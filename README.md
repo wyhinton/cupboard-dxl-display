@@ -7,6 +7,14 @@
 
 - https://www.youtube.com/watch?v=kLEp5tGDqcI
 
+# Components
+
+# Linting
+
+# Typescript
+
+# Firebase
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
