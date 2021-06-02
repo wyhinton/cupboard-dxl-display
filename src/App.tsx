@@ -4,7 +4,6 @@ import "./App.global.css";
 import { useStoreState, useStoreActions } from "./hooks";
 import CardGrid from "./componets/CardLayout";
 export default function App() {
-  const [displayText, setDisplayText] = useState({ val: "empty" } as any);
   const fetch_sheet_data = useStoreActions(
     (actions) => actions.appData.fetchGoogleSheet
   );

@@ -3,7 +3,13 @@
 [![Language: Typescript](https://badges.aleen42.com/src/typescript.svg)](https://badges.aleen42.com/src/typescript.svg)
 [![Framework: React](https://badges.aleen42.com/src/react.svg)](https://badges.aleen42.com/src/react.svg)
 
+# Live Demo
+
+- https://iframeprototype-83a96.web.app/
+
 # Github Actions
+
+Resources:
 
 - https://www.youtube.com/watch?v=kLEp5tGDqcI
 
@@ -13,9 +19,18 @@
 
 # Typescript
 
+Resources:
+Working with Classes:
+
+- https://www.youtube.com/watch?v=OaxeCPWTdcA
+
 # Firebase
 
 # Getting Started with Create React App
+
+# Libraries
+
+### [react-grid-layout](https://github.com/react-grid-layout/react-grid-layout)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

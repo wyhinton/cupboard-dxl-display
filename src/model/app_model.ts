@@ -1,6 +1,7 @@
 import { action, thunk, Thunk, Action } from "easy-peasy";
 import GetSheetDone from "get-sheet-done";
-import type { CardData } from "./card_model";
+import CardData from "./card_model";
+import type { GoogleSheet, RawCardInfoRow } from "./google_sheet";
 
 export interface AppDataModel {
   //state
@@ -12,25 +13,19 @@ export interface AppDataModel {
   setActiveCards: Action<AppDataModel, CardData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
 }
-export interface GoolgeSheet<T> {
-  data: Array<T>;
-  title: string;
-  updated: string;
-}
 
 const appData: AppDataModel = {
-  //state
   availableCards: [],
   activeCards: [],
-  //requests
   fetchGoogleSheet: thunk(async (actions) => {
-    getSheet<CardData>("181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k", 1).then(
-      (values) => {
-        console.log(values);
-        actions.setAvailableCards(values.data as CardData[]);
-        actions.setActiveCards(values.data as CardData[]);
-      }
-    );
+    getSheet<RawCardInfoRow>(
+      "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
+      1
+    ).then((sheet) => {
+      const cards = sheet.data.map((c) => new CardData(c));
+      actions.setAvailableCards(cards);
+      actions.setActiveCards(cards);
+    });
   }),
   //setters
   setAvailableCards: action((state, payload) => {
@@ -41,10 +36,10 @@ const appData: AppDataModel = {
   }),
 };
 
-function getSheet<T>(key: string, sheetNum: number): Promise<GoolgeSheet<T>> {
-  const promise = new Promise<GoolgeSheet<T>>(function (resolve, reject) {
+function getSheet<T>(key: string, sheetNum: number): Promise<GoogleSheet<T>> {
+  const promise = new Promise<GoogleSheet<T>>(function (resolve, reject) {
     GetSheetDone.labeledCols(key, sheetNum)
-      .then((sheet: GoolgeSheet<T>) => {
+      .then((sheet: GoogleSheet<T>) => {
         console.log(sheet);
         resolve(sheet);
       })
