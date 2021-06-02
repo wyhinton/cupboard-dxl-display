@@ -3,16 +3,13 @@ import React, { useState } from "react";
 // import {BrowserView, BrowserWindow} from 'electron/main';
 
 const ViewCard = ({ src, key }: { src: string; key: string }) => {
-  //   const win = new BrowserWindow({ width: 800, height: 600 });
-
-  //   const view = new BrowserView();
-  //   win.setBrowserView(view);
-  //   view.setBounds({ x: 0, y: 0, width: 300, height: 300 });
-  //   view.webContents.loadURL('https://electronjs.org');
-
   return (
     <div>
-      {/* <iframe src={"http://www.youtube.com/embed/xDMP3i36naA"}></iframe> */}
+      <iframe
+        src={
+          "https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik"
+        }
+      ></iframe>
     </div>
   );
 };

@@ -26,6 +26,7 @@ const appData: AppDataModel = {
   fetchGoogleSheet: thunk(async (actions) => {
     getSheet<CardData>("181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k", 1).then(
       (values) => {
+        console.log(values);
         actions.setAvailableCards(values.data as CardData[]);
         actions.setActiveCards(values.data as CardData[]);
       }
@@ -44,6 +45,7 @@ function getSheet<T>(key: string, sheetNum: number): Promise<GoolgeSheet<T>> {
   const promise = new Promise<GoolgeSheet<T>>(function (resolve, reject) {
     GetSheetDone.labeledCols(key, sheetNum)
       .then((sheet: GoolgeSheet<T>) => {
+        console.log(sheet);
         resolve(sheet);
       })
       .catch((err: unknown) => {

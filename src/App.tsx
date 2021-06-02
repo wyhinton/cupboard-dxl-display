@@ -8,8 +8,12 @@ export default function App() {
   const fetch_sheet_data = useStoreActions(
     (actions) => actions.appData.fetchGoogleSheet
   );
+  useEffect(() => {
+    fetch_sheet_data();
+  }, []);
   const containerStyle = {
     width: "100vw",
+    height: "100vh",
   };
   return (
     <div style={containerStyle}>
