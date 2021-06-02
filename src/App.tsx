@@ -1,26 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React, { useEffect, useState } from "react";
+// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import "./App.global.css";
+import { useStoreState, useStoreActions } from "./hooks";
+import CardGrid from "./componets/CardLayout";
+export default function App() {
+  const [displayText, setDisplayText] = useState({ val: "empty" } as any);
+  const fetch_sheet_data = useStoreActions(
+    (actions) => actions.appData.fetchGoogleSheet
+  );
+  const containerStyle = {
+    width: "100vw",
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={containerStyle}>
+      <CardGrid />
     </div>
   );
 }
-
-export default App;
