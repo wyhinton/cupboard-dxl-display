@@ -2,7 +2,9 @@ import { action, thunk, Thunk, Action } from "easy-peasy";
 import GetSheetDone from "get-sheet-done";
 import CardData from "./card_model";
 import type { GoogleSheet, RawCardInfoRow } from "./google_sheet";
-
+/**
+ * Core app model
+ */
 export interface AppDataModel {
   //state
   availableCards: CardData[];

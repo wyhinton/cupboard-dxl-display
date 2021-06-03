@@ -18,4 +18,21 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0;
+}
+h1,
+p {
+  font-family: Lato;
+}
+
+.box {
+  border: 1px solid #f00;
+}
+
+.box.custom {
+  border: 1px solid #0f0;
+}
+
+.wrapper {
+  border: 1px solid #000;
 }

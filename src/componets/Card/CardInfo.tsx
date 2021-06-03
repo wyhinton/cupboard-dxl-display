@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import CardData from "../../model/card_model";
-
+/**
+ * This comment _supports_ [Markdown](https://marked.js.org/)
+ */
 const CardInfo = ({ data }: { data: CardData }): JSX.Element => {
   const containerStyle = {
     backgroundColor: "lightgrey",
-    height: "15%",
     padding: ".25em",
   } as React.CSSProperties;
   return (

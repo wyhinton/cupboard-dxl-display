@@ -12,6 +12,7 @@
 Resources:
 
 - https://www.youtube.com/watch?v=kLEp5tGDqcI
+- https://codeburst.io/five-tips-i-wish-i-knew-when-i-started-with-typescript-c9e8609029db
 
 # Components
 

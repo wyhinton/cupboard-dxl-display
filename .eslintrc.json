@@ -14,6 +14,7 @@
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
     "@typescript-eslint/naming-convention": "warn",
+    "@typescript-eslint/no-non-null-assertion": "error",
     "@typescript-eslint/explicit-function-return-type": [
       "warn",
       {

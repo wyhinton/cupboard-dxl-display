@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 // import _ from "lodash";
 import Clock from "./Clock";
 import IFrameView from "./IFrameView";
@@ -46,6 +46,11 @@ export const CardGrid = (): JSX.Element => {
     xxs: layout,
   };
 
+  interface GridProps {
+    key: string;
+  }
+
+  // const input = React.useRef<HTMLDivElement>(null);
   return (
     <ResponsiveGridLayout
       className="layout"
@@ -55,6 +60,7 @@ export const CardGrid = (): JSX.Element => {
       rowHeight={size.y / 3}
       margin={[20, 20]}
     >
+      {/* <Component val={"clock"}> */}
       <div key={"clock"}>
         <ViewCard>
           <Clock />
@@ -63,8 +69,8 @@ export const CardGrid = (): JSX.Element => {
       {availableCards.map((card: CardData, i: number) => {
         console.log(i.toString());
         return (
-          <div key={i} data-grid={{ i }}>
-            <ViewCard key={i.toString()} data={availableCards[i]}>
+          <div key={i.toString()}>
+            <ViewCard data={card} key={i.toString()}>
               <IFrameView src="https://www.youtube.com/embed/tgbNymZ7vqY" />
             </ViewCard>
           </div>
@@ -73,5 +79,6 @@ export const CardGrid = (): JSX.Element => {
     </ResponsiveGridLayout>
   );
 };
-
+// react-draggable cssTransforms react-resizable react-grid-item
 export default CardGrid;
+// react-grid-item react-draggable cssTransforms react-resizable

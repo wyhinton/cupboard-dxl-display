@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import "./App.global.css";
 import { useStoreState, useStoreActions } from "./hooks";
 import CardGrid from "./componets/CardLayout";
+import Toolbar from "./componets/Toolbar";
+import Button from "./componets/Button";
+
 export default function App() {
   const fetch_sheet_data = useStoreActions(
     (actions) => actions.appData.fetchGoogleSheet
@@ -15,8 +18,18 @@ export default function App() {
     height: "100vh",
   };
   return (
-    <div style={containerStyle}>
-      <CardGrid />
-    </div>
+    <>
+      <Toolbar>
+        <Button
+          onClick={() => {
+            console.log("hello");
+          }}
+          text={"do something"}
+        ></Button>
+      </Toolbar>
+      <div style={containerStyle}>
+        <CardGrid />
+      </div>
+    </>
   );
 }
