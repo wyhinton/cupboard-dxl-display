@@ -4,6 +4,7 @@ import CardData from "./card_model";
 import type { GoogleSheet, RawCardInfoRow } from "./google_sheet";
 /**
  * Core app model
+ * @param
  */
 export interface AppDataModel {
   //state

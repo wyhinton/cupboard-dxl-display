@@ -31,15 +31,16 @@ export const CardGrid = (): JSX.Element => {
   }, [availableCards]);
 
   const layout: Layout[] = [
-    { i: "0", x: 0, y: 0, w: 1, h: 1, static: true },
-    { i: "1", x: 1, y: 0, w: 1, h: 1, minW: 2, maxW: 4 },
-    { i: "2", x: 2, y: 0, w: 1, h: 1 },
-    { i: "3", x: 3, y: 0, w: 1, h: 1 },
+    { i: "clock", x: 0, y: 0, w: 2, h: 1, static: true },
+    { i: "0", x: 0, y: 1, w: 1, h: 1, static: true },
+    { i: "1", x: 1, y: 1, w: 1, h: 1, minW: 2, maxW: 4 },
+    { i: "2", x: 2, y: 1, w: 1, h: 1 },
+    { i: "3", x: 3, y: 1, w: 1, h: 1 },
     { i: "4", x: 0, y: 2, w: 1, h: 1 },
     { i: "5", x: 1, y: 2, w: 1, h: 1 },
     { i: "6", x: 2, y: 2, w: 1, h: 1 },
     { i: "7", x: 3, y: 2, w: 1, h: 1 },
-    { i: "clock", x: 0, y: 0, w: 2, h: 1 },
+    // { i: "clock", x: 0, y: 0, w: 2, h: 1, static: true },
   ];
   const layouts: Layouts = {
     lg: layout,
@@ -53,6 +54,12 @@ export const CardGrid = (): JSX.Element => {
     key: string;
   }
 
+  const testSources = [
+    "https://sketchfab.com/models/b70e888cb0ca4b07bfa5b51fe44ecd69/embed?autospin=0.2&amp;autostart=1&amp;preload=1",
+    "https://www.youtube.com/embed/sGF6bOi1NfA",
+    "http://meipokwan.org/Art/Kaleidoscope.htm",
+    "http://tulpinteractive.com/on-time-every-time/",
+  ];
   // const input = React.useRef<HTMLDivElement>(null);
   return (
     <ResponsiveGridLayout
@@ -74,7 +81,9 @@ export const CardGrid = (): JSX.Element => {
         return (
           <div key={i.toString()}>
             <ViewCard data={card} key={i.toString()}>
-              <IFrameView src="https://www.youtube.com/embed/tgbNymZ7vqY" />
+              <IFrameView src={rand<string>(testSources)} />
+              {/* <IFrameView src="https://sketchfab.com/models/b70e888cb0ca4b07bfa5b51fe44ecd69/embed?autospin=0.2&amp;autostart=1&amp;preload=1" /> */}
+              {/* <IFrameView src="https://ww.youtube.com/embed/tgbNymZ7vqY" /> */}
             </ViewCard>
           </div>
         );
@@ -85,3 +94,8 @@ export const CardGrid = (): JSX.Element => {
 // react-draggable cssTransforms react-resizable react-grid-item
 export default CardGrid;
 // react-grid-item react-draggable cssTransforms react-resizable
+
+function rand<T>(items: T[]): T {
+  // "~~" for a closest "int"
+  return items[~~(items.length * Math.random())];
+}
