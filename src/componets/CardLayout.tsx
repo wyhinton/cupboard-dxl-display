@@ -14,8 +14,22 @@ import CardData from "../model/card_model";
 
 /**
  * Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components
+ * ```
+ *  {availableCards.map((card: CardData, i: number) => {
+ *   console.log(i.toString());
+ *   return (
+ *   <div key={i.toString()}>
+ *     <ViewCard data={card} key={i.toString()}>
+ *       <IFrameView src={rand<string>(testSources)} />
+ *       </ViewCard>
+ *       </div>
+ *     );
+ *   })}
+ * ```
  * @component
+ *
  */
+
 export const CardGrid = (): JSX.Element => {
   const [size, setSize] = useState({
     x: window.innerWidth,
@@ -81,7 +95,8 @@ export const CardGrid = (): JSX.Element => {
         return (
           <div key={i.toString()}>
             <ViewCard data={card} key={i.toString()}>
-              <IFrameView src={rand<string>(testSources)} />
+              <IFrameView src={card.src} />
+              {/* <IFrameView src={rand<string>(testSources)} /> */}
               {/* <IFrameView src="https://sketchfab.com/models/b70e888cb0ca4b07bfa5b51fe44ecd69/embed?autospin=0.2&amp;autostart=1&amp;preload=1" /> */}
               {/* <IFrameView src="https://ww.youtube.com/embed/tgbNymZ7vqY" /> */}
             </ViewCard>

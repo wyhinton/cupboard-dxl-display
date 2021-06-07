@@ -34,7 +34,9 @@ const ViewCard = ({
     height: "100%",
     border: "5px blue",
   } as React.CSSProperties;
-
+  const containerStyle = {
+    position: "relative",
+  };
   return (
     <div
       className={"view-card"}
@@ -43,11 +45,9 @@ const ViewCard = ({
       }}
     >
       <div style={{ height: "100%" }} data-grid={dataGrid ?? undefined}>
-        <div style={{ height: data ? "85%" : "100%" }}>{children}</div>
-        <div style={{ height: data ? "15%" : "0%" }}>
-          {data ? <CardInfo data={data} /> : ""}
-        </div>
+        <div style={{ height: data ? "100%" : "100%" }}>{children}</div>
       </div>
+      {data ? <CardInfo data={data} /> : ""}
     </div>
   );
 };
