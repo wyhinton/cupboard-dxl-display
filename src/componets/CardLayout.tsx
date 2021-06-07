@@ -1,5 +1,4 @@
 import React, { useEffect, useState, forwardRef } from "react";
-// import _ from "lodash";
 import Clock from "./Clock";
 import IFrameView from "./IFrameView";
 import GridLayout, {
@@ -13,6 +12,10 @@ import ViewCard from "./Card";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../model/card_model";
 
+/**
+ * Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components
+ * @component
+ */
 export const CardGrid = (): JSX.Element => {
   const [size, setSize] = useState({
     x: window.innerWidth,

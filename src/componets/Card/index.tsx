@@ -11,6 +11,10 @@ interface ViewCardProps {
   data?: CardData;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
+/**
+ * Wraps card content.
+ * @component
+ */
 const ViewCard = ({
   children,
   dataGrid,

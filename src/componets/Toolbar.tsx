@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-
+/**
+ * Wraps navigation controls
+ * @component
+ */
 const Toolbar = ({
   children,
 }: {

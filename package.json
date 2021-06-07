@@ -36,7 +36,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "doc": "typedoc --entryPoints src"
+    "doc": "jsdoc2md --files ./src/* --configure ./jsdoc.conf.json > ./README.md --template README_TEMPLATE.hbs"
   },
   "browserslist": {
     "production": [
@@ -51,8 +51,9 @@
     ]
   },
   "devDependencies": {
+    "better-docs": "^2.3.2",
     "jsdoc": "^3.6.7",
     "jsdoc-plugin-typescript": "^2.0.6",
-    "typedoc": "^0.20.36"
+    "jsdoc-to-markdown": "^7.0.1"
   }
 }

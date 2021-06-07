@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button as EverGreenButton } from "evergreen-ui";
 
 /**
- * Button Element which wraps and Evergreen UI Button
+ * Wraps an Evergreen UI Button.
+ * @component
  */
 const Button = ({
   onClick,

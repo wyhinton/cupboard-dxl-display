@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { useStoreState, useStoreActions } from "../hooks";
 
+/**
+ * Minimal warpper for an <iframe>. Can be toggled between a full screen, active view, and a regular card view.
+ * @component
+ * @example
+ * const my_url = "https://www.youtube.com/embed/tgbNymZ7vqY";
+ * return(
+ *  <IFrameView src = {my_url}/>
+ * )
+ */
 const IFrameView = ({ src }: { src: string }): JSX.Element => {
   const [active, setActive] = useState(false);
   // const
@@ -17,8 +25,6 @@ const IFrameView = ({ src }: { src: string }): JSX.Element => {
     height: "100%",
     border: "5px blue",
   } as React.CSSProperties;
-
-  // const [view, setView] = useState(iframeStyle);
 
   return (
     <div

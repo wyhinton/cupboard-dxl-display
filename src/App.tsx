@@ -6,6 +6,10 @@ import CardGrid from "./componets/CardLayout";
 import Toolbar from "./componets/Toolbar";
 import Button from "./componets/Button";
 
+/**
+ * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
+ * @component
+ */
 export default function App() {
   const fetch_sheet_data = useStoreActions(
     (actions) => actions.appData.fetchGoogleSheet
