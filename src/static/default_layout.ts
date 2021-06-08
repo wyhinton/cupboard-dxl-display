@@ -1,4 +1,4 @@
-import { Layout, ResizeHandle } from "react-grid-layout";
+import { Layout } from "react-grid-layout";
 // const availableHandles: ResizeHandle[] = [
 //   "s",
 //   "w",
