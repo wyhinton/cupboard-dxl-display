@@ -66,6 +66,7 @@ export const perfTest2Cards = [
     title: "Perf Test 2",
   },
 ];
+
 export const perfTest3Cards = [
   {
     src: "https://leafletjs.com/examples/choropleth/example.html",
@@ -98,5 +99,43 @@ export const perfTest3Cards = [
   {
     src: "https://leafletjs.com/examples/choropleth/example.html",
     title: "Perf Test 3",
+  },
+];
+// <iframe width="100%" height="584" frameborder="0"
+//   src="https://observablehq.com/embed/@d3/streamgraph-transitions?cells=chart"></iframe>
+// <iframe width="100%" height="1058" frameborder="0"
+//   src="https://observablehq.com/embed/@d3/zoomable-circle-packing?cells=chart"></iframe>
+export const perfTest4Cards = [
+  {
+    src: "https://observablehq.com/embed/@d3/zoomable-circle-packing?cells=chart",
+    title: "Perf Test 4",
+  },
+  {
+    src: "https://observablehq.com/embed/@d3/zoomable-circle-packing?cells=chart",
+    title: "Perf Test 4",
+  },
+  {
+    src: "https://observablehq.com/embed/@d3/zoomable-circle-packing?cells=chart",
+    title: "Perf Test 4",
+  },
+  {
+    src: "https://observablehq.com/embed/@d3/streamgraph-transitions?cells=chart",
+    title: "Perf Test 4",
+  },
+  {
+    src: "https://observablehq.com/embed/@d3/streamgraph-transitions?cells=chart",
+    title: "Perf Test 4",
+  },
+  {
+    src: "https://observablehq.com/embed/@d3/streamgraph-transitions?cells=chart",
+    title: "Perf Test 4",
+  },
+  {
+    src: "https://observablehq.com/embed/@d3/streamgraph-transitions?cells=chart",
+    title: "Perf Test 4",
+  },
+  {
+    src: "https://observablehq.com/embed/@d3/streamgraph-transitions?cells=chart",
+    title: "Perf Test 4",
   },
 ];

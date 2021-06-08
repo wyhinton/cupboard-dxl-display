@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CardInfo from "./CardInfo";
 import CardData from "../../model/card_model";
-import "../../css/viewCard.css";
 import { Layout } from "react-grid-layout";
 import { ViewMode } from "../../model/enums";
 import { useStoreState, useStoreActions } from "../../hooks";

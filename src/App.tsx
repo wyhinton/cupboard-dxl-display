@@ -10,6 +10,7 @@ import {
   perfTest1Cards,
   perfTest2Cards,
   perfTest3Cards,
+  perfTest4Cards,
 } from "./static/performance_test_layouts";
 import DropDownMenu from "./componets/DropDownMenu";
 import { ViewMode } from "./model/enums";
@@ -70,19 +71,25 @@ export default function App() {
           onClick={() => {
             setAvailableCards(perfTest1Cards);
           }}
-          text={"Performance Test 1"}
+          text={"Performance Test 1 - 3D"}
         ></Button>
         <Button
           onClick={() => {
             setAvailableCards(perfTest2Cards);
           }}
-          text={"Performance Test 2"}
+          text={"Performance Test 2 - code"}
         ></Button>
         <Button
           onClick={() => {
             setAvailableCards(perfTest3Cards);
           }}
-          text={"Performance Test 3"}
+          text={"Performance Test 3 - map"}
+        ></Button>
+        <Button
+          onClick={() => {
+            setAvailableCards(perfTest4Cards);
+          }}
+          text={"Performance Test 4 - d3"}
         ></Button>
       </Toolbar>
       <div style={containerStyle}>
