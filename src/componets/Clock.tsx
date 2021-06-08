@@ -7,8 +7,24 @@ import React, { useState, useEffect } from "react";
 function Clock(): JSX.Element {
   const [date, setDate] = useState(new Date());
   const clockText = {
-    fontSize: "xxx-large",
+    margin: 0,
+    fontSize: "large",
   };
+  const containerStyle = {
+    backdropFilter: "blur(4px)",
+    height: "100%",
+    padding: ".5em",
+    // textSize:
+    fontSize: "48pt",
+    fontWeight: 600,
+    color: "white",
+  } as React.CSSProperties;
+
+  const dividerStyle = {
+    height: ".5em",
+    backgroundColor: "white",
+    width: "100%",
+  } as React.CSSProperties;
   //Replaces componentDidMount and componentWillUnmount
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);
@@ -22,10 +38,11 @@ function Clock(): JSX.Element {
   }
 
   return (
-    <div>
-      <div style={clockText}>D.H. HILL</div>
-      <div style={clockText}>DATA EXPERIENCE LAB</div>
-      <h2>{date.toLocaleTimeString()}.</h2>
+    <div style={containerStyle}>
+      <div>D.H. HILL</div>
+      <div>DATA EXPERIENCE LAB</div>
+      <div style={dividerStyle}></div>
+      <div>{date.toLocaleTimeString()}.</div>
     </div>
   );
 }

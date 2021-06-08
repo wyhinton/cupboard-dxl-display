@@ -2,6 +2,9 @@ import { action, thunk, Thunk, Action } from "easy-peasy";
 import GetSheetDone from "get-sheet-done";
 import CardData from "./card_model";
 import type { GoogleSheet, RawCardInfoRow } from "./google_sheet";
+import { Layouts, Layout } from "react-grid-layout";
+import defaultGridLayout from "../static/default_layout";
+import { ViewMode } from "./enums";
 /**
  * Core app model
  * @param
@@ -10,16 +13,25 @@ export interface AppDataModel {
   //state
   availableCards: CardData[];
   activeCards: CardData[];
+  currentLayout: Layout[];
+  viewMode: ViewMode;
   //requests
+
   fetchGoogleSheet: Thunk<AppDataModel>;
   //setters
+  setViewMode: Action<AppDataModel, ViewMode>;
+  setCurrentLayout: Action<AppDataModel, Layout[]>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
 }
 
 const appData: AppDataModel = {
+  //state
   availableCards: [],
   activeCards: [],
+  currentLayout: defaultGridLayout,
+  viewMode: ViewMode.DEFAULT,
+  //requests
   fetchGoogleSheet: thunk(async (actions) => {
     getSheet<RawCardInfoRow>(
       "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
@@ -30,12 +42,21 @@ const appData: AppDataModel = {
       actions.setActiveCards(cards);
     });
   }),
+
   //setters
-  setAvailableCards: action((state, payload) => {
-    state.availableCards = payload;
+  setViewMode: action((state, viewModeEnum) => {
+    console.log(viewModeEnum);
+    state.viewMode = viewModeEnum;
   }),
-  setActiveCards: action((state, payload) => {
-    state.activeCards = payload;
+  setCurrentLayout: action((state, layoutArr) => {
+    state.currentLayout = layoutArr;
+  }),
+  setAvailableCards: action((state, cardDataArr) => {
+    state.availableCards = cardDataArr;
+  }),
+  setActiveCards: action((state, cardDataArr) => {
+    console.log("setting cards");
+    state.activeCards = cardDataArr;
   }),
 };
 
