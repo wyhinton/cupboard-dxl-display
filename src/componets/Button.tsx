@@ -14,8 +14,6 @@ const Button = ({
 }): JSX.Element => {
   return (
     <div onMouseUp={onClick}>
-      {/* <div onMouseUp={() => onClick()}> */}
-      {/* <div onMouseUp={() => onClick}> */}
       <EverGreenButton>{text}</EverGreenButton>
     </div>
   );

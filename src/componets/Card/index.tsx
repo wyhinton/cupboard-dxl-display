@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import CardInfo from "./CardInfo";
-import CardData from "../../model/card_model";
+import CardData from "../../data_structs/cardData";
 import { Layout } from "react-grid-layout";
-import { ViewMode } from "../../model/enums";
+import { ViewMode } from "../../enums";
 import { useStoreState, useStoreActions } from "../../hooks";
+import { useLongPress } from "react-use";
 
 interface ViewCardProps {
   key?: string;
@@ -27,7 +28,15 @@ const ViewCard = ({
   const [backgroundStyle, setBackgroundStyle] = useState({
     backgroundColor: "gray",
   } as React.CSSProperties);
+  const onLongPress = () => {
+    console.log("calls callback after long pressing 300ms");
+  };
 
+  const defaultOptions = {
+    isPreventDefault: true,
+    delay: 100,
+  };
+  const longPressEvent = useLongPress(onLongPress, defaultOptions);
   useEffect(() => {
     const isEditMode = viewMode == ViewMode.EDIT;
     const style = {
@@ -41,6 +50,7 @@ const ViewCard = ({
     } as React.CSSProperties;
     setBackgroundStyle(style);
   }, [viewMode]);
+
   return (
     <div
       className={"view-card"}
@@ -48,9 +58,22 @@ const ViewCard = ({
       onDoubleClick={() => {
         onDoubleClick;
       }}
+      {...longPressEvent}
     >
       <div style={{ height: "100%" }} data-grid={dataGrid ?? undefined}>
         <div style={{ height: data ? "100%" : "100%" }}>{children}</div>
+        <div
+          style={{
+            position: "absolute",
+            color: "red",
+            fontSize: "20pt ",
+            zIndex: 1,
+            top: 0,
+            left: 0,
+          }}
+        >
+          {}
+        </div>
       </div>
       {data ? <CardInfo data={data} /> : ""}
     </div>

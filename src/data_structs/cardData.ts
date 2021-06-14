@@ -1,4 +1,5 @@
 import type { RawCardInfoRow } from "./google_sheet";
+import { v4 as uuidv4 } from "uuid";
 /**
  *
  */

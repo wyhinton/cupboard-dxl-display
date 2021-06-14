@@ -45,4 +45,4 @@ const IFrameView = ({ src }: { src: string }): JSX.Element => {
   );
 };
 
-export default IFrameView;
+export default React.memo(IFrameView);

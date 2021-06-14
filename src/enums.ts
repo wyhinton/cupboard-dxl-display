@@ -1,5 +1,5 @@
 export enum ViewMode {
-  DEFAULT = "DEFAULT",
+  DISPLAY = "DISPLAY",
   EDIT = "EDIT",
   CYCLE = "CYCLE",
 }

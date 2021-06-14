@@ -11,11 +11,11 @@ const Toolbar = ({
   const toolbarStyle = {
     position: "absolute",
     bottom: 0,
-    height: "3em",
+    height: "4em",
     width: "100vw",
     backgroundColor: "blue",
     zIndex: 1,
-    display: "flex",
+    display: "block",
   } as React.CSSProperties;
 
   return <div style={toolbarStyle}>{children}</div>;

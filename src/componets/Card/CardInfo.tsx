@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CardData from "../../model/card_model";
+import CardData from "../../data_structs/cardData";
 /**
  * Formats text from a CardData object, including it's title and source url.
  * @component

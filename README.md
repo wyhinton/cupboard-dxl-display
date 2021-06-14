@@ -19,6 +19,7 @@ A large interactive NEC V864Q 86”display with infrared touch screen that: 1) p
 - [Components](#components)
 - [Configs](#configs)
 - [Documentation](#documentation)
+- [Libraries](#libraries)
 
 # Quick Start
 
@@ -94,7 +95,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ### ```tsconfig.json```
 Describes the settings type script compiler with use for the project. This projects tsconfig is the default one geneated by ```npx create-react-app my-app --template typescript```. For a full list of settings see [this page](https://www.typescriptlang.org/tsconfig) from the official typescript docs. 
 ### ```decs.d.ts```
-Describe the shape of JavaScript values to the TypeScript compiler. Or put another way, it is the way to describe, (usually in an external file), the types present in an external JavaScript code. Allows us to use javascript libaries which like type definitions.
+Describe the shape of JavaScript values to the TypeScript compiler. Or put another way, it is the way to describe, (usually in an external file), the types present in an external JavaScript code. Allows us to use javascript libaries which lack type definitions.
 ## Firebase
 ### ```firebase.json```
 Configuration options for our firebase project. Notably the ```public``` is set to our ```build``` folder rather than ```public```. We need to build our project with ```yarn build``` if we want our deployment to update with changes from our ```src```.
@@ -111,26 +112,43 @@ Configures jsdoc settings.
 ### ```README_TEMPLATE.hbs```
 Provides jsdoc-to-markdown with a template format. 
 
+# Libraries
+- [react-use](https://github.com/streamich/react-use#readme) - Provides useful hooks for event handling like ```useIdle``` and ```useLongPress```
+- [react-grid-layout](https://github.com/react-grid-layout/react-grid-layout) - Draggable and resizable grid layout with responsive breakpoints. Used for editing and display our card layotus.
+- [evergreen-ui](https://github.com/segmentio/evergreen) - React UI framework. Provides some  componets for things like Buttons, Menus, etc., that work well with the projects design language. Allows us to avoid having to basic UI components from scratch. 
+- [easy-peasy](https://github.com/ctrlplusb/easy-peasy) - Redux wrapper which allows us to design clear, centralized state managment for our application.
+
+# Learning Resources
+### react-grid-layout
+- ["React grid layout from TypeScript" codesandbox example](https://codesandbox.io/s/react-grid-layout-from-typescript-forked-46zp2)
+### Github Actions 
+- [Deploy React Application To Firebase Using GitHub Actions](https://www.youtube.com/watch?v=kLEp5tGDqcI)
+### Typescript 
+- [Five tips I wish I knew when I started with Typescript](https://codeburst.io/five-tips-i-wish-i-knew-when-i-started-with-typescript-c9e8609029db)
+- [Learn TypeScript #6, Advanced Classes](https://www.youtube.com/watch?v=OaxeCPWTdcA)
 # Components
 
 ## Classes
 
 <dl>
+<dt><a href="#Background">Background</a></dt>
+<dd></dd>
+<dt><a href="#Button">Button</a></dt>
+<dd></dd>
 <dt><a href="#CardInfo">CardInfo</a></dt>
+<dd></dd>
+<dt><a href="#ViewCard">ViewCard</a></dt>
 <dd></dd>
 <dt><a href="#CardGrid">CardGrid</a></dt>
 <dd></dd>
 <dt><a href="#Clock">Clock</a></dt>
 <dd></dd>
+<dt><a href="#DropDownMenu">DropDownMenu</a></dt>
+<dd></dd>
 <dt><a href="#IFrameView">IFrameView</a></dt>
 <dd></dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#Button">Button()</a></dt>
-<dd><p>Button Element which wraps and Evergreen UI Button</p></dd>
+<dt><a href="#Toolbar">Toolbar</a></dt>
+<dd></dd>
 </dl>
 
 ## Interfaces
@@ -146,6 +164,31 @@ Provides jsdoc-to-markdown with a template format.
 <p>Core app model</p>
 
 **Kind**: global interface  
+
+|  |
+|
+| 
+
+<a name="Background"></a>
+
+## Background
+**Kind**: global class  
+**Component**:   
+<a name="new_Background_new"></a>
+
+### new Background()
+<p>Background with particle animation.</p>
+
+<a name="Button"></a>
+
+## Button
+**Kind**: global class  
+**Component**:   
+<a name="new_Button_new"></a>
+
+### new Button()
+<p>Wraps an Evergreen UI Button.</p>
+
 <a name="CardInfo"></a>
 
 ## CardInfo
@@ -156,6 +199,16 @@ Provides jsdoc-to-markdown with a template format.
 ### new CardInfo()
 <p>Formats text from a CardData object, including it's title and source url.</p>
 
+<a name="ViewCard"></a>
+
+## ViewCard
+**Kind**: global class  
+**Component**:   
+<a name="new_ViewCard_new"></a>
+
+### new ViewCard()
+<p>Wraps card content.</p>
+
 <a name="CardGrid"></a>
 
 ## CardGrid
@@ -165,6 +218,17 @@ Provides jsdoc-to-markdown with a template format.
 
 ### new exports.CardGrid()
 <p>Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components</p>
+<pre class="prettyprint source"><code> {availableCards.map((card: CardData, i: number) => {
+  console.log(i.toString());
+  return (
+  &lt;div key={i.toString()}>
+    &lt;ViewCard data={card} key={i.toString()}>
+      &lt;IFrameView src={rand&lt;string>(testSources)} />
+      &lt;/ViewCard>
+      &lt;/div>
+    );
+  })}
+</code></pre>
 
 <a name="Clock"></a>
 
@@ -175,6 +239,16 @@ Provides jsdoc-to-markdown with a template format.
 
 ### new Clock()
 <p>Simple clock widget for displaying the current time.</p>
+
+<a name="DropDownMenu"></a>
+
+## DropDownMenu
+**Kind**: global class  
+**Component**:   
+<a name="new_DropDownMenu_new"></a>
+
+### new DropDownMenu()
+<p>Wraps an Evergreen UI DropDownMenu.</p>
 
 <a name="IFrameView"></a>
 
@@ -190,20 +264,22 @@ Provides jsdoc-to-markdown with a template format.
 ```js
 const my_url = "https://www.youtube.com/embed/tgbNymZ7vqY";return( <IFrameView src = {my_url}/>)
 ```
-<a name="Button"></a>
+<a name="Toolbar"></a>
 
-## Button()
-<p>Button Element which wraps and Evergreen UI Button</p>
+## Toolbar
+**Kind**: global class  
+**Component**:   
+<a name="new_Toolbar_new"></a>
 
-**Kind**: global function  
+### new Toolbar()
+<p>Wraps navigation controls</p>
+
 
 * * *
 
 # Documentation
 
-# Learning Resources
-- https://www.youtube.com/watch?v=kLEp5tGDqcI
-- https://codeburst.io/five-tips-i-wish-i-knew-when-i-started-with-typescript-c9e8609029db
-- https://www.youtube.com/watch?v=OaxeCPWTdcA
+
+
 
 &copy; 2016-Present NCSU

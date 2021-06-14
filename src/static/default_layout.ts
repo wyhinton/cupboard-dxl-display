@@ -1,4 +1,4 @@
-import { Layout } from "react-grid-layout";
+import { Layout, Layouts } from "react-grid-layout";
 // const availableHandles: ResizeHandle[] = [
 //   "s",
 //   "w",
@@ -9,7 +9,7 @@ import { Layout } from "react-grid-layout";
 //   "se",
 //   "ne",
 // ];
-const defaultGridLayout: Layout[] = [
+const defaultGridLayoutArr: Layout[] = [
   { i: "clock", x: 0, y: 0, w: 2, h: 1, static: true },
   {
     i: "0",
@@ -36,4 +36,12 @@ const defaultGridLayout: Layout[] = [
   { i: "7", x: 3, y: 2, w: 1, h: 1 },
 ];
 
-export default defaultGridLayout;
+const defaultLayouts: Layouts = {
+  lg: defaultGridLayoutArr,
+  md: defaultGridLayoutArr,
+  sm: defaultGridLayoutArr,
+  xs: defaultGridLayoutArr,
+  xxs: defaultGridLayoutArr,
+};
+
+export default defaultLayouts;

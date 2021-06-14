@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import {
-  SelectMenu,
-  Position,
-  Button,
-  SelectField,
-  SelectMenuItem,
-} from "evergreen-ui";
-// import Button from "./Button";
-// import Button from 'evergreen-ui';
+import { SelectMenu, Position, Button, SelectMenuItem } from "evergreen-ui";
+
+// export interface SelectMenuItem {
+//   label: string
+//   value: string | number
+//   labelInList?: string
+//   disabled?: boolean
+// }
 /**
  * Wraps an Evergreen UI DropDownMenu.
  * @component
@@ -19,10 +18,11 @@ const DropDownMenu = ({
 }: {
   onSelect: (item: SelectMenuItem) => void;
   title: string;
-  items: string[];
+  items: SelectMenuItem[];
 }): JSX.Element => {
-  const [selected, setSelected] = useState(false);
-  const [value, setValue] = useState(items[0]);
+  // const [selected, setSelected] = useState(false);
+  const [value, setValue] = useState(items[0]?.label);
+  type Test = string | string[] | undefined;
   return (
     <div>
       {`${title}: `}
@@ -32,13 +32,12 @@ const DropDownMenu = ({
         hasTitle={false}
         hasFilter={false}
         position={Position.TOP}
-        options={items.map((label) => ({ label, value: label }))}
+        options={items}
         selected={value}
         onSelect={(item) => {
           onSelect(item);
           setValue(item.label);
         }}
-        // onSelect={(item) => setValue(item.label)}
       >
         <Button>{value}</Button>
       </SelectMenu>
@@ -47,3 +46,5 @@ const DropDownMenu = ({
 };
 
 export default DropDownMenu;
+
+// { label, value: label }

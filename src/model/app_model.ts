@@ -1,10 +1,20 @@
-import { action, thunk, Thunk, Action } from "easy-peasy";
+import {
+  action,
+  thunk,
+  Thunk,
+  Action,
+  thunkOn,
+  ThunkOn,
+  debug,
+} from "easy-peasy";
 import GetSheetDone from "get-sheet-done";
-import CardData from "./card_model";
-import type { GoogleSheet, RawCardInfoRow } from "./google_sheet";
+import CardData from "../data_structs/cardData";
+import type { GoogleSheet, RawCardInfoRow } from "../data_structs/google_sheet";
 import { Layouts, Layout } from "react-grid-layout";
 import defaultGridLayout from "../static/default_layout";
-import { ViewMode } from "./enums";
+import { ViewMode } from "../enums";
+import History from "../data_structs/history";
+import { StoreModel } from "./index";
 /**
  * Core app model
  * @param
@@ -13,16 +23,37 @@ export interface AppDataModel {
   //state
   availableCards: CardData[];
   activeCards: CardData[];
-  currentLayout: Layout[];
+  currentLayout: Layouts;
+  bufferLayout: Layouts;
   viewMode: ViewMode;
-  //requests
+  history: History;
+  localStorageLayouts: any[];
 
+  //requests
   fetchGoogleSheet: Thunk<AppDataModel>;
-  //setters
+
+  //loaders
+  loadLocalLayouts: Action<AppDataModel>;
+
+  //managers
+  manageViewModeChange: Thunk<AppDataModel, ViewMode>;
+
+  //simple setters
   setViewMode: Action<AppDataModel, ViewMode>;
-  setCurrentLayout: Action<AppDataModel, Layout[]>;
+  setCurrentLayout: Action<AppDataModel, Layouts>;
+  setBufferLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
+
+  //listeners
+  onUndoHistory: ThunkOn<AppDataModel, never, StoreModel>;
+  onRedoHistory: ThunkOn<AppDataModel, never, StoreModel>;
+
+  //clear
+  clearLocalLayouts: Action<AppDataModel>;
+
+  //local storage
+  saveLayoutLocal: Thunk<AppDataModel>;
 }
 
 const appData: AppDataModel = {
@@ -30,7 +61,11 @@ const appData: AppDataModel = {
   availableCards: [],
   activeCards: [],
   currentLayout: defaultGridLayout,
-  viewMode: ViewMode.DEFAULT,
+  bufferLayout: defaultGridLayout,
+  viewMode: ViewMode.DISPLAY,
+  history: new History(),
+  localStorageLayouts: [],
+
   //requests
   fetchGoogleSheet: thunk(async (actions) => {
     getSheet<RawCardInfoRow>(
@@ -43,13 +78,31 @@ const appData: AppDataModel = {
     });
   }),
 
-  //setters
-  setViewMode: action((state, viewModeEnum) => {
+  //managers
+  manageViewModeChange: thunk((actions, viewModeEnum) => {
     console.log(viewModeEnum);
-    state.viewMode = viewModeEnum;
+    actions.setViewMode(viewModeEnum);
+    switch (viewModeEnum) {
+      case ViewMode.EDIT:
+        break;
+      case ViewMode.DISPLAY:
+        break;
+      case ViewMode.CYCLE:
+        break;
+      default:
+        console.log("reached default in set view mode thunk");
+    }
   }),
+  //adders
+  // addEditHistory: action((state, layouts) => {
+  //   state.history.addEvent(layouts);
+  // }),
+  //simple setters
   setCurrentLayout: action((state, layoutArr) => {
     state.currentLayout = layoutArr;
+  }),
+  setBufferLayout: action((state, layouts) => {
+    state.bufferLayout = layouts;
   }),
   setAvailableCards: action((state, cardDataArr) => {
     state.availableCards = cardDataArr;
@@ -57,6 +110,50 @@ const appData: AppDataModel = {
   setActiveCards: action((state, cardDataArr) => {
     console.log("setting cards");
     state.activeCards = cardDataArr;
+  }),
+  setViewMode: action((state, viewModeEnum) => {
+    console.log("setting cards");
+    state.viewMode = viewModeEnum;
+  }),
+  //listeners
+  onUndoHistory: thunkOn(
+    (actions, storeActions) => storeActions.historyData.setCurrentHistory,
+    async (actions, payload, { injections }) => {
+      console.log("got undo");
+      console.log(payload.payload);
+      actions.setCurrentLayout(payload.payload);
+      console.log(debug(payload));
+    }
+  ),
+  onRedoHistory: thunkOn(
+    (actions, storeActions) => storeActions.historyData.setCurrentHistory,
+    async (actions, payload, { injections }) => {
+      console.log("got redo");
+      console.log(payload.payload);
+      actions.setCurrentLayout(payload.payload);
+      console.log(debug(payload));
+    }
+  ),
+  //local storage
+  clearLocalLayouts: action((state) => {
+    localStorage.clear();
+    state.localStorageLayouts = [];
+  }),
+  loadLocalLayouts: action((state) => {
+    const layouts: any = Object.keys(localStorage)
+      .filter((k) => k.startsWith("curLayout"))
+      .map((k) => ({
+        name: k,
+        layout: JSON.parse(localStorage[k]) as Layout[],
+      }));
+    state.localStorageLayouts = layouts;
+  }),
+  saveLayoutLocal: thunk((actions, _, { getState }) => {
+    localStorage.setItem(
+      `curLayout_${localStorage.length}`,
+      JSON.stringify(getState().currentLayout)
+    );
+    actions.loadLocalLayouts();
   }),
 };
 
