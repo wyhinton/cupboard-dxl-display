@@ -1,0 +1,81 @@
+/* EDITOR PANEL */
+.editor {
+  background: lightblue;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: absolute;
+}
+
+.editor-hidden {
+  display: none;
+}
+
+.editor-minimized {
+  height: 10px;
+}
+
+/* EDITOR FORM */
+.editor-form-container {
+  height: 100%;
+  width: 100%;
+  padding-bottom: 0.25em;
+}
+
+.form-section-header {
+  color: black;
+  background-color: darkgrey;
+  width: 100%;
+  height: fit-content;
+}
+
+.form-section-header {
+  border-top: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+}
+
+.form-row {
+  width: 100%;
+  height: fit-content;
+}
+
+.form-footer{
+  border: 1px solid red; 
+}
+
+.react-draggable {
+  border-radius: 1%;
+  overflow: hidden;
+  border: 1px solid white !important;
+  transition: height 0.2s ease-in;
+}
+
+.panel-header {
+  width: 100%;
+  height: fit-content;
+  cursor: grab;
+  display: flex;
+  justify-content: space-between;
+}
+
+.panel-minimize-button {
+  height: initial;
+  /* height: 0.25em; */
+  /* height: 100%; */
+  width: 5%;
+  background-color: red;
+}
+
+.panel-minimize-button::after {
+  width: 10px;
+  height: 10px;
+  background-color: purple;
+}
+
+.react-tabs{
+  height: 100%;
+}
+
+.react-tabs__tab-panel{
+  height: 100%;
+}

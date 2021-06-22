@@ -44,6 +44,7 @@ const historyData: HistoryModel = {
   //   console.log(newLayouts);
   // }),
   addEditHistory: action((state, layouts) => {
+    console.log("adding edit history");
     console.log(layouts);
     state.history.addEditEvent(layouts);
   }),

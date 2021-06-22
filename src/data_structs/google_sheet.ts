@@ -7,4 +7,5 @@ export interface GoogleSheet<T> {
 export interface RawCardInfoRow {
   src: string;
   title: string;
+  added: string;
 }

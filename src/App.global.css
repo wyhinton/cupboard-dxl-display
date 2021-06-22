@@ -41,7 +41,9 @@ p {
 .wrapper {
   border: 1px solid #000;
 }
-
+.div{
+  height: 100%;
+}
 .react-draggable .react-resizable-handle {
   position: absolute;
   width: 20px;

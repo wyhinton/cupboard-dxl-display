@@ -1,0 +1,29 @@
+.test-card {
+  /* border: 1px solid pink; */
+}
+.test-card-preview {
+  /* border: 10px solid rgb(175, 0, 0); */
+}
+.test-card-display {
+  border: 10px solid yellow;
+}
+
+.preview {
+  transition: width 0.5s ease;
+}
+.preview-hidden {
+  display: block;
+  width: 0px;
+  height: 0px;
+}
+
+.preview-visible {
+  width: 1500px;
+  height: 500px;
+  background-color: blue;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: block;
+  transition: width 1.5s ease;
+}

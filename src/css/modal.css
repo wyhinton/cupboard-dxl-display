@@ -1,0 +1,28 @@
+.modal {
+  transition: width 0.5s ease, height 0.5s ease;
+}
+
+.modal-full-screen {
+  left: 0 !important;
+  top: 0 !important;
+  width: 100vw !important;
+  height: 90vh !important;
+}
+
+.modal-content-container :nth-child(0) div {
+  border: 1px solid red;
+  height: 100%;
+}
+.modal-backdrop-active {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000a6;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.modal-backdrop-active :nth-child(0) div {
+  border: 1px solid red !important;
+  height: 100%;
+}

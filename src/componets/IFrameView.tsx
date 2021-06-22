@@ -31,6 +31,7 @@ const IFrameView = ({ src }: { src: string }): JSX.Element => {
       onDoubleClick={() => {
         setActive(!active);
       }}
+      className={"iframe-view-container"}
       style={{ height: "100%" }}
     >
       <iframe

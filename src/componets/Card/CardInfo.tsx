@@ -4,7 +4,13 @@ import CardData from "../../data_structs/cardData";
  * Formats text from a CardData object, including it's title and source url.
  * @component
  */
-const CardInfo = ({ data }: { data: CardData }): JSX.Element => {
+const CardInfo = ({
+  data,
+  className,
+}: {
+  data: CardData;
+  className: string;
+}): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
   const containerStyle = {
     backgroundColor: "lightgrey",
@@ -33,10 +39,7 @@ const CardInfo = ({ data }: { data: CardData }): JSX.Element => {
   };
   return (
     <>
-      <div
-        style={expanded ? containerStyleExpanded : containerStyle}
-        onClick={() => setExpanded(!expanded)}
-      >
+      <div className={className} onClick={() => setExpanded(!expanded)}>
         <div style={titleStyle}>{data.title}</div>
         <a>{data.src}</a>
         <div style={{ display: expanded ? "block" : "none" }}>

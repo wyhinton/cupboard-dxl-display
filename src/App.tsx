@@ -13,8 +13,11 @@ import {
   perfTest4Cards,
 } from "./static/performance_test_layouts";
 import DropDownMenu from "./componets/DropDownMenu";
-import { ViewMode } from "./enums";
+import { AppMode } from "./enums";
 import { SelectMenuItem } from "evergreen-ui";
+import EditorPanel from "./componets/EditorPanel/EditorPanel";
+import { useKeyPress, useKeyPressEvent } from "react-use";
+
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  * @component
@@ -27,35 +30,35 @@ import { SelectMenuItem } from "evergreen-ui";
 </iframe> */
 }
 export default function App() {
+  //F8 KEY CODE
+  const f12Pressed = useKeyPress("112");
+  const viewModeState = useStoreState((state) => state.appData.appMode);
+  const toggleEditMode = () => {
+    switch (viewModeState) {
+      case AppMode.DISPLAY:
+        manageViewModeChange(AppMode.EDIT);
+        break;
+      case AppMode.EDIT:
+        manageViewModeChange(AppMode.DISPLAY);
+        break;
+      default:
+        console.log("unknown view mode passed to edit toggle");
+    }
+  };
+
+  useKeyPressEvent("F4", toggleEditMode);
+
   const fetchSheetData = useStoreActions(
     (actions) => actions.appData.fetchGoogleSheet
   );
   const loadLocalLayouts = useStoreActions(
     (actions) => actions.appData.loadLocalLayouts
   );
-
-  const clearLocalLayouts = useStoreActions(
-    (actions) => actions.appData.clearLocalLayouts
-  );
-
-  const setAvailableCards = useStoreActions(
-    (actions) => actions.appData.setActiveCards
-  );
   const manageViewModeChange = useStoreActions(
     (actions) => actions.appData.manageViewModeChange
   );
-  const saveLayoutLocal = useStoreActions(
-    (actions) => actions.appData.saveLayoutLocal
-  );
   const localStorageLayouts = useStoreState(
     (state) => state.appData.localStorageLayouts
-  );
-
-  const undoHistory = useStoreActions(
-    (actions) => actions.historyData.undoHistory
-  );
-  const redoHistory = useStoreActions(
-    (actions) => actions.historyData.undoHistory
   );
 
   const [availableLayouts, setAvailableLayouts] = useState(localStorageLayouts);
@@ -66,6 +69,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    console.log(f12Pressed);
+  }, [f12Pressed]);
+
+  useEffect(() => {
     setAvailableLayouts(localStorageLayouts);
   }, [localStorageLayouts]);
 
@@ -73,98 +80,11 @@ export default function App() {
     width: "100vw",
     height: "100vh",
   };
-  const toolbarRowStyle = {
-    display: "flex",
-    width: "100%",
-  };
+
   return (
     <>
       <Background />
-      <Toolbar>
-        <span style={toolbarRowStyle}>
-          <DropDownMenu
-            onSelect={(item) => {
-              manageViewModeChange(
-                ViewMode[item.label as unknown as keyof typeof ViewMode]
-              );
-              console.log(item);
-            }}
-            items={Object.keys(ViewMode).map(
-              (k) => ({ label: k, value: k } as SelectMenuItem)
-            )}
-            title={"View Mode"}
-          />
-          <DropDownMenu
-            onSelect={(item) => {
-              console.log(item);
-
-              // console.log(item);
-            }}
-            items={localStorageLayouts.map((l) => ({
-              label: l.name,
-              value: l.layout,
-            }))}
-            title={"Load Layout"}
-          />
-          <Button
-            onClick={() => {
-              clearLocalLayouts();
-            }}
-            text={"Clear Local"}
-          ></Button>
-          <Button
-            onClick={() => {
-              console.log("hello");
-            }}
-            text={"Return"}
-          ></Button>
-          <Button
-            onClick={() => {
-              saveLayoutLocal();
-            }}
-            text={"Save Layout"}
-          ></Button>
-
-          <Button
-            onClick={() => {
-              undoHistory();
-            }}
-            text={"Undo"}
-          ></Button>
-          <Button
-            onClick={() => {
-              redoHistory();
-            }}
-            text={"Redo"}
-          ></Button>
-        </span>
-        <span style={toolbarRowStyle}>
-          <Button
-            onClick={() => {
-              setAvailableCards(perfTest1Cards);
-            }}
-            text={"Performance Test 1 - 3D"}
-          ></Button>
-          <Button
-            onClick={() => {
-              setAvailableCards(perfTest2Cards);
-            }}
-            text={"Performance Test 2 - code"}
-          ></Button>
-          <Button
-            onClick={() => {
-              setAvailableCards(perfTest3Cards);
-            }}
-            text={"Performance Test 3 - map"}
-          ></Button>
-          <Button
-            onClick={() => {
-              setAvailableCards(perfTest4Cards);
-            }}
-            text={"Performance Test 4 - d3"}
-          ></Button>
-        </span>
-      </Toolbar>
+      <EditorPanel visible={viewModeState === AppMode.EDIT} />
       <div style={containerStyle}>
         <CardGrid />
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef } from "react";
+import React, { useEffect, useState, forwardRef, useRef } from "react";
 import Clock from "./Clock";
 import IFrameView from "./IFrameView";
 import GridLayout, { WidthProvider, Responsive } from "react-grid-layout";
@@ -6,8 +6,10 @@ import "../css/cardLayout.css";
 import ViewCard from "./Card";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../data_structs/cardData";
-import { ViewMode } from "../enums";
-import { useLongPress } from "react-use";
+import { AppMode } from "../enums";
+import TestModal from "./TestModal";
+import TestForward from "./TestForward";
+
 /**
  * Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components
  * ```
@@ -31,26 +33,17 @@ export const CardGrid = (): JSX.Element => {
     x: window.innerWidth,
     y: window.innerHeight,
   });
-  const availableHandles = ["s", "w", "e", "n", "sw", "nw", "se", "ne"];
-  // const originalLayout = getFromLS("layout") || [];
-  const viewMode = useStoreState((state) => state.appData.viewMode);
+  // const elementRef = useRef<HTMLDivElement>(null);
+  const viewMode = useStoreState((state) => state.appData.appMode);
   const currentLayout = useStoreState((state) => state.appData.currentLayout);
   const [cardContainerStyle, setCardContainerStyle] = useState({
     display: "block",
+    height: "100%",
   } as React.CSSProperties);
-  const setCurrentLayout = useStoreActions(
-    (actions) => actions.appData.setCurrentLayout
-  );
+  // const elementRef = useRef();
   // const longPressEvent = useLongPress(onLongPress,)
-  const onLongPress = () => {
-    console.log("long pressed");
-  };
-  const defaultOptions = {
-    isPreventDefault: true,
-    delay: 100,
-  };
-  const longPressEvent = useLongPress(onLongPress, defaultOptions);
-
+  const [activeCardKey, setActiveCardKey] =
+    useState<string | undefined>(undefined);
   const addEditHistory = useStoreActions(
     (actions) => actions.historyData.addEditHistory
   );
@@ -64,70 +57,105 @@ export const CardGrid = (): JSX.Element => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
   useEffect(() => {
     console.log("cards changed");
-    // console.log(availableCards);
-    // console.log(size.y);
     console.log(currentLayout);
   }, [availableCards, activeCards, currentLayout]);
 
+  // useEffect(() => {
+  //   console.log("active key chaged");
+  //   console.log(activeCardKey);
+  // }, [activeCardKey]);
+  const activeKeyRef = useRef("");
+
   useEffect(() => {
     setViewModeProps({
-      isDraggable: viewMode === ViewMode.EDIT ? true : false,
-      isResizable: viewMode === ViewMode.EDIT ? true : false,
+      isDraggable: viewMode === AppMode.EDIT ? true : false,
+      isResizable: viewMode === AppMode.EDIT ? true : false,
     });
-    viewMode == ViewMode.EDIT
+    viewMode == AppMode.EDIT
       ? setCardContainerStyle({ border: "1px solid blue" })
       : setCardContainerStyle({ border: "none" });
   }, [viewMode]);
+  const [portal, setPortal] = useState(undefined);
 
   return (
-    <ResponsiveGridLayout
-      className="layout"
-      layouts={currentLayout}
-      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-      cols={{ lg: 4, md: 4, sm: 4, xs: 4, xxs: 4 }}
-      rowHeight={size.y / 3}
-      margin={[20, 20]}
-      // resizeHandle={TestHandle}
-      resizeHandles={["se", "ne", "e", "w"]}
-      onLayoutChange={(l, lays) => addEditHistory(lays)}
-      preventCollision={false}
-      onDragStart={(layout, oldItem, newItem, placeholder, e, element) => {
-        console.log("drag started");
-        console.log(layout);
-        console.log(oldItem);
-        console.log(newItem);
-        console.log(placeholder);
-        console.log(e);
-        console.log(element);
-        const prevStyle = element.style;
-        prevStyle.border = "2px solid cyan";
-        element.style.border = "4px solid cyan";
-        console.log(prevStyle);
-      }}
-      onDragStop={(layout, oldItem, newItem, placeholder, e, element) => {
-        console.log("drag ended");
-        // console.log(item);
-        console.log(element);
-        element.style.border = "2px solid blue";
-      }}
-      {...viewModeProps}
-    >
-      <div key={"clock"} style={cardContainerStyle} {...longPressEvent}>
-        <ViewCard>
-          <Clock />
-        </ViewCard>
-      </div>
-      {activeCards.map((card: CardData, i: number) => {
-        console.log(i.toString());
-        return (
-          <div key={i.toString()} style={cardContainerStyle}>
-            <ViewCard data={card} key={i.toString()}>
-              <IFrameView src={card.src} />
-            </ViewCard>
-          </div>
-        );
-      })}
-    </ResponsiveGridLayout>
+    <div>
+      {/* <Container componentToShow={"component-a"} /> */}
+      {/* <TestModal text={"hello"}></TestModal> */}
+      <ResponsiveGridLayout
+        className="card-layout"
+        // className="layout"
+        layouts={currentLayout}
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 4, md: 4, sm: 4, xs: 4, xxs: 4 }}
+        rowHeight={size.y / 3}
+        margin={[20, 20]}
+        // resizeHandle={TestHandle}
+        resizeHandles={["se", "ne", "e", "w"]}
+        onLayoutChange={(l, lays) => addEditHistory(lays)}
+        preventCollision={false}
+        onDragStart={(layout, oldItem, newItem, placeholder, e, element) => {
+          console.log("drag started");
+          console.log(layout);
+          console.log(oldItem);
+          console.log(newItem);
+          console.log(placeholder);
+          console.log(e);
+          console.log(element);
+          const prevStyle = element.style;
+          prevStyle.border = "2px solid cyan";
+          element.style.border = "4px solid cyan";
+          console.log(prevStyle);
+        }}
+        onDragStop={(layout, oldItem, newItem, placeholder, e, element) => {
+          console.log("drag ended");
+          // console.log(item);
+          console.log(element);
+          element.style.border = "2px solid blue";
+        }}
+        {...viewModeProps}
+      >
+        <div key={"clock"} style={cardContainerStyle}>
+          <ViewCard>
+            <Clock />
+          </ViewCard>
+        </div>
+        {activeCards.map((card: CardData, i: number) => {
+          // console.log(i.toString());
+          return (
+            <div
+              key={i.toString()}
+              style={cardContainerStyle}
+              onMouseUp={(e) => {
+                console.log(e.target);
+                console.log(i);
+              }}
+              onMouseDown={(e) => {
+                console.log(e);
+              }}
+            >
+              <ViewCard
+                data={card}
+                key={i.toString()}
+                testkey={i.toString()}
+                setModal={() => {
+                  // setActiveCardKey(i.toString());
+                  activeKeyRef.current = i.toString();
+                }}
+                activeKey={activeKeyRef}
+              >
+                {activeCardKey == i.toString() ? (
+                  <TestModal text={"hello"}></TestModal>
+                ) : (
+                  <div></div>
+                )}
+
+                <IFrameView src={card.src} />
+              </ViewCard>
+            </div>
+          );
+        })}
+      </ResponsiveGridLayout>
+    </div>
   );
 };
 // react-draggable cssTransforms react-resizable react-grid-item

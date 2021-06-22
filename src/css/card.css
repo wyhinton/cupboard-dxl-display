@@ -1,0 +1,36 @@
+/* CARD CONTENT */
+.card {
+  border-radius: 0.5em;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+/* .card :nth-child(1) div {
+  border: 1px solid red;
+  height: 100%;
+} */
+
+.card-edit {
+  border: 1px solid blue;
+  box-shadow: none;
+}
+.card-display {
+  display: flex;
+  border: 1px solid white;
+  box-shadow: 0 8px 32px 0 rgba(49, 49, 49, 0.37);
+}
+
+.card-preview {
+  border: 3px solid red;
+}
+
+/* CARD INFO */
+.info-display {
+  height: 0;
+  overflow: hidden;
+}
+/* CARD INFO */
+.info-preview {
+  height: 10%;
+}

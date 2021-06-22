@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Particles from "react-particles-js";
 import { useStoreState } from "../hooks";
-import { ViewMode } from "../enums";
+import { AppMode } from "../enums";
 import GridLines from "react-gridlines";
 /**
  * Background with particle animation.
@@ -9,7 +9,7 @@ import GridLines from "react-gridlines";
  */
 
 const Background = (): JSX.Element => {
-  const viewMode = useStoreState((state) => state.appData.viewMode);
+  const viewMode = useStoreState((state) => state.appData.appMode);
   const [size, setSize] = useState({
     x: window.innerWidth,
     y: window.innerHeight,
@@ -19,7 +19,7 @@ const Background = (): JSX.Element => {
     backgroundColor: "gray",
   } as React.CSSProperties);
   useEffect(() => {
-    const isEditMode = viewMode == ViewMode.EDIT;
+    const isEditMode = viewMode == AppMode.EDIT;
 
     const style = {
       position: "absolute",
@@ -36,7 +36,7 @@ const Background = (): JSX.Element => {
 
   return (
     <div style={backgroundStyle}>
-      {viewMode === ViewMode.EDIT ? (
+      {viewMode === AppMode.EDIT ? (
         <GridLines
           cellWidth={size.x / 50}
           strokeWidth={2}

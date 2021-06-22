@@ -12,9 +12,11 @@ import CardData from "../data_structs/cardData";
 import type { GoogleSheet, RawCardInfoRow } from "../data_structs/google_sheet";
 import { Layouts, Layout } from "react-grid-layout";
 import defaultGridLayout from "../static/default_layout";
-import { ViewMode } from "../enums";
+import { AppMode } from "../enums";
 import History from "../data_structs/history";
 import { StoreModel } from "./index";
+import type { HtmlPortalNode } from "react-reverse-portal";
+import { Component } from "evergreen-ui/node_modules/@types/react";
 /**
  * Core app model
  * @param
@@ -25,10 +27,9 @@ export interface AppDataModel {
   activeCards: CardData[];
   currentLayout: Layouts;
   bufferLayout: Layouts;
-  viewMode: ViewMode;
+  appMode: AppMode;
   history: History;
   localStorageLayouts: any[];
-
   //requests
   fetchGoogleSheet: Thunk<AppDataModel>;
 
@@ -36,15 +37,14 @@ export interface AppDataModel {
   loadLocalLayouts: Action<AppDataModel>;
 
   //managers
-  manageViewModeChange: Thunk<AppDataModel, ViewMode>;
+  manageViewModeChange: Thunk<AppDataModel, AppMode>;
 
   //simple setters
-  setViewMode: Action<AppDataModel, ViewMode>;
+  setAppMode: Action<AppDataModel, AppMode>;
   setCurrentLayout: Action<AppDataModel, Layouts>;
   setBufferLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
-
   //listeners
   onUndoHistory: ThunkOn<AppDataModel, never, StoreModel>;
   onRedoHistory: ThunkOn<AppDataModel, never, StoreModel>;
@@ -62,7 +62,7 @@ const appData: AppDataModel = {
   activeCards: [],
   currentLayout: defaultGridLayout,
   bufferLayout: defaultGridLayout,
-  viewMode: ViewMode.DISPLAY,
+  appMode: AppMode.DISPLAY,
   history: new History(),
   localStorageLayouts: [],
 
@@ -81,13 +81,13 @@ const appData: AppDataModel = {
   //managers
   manageViewModeChange: thunk((actions, viewModeEnum) => {
     console.log(viewModeEnum);
-    actions.setViewMode(viewModeEnum);
+    actions.setAppMode(viewModeEnum);
     switch (viewModeEnum) {
-      case ViewMode.EDIT:
+      case AppMode.EDIT:
         break;
-      case ViewMode.DISPLAY:
+      case AppMode.DISPLAY:
         break;
-      case ViewMode.CYCLE:
+      case AppMode.CYCLE:
         break;
       default:
         console.log("reached default in set view mode thunk");
@@ -105,16 +105,18 @@ const appData: AppDataModel = {
     state.bufferLayout = layouts;
   }),
   setAvailableCards: action((state, cardDataArr) => {
+    console.log("setting available cards");
     state.availableCards = cardDataArr;
   }),
   setActiveCards: action((state, cardDataArr) => {
-    console.log("setting cards");
+    console.log("setting active cards");
     state.activeCards = cardDataArr;
   }),
-  setViewMode: action((state, viewModeEnum) => {
-    console.log("setting cards");
-    state.viewMode = viewModeEnum;
+  setAppMode: action((state, viewModeEnum) => {
+    console.log("setting view mode");
+    state.appMode = viewModeEnum;
   }),
+
   //listeners
   onUndoHistory: thunkOn(
     (actions, storeActions) => storeActions.historyData.setCurrentHistory,
