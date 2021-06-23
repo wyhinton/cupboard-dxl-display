@@ -1,6 +1,7 @@
 import { action, Action, thunk, Thunk, thunkOn, ThunkOn } from "easy-peasy";
 import History from "../data_structs/history";
 import { Layouts } from "react-grid-layout";
+
 export interface HistoryModel {
   history: History;
   addEditHistory: Action<HistoryModel, Layouts>;
@@ -46,6 +47,8 @@ const historyData: HistoryModel = {
   addEditHistory: action((state, layouts) => {
     console.log("adding edit history");
     console.log(layouts);
+    const test = JSON.stringify(layouts);
+    console.log(test);
     state.history.addEditEvent(layouts);
   }),
 };

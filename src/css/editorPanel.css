@@ -1,9 +1,39 @@
-/* EDITOR PANEL */
-.editor {
-  background: lightblue;
-  display: flex;
-  flex-direction: column;
+#editor-panel-container {
+  position: absolute;
+  z-index: 100;
+  width: 100vw;
   height: 100vh;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+/* EDITOR DRAGGABLE */
+.editor-panel {
+  pointer-events: all;
+  overflow: hidden;
+  background-color: #2d2d2d;
+  border: 1px solid white;
+  transition: width 0.5s, height 0.5s;
+  color: white;
+}
+.editor-panel-minimized {
+  width: 10rem;
+  height: 4rem;
+}
+.editor-panel-full {
+  width: 30vw;
+  height: 500px;
+}
+.hidden {
+  display: none;
+}
+
+.editor {
+  /* background: lightblue; */
+  /* display: flex; */
+  flex-direction: column;
+  /* height: 100vh; */
   position: absolute;
 }
 
@@ -39,8 +69,8 @@
   height: fit-content;
 }
 
-.form-footer{
-  border: 1px solid red; 
+.form-footer {
+  border: 1px solid red;
 }
 
 .react-draggable {
@@ -50,9 +80,14 @@
   transition: height 0.2s ease-in;
 }
 
+/* .react-draggable :nth-child(1) div {
+  height: 100%;
+  background-color: purple;
+} */
+
 .panel-header {
   width: 100%;
-  height: fit-content;
+  height: fit-content !important;
   cursor: grab;
   display: flex;
   justify-content: space-between;
@@ -72,10 +107,12 @@
   background-color: purple;
 }
 
-.react-tabs{
+/* TABS */
+.react-tabs {
   height: 100%;
 }
 
-.react-tabs__tab-panel{
+.react-tabs__tab-panel {
   height: 100%;
+  padding: 1em;
 }

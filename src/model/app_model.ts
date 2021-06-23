@@ -7,16 +7,18 @@ import {
   ThunkOn,
   debug,
 } from "easy-peasy";
-import GetSheetDone from "get-sheet-done";
+import { getSheet } from "../utils";
 import CardData from "../data_structs/cardData";
-import type { GoogleSheet, RawCardInfoRow } from "../data_structs/google_sheet";
+import LayoutData from "../data_structs/layout_data";
+import type {
+  RawCardInfoRow,
+  RawLayoutRow,
+} from "../data_structs/google_sheet";
 import { Layouts, Layout } from "react-grid-layout";
 import defaultGridLayout from "../static/default_layout";
 import { AppMode } from "../enums";
 import History from "../data_structs/history";
 import { StoreModel } from "./index";
-import type { HtmlPortalNode } from "react-reverse-portal";
-import { Component } from "evergreen-ui/node_modules/@types/react";
 /**
  * Core app model
  * @param
@@ -36,6 +38,8 @@ export interface AppDataModel {
   //loaders
   loadLocalLayouts: Action<AppDataModel>;
 
+  //listeners
+  onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
   //managers
   manageViewModeChange: Thunk<AppDataModel, AppMode>;
 
@@ -67,14 +71,21 @@ const appData: AppDataModel = {
   localStorageLayouts: [],
 
   //requests
-  fetchGoogleSheet: thunk(async (actions) => {
+  fetchGoogleSheet: thunk(async (actions, _, { getState }) => {
     getSheet<RawCardInfoRow>(
       "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
       1
     ).then((sheet) => {
       const cards = sheet.data.map((c) => new CardData(c));
+      console.log(cards);
       actions.setAvailableCards(cards);
-      actions.setActiveCards(cards);
+      const startCards = Array.from(Array(10).keys()).map((i) => {
+        const clone = getState().availableCards[0].clone();
+        console.log(clone.instanceId);
+        return clone;
+      });
+      console.log(startCards);
+      actions.setActiveCards(startCards);
     });
   }),
 
@@ -93,11 +104,6 @@ const appData: AppDataModel = {
         console.log("reached default in set view mode thunk");
     }
   }),
-  //adders
-  // addEditHistory: action((state, layouts) => {
-  //   state.history.addEvent(layouts);
-  // }),
-  //simple setters
   setCurrentLayout: action((state, layoutArr) => {
     state.currentLayout = layoutArr;
   }),
@@ -118,6 +124,27 @@ const appData: AppDataModel = {
   }),
 
   //listeners
+  onSwapCardContent: thunkOn(
+    (actions, storeActions) => storeActions.layoutsData.swapCardContent,
+    async (actions, payload, { getState }) => {
+      console.log("got swap card content");
+      console.log(payload.payload);
+      console.log(getState().activeCards);
+      const newCards = getState().activeCards.map((c) => {
+        if (c.instanceId === payload.payload.targetId) {
+          const newSource = getState().availableCards.filter(
+            (c) => c.sourceId === payload.payload.sourceId.split("_")[0]
+          )[0];
+          console.log(newSource);
+          return newSource;
+        } else {
+          return c;
+        }
+      });
+      actions.setActiveCards(newCards);
+      console.log(debug(payload));
+    }
+  ),
   onUndoHistory: thunkOn(
     (actions, storeActions) => storeActions.historyData.setCurrentHistory,
     async (actions, payload, { injections }) => {
@@ -158,21 +185,5 @@ const appData: AppDataModel = {
     actions.loadLocalLayouts();
   }),
 };
-
-function getSheet<T>(key: string, sheetNum: number): Promise<GoogleSheet<T>> {
-  const promise = new Promise<GoogleSheet<T>>(function (resolve, reject) {
-    GetSheetDone.labeledCols(key, sheetNum)
-      .then((sheet: GoogleSheet<T>) => {
-        console.log(sheet);
-        resolve(sheet);
-      })
-      .catch((err: unknown) => {
-        console.error(
-          `Error: ${err} fetching DOC_KEY ${key}, sheet number ${sheetNum}`
-        );
-      });
-  });
-  return promise;
-}
 
 export default appData;

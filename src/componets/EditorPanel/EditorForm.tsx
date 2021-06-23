@@ -12,6 +12,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import PerformanceTests from "./EditorSection/PerformanceTests";
 import LayoutManager from "./EditorSection/LayoutManger";
+import LayoutsTabel from "./LayoutsTable";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
 const EditorForm = (): JSX.Element => {
@@ -19,23 +20,21 @@ const EditorForm = (): JSX.Element => {
     <div className="editor-form-container">
       <Tabs>
         <TabList>
-          <Tab>Performance Tests</Tab>
           <Tab>Content</Tab>
           <Tab>Layouts</Tab>
+          <Tab>Performance Tests</Tab>
         </TabList>
-        <TabPanel>
-          <PerformanceTests />
-        </TabPanel>
         <TabPanel>
           <ContentTable />
         </TabPanel>
         <TabPanel>
+          <LayoutsTabel />
           <LayoutManager />
         </TabPanel>
+        <TabPanel>
+          <PerformanceTests />
+        </TabPanel>
       </Tabs>
-      <FormFooter>
-
-      </FormFooter>
     </div>
   );
 };
@@ -75,6 +74,3 @@ const FormFooter = ({ children }: FormRowProps) => {
 };
 
 export default EditorForm;
-
-
-

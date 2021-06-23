@@ -14,6 +14,7 @@ function Clock(): JSX.Element {
     backdropFilter: "blur(4px)",
     height: "100%",
     padding: ".5em",
+    width: "100%",
     // textSize:
     fontSize: "48pt",
     fontWeight: 600,

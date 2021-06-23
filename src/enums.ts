@@ -9,3 +9,8 @@ export enum CardView {
   PREVIEW = "PREVIEW",
   FULL_SCREEN = "FULL_SCREEN",
 }
+
+export enum DragType {
+  CARD_TABLE_DATA = "CARD_TABLE_DATA",
+  DISPLAY_CARD = "DISPLAY_CARD",
+}

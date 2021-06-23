@@ -5,6 +5,7 @@
   width: 100%;
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
 }
 /* .card :nth-child(1) div {
   border: 1px solid red;
@@ -16,7 +17,6 @@
   box-shadow: none;
 }
 .card-display {
-  display: flex;
   border: 1px solid white;
   box-shadow: 0 8px 32px 0 rgba(49, 49, 49, 0.37);
 }
@@ -27,6 +27,11 @@
 
 /* CARD INFO */
 .info-display {
+  height: 0;
+  overflow: hidden;
+}
+
+.info-hidden {
   height: 0;
   overflow: hidden;
 }

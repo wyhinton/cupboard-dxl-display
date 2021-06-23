@@ -1,37 +1,24 @@
 import React, { useEffect, useState } from "react";
-// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import "./App.global.css";
 import { useStoreState, useStoreActions } from "./hooks";
 import CardGrid from "./componets/CardLayout";
-import Toolbar from "./componets/Toolbar";
-import Button from "./componets/Button";
 import Background from "./componets/Background";
-import {
-  perfTest1Cards,
-  perfTest2Cards,
-  perfTest3Cards,
-  perfTest4Cards,
-} from "./static/performance_test_layouts";
-import DropDownMenu from "./componets/DropDownMenu";
 import { AppMode } from "./enums";
-import { SelectMenuItem } from "evergreen-ui";
-import EditorPanel from "./componets/EditorPanel/EditorPanel";
 import { useKeyPress, useKeyPressEvent } from "react-use";
+import {
+  DropResult,
+  DragDropContext,
+  DraggableLocation,
+} from "react-beautiful-dnd";
+import EditorPanel from "./componets/EditorPanel/EditorPanel";
+import type { SwapInfo } from "./model/layouts_model";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  * @component
  */
 
-{
-  /* <iframe height="265" style="width: 100%;" scrolling="no" title="Leaflet - GeoJSON Point Stress Test" src="https://codepen.io/jangajack/embed/GEYywd?height=265&theme-id=light&default-tab=js,result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href='https://codepen.io/jangajack/embed/GEYywd?height=265&theme-id=light&default-tab=js,result'>Leaflet - GeoJSON Point Stress Test</a> by JS
-  (<a href='https://codepen.io/jangajack'>@jangajack</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe> */
-}
 export default function App() {
-  //F8 KEY CODE
-  const f12Pressed = useKeyPress("112");
   const viewModeState = useStoreState((state) => state.appData.appMode);
   const toggleEditMode = () => {
     switch (viewModeState) {
@@ -48,10 +35,13 @@ export default function App() {
 
   useKeyPressEvent("F4", toggleEditMode);
 
-  const fetchSheetData = useStoreActions(
+  const fetchCardsSheetAction = useStoreActions(
     (actions) => actions.appData.fetchGoogleSheet
   );
-  const loadLocalLayouts = useStoreActions(
+  const fetchLayoutSheetAction = useStoreActions(
+    (actions) => actions.layoutsData.fetchLayoutDataGoogleSheet
+  );
+  const loadLocalLayoutsAction = useStoreActions(
     (actions) => actions.appData.loadLocalLayouts
   );
   const manageViewModeChange = useStoreActions(
@@ -61,16 +51,17 @@ export default function App() {
     (state) => state.appData.localStorageLayouts
   );
 
+  const swapCardDataAction = useStoreActions(
+    (actions) => actions.layoutsData.swapCardContent
+  );
+
   const [availableLayouts, setAvailableLayouts] = useState(localStorageLayouts);
   // const [localStorageLayouts, setLocalStorageLayouts] = useState(Object.entries<[K in keyof T]: [K, T[K]];>(localStorage).filter(a,[k,v]=>{if k.startsWith("curLayout"){return true}}));
   useEffect(() => {
-    fetchSheetData();
-    loadLocalLayouts();
+    fetchLayoutSheetAction();
+    fetchCardsSheetAction();
+    loadLocalLayoutsAction();
   }, []);
-
-  useEffect(() => {
-    console.log(f12Pressed);
-  }, [f12Pressed]);
 
   useEffect(() => {
     setAvailableLayouts(localStorageLayouts);
@@ -81,13 +72,69 @@ export default function App() {
     height: "100vh",
   };
 
+  const onChange = (
+    source: DraggableLocation,
+    destination: DraggableLocation
+  ) => {
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return true;
+    }
+    return false;
+  };
+  // export const deleteTask = (data, { droppableId, index }) => {
+  //   data = clone(data);
+  //   data.columns[droppableId].taskIds.splice(index, 1);
+  //   return data;
+  // };
+  // /**
+  //  *
+  //  */
+  // export const addTask = (data, { droppableId, index }, taskId) => {
+  //   data = clone(data);
+  //   data.columns[droppableId].taskIds.splice(index, 0, taskId);
+  //   return data;
+  // };
+  const onDragEnd = (res: DropResult) => {
+    console.log(res);
+    const { source, destination, draggableId } = res;
+    console.log(source, destination, draggableId);
+    console.log(
+      `dragged from ${draggableId} to ${
+        destination?.droppableId
+      } current title: ${"yes"}`
+    );
+    if (!destination) return;
+    swapCardDataAction({
+      sourceId: draggableId,
+      targetId: destination.droppableId,
+    });
+    // if (onChange(source, destination)) return;
+
+    // if (res.type === "TASK") {
+    //   let newData = deleteTask(data, source);
+    //   newData = addTask(newData, destination, draggableId);
+    //   setData(newData);
+    // }
+    // if (res.type === "COLUMN") {
+    //   let columnOrder = [...data.columnOrder];
+    //   columnOrder.splice(source.index, 1);
+    //   columnOrder.splice(destination.index, 0, draggableId);
+    //   data.columnOrder = columnOrder;
+    //   setData({ ...data });
+  };
+
   return (
     <>
       <Background />
-      <EditorPanel visible={viewModeState === AppMode.EDIT} />
-      <div style={containerStyle}>
-        <CardGrid />
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <EditorPanel visible={viewModeState === AppMode.EDIT} />
+        <div style={containerStyle}>
+          <CardGrid />
+        </div>
+      </DragDropContext>
     </>
   );
 }
