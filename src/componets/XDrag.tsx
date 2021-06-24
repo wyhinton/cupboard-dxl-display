@@ -2,6 +2,7 @@ import React, { FC, ReactNode } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
 
 interface IXDrag extends Omit<DraggableProps, "children"> {
+  
   className?: string;
   children: ReactNode;
   dragAll?: boolean;
@@ -10,10 +11,13 @@ interface IXDrag extends Omit<DraggableProps, "children"> {
 const XDrag: FC<IXDrag> = ({ className, children, dragAll, ...props }) => {
   console.log(React.isValidElement(children));
   console.log(props);
+  // console.log();
+  // console.log(props.dragg);
   if (!React.isValidElement(children)) return <div />;
   return (
     <Draggable {...props}>
-      {(provided) => {
+      {(provided, snapshot) => {
+        const test = () =>{console.log(snapshot.isDragging);}
         const dragHandleProps = dragAll ? provided.dragHandleProps : {};
         return (
           <div

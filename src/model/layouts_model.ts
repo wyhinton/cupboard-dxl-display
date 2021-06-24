@@ -77,7 +77,7 @@ const layoutsData: LayoutsModel = {
 
       console.log(activeCards);
       const cardToChange = activeCards.filter(
-        (c) => c.instanceId === swapInfo.targetId
+        (c) => c.sourceId === swapInfo.targetId
       );
       actions.updateLayout(swapInfo);
       console.log(cardToChange);
@@ -98,30 +98,14 @@ const layoutsData: LayoutsModel = {
       console.log("got swap set active cards at layout model");
       console.log(payload.payload);
       console.log(getState().activeLayout?.layout);
-      const newIds = payload.payload.map((val) => {
-        console.log(val);
-        console.log(val.instanceId);
-        return val.instanceId;
-      });
+      // const newIds = payload.payload.map((val) => {
+      //   console.log(val);
+      //   console.log(val.sourceId);
+      //   return val.sourceId;
+      // });
 
       const curActiveLayout = getState().activeLayout?.layout;
       console.log(curActiveLayout);
-      //   if (curActiveLayout) {
-      //     const oldIds = curActiveLayout.lg.map((v) => v.i);
-      //     console.log(newIds);
-      //     console.log(oldIds);
-      //     const missing = oldIds.filter(
-      //       (item) => newIds.indexOf(item) < 0 && item !== "clock"
-      //     );
-      //     console.log(missing);
-      //     for (const [k, v] of Object.entries(curActiveLayout)) {
-      //       console.log(v);
-      //       //   let newval = v.map(vv=>{
-      //       //       if
-      //       //   })
-      //       console.log(k);
-      //     }
-      //   }
     }
   ),
 };

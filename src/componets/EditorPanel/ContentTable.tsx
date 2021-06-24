@@ -18,7 +18,7 @@ const ContentTable = () => {
           {availableCards.map((card, i) => {
             console.log(i);
             return (
-              <XDrag draggableId={card.instanceId} index={i} key={i.toString()}>
+              <XDrag draggableId={card.sourceId} index={i} key={i.toString()}>
                 <ContentItem card={card} index={i} />
               </XDrag>
             );

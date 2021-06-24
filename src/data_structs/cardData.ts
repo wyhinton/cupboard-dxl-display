@@ -8,7 +8,7 @@ export default class CardData {
   readonly title: string;
   readonly added?: Date;
   readonly sourceId: string;
-  instanceId!: string;
+  // instanceId!: string;
   static idCountMap: Map<string, number> = new Map();
 
   constructor(row: RawCardInfoRow) {
@@ -16,7 +16,8 @@ export default class CardData {
     this.src = row.src;
     this.title = row.title;
     this.added = new Date(row.added);
-    this.sourceId = row.sourceid;
+    this.sourceId = row.src;
+    // this.sourceId = row.sourceid;
     console.log(CardData.idCountMap.has(row.sourceid));
     // console.log(row.id);
     if (CardData.idCountMap.has(row.sourceid)) {
@@ -31,12 +32,12 @@ export default class CardData {
     //   console.log(val);
     // })
     console.log(Object.keys(CardData.idCountMap));
-    const idCount = CardData.idCountMap.get(row.sourceid);
-    if (idCount) {
-      this.instanceId = row.sourceid.concat("_", idCount.toString());
-    } else {
-      this.instanceId = "FAULTY_INSTANCE_ID";
-    }
+    // const idCount = CardData.idCountMap.get(row.sourceid);
+    // if (idCount) {
+    //   this.instanceId = row.sourceid.concat("_", idCount.toString());
+    // } else {
+    //   this.instanceId = "FAULTY_INSTANCE_ID";
+    // }
   }
   clone(): CardData {
     const test = {};
@@ -53,9 +54,9 @@ export default class CardData {
     const newobj: CardData = Object.assign(test, this);
     const newInstanceId = CardData.idCountMap.get(this.sourceId);
 
-    if (newInstanceId) {
-      newobj.instanceId = this.sourceId.concat("_", newInstanceId.toString());
-    }
+    // if (newInstanceId) {
+    //   newobj.instanceId = this.sourceId.concat("_", newInstanceId.toString());
+    // }
     console.log(newobj);
     return newobj;
   }

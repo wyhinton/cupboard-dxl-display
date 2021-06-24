@@ -117,8 +117,7 @@ export const CardGrid = (): JSX.Element => {
             return (
               <div
                 //key provided here is the means of accesing a unique identifier for the cards
-                // key={i.toString()}
-                key={card.instanceId}
+                key={card.sourceId}
                 style={cardContainerStyle}
                 onMouseUp={(e) => {
                   console.log(e.target);
@@ -128,7 +127,7 @@ export const CardGrid = (): JSX.Element => {
                   console.log(e);
                 }}
               >
-                <IXDrop key={i} droppableId={card.instanceId}>
+                <IXDrop key={i} droppableId={card.sourceId}>
                   <ViewCard
                     data={card}
                     key={i.toString()}

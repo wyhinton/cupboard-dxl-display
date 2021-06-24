@@ -28,7 +28,6 @@ export interface AppDataModel {
   availableCards: CardData[];
   activeCards: CardData[];
   currentLayout: Layouts;
-  bufferLayout: Layouts;
   appMode: AppMode;
   history: History;
   localStorageLayouts: any[];
@@ -46,7 +45,6 @@ export interface AppDataModel {
   //simple setters
   setAppMode: Action<AppDataModel, AppMode>;
   setCurrentLayout: Action<AppDataModel, Layouts>;
-  setBufferLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
   //listeners
@@ -65,7 +63,6 @@ const appData: AppDataModel = {
   availableCards: [],
   activeCards: [],
   currentLayout: defaultGridLayout,
-  bufferLayout: defaultGridLayout,
   appMode: AppMode.DISPLAY,
   history: new History(),
   localStorageLayouts: [],
@@ -79,11 +76,7 @@ const appData: AppDataModel = {
       const cards = sheet.data.map((c) => new CardData(c));
       console.log(cards);
       actions.setAvailableCards(cards);
-      const startCards = Array.from(Array(10).keys()).map((i) => {
-        const clone = getState().availableCards[0].clone();
-        console.log(clone.instanceId);
-        return clone;
-      });
+      const startCards = cards;
       console.log(startCards);
       actions.setActiveCards(startCards);
     });
@@ -107,9 +100,6 @@ const appData: AppDataModel = {
   setCurrentLayout: action((state, layoutArr) => {
     state.currentLayout = layoutArr;
   }),
-  setBufferLayout: action((state, layouts) => {
-    state.bufferLayout = layouts;
-  }),
   setAvailableCards: action((state, cardDataArr) => {
     console.log("setting available cards");
     state.availableCards = cardDataArr;
@@ -131,9 +121,9 @@ const appData: AppDataModel = {
       console.log(payload.payload);
       console.log(getState().activeCards);
       const newCards = getState().activeCards.map((c) => {
-        if (c.instanceId === payload.payload.targetId) {
+        if (c.sourceId === payload.payload.targetId) {
           const newSource = getState().availableCards.filter(
-            (c) => c.sourceId === payload.payload.sourceId.split("_")[0]
+            (c) => c.sourceId === payload.payload.sourceId
           )[0];
           console.log(newSource);
           return newSource;
