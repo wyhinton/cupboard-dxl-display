@@ -1,0 +1,81 @@
+.content-row-inactive {
+  color: darkgrey;
+}
+.content-row-active {
+  color: red;
+}
+
+tr {
+  border-bottom: 1px solid red;
+  height: 1em;
+  max-width: 100%;
+  min-width: 100%;
+}
+
+thead {
+  border-bottom: 2px solid red;
+}
+
+.table-container {
+  height: fit-content;
+  /* overflow: scroll; */
+}
+table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  table-layout: fixed;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.row-favicon {
+  padding: 0.5em;
+}
+
+th {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  text-align: center;
+  height: 3em;
+}
+
+td {
+  text-align: left;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+th:nth-child(1) {
+  text-align: left;
+  width: 30%;
+  width: 10rem;
+}
+th:nth-child(2) {
+  max-width: 7em;
+  min-width: 7em;
+}
+
+td:nth-child(1) {
+  width: 40%;
+}
+td:nth-child(2) {
+  text-align: center;
+  width: 20%;
+}
+
+td:nth-child(3) {
+  width: 50%;
+}
+td:nth-child(4) {
+  width: 10%;
+  text-align: center;
+}
+td:nth-child(5) {
+  width: 10%;
+  text-align: center;
+}

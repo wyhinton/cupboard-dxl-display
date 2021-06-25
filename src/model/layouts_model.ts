@@ -98,12 +98,6 @@ const layoutsData: LayoutsModel = {
       console.log("got swap set active cards at layout model");
       console.log(payload.payload);
       console.log(getState().activeLayout?.layout);
-      // const newIds = payload.payload.map((val) => {
-      //   console.log(val);
-      //   console.log(val.sourceId);
-      //   return val.sourceId;
-      // });
-
       const curActiveLayout = getState().activeLayout?.layout;
       console.log(curActiveLayout);
     }

@@ -15,8 +15,8 @@ export default class LayoutData {
   }
   swap_card(swapInfo: SwapInfo) {
     for (const [k, v] of Object.entries(this.layout)) {
-      console.log(v);
-      console.log(k);
+      // console.log(v);
+      // console.log(k);
       v.forEach((layoutVal, i) => {
         if (layoutVal.i == swapInfo.targetId) {
           v[i].i = swapInfo.sourceId;
@@ -24,5 +24,8 @@ export default class LayoutData {
       });
       this.layout[k] = v;
     }
+  }
+  sources(): string[] {
+    return this.layout.lg.map((l) => l.i);
   }
 }

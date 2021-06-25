@@ -10,6 +10,7 @@ export interface RawCardInfoRow {
   added: string;
   sourceid: string;
   author: string;
+  interaction: string;
 }
 
 export interface RawLayoutRow {

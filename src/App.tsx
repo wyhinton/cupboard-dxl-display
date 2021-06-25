@@ -98,6 +98,7 @@ export default function App() {
   //   return data;
   // };
   const onDragEnd = (res: DropResult) => {
+    if (res.destination?.droppableId == res.source?.droppableId) return;
     console.log(res);
     const { source, destination, draggableId } = res;
     console.log(source, destination, draggableId);
@@ -107,23 +108,10 @@ export default function App() {
       } current title: ${"yes"}`
     );
     if (!destination) return;
-    swapCardDataAction({
-      sourceId: draggableId,
-      targetId: destination.droppableId,
-    });
-    // if (onChange(source, destination)) return;
-
-    // if (res.type === "TASK") {
-    //   let newData = deleteTask(data, source);
-    //   newData = addTask(newData, destination, draggableId);
-    //   setData(newData);
-    // }
-    // if (res.type === "COLUMN") {
-    //   let columnOrder = [...data.columnOrder];
-    //   columnOrder.splice(source.index, 1);
-    //   columnOrder.splice(destination.index, 0, draggableId);
-    //   data.columnOrder = columnOrder;
-    //   setData({ ...data });
+    // swapCardDataAction({
+    //   sourceId: draggableId,
+    //   targetId: destination.droppableId,
+    // });
   };
 
   return (

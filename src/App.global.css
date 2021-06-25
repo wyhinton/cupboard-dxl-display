@@ -68,6 +68,10 @@ p {
   display: flex;
 }
 
+.react-grid-item div {
+  width: 100%;
+}
+
 .react-grid-item.react-grid-placeholder {
   background: green;
   opacity: 0.2;

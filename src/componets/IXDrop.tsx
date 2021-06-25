@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import { Droppable, DroppableProps } from "react-beautiful-dnd";
 
 interface IXDrop extends Omit<DroppableProps, "children"> {
@@ -8,7 +8,10 @@ interface IXDrop extends Omit<DroppableProps, "children"> {
 
 const XDrop: FC<IXDrop> = ({ children, className, ...props }) => {
   // console.log();
-
+  useEffect(() => {
+    console.log(props);
+  }, [props]);
+  // console.log(props);
   return (
     <Droppable {...props}>
       {(provided, snapshot) => {

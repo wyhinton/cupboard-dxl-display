@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import DropDownMenu from "../../DropDownMenu";
-import Button from "../../Button";
+import DropDownMenu from "../../Util/DropDownMenu";
+import Button from "../../Util/Button";
 import { useStoreState, useStoreActions } from "../../../hooks";
 import { AppMode } from "../../../enums";
 import { SelectMenuItem } from "evergreen-ui";

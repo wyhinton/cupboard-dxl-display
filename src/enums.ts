@@ -14,3 +14,8 @@ export enum DragType {
   CARD_TABLE_DATA = "CARD_TABLE_DATA",
   DISPLAY_CARD = "DISPLAY_CARD",
 }
+
+export enum InteractionType {
+  ACTIVE = "ACTIVE",
+  STATIC = "STATIC",
+}

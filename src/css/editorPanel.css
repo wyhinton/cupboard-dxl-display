@@ -113,6 +113,8 @@
 }
 
 .react-tabs__tab-panel {
+  box-sizing: border-box;
   height: 100%;
   padding: 1em;
+  overflow: scroll;
 }

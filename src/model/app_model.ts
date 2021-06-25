@@ -9,11 +9,7 @@ import {
 } from "easy-peasy";
 import { getSheet } from "../utils";
 import CardData from "../data_structs/cardData";
-import LayoutData from "../data_structs/layout_data";
-import type {
-  RawCardInfoRow,
-  RawLayoutRow,
-} from "../data_structs/google_sheet";
+import type { RawCardInfoRow } from "../data_structs/google_sheet";
 import { Layouts, Layout } from "react-grid-layout";
 import defaultGridLayout from "../static/default_layout";
 import { AppMode } from "../enums";
@@ -31,6 +27,7 @@ export interface AppDataModel {
   appMode: AppMode;
   history: History;
   localStorageLayouts: any[];
+
   //requests
   fetchGoogleSheet: Thunk<AppDataModel>;
 
@@ -39,6 +36,7 @@ export interface AppDataModel {
 
   //listeners
   onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
+  onSetActiveLayout: ThunkOn<AppDataModel, never, StoreModel>;
   //managers
   manageViewModeChange: Thunk<AppDataModel, AppMode>;
 
@@ -73,12 +71,10 @@ const appData: AppDataModel = {
       "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
       1
     ).then((sheet) => {
+      //transform raw row data into cardData class members
       const cards = sheet.data.map((c) => new CardData(c));
-      console.log(cards);
+      //set our available pool of cards
       actions.setAvailableCards(cards);
-      const startCards = cards;
-      console.log(startCards);
-      actions.setActiveCards(startCards);
     });
   }),
 
@@ -106,6 +102,7 @@ const appData: AppDataModel = {
   }),
   setActiveCards: action((state, cardDataArr) => {
     console.log("setting active cards");
+    console.log(cardDataArr);
     state.activeCards = cardDataArr;
   }),
   setAppMode: action((state, viewModeEnum) => {
@@ -114,6 +111,39 @@ const appData: AppDataModel = {
   }),
 
   //listeners
+  onSetActiveLayout: thunkOn(
+    // console.log("liste");
+
+    (actions, storeActions) => storeActions.layoutsData.setActiveLayout,
+    async (actions, payload, { getState }) => {
+      console.log("listened for setActiveLayout at app_model");
+      const activeSources = payload.payload
+        .sources()
+        .filter((s) => s !== "clock");
+      console.log(activeSources);
+      //async thunk issue
+      console.log(getState().availableCards);
+      const availableCardsUpdated = getState().availableCards.map((card) => {
+        if (activeSources.includes(card.sourceId)) {
+          card.set_active(true);
+        } else {
+          card.set_active(false);
+        }
+        return card;
+      });
+      const activeCards = getState().availableCards.filter((card) => {
+        return activeSources.includes(card.sourceId);
+      });
+      // console.log(activeCards);
+      // activeCards.forEach((c) => {
+      //   c.set_active(true);
+      // });
+      actions.setAvailableCards(availableCardsUpdated);
+      actions.setActiveCards(activeCards);
+      console.log(activeCards);
+    }
+  ),
+
   onSwapCardContent: thunkOn(
     (actions, storeActions) => storeActions.layoutsData.swapCardContent,
     async (actions, payload, { getState }) => {
@@ -135,6 +165,7 @@ const appData: AppDataModel = {
       console.log(debug(payload));
     }
   ),
+
   onUndoHistory: thunkOn(
     (actions, storeActions) => storeActions.historyData.setCurrentHistory,
     async (actions, payload, { injections }) => {

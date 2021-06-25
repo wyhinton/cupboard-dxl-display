@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Button from "../Button";
+import Button from "../Util/Button";
 import Toolbar from "../Toolbar";
 import { Heading } from "evergreen-ui";
-import DropDownMenu from "../DropDownMenu";
+import DropDownMenu from "../Util/DropDownMenu";
 import { AppMode } from "../../enums";
 import "../../css/editorPanel.css";
 import { useStoreState, useStoreActions } from "../../hooks";
