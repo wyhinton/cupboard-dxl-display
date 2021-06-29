@@ -10,7 +10,7 @@ import {
 
 const PerformanceTests = () => {
   const setAvailableCards = useStoreActions(
-    (actions) => actions.appData.setActiveCards
+    (actions) => actions.appModel.setActiveCards
   );
 
   return (

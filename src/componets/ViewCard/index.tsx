@@ -6,7 +6,7 @@ import React, {
   ReactElement,
 } from "react";
 import CardInfo from "./CardInfo";
-import CardData from "../../data_structs/cardData";
+import CardData from "../../data_structs/CardData";
 import { Layout } from "react-grid-layout";
 import { AppMode } from "../../enums";
 import { useStoreState, useStoreActions } from "../../hooks";
@@ -60,7 +60,7 @@ const ViewCard = ({
     setTargetBoundingBox(boundingRect);
   }, [elementRef.current?.parentElement?.style]);
 
-  const appModeState = useStoreState((state) => state.appData.appMode);
+  const appModeState = useStoreState((state) => state.appModel.appMode);
   const [cardView, setCardView] = useState(CardView.NORMAL);
   const [targetBoundingBox, setTargetBoundingBox] =
     useState<undefined | DOMRect>();

@@ -6,7 +6,7 @@ interface IXDrop extends Omit<DroppableProps, "children"> {
   className?: string;
 }
 
-const XDrop: FC<IXDrop> = ({ children, className, ...props }) => {
+const IXDrop: FC<IXDrop> = ({ children, className, ...props }) => {
   // console.log();
   useEffect(() => {
     console.log(props);
@@ -32,4 +32,4 @@ const XDrop: FC<IXDrop> = ({ children, className, ...props }) => {
   );
 };
 
-export default XDrop;
+export default IXDrop;

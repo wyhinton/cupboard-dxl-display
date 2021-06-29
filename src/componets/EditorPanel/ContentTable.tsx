@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Table } from "evergreen-ui";
 import { useStoreState, useStoreActions } from "../../hooks";
 import ContentItem from "./ContentItem";
 import IXDrop from "../IXDrop";
 import XDrag from "../XDrag";
 import classNames from "classnames";
-import CardData from "../../data_structs/cardData";
+import CardData from "../../data_structs/CardData";
 import "../../css/table.css";
 import { TextInput, Menu } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
@@ -16,7 +15,9 @@ import TableHeader from "./TableHeader";
 // };
 
 const ContentTable = () => {
-  const availableCards = useStoreState((state) => state.appData.availableCards);
+  const availableCards = useStoreState(
+    (state) => state.appModel.availableCards
+  );
   const [filterKey, setFilterKey] = useState<string | undefined>(undefined);
   // const [filterKey2, setFilterKey2] =
   //   useState<InterfaceToCardData | undefined>(undefined);

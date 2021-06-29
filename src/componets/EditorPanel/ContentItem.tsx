@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactNode } from "react";
-import CardData from "../../data_structs/cardData";
+import CardData from "../../data_structs/CardData";
 import "../../css/contentItem.css";
 import { JsxElement } from "typescript";
 import classNames from "classnames";

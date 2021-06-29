@@ -4,14 +4,16 @@ import {
   Thunk,
   Action,
   thunkOn,
+  actionOn,
+  ActionOn,
   ThunkOn,
   debug,
 } from "easy-peasy";
-import LayoutData from "../data_structs/layout_data";
+import LayoutData from "../data_structs/LayoutData";
 import type { GoogleSheet, RawLayoutRow } from "../data_structs/google_sheet";
 import { getSheet } from "../utils";
 import { StoreModel } from "./index";
-import CardData from "../data_structs/cardData";
+import CardData from "../data_structs/CardData";
 import { Layouts } from "react-grid-layout";
 
 export interface SwapInfo {
@@ -25,9 +27,10 @@ export interface LayoutsModel {
   externalLayouts: LayoutData[];
 
   //listeners
-  onSetActiveCards: ThunkOn<LayoutsModel, CardData[], StoreModel>;
+  onLayoutSheetLoadSuccess: ThunkOn<LayoutsModel, never, StoreModel>;
+
   //requests
-  fetchLayoutDataGoogleSheet: Thunk<LayoutsModel>;
+  // fetchLayoutDataGoogleSheet: Thunk<LayoutsModel>;
 
   //simple setters
   setActiveLayout: Action<LayoutsModel, LayoutData>;
@@ -38,27 +41,27 @@ export interface LayoutsModel {
   swapCardContent: Thunk<LayoutsModel, SwapInfo, StoreModel>;
 }
 
-const layoutsData: LayoutsModel = {
+const layoutsModel: LayoutsModel = {
   //state
   activeLayout: undefined,
   externalLayouts: [],
-  //requests
-  fetchLayoutDataGoogleSheet: thunk(
-    async (actions, _, { getState, getStoreState }) => {
-      getSheet<RawLayoutRow>(
-        "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
-        2
-      ).then((sheet) => {
-        console.log(getStoreState());
 
-        const layouts = sheet.data.map((l) => new LayoutData(l));
-        const defaultLayout = layouts.filter(
-          (l) => l.title === "Default_Layout_1"
-        )[0];
-        actions.setActiveLayout(defaultLayout);
-        actions.setExternalLayouts(layouts);
-        console.log(layouts);
-      });
+  //listeners
+  onLayoutSheetLoadSuccess: thunkOn(
+    // targetResolver:
+    (actions, storeActions) =>
+      storeActions.googleSheetsModel.setLayoutDataGoogleSheet,
+    // handler:
+    (actions, target) => {
+      console.log("diong on cart sheet load success");
+      console.log(target.payload);
+      const layouts = target.payload.data.map((l) => new LayoutData(l));
+      const defaultLayout = layouts.filter(
+        (l) => l.title === "Default_Layout_1"
+      )[0];
+      actions.setActiveLayout(defaultLayout);
+      actions.setExternalLayouts(layouts);
+      console.log(layouts);
     }
   ),
   //simple setters
@@ -73,7 +76,7 @@ const layoutsData: LayoutsModel = {
   swapCardContent: thunk(
     (actions, swapInfo, { getStoreState, getStoreActions }) => {
       const curModel = getStoreState() as StoreModel;
-      const activeCards = curModel.appData.activeCards;
+      const activeCards = curModel.appModel.activeCards;
 
       console.log(activeCards);
       const cardToChange = activeCards.filter(
@@ -87,21 +90,11 @@ const layoutsData: LayoutsModel = {
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;
     if (old) {
-      old.swap_card(swap);
+      old.swapCard(swap);
       console.log(old.layout);
       state.activeLayout = old;
     }
   }),
-  onSetActiveCards: thunkOn(
-    (actions, storeActions) => storeActions.appData.setActiveCards,
-    async (actions, payload, { getState }) => {
-      console.log("got swap set active cards at layout model");
-      console.log(payload.payload);
-      console.log(getState().activeLayout?.layout);
-      const curActiveLayout = getState().activeLayout?.layout;
-      console.log(curActiveLayout);
-    }
-  ),
 };
 
-export default layoutsData;
+export default layoutsModel;

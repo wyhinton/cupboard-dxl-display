@@ -1,5 +1,5 @@
 import { action, Action, thunk, Thunk, thunkOn, ThunkOn } from "easy-peasy";
-import History from "../data_structs/history";
+import History from "../data_structs/History";
 import { Layouts } from "react-grid-layout";
 
 export interface HistoryModel {
@@ -11,7 +11,7 @@ export interface HistoryModel {
   setCurrentHistory: Action<HistoryModel, Layouts>;
   // onAddTodo: ThunkOn<HistoryModel, any, StoreModel>;
 }
-const historyData: HistoryModel = {
+const historyModel: HistoryModel = {
   history: new History(),
   undoHistory: thunk((actions, _, { getState }) => {
     // console.log(payload);
@@ -53,4 +53,4 @@ const historyData: HistoryModel = {
   }),
 };
 
-export default historyData;
+export default historyModel;

@@ -3,7 +3,7 @@ import { useStoreState, useStoreActions } from "../../hooks";
 
 const LayoutsTable = () => {
   const externalLayoutsState = useStoreState(
-    (state) => state.layoutsData.externalLayouts
+    (state) => state.layoutsModel.externalLayouts
   );
   return (
     <table>

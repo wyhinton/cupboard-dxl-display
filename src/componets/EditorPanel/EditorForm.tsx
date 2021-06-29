@@ -11,7 +11,7 @@ import ContentTable from "./ContentTable";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import PerformanceTests from "./EditorSection/PerformanceTests";
-import LayoutManager from "./EditorSection/LayoutManger";
+import LayoutManager from "./EditorSection/LayoutManager";
 import LayoutsTabel from "./LayoutsTable";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 

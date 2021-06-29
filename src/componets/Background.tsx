@@ -9,7 +9,7 @@ import GridLines from "react-gridlines";
  */
 
 const Background = (): JSX.Element => {
-  const viewMode = useStoreState((state) => state.appData.appMode);
+  const viewMode = useStoreState((state) => state.appModel.appMode);
   const [size, setSize] = useState({
     x: window.innerWidth,
     y: window.innerHeight,

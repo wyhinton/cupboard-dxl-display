@@ -3,17 +3,19 @@ import {
   thunk,
   Thunk,
   Action,
+  ActionOn,
   thunkOn,
   ThunkOn,
   debug,
+  actionOn,
 } from "easy-peasy";
 import { getSheet } from "../utils";
-import CardData from "../data_structs/cardData";
+import CardData from "../data_structs/CardData";
 import type { RawCardInfoRow } from "../data_structs/google_sheet";
 import { Layouts, Layout } from "react-grid-layout";
-import defaultGridLayout from "../static/default_layout";
+import defaultGridLayout from "../static/defaultLayouts";
 import { AppMode } from "../enums";
-import History from "../data_structs/history";
+import History from "../data_structs/History";
 import { StoreModel } from "./index";
 /**
  * Core app model
@@ -29,12 +31,13 @@ export interface AppDataModel {
   localStorageLayouts: any[];
 
   //requests
-  fetchGoogleSheet: Thunk<AppDataModel>;
+  // fetchGoogleSheet: Thunk<AppDataModel>;
 
   //loaders
   loadLocalLayouts: Action<AppDataModel>;
 
   //listeners
+  onCardSheetLoadSuccess: ActionOn<AppDataModel, StoreModel>;
   onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
   onSetActiveLayout: ThunkOn<AppDataModel, never, StoreModel>;
   //managers
@@ -55,8 +58,9 @@ export interface AppDataModel {
   //local storage
   saveLayoutLocal: Thunk<AppDataModel>;
 }
+125;
 
-const appData: AppDataModel = {
+const appModel: AppDataModel = {
   //state
   availableCards: [],
   activeCards: [],
@@ -66,17 +70,17 @@ const appData: AppDataModel = {
   localStorageLayouts: [],
 
   //requests
-  fetchGoogleSheet: thunk(async (actions, _, { getState }) => {
-    getSheet<RawCardInfoRow>(
-      "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
-      1
-    ).then((sheet) => {
-      //transform raw row data into cardData class members
-      const cards = sheet.data.map((c) => new CardData(c));
-      //set our available pool of cards
-      actions.setAvailableCards(cards);
-    });
-  }),
+  // fetchGoogleSheet: thunk(async (actions, _, { getState }) => {
+  //   getSheet<RawCardInfoRow>(
+  //     "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
+  //     1
+  //   ).then((sheet) => {
+  //     //transform raw row data into cardData class members
+  //     const cards = sheet.data.map((c) => new CardData(c));
+  //     //set our available pool of cards
+  //     actions.setAvailableCards(cards);
+  //   });
+  // }),
 
   //managers
   manageViewModeChange: thunk((actions, viewModeEnum) => {
@@ -111,10 +115,24 @@ const appData: AppDataModel = {
   }),
 
   //listeners
+  onCardSheetLoadSuccess: actionOn(
+    // targetResolver:
+    (actions, storeActions) =>
+      storeActions.googleSheetsModel.setCardDataGoogleSheet,
+    // handler:
+    (state, target) => {
+      console.log("diong on cart sheet load success");
+      console.log(target.payload);
+      const cards = target.payload.data.map((c) => new CardData(c));
+      console.log(cards);
+      state.activeCards = cards;
+    }
+  ),
+
   onSetActiveLayout: thunkOn(
     // console.log("liste");
 
-    (actions, storeActions) => storeActions.layoutsData.setActiveLayout,
+    (actions, storeActions) => storeActions.layoutsModel.setActiveLayout,
     async (actions, payload, { getState }) => {
       console.log("listened for setActiveLayout at app_model");
       const activeSources = payload.payload
@@ -145,7 +163,7 @@ const appData: AppDataModel = {
   ),
 
   onSwapCardContent: thunkOn(
-    (actions, storeActions) => storeActions.layoutsData.swapCardContent,
+    (actions, storeActions) => storeActions.layoutsModel.swapCardContent,
     async (actions, payload, { getState }) => {
       console.log("got swap card content");
       console.log(payload.payload);
@@ -167,7 +185,7 @@ const appData: AppDataModel = {
   ),
 
   onUndoHistory: thunkOn(
-    (actions, storeActions) => storeActions.historyData.setCurrentHistory,
+    (actions, storeActions) => storeActions.historyModel.setCurrentHistory,
     async (actions, payload, { injections }) => {
       console.log("got undo");
       console.log(payload.payload);
@@ -176,7 +194,7 @@ const appData: AppDataModel = {
     }
   ),
   onRedoHistory: thunkOn(
-    (actions, storeActions) => storeActions.historyData.setCurrentHistory,
+    (actions, storeActions) => storeActions.historyModel.setCurrentHistory,
     async (actions, payload, { injections }) => {
       console.log("got redo");
       console.log(payload.payload);
@@ -207,4 +225,4 @@ const appData: AppDataModel = {
   }),
 };
 
-export default appData;
+export default appModel;

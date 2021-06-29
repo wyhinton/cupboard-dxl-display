@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
  * Simple clock widget for displaying the current time.
  * @component
  */
-function Clock(): JSX.Element {
+const Clock = (): JSX.Element => {
   const [date, setDate] = useState(new Date());
   const clockText = {
     margin: 0,
@@ -46,6 +46,6 @@ function Clock(): JSX.Element {
       <div>{date.toLocaleTimeString()}.</div>
     </div>
   );
-}
+};
 
 export default Clock;

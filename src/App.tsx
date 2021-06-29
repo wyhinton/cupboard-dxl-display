@@ -11,15 +11,15 @@ import {
   DraggableLocation,
 } from "react-beautiful-dnd";
 import EditorPanel from "./componets/EditorPanel/EditorPanel";
-import type { SwapInfo } from "./model/layouts_model";
+import type { SwapInfo } from "./model/layoutsModel";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  * @component
  */
 
-export default function App() {
-  const viewModeState = useStoreState((state) => state.appData.appMode);
+const App = (): JSX.Element => {
+  const viewModeState = useStoreState((state) => state.appModel.appMode);
   const toggleEditMode = () => {
     switch (viewModeState) {
       case AppMode.DISPLAY:
@@ -35,31 +35,33 @@ export default function App() {
 
   useKeyPressEvent("F4", toggleEditMode);
 
-  const fetchCardsSheetAction = useStoreActions(
-    (actions) => actions.appData.fetchGoogleSheet
+  const fetchCardDataGoogleSheetThunk = useStoreActions(
+    (actions) => actions.googleSheetsModel.fetchCardDataGoogleSheet
   );
-  const fetchLayoutSheetAction = useStoreActions(
-    (actions) => actions.layoutsData.fetchLayoutDataGoogleSheet
+  const fetchLayoutDataGoogleSheetThunk = useStoreActions(
+    (actions) => actions.googleSheetsModel.fetchLayoutDataGoogleSheet
   );
   const loadLocalLayoutsAction = useStoreActions(
-    (actions) => actions.appData.loadLocalLayouts
+    (actions) => actions.appModel.loadLocalLayouts
   );
   const manageViewModeChange = useStoreActions(
-    (actions) => actions.appData.manageViewModeChange
+    (actions) => actions.appModel.manageViewModeChange
   );
   const localStorageLayouts = useStoreState(
-    (state) => state.appData.localStorageLayouts
+    (state) => state.appModel.localStorageLayouts
   );
 
   const swapCardDataAction = useStoreActions(
-    (actions) => actions.layoutsData.swapCardContent
+    (actions) => actions.layoutsModel.swapCardContent
   );
 
   const [availableLayouts, setAvailableLayouts] = useState(localStorageLayouts);
   // const [localStorageLayouts, setLocalStorageLayouts] = useState(Object.entries<[K in keyof T]: [K, T[K]];>(localStorage).filter(a,[k,v]=>{if k.startsWith("curLayout"){return true}}));
   useEffect(() => {
-    fetchLayoutSheetAction();
-    fetchCardsSheetAction();
+    // fetchLayoutSheetAction();
+    fetchCardDataGoogleSheetThunk();
+    fetchLayoutDataGoogleSheetThunk();
+    // fetchCardsSheetAction();
     loadLocalLayoutsAction();
   }, []);
 
@@ -84,19 +86,6 @@ export default function App() {
     }
     return false;
   };
-  // export const deleteTask = (data, { droppableId, index }) => {
-  //   data = clone(data);
-  //   data.columns[droppableId].taskIds.splice(index, 1);
-  //   return data;
-  // };
-  // /**
-  //  *
-  //  */
-  // export const addTask = (data, { droppableId, index }, taskId) => {
-  //   data = clone(data);
-  //   data.columns[droppableId].taskIds.splice(index, 0, taskId);
-  //   return data;
-  // };
   const onDragEnd = (res: DropResult) => {
     if (res.destination?.droppableId == res.source?.droppableId) return;
     console.log(res);
@@ -125,4 +114,6 @@ export default function App() {
       </DragDropContext>
     </>
   );
-}
+};
+
+export default App;

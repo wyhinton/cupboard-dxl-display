@@ -1,6 +1,6 @@
 import { Layout, Layouts } from "react-grid-layout";
 import type { RawLayoutRow } from "./google_sheet";
-import type { SwapInfo } from "../model/layouts_model";
+import type { SwapInfo } from "../model/layoutsModel";
 export default class LayoutData {
   readonly title: string;
   readonly author: string;
@@ -13,7 +13,7 @@ export default class LayoutData {
     this.added = new Date(row.added);
     this.layout = JSON.parse(row.layout);
   }
-  swap_card(swapInfo: SwapInfo) {
+  swapCard(swapInfo: SwapInfo) {
     for (const [k, v] of Object.entries(this.layout)) {
       // console.log(v);
       // console.log(k);

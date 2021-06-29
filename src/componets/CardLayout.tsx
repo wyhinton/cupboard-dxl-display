@@ -3,9 +3,9 @@ import Clock from "./Clock";
 import IFrameView from "./IFrameView";
 import GridLayout, { WidthProvider, Responsive } from "react-grid-layout";
 import "../css/cardLayout.css";
-import ViewCard from "./Card";
+import ViewCard from "./ViewCard";
 import { useStoreState, useStoreActions } from "../hooks";
-import CardData from "../data_structs/cardData";
+import CardData from "../data_structs/CardData";
 import { AppMode } from "../enums";
 import TestModal from "./TestModal";
 import TestForward from "./TestForward";
@@ -29,9 +29,9 @@ import IXDrop from "./IXDrop";
  */
 
 export const CardGrid = (): JSX.Element => {
-  const viewModeState = useStoreState((state) => state.appData.appMode);
+  const viewModeState = useStoreState((state) => state.appModel.appMode);
   const currentLayoutState = useStoreState(
-    (state) => state.layoutsData.activeLayout
+    (state) => state.layoutsModel.activeLayout
   );
   // const currentLayout = useStoreState((state) => state.appData.currentLayout);
   const [size, setSize] = useState({
@@ -49,11 +49,13 @@ export const CardGrid = (): JSX.Element => {
   const [activeCardKey, setActiveCardKey] =
     useState<string | undefined>(undefined);
   const addEditHistory = useStoreActions(
-    (actions) => actions.historyData.addEditHistory
+    (actions) => actions.historyModel.addEditHistory
   );
 
-  const availableCards = useStoreState((state) => state.appData.availableCards);
-  const activeCards = useStoreState((state) => state.appData.activeCards);
+  const availableCards = useStoreState(
+    (state) => state.appModel.availableCards
+  );
+  const activeCards = useStoreState((state) => state.appModel.activeCards);
   const [viewModeProps, setViewModeProps] = useState({
     isDraggable: false,
     isResizable: false,

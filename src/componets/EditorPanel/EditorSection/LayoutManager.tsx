@@ -7,16 +7,16 @@ import { SelectMenuItem } from "evergreen-ui";
 
 const LayoutManager = () => {
   const manageViewModeChange = useStoreActions(
-    (actions) => actions.appData.manageViewModeChange
+    (actions) => actions.appModel.manageViewModeChange
   );
   const localStorageLayouts = useStoreState(
-    (state) => state.appData.localStorageLayouts
+    (state) => state.appModel.localStorageLayouts
   );
   const clearLocalLayouts = useStoreActions(
-    (actions) => actions.appData.clearLocalLayouts
+    (actions) => actions.appModel.clearLocalLayouts
   );
   const saveLayoutLocal = useStoreActions(
-    (actions) => actions.appData.saveLayoutLocal
+    (actions) => actions.appModel.saveLayoutLocal
   );
   return (
     <>
