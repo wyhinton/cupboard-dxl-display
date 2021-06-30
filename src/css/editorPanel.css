@@ -16,6 +16,7 @@
   border: 1px solid white;
   transition: width 0.5s, height 0.5s;
   color: white;
+  border-radius: 0.5em;
 }
 .editor-panel-minimized {
   width: 10rem;
@@ -87,18 +88,23 @@
 
 .panel-header {
   width: 100%;
-  height: fit-content !important;
+  /* height: fit-content !important; */
   cursor: grab;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  border-bottom: 1px solid black;
+  background-color: #1f1f1f;
+  height: 2em;
 }
 
 .panel-minimize-button {
+  margin-top: auto;
+  margin-bottom: auto;
   height: initial;
   /* height: 0.25em; */
   /* height: 100%; */
   width: 5%;
-  background-color: red;
+  /* background-color: red; */
 }
 
 .panel-minimize-button::after {
@@ -117,4 +123,30 @@
   height: 100%;
   padding: 1em;
   overflow: scroll;
+}
+
+.panel-overlay {
+  height: 100%;
+}
+
+.panel-overlay-hidden {
+  pointer-events: none;
+  display: none;
+}
+
+.panel-overlay-visible {
+  pointer-events: all;
+}
+
+.overlay-icon-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  background-color: darkblue;
+}
+.overlay-icon-container svg {
+  margin: auto;
 }

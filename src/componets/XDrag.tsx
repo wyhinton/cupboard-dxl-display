@@ -1,5 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
+import ReactTable from "react-table";
+// import "react-table/react-table.css";
 
 interface IXDrag extends Omit<DraggableProps, "children"> {
   className?: string;
@@ -21,14 +23,14 @@ const XDrag: FC<IXDrag> = ({ className, children, dragAll, ...props }) => {
         };
         const dragHandleProps = dragAll ? provided.dragHandleProps : {};
         return (
-          <div
+          <tr
             className={className}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...dragHandleProps}
           >
             {React.cloneElement(children, { provided })}
-          </div>
+          </tr>
         );
       }}
     </Draggable>

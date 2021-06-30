@@ -69,19 +69,6 @@ const appModel: AppDataModel = {
   history: new History(),
   localStorageLayouts: [],
 
-  //requests
-  // fetchGoogleSheet: thunk(async (actions, _, { getState }) => {
-  //   getSheet<RawCardInfoRow>(
-  //     "181P-SDszUOj_xn1HJ1DRrO8pG-LXyXNmINcznHeoK8k",
-  //     1
-  //   ).then((sheet) => {
-  //     //transform raw row data into cardData class members
-  //     const cards = sheet.data.map((c) => new CardData(c));
-  //     //set our available pool of cards
-  //     actions.setAvailableCards(cards);
-  //   });
-  // }),
-
   //managers
   manageViewModeChange: thunk((actions, viewModeEnum) => {
     console.log(viewModeEnum);
@@ -125,13 +112,11 @@ const appModel: AppDataModel = {
       console.log(target.payload);
       const cards = target.payload.data.map((c) => new CardData(c));
       console.log(cards);
-      state.activeCards = cards;
+      state.availableCards = cards;
     }
   ),
 
   onSetActiveLayout: thunkOn(
-    // console.log("liste");
-
     (actions, storeActions) => storeActions.layoutsModel.setActiveLayout,
     async (actions, payload, { getState }) => {
       console.log("listened for setActiveLayout at app_model");
@@ -152,10 +137,6 @@ const appModel: AppDataModel = {
       const activeCards = getState().availableCards.filter((card) => {
         return activeSources.includes(card.sourceId);
       });
-      // console.log(activeCards);
-      // activeCards.forEach((c) => {
-      //   c.set_active(true);
-      // });
       actions.setAvailableCards(availableCardsUpdated);
       actions.setActiveCards(activeCards);
       console.log(activeCards);

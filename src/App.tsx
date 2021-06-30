@@ -56,12 +56,9 @@ const App = (): JSX.Element => {
   );
 
   const [availableLayouts, setAvailableLayouts] = useState(localStorageLayouts);
-  // const [localStorageLayouts, setLocalStorageLayouts] = useState(Object.entries<[K in keyof T]: [K, T[K]];>(localStorage).filter(a,[k,v]=>{if k.startsWith("curLayout"){return true}}));
   useEffect(() => {
-    // fetchLayoutSheetAction();
     fetchCardDataGoogleSheetThunk();
     fetchLayoutDataGoogleSheetThunk();
-    // fetchCardsSheetAction();
     loadLocalLayoutsAction();
   }, []);
 
@@ -97,10 +94,10 @@ const App = (): JSX.Element => {
       } current title: ${"yes"}`
     );
     if (!destination) return;
-    // swapCardDataAction({
-    //   sourceId: draggableId,
-    //   targetId: destination.droppableId,
-    // });
+    swapCardDataAction({
+      sourceId: draggableId,
+      targetId: destination.droppableId,
+    });
   };
 
   return (

@@ -9,7 +9,7 @@ import Draggable from "react-draggable";
 import ReactDom from "react-dom";
 import DragAndDock from "react-drag-and-dock";
 import EditorForm from "./EditorForm";
-import { Heading } from "evergreen-ui";
+import { Heading, FullscreenIcon, MinimizeIcon } from "evergreen-ui";
 import { useStoreState, useStoreActions } from "../../hooks";
 import "../../css/editorPanel.css";
 import classNames from "classnames";
@@ -32,6 +32,10 @@ const EditorPanel = ({ visible }: EditorPanelProps): JSX.Element => {
     "editor-visible": visible,
     // "editor-minimized": minimized,
   });
+  const panelOverlayClass = classNames("panel-overlay", {
+    "panel-overlay-visible": minimized,
+    "panel-overlay-hidden": !minimized,
+  });
 
   const styles = {
     root: { display: "none !important", border: "5px solid red !important" },
@@ -51,6 +55,14 @@ const EditorPanel = ({ visible }: EditorPanelProps): JSX.Element => {
             }}
             visible={visible}
           ></PanelHeader>
+          <div
+            className={panelOverlayClass}
+            onMouseUp={() => setMinimized(false)}
+          >
+            <div className={"overlay-icon-container"}>
+              <FullscreenIcon size={30}></FullscreenIcon>
+            </div>
+          </div>
           <EditorForm />
         </div>
       </Draggable>
@@ -69,13 +81,12 @@ interface PanelHeaderProps {
   visible: boolean;
 }
 const PanelHeader = ({ onMinimize, visible }: PanelHeaderProps) => {
-  const editorClass = classNames("panel-header", {
-    "panel-header-hidden": visible,
-  });
   return (
     <div className={"editor-panel-handle panel-header"}>
-      <Heading>Editor</Heading>
-      <div onMouseUp={onMinimize} className={"panel-minimize-button"}></div>
+      {/* <Heading>Editor</Heading> */}
+      <div onMouseUp={onMinimize} className={"panel-minimize-button"}>
+        <MinimizeIcon></MinimizeIcon>
+      </div>
     </div>
   );
 };

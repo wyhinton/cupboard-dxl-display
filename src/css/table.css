@@ -1,8 +1,10 @@
 .content-row-inactive {
   color: darkgrey;
+  transition: color 0.5s ease-out;
 }
 .content-row-active {
   color: red;
+  transition: color 0.5s ease-out;
 }
 
 tr {
@@ -49,6 +51,7 @@ td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color 0.25s ease-out;
 }
 th:nth-child(1) {
   text-align: left;
@@ -78,4 +81,8 @@ td:nth-child(4) {
 td:nth-child(5) {
   width: 10%;
   text-align: center;
+}
+
+.status-indicator {
+  width: 10%;
 }

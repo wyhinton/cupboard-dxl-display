@@ -21,7 +21,7 @@ const IXDrop: FC<IXDrop> = ({ children, className, ...props }) => {
             {...provided.innerRef}
             ref={provided.innerRef}
             className={className}
-            //   isDraggingOver={snapshot.isDraggingOver}
+            // isDraggingOver={snapshot.isDraggingOver}
           >
             {children}
             {provided.placeholder}

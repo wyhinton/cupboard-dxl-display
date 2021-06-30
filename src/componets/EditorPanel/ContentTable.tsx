@@ -6,9 +6,11 @@ import XDrag from "../XDrag";
 import classNames from "classnames";
 import CardData from "../../data_structs/CardData";
 import "../../css/table.css";
-import { TextInput, Menu } from "evergreen-ui";
+import { TextInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import TableHeader from "./TableHeader";
+import ReactTable from "react-table";
+// import "react-table/react-table.css";
 
 // type InterfaceToCardData = {
 //   [key: string]: CardData;
@@ -19,8 +21,6 @@ const ContentTable = () => {
     (state) => state.appModel.availableCards
   );
   const [filterKey, setFilterKey] = useState<string | undefined>(undefined);
-  // const [filterKey2, setFilterKey2] =
-  //   useState<InterfaceToCardData | undefined>(undefined);
   const [cardItems, setCardItems] = useState(availableCards);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -67,6 +67,7 @@ const ContentTable = () => {
   }, [availableCards]);
   return (
     <div>
+      <div>{/* <ReactTable data={availableCards}></ReactTable> */}</div>
       <TextInput
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
           setSearchTerm(e.currentTarget.value)
@@ -102,10 +103,13 @@ const ContentTable = () => {
                 title={"Interaction"}
                 onClick={() => setFilterKey("interaction")}
               ></TableHeader>
+              <TableHeader
+                title={"Status"}
+                onClick={() => setFilterKey("active")}
+              ></TableHeader>
             </tr>
             {/* </thead> */}
             {cardItems.map((card, i) => {
-              // {cardList.current.map((card, i) => {
               console.log(i);
               return (
                 <tr
@@ -140,10 +144,16 @@ const ContentTable = () => {
                       </div>
                     </XDrag>
                   </td>
+
                   <td>{formatDate(card.added)}</td>
                   <td>{card.src}</td>
                   <td>{card.author}</td>
                   <td>{card.interaction}</td>
+                  <td className={"status-indicator"}>
+                    <div>
+                      <StatusIndicator color={"sucess"}></StatusIndicator>
+                    </div>
+                  </td>
                 </tr>
               );
             })}
@@ -153,6 +163,7 @@ const ContentTable = () => {
     </div>
   );
 };
+
 function formatDate(date: Date | undefined): string {
   if (date) {
     const d = new Date(date);

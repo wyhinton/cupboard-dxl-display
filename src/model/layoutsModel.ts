@@ -74,17 +74,14 @@ const layoutsModel: LayoutsModel = {
     state.externalLayouts = newLayoutArr;
   }),
   swapCardContent: thunk(
-    (actions, swapInfo, { getStoreState, getStoreActions }) => {
+    (actions, swapInfo, { getState, getStoreState, getStoreActions }) => {
       const curModel = getStoreState() as StoreModel;
       const activeCards = curModel.appModel.activeCards;
-
-      console.log(activeCards);
-      const cardToChange = activeCards.filter(
-        (c) => c.sourceId === swapInfo.targetId
-      );
-      actions.updateLayout(swapInfo);
-      console.log(cardToChange);
-      console.log(swapInfo);
+      const prevLayout = getState().activeLayout;
+      if (prevLayout) {
+        prevLayout.swapCard(swapInfo);
+        actions.setActiveLayout(prevLayout);
+      }
     }
   ),
   updateLayout: action((state, swap) => {
