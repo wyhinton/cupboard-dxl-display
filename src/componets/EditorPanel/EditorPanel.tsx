@@ -1,18 +1,13 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  createRef,
-  useLayoutEffect,
-} from "react";
+import React, { useState, FC } from "react";
 import Draggable from "react-draggable";
 import ReactDom from "react-dom";
 import DragAndDock from "react-drag-and-dock";
-import EditorForm from "./EditorForm";
+import Editor from "./Editor";
 import { Heading, FullscreenIcon, MinimizeIcon } from "evergreen-ui";
 import { useStoreState, useStoreActions } from "../../hooks";
 import "../../css/editorPanel.css";
 import classNames from "classnames";
+import { AppMode } from "../../enums";
 
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
@@ -20,17 +15,17 @@ interface EditorPanelProps {
   visible: boolean;
 }
 
-const EditorPanel = ({ visible }: EditorPanelProps): JSX.Element => {
+const EditorPanel: FC = () => {
   const [minimized, setMinimized] = useState(false);
+  const viewModeState = useStoreState((state) => state.appModel.appMode);
 
   const editorPanelClass = classNames("editor-panel", {
     "editor-panel-full": !minimized,
-    hidden: !visible,
+    hidden: viewModeState === AppMode.DISPLAY,
     "editor-panel-minimized": minimized,
   });
   const editorClass = classNames("editor", {
-    "editor-visible": visible,
-    // "editor-minimized": minimized,
+    "editor-visible": viewModeState === AppMode.EDIT,
   });
   const panelOverlayClass = classNames("panel-overlay", {
     "panel-overlay-visible": minimized,
@@ -53,7 +48,7 @@ const EditorPanel = ({ visible }: EditorPanelProps): JSX.Element => {
             onMinimize={() => {
               setMinimized(!minimized);
             }}
-            visible={visible}
+            visible={viewModeState === AppMode.EDIT}
           ></PanelHeader>
           <div
             className={panelOverlayClass}
@@ -63,7 +58,7 @@ const EditorPanel = ({ visible }: EditorPanelProps): JSX.Element => {
               <FullscreenIcon size={30}></FullscreenIcon>
             </div>
           </div>
-          <EditorForm />
+          <Editor />
         </div>
       </Draggable>
     </>,

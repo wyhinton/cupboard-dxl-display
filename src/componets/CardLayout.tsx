@@ -1,4 +1,11 @@
-import React, { useEffect, useState, forwardRef, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  FC,
+  useMemo,
+  forwardRef,
+  useRef,
+} from "react";
 import Clock from "./Clock";
 import IFrameView from "./IFrameView";
 import GridLayout, { WidthProvider, Responsive } from "react-grid-layout";
@@ -7,8 +14,7 @@ import ViewCard from "./ViewCard";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../data_structs/CardData";
 import { AppMode } from "../enums";
-import TestModal from "./TestModal";
-import TestForward from "./TestForward";
+import Modal from "./Modal";
 import IXDrop from "./IXDrop";
 /**
  * Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components
@@ -28,61 +34,75 @@ import IXDrop from "./IXDrop";
  *
  */
 
-export const CardGrid = (): JSX.Element => {
+export const CardGrid: FC = () => {
   const viewModeState = useStoreState((state) => state.appModel.appMode);
   const currentLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
-  // const currentLayout = useStoreState((state) => state.appData.currentLayout);
   const [size, setSize] = useState({
     x: window.innerWidth,
     y: window.innerHeight,
   });
-  // const elementRef = useRef<HTMLDivElement>(null);
+  const testViewMode = useMemo(() => {
+    //only allow dragging/resizing when in edit mode
+    console.log(viewModeState);
+    console.log(AppMode.EDIT === viewModeState);
+    return viewModeState === AppMode.EDIT;
+  }, [viewModeState]);
 
-  const [cardContainerStyle, setCardContainerStyle] = useState({
-    display: "block",
-    height: "100%",
-  } as React.CSSProperties);
-  // const elementRef = useRef();
-  // const longPressEvent = useLongPress(onLongPress,)
   const [activeCardKey, setActiveCardKey] =
     useState<string | undefined>(undefined);
-  const addEditHistory = useStoreActions(
-    (actions) => actions.historyModel.addEditHistory
-  );
 
-  const availableCards = useStoreState(
-    (state) => state.appModel.availableCards
-  );
   const activeCards = useStoreState((state) => state.appModel.activeCards);
-  const [viewModeProps, setViewModeProps] = useState({
-    isDraggable: false,
-    isResizable: false,
-  });
+
   const ResponsiveGridLayout = WidthProvider(Responsive);
   useEffect(() => {
     console.log("cards changed");
     console.log(currentLayoutState);
-  }, [availableCards, activeCards, currentLayoutState]);
+  }, [activeCards, currentLayoutState]);
 
-  // useEffect(() => {
-  //   console.log("active key chaged");
-  //   console.log(activeCardKey);
-  // }, [activeCardKey]);
   const activeKeyRef = useRef("");
 
-  useEffect(() => {
-    setViewModeProps({
-      isDraggable: viewModeState === AppMode.EDIT ? true : false,
-      isResizable: viewModeState === AppMode.EDIT ? true : false,
-    });
-    viewModeState == AppMode.EDIT
-      ? setCardContainerStyle({ border: "1px solid blue" })
-      : setCardContainerStyle({ border: "none" });
-  }, [viewModeState]);
-  const [portal, setPortal] = useState(undefined);
+  // we need to memo any children of the gird layout to avoid re-renders
+  //github.com/react-grid-layout/react-grid-layout
+  const memoCards = useMemo(() => {
+    return activeCards.map((card: CardData, i: number) => {
+      return (
+        <div
+          //key provided here is the means of accesing a unique identifier for the cards
+          key={card.sourceId}
+          // style={cardContainerStyle}
+          onMouseUp={(e) => {
+            console.log(e.target);
+            console.log(i);
+          }}
+          onMouseDown={(e) => {
+            console.log(e);
+          }}
+        >
+          <IXDrop key={i} droppableId={card.sourceId}>
+            <ViewCard
+              data={card}
+              key={i.toString()}
+              testkey={i.toString()}
+              setModal={() => {
+                activeKeyRef.current = i.toString();
+              }}
+              activeKey={activeKeyRef}
+            >
+              {activeCardKey == i.toString() ? (
+                <Modal text={"hello"}></Modal>
+              ) : (
+                <div></div>
+              )}
 
+              <IFrameView src={card.src} />
+            </ViewCard>
+          </IXDrop>
+        </div>
+      );
+    });
+  }, [activeCards]);
   return (
     <div>
       {currentLayoutState ? (
@@ -94,40 +114,33 @@ export const CardGrid = (): JSX.Element => {
           rowHeight={size.y / 3}
           margin={[20, 20]}
           resizeHandles={["se", "ne", "e", "w"]}
-          onLayoutChange={(l, lays) => addEditHistory(lays)}
+          // onLayoutChange={(l, lays) => addEditHistory(lays)}
           preventCollision={false}
           onDragStart={(layout, oldItem, newItem, placeholder, e, element) => {
             const prevStyle = element.style;
             prevStyle.border = "2px solid cyan";
             element.style.border = "4px solid cyan";
-            console.log(prevStyle);
           }}
           onDragStop={(layout, oldItem, newItem, placeholder, e, element) => {
             console.log("drag ended");
-            // console.log(item);
             console.log(element);
             element.style.border = "2px solid blue";
           }}
-          {...viewModeProps}
+          isDraggable={testViewMode}
+          isResizable={testViewMode}
         >
-          <div key={"clock"} style={cardContainerStyle}>
+          <div key={"clock"}>
             <ViewCard>
               <Clock />
             </ViewCard>
           </div>
+          {/* {memoCards} */}
           {activeCards.map((card: CardData, i: number) => {
             return (
               <div
                 //key provided here is the means of accesing a unique identifier for the cards
                 key={card.sourceId}
-                style={cardContainerStyle}
-                onMouseUp={(e) => {
-                  console.log(e.target);
-                  console.log(i);
-                }}
-                onMouseDown={(e) => {
-                  console.log(e);
-                }}
+                // style={cardContainerStyle}
               >
                 <IXDrop key={i} droppableId={card.sourceId}>
                   <ViewCard
@@ -140,7 +153,7 @@ export const CardGrid = (): JSX.Element => {
                     activeKey={activeKeyRef}
                   >
                     {activeCardKey == i.toString() ? (
-                      <TestModal text={"hello"}></TestModal>
+                      <Modal text={"hello"}></Modal>
                     ) : (
                       <div></div>
                     )}
@@ -159,3 +172,11 @@ export const CardGrid = (): JSX.Element => {
   );
 };
 export default React.memo(CardGrid);
+// function propsAreEqual(
+//   prevProps: Readonly<PropsWithChildren<ViewCardProps>>,
+//   nextProps: Readonly<PropsWithChildren<ViewCardProps>>
+// ): boolean {
+//   console.log(prevProps.data);
+//   console.log(nextProps.data);
+//   return true;
+// }

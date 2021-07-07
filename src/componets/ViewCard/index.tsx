@@ -1,8 +1,9 @@
 import React, {
+  PropsWithChildren,
   useState,
   useEffect,
   useRef,
-  createContext,
+  FC,
   ReactElement,
 } from "react";
 import CardInfo from "./CardInfo";
@@ -14,14 +15,11 @@ import { useLongPress } from "react-use";
 import { CardView } from "../../enums";
 import classNames from "classnames";
 import "../../css/card.css";
-import TestModal from "../TestModal";
+import Modal from "../Modal";
 import type { HtmlPortalNode } from "react-reverse-portal";
 import { Component } from "evergreen-ui/node_modules/@types/react";
-import { Transition } from "react-transition-group";
-import IXDrop from "../IXDrop";
 import {
   createHtmlPortalNode,
-  createSvgPortalNode,
   InPortal,
   OutPortal,
 } from "react-reverse-portal";
@@ -41,29 +39,17 @@ interface ViewCardProps {
  * @component
  */
 
-const ViewCard = ({
+const ViewCard: FC<ViewCardProps> = ({
   children,
-  key,
   activeKey,
   testkey,
-  dataGrid,
   data,
   setModal,
   onDoubleClick,
-}: ViewCardProps): JSX.Element => {
+}: ViewCardProps) => {
   const elementRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    console.log("ele erf us effect");
-    const boundingRect =
-      elementRef.current?.parentElement?.getBoundingClientRect();
-    setTargetBoundingBox(boundingRect);
-  }, [elementRef.current?.parentElement?.style]);
-
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [cardView, setCardView] = useState(CardView.NORMAL);
-  const [targetBoundingBox, setTargetBoundingBox] =
-    useState<undefined | DOMRect>();
 
   const cardClass = classNames("card", {
     "card-edit": appModeState === AppMode.EDIT,
@@ -77,12 +63,16 @@ const ViewCard = ({
     "info-preview": cardView === CardView.PREVIEW,
   });
 
-  const portalNode = React.useMemo(() => createHtmlPortalNode(), []);
+  const portalNode = React.useMemo(
+    // () => createHtmlPortalNode(),
+    () =>
+      createHtmlPortalNode({
+        attributes: { id: "div-1", style: "height: 100%" },
+      }),
+    []
+  );
 
   const onLongPress = (): void => {
-    const boundingRect =
-      elementRef.current?.parentElement?.getBoundingClientRect();
-    setTargetBoundingBox(boundingRect);
     //only resize the card on press if app is in display mode
     if (appModeState === AppMode.DISPLAY) {
       switch (cardView) {
@@ -108,7 +98,7 @@ const ViewCard = ({
     chil: ReactElement | ReactElement[],
     view: CardView,
     node: HtmlPortalNode<Component<any>>,
-    rect: DOMRect | undefined,
+    // rect: DOMRect | undefined,
     isActive: boolean
   ): ReactElement => {
     //if in preview mode or full screen mode render card to the portal
@@ -118,12 +108,12 @@ const ViewCard = ({
     ) {
       console.log("passed");
       return (
-        <TestModal
+        <Modal
           text={"hello"}
           portal={node}
-          boundingRect={targetBoundingBox}
+          // boundingRect={targetBoundingBox}
           mode={view}
-        ></TestModal>
+        ></Modal>
       );
     } else {
       console.log("did not pass");
@@ -131,15 +121,6 @@ const ViewCard = ({
     }
   };
 
-  const getDroppableId = (receivedData: CardData | undefined): string => {
-    console.log(receivedData);
-    console.log(receivedData?.title);
-    if (receivedData) {
-      return receivedData.title;
-    } else {
-      return "not card data";
-    }
-  };
   return (
     //receives a drag objects
     <div
@@ -171,14 +152,49 @@ const ViewCard = ({
         children,
         cardView,
         portalNode,
-        targetBoundingBox,
         activeKey?.current == testkey
       )}
     </div>
   );
 };
 
-export default ViewCard;
-const ComponentA = ({ portal }: { portal: HtmlPortalNode<Component<any>> }) => {
-  return <OutPortal node={portal} />;
-};
+// function memo(
+//   Component: FC<ViewCardProps>,
+//   propsAreEqual?: (
+//     prevProps: Readonly<PropsWithChildren<P>>,
+//     nextProps: Readonly<PropsWithChildren<P>>
+//   ) => boolean
+// ): NamedExoticComponent<PropsWithChildren<P>>;
+// function propsAreEqual(prev: Readonly<PropsWithChildren<>>,, next) {
+//   if (next.toChild.includes(next.number)) { return false }
+//   else if ( next.anotherProperty === next.someStaticProperty ) { return false }
+//   else { return true }
+//  }
+// function memo<P>(
+//   Component: FC<P>,
+//   propsAreEqual?: (
+//     prevProps: Readonly<PropsWithChildren<P>>,
+//     nextProps: Readonly<PropsWithChildren<P>>
+//   ) => boolean
+// );
+
+// const propsAreEqual<P> = (
+//   prevProps: Readonly<PropsWithChildren<P>>,
+//   nextProps: Readonly<PropsWithChildren<P>>
+//  ):boolean => {
+
+//  }
+function propsAreEqual(
+  prevProps: Readonly<PropsWithChildren<ViewCardProps>>,
+  nextProps: Readonly<PropsWithChildren<ViewCardProps>>
+): boolean {
+  console.log(prevProps.data);
+  console.log(nextProps.data);
+  console.log("HELLO FROM PROPS ARE EQUAL");
+  // if (prevProps.data?.src == nextProps.data?.src) {
+  //   return false;
+  // }
+  return true;
+}
+export default React.memo(ViewCard);
+// export default React.memo(ViewCard, propsAreEqual);

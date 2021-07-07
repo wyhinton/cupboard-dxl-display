@@ -42,7 +42,7 @@ export interface AppDataModel {
   onSetActiveLayout: ThunkOn<AppDataModel, never, StoreModel>;
   //managers
   manageViewModeChange: Thunk<AppDataModel, AppMode>;
-
+  toggleViewMode: Thunk<AppDataModel, never>;
   //simple setters
   setAppMode: Action<AppDataModel, AppMode>;
   setCurrentLayout: Action<AppDataModel, Layouts>;
@@ -83,6 +83,22 @@ const appModel: AppDataModel = {
       default:
         console.log("reached default in set view mode thunk");
     }
+  }),
+  toggleViewMode: thunk((actions, _, { getState }) => {
+    console.log("toggling view mod ");
+    switch (getState().appMode) {
+      case AppMode.EDIT:
+        actions.setAppMode(AppMode.DISPLAY);
+        break;
+      case AppMode.DISPLAY:
+        actions.setAppMode(AppMode.EDIT);
+        break;
+      case AppMode.CYCLE:
+        break;
+      default:
+        console.log("reached default in set view mode thunk");
+    }
+    console.log(getState().appMode);
   }),
   setCurrentLayout: action((state, layoutArr) => {
     state.currentLayout = layoutArr;

@@ -25,6 +25,10 @@
   border: 3px solid red;
 }
 
+.card-footer {
+  background-color: grey;
+  color: white;
+}
 /* CARD INFO */
 .info-display {
   height: 0;
@@ -38,4 +42,8 @@
 /* CARD INFO */
 .info-preview {
   height: 10%;
+}
+
+iframe {
+  overflow: hidden;
 }

@@ -11,26 +11,38 @@ interface IXDrag extends Omit<DraggableProps, "children"> {
 
 const XDrag: FC<IXDrag> = ({ className, children, dragAll, ...props }) => {
   console.log(React.isValidElement(children));
-  console.log(props);
-  // console.log();
-  // console.log(props.dragg);
+  // console.log(props);
   if (!React.isValidElement(children)) return <div />;
+  // const child = React.memo(children, []);
   return (
     <Draggable {...props}>
       {(provided, snapshot) => {
-        const test = () => {
-          console.log(snapshot.isDragging);
-        };
+        // const test = () => {
+        //   console.log(snapshot.isDragging);
+        // };
         const dragHandleProps = dragAll ? provided.dragHandleProps : {};
         return (
-          <tr
-            className={className}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...dragHandleProps}
-          >
-            {React.cloneElement(children, { provided })}
-          </tr>
+          <>
+            <tr
+              className={className}
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...dragHandleProps}
+            >
+              {React.cloneElement(children, { provided })}
+              {/* {children, {provided}} */}
+              {/* {provided.placeholder} */}
+              {/* {children} */}
+            </tr>
+            <tr
+              style={{
+                display: snapshot.isDragging ? "table-row" : "none",
+                backgroundColor: snapshot.isDragging ? "blue" : "none",
+              }}
+            >
+              {React.cloneElement(children, { provided })}
+            </tr>
+          </>
         );
       }}
     </Draggable>
@@ -41,15 +53,24 @@ XDrag.defaultProps = {
   dragAll: true,
 };
 
-export default XDrag;
+export default React.memo(XDrag);
 
-{
-  /* <div
-className={className}
-ref={provided.innerRef}
-{...provided.draggableProps}
-{...dragHandleProps}
->
-{React.cloneElement(children, { provided })}
-</div> */
-}
+// class PureFatherWrapper extends React.PureComponent {
+//   render() {
+//     return (
+//       <PureFather>
+//         <SomeChild />
+//       </PureFather>
+//     );
+//   }
+// }
+// {
+//   /* <div
+// className={className}
+// ref={provided.innerRef}
+// {...provided.draggableProps}
+// {...dragHandleProps}
+// >
+// {React.cloneElement(children, { provided })}
+// </div> */
+// }

@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-
+import React, { useState, FC, PropsWithChildren } from "react";
+import { Spinner, Pane } from "evergreen-ui";
+import classNames from "classnames";
+import Loader from "react-loader-spinner";
+import "../css/iframeView.css";
+interface IFrameViewProps {
+  src: string;
+}
 /**
  * Minimal warpper for an <iframe>. Can be toggled between a full screen, active view, and a regular card view.
  * @component
@@ -9,8 +15,13 @@ import React, { useState } from "react";
  *  <IFrameView src = {my_url}/>
  * )
  */
-const IFrameView = ({ src }: { src: string }): JSX.Element => {
+const IFrameView: FC<IFrameViewProps> = ({ src }) => {
   const [active, setActive] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const iframeOverlayClass = classNames("iframe-view-overlay", {
+    "iframe-view-overlay-hidden": isLoaded,
+    "iframe-view-overlay-loading": !isLoaded,
+  });
   // const
   const iframeStyle = {
     width: "100%",
@@ -34,16 +45,29 @@ const IFrameView = ({ src }: { src: string }): JSX.Element => {
       className={"iframe-view-container"}
       style={{ height: "100%" }}
     >
+      <div className={iframeOverlayClass}>
+        <Loader type="Grid" color="white" height={80} width={80} />
+      </div>
       <iframe
-        src={
-          src
-          // "https://www.youtube.com/embed/tgbNymZ7vqY"
-          // "https://www.openstreetmap.org/export/embed.html?bbox=-0.004017949104309083%2C51.47612752641776%2C0.00030577182769775396%2C51.478569861898606&layer=mapnik"
-        }
+        onLoad={(e) => {
+          setIsLoaded(true);
+        }}
+        src={src}
         style={active ? iframeActive : iframeStyle}
       ></iframe>
     </div>
   );
 };
 
-export default React.memo(IFrameView);
+export default React.memo(IFrameView, propsAreEqual);
+function propsAreEqual(
+  prevProps: Readonly<PropsWithChildren<IFrameViewProps>>,
+  nextProps: Readonly<PropsWithChildren<IFrameViewProps>>
+): boolean {
+  if (prevProps.src == nextProps.src) {
+    return false;
+  }
+  console.log(prevProps.src);
+  console.log(nextProps.src);
+  return true;
+}

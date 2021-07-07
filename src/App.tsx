@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, FC, useState } from "react";
 import "./App.global.css";
 import { useStoreState, useStoreActions } from "./hooks";
 import CardGrid from "./componets/CardLayout";
@@ -18,22 +18,12 @@ import type { SwapInfo } from "./model/layoutsModel";
  * @component
  */
 
-const App = (): JSX.Element => {
-  const viewModeState = useStoreState((state) => state.appModel.appMode);
-  const toggleEditMode = () => {
-    switch (viewModeState) {
-      case AppMode.DISPLAY:
-        manageViewModeChange(AppMode.EDIT);
-        break;
-      case AppMode.EDIT:
-        manageViewModeChange(AppMode.DISPLAY);
-        break;
-      default:
-        console.log("unknown view mode passed to edit toggle");
-    }
-  };
+const App: FC = () => {
+  const toggleViewModeThunk = useStoreActions(
+    (actions) => actions.appModel.toggleViewMode
+  );
 
-  useKeyPressEvent("F4", toggleEditMode);
+  // useKeyPressEvent("F4", toggleViewModeThunk());
 
   const fetchCardDataGoogleSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchCardDataGoogleSheet
@@ -44,46 +34,40 @@ const App = (): JSX.Element => {
   const loadLocalLayoutsAction = useStoreActions(
     (actions) => actions.appModel.loadLocalLayouts
   );
-  const manageViewModeChange = useStoreActions(
-    (actions) => actions.appModel.manageViewModeChange
-  );
-  const localStorageLayouts = useStoreState(
-    (state) => state.appModel.localStorageLayouts
-  );
-
   const swapCardDataAction = useStoreActions(
     (actions) => actions.layoutsModel.swapCardContent
   );
 
-  const [availableLayouts, setAvailableLayouts] = useState(localStorageLayouts);
   useEffect(() => {
     fetchCardDataGoogleSheetThunk();
     fetchLayoutDataGoogleSheetThunk();
     loadLocalLayoutsAction();
+    console.log("fetching data");
   }, []);
 
-  useEffect(() => {
-    setAvailableLayouts(localStorageLayouts);
-  }, [localStorageLayouts]);
+  // useEffect(() => {
+  //   setAvailableLayouts(localStorageLayouts);
+  // }, [localStorageLayouts]);
 
   const containerStyle = {
     width: "100vw",
     height: "100vh",
   };
 
-  const onChange = (
-    source: DraggableLocation,
-    destination: DraggableLocation
-  ) => {
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return true;
-    }
-    return false;
-  };
+  // const onChange = (
+  //   source: DraggableLocation,
+  //   destination: DraggableLocation
+  // ) => {
+  //   if (
+  //     destination.droppableId === source.droppableId &&
+  //     destination.index === source.index
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
   const onDragEnd = (res: DropResult) => {
+    console.log("processing drag end");
     if (res.destination?.droppableId == res.source?.droppableId) return;
     console.log(res);
     const { source, destination, draggableId } = res;
@@ -102,13 +86,25 @@ const App = (): JSX.Element => {
 
   return (
     <>
-      <Background />
-      <DragDropContext onDragEnd={onDragEnd}>
-        <EditorPanel visible={viewModeState === AppMode.EDIT} />
-        <div style={containerStyle}>
-          <CardGrid />
-        </div>
-      </DragDropContext>
+      <div
+        onKeyUp={(e) => {
+          // console.log(e);
+          // console.log(e.key);
+          if (e.key === "F4") {
+            toggleViewModeThunk();
+          }
+        }}
+        tabIndex={0}
+      >
+        <Background />
+        <DragDropContext onDragEnd={onDragEnd}>
+          <EditorPanel />
+          {/* <EditorPanel visible={viewModeState === AppMode.EDIT} /> */}
+          <div style={containerStyle}>
+            <CardGrid />
+          </div>
+        </DragDropContext>
+      </div>
     </>
   );
 };

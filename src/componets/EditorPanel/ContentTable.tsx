@@ -1,20 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useStoreState, useStoreActions } from "../../hooks";
-import ContentItem from "./ContentItem";
+import { useStoreState } from "../../hooks";
 import IXDrop from "../IXDrop";
 import XDrag from "../XDrag";
-import classNames from "classnames";
 import CardData from "../../data_structs/CardData";
 import "../../css/table.css";
 import { TextInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import TableHeader from "./TableHeader";
-import ReactTable from "react-table";
-// import "react-table/react-table.css";
-
-// type InterfaceToCardData = {
-//   [key: string]: CardData;
-// };
 
 const ContentTable = () => {
   const availableCards = useStoreState(
@@ -67,7 +59,6 @@ const ContentTable = () => {
   }, [availableCards]);
   return (
     <div>
-      <div>{/* <ReactTable data={availableCards}></ReactTable> */}</div>
       <TextInput
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
           setSearchTerm(e.currentTarget.value)
@@ -78,7 +69,11 @@ const ContentTable = () => {
       <div style={{ paddingBottom: ".5em", paddingTop: ".5em" }}>
         <Menu.Divider></Menu.Divider>
       </div>
-      <IXDrop className={"table-container"} droppableId={"Card Content Table"}>
+      <IXDrop
+        className={"table-container"}
+        droppableId={"Card Content Table"}
+        isDropDisabled={true}
+      >
         <table>
           <tbody>
             {/* <thead> */}
@@ -103,30 +98,22 @@ const ContentTable = () => {
                 title={"Interaction"}
                 onClick={() => setFilterKey("interaction")}
               ></TableHeader>
-              <TableHeader
-                title={"Status"}
-                onClick={() => setFilterKey("active")}
-              ></TableHeader>
             </tr>
-            {/* </thead> */}
             {cardItems.map((card, i) => {
-              console.log(i);
               return (
-                <tr
-                  key={i}
+                <XDrag
+                  draggableId={card.sourceId}
+                  index={i}
+                  key={i.toString()}
+                  isDragDisabled={card.isActive}
                   className={
                     card.isActive
                       ? "content-row-active"
                       : "contnet-row-inactive"
                   }
                 >
-                  <td>
-                    <XDrag
-                      draggableId={card.sourceId}
-                      index={i}
-                      key={i.toString()}
-                      isDragDisabled={card.isActive}
-                    >
+                  <>
+                    <td>
                       <div style={{ display: "flex" }}>
                         <img
                           className={"row-favicon"}
@@ -142,19 +129,14 @@ const ContentTable = () => {
                           {card.title}
                         </div>
                       </div>
-                    </XDrag>
-                  </td>
+                    </td>
 
-                  <td>{formatDate(card.added)}</td>
-                  <td>{card.src}</td>
-                  <td>{card.author}</td>
-                  <td>{card.interaction}</td>
-                  <td className={"status-indicator"}>
-                    <div>
-                      <StatusIndicator color={"sucess"}></StatusIndicator>
-                    </div>
-                  </td>
-                </tr>
+                    <td>{formatDate(card.added)}</td>
+                    <td>{card.src}</td>
+                    <td>{card.author}</td>
+                    <td>{card.interaction}</td>
+                  </>
+                </XDrag>
               );
             })}
           </tbody>

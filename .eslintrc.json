@@ -9,11 +9,14 @@
     "react-hooks",
     "react",
     "import",
-    "filenames"
+    "filenames",
+    "unicorn"
   ],
   "extends": [
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
+    // "xo",
+    // "xo-react"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",

@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import Button from "../Util/Button";
-import Toolbar from "../Toolbar";
+import React from "react";
 import { Heading } from "evergreen-ui";
 import DropDownMenu from "../Util/DropDownMenu";
 import { AppMode } from "../../enums";
 import "../../css/editorPanel.css";
-import { useStoreState, useStoreActions } from "../../hooks";
-import { SelectMenuItem } from "evergreen-ui";
 import ContentTable from "./ContentTable";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
@@ -15,7 +11,7 @@ import LayoutManager from "./EditorSection/LayoutManager";
 import LayoutsTabel from "./LayoutsTable";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
-const EditorForm = (): JSX.Element => {
+const Editor = (): JSX.Element => {
   return (
     <div className="editor-form-container">
       <Tabs>
@@ -73,4 +69,4 @@ const FormFooter = ({ children }: FormRowProps) => {
   return <div className={"form-footer"}>{children}</div>;
 };
 
-export default EditorForm;
+export default Editor;

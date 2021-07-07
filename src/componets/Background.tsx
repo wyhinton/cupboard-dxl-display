@@ -33,18 +33,27 @@ const Background = (): JSX.Element => {
     // console.log(viewMode);
     setBackgroundStyle(style);
   }, [viewMode]);
-
+  const bgFillSolid = {
+    position: "absolute",
+    height: "100vh",
+    width: "100vw",
+    top: 0,
+    left: 0,
+    backgroundColor: "lightgrey",
+    transition: "background-color 0.5s ease",
+  } as React.CSSProperties;
   return (
     <div style={backgroundStyle}>
       {viewMode === AppMode.EDIT ? (
-        <GridLines
-          cellWidth={size.x / 50}
-          strokeWidth={2}
-          cellWidth2={size.x / 50}
-          className="grid-area"
-          lineColor="gray"
-        />
+        <div style={bgFillSolid}></div>
       ) : (
+        // <GridLines
+        //   cellWidth={size.x / 50}
+        //   strokeWidth={2}
+        //   cellWidth2={size.x / 50}
+        //   className="grid-area"
+        //   lineColor="gray"
+        // />
         <Particles />
       )}
     </div>
