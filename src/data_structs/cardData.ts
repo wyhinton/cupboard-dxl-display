@@ -1,4 +1,4 @@
-import type { RawCardInfoRow } from "./google_sheet";
+import type RawCardRow from "../interfaces/RawCardRow";
 import { InteractionType } from "../enums";
 
 /**
@@ -14,7 +14,7 @@ export default class CardData {
   isActive!: boolean;
   // instanceId!: string;
 
-  constructor(row: RawCardInfoRow) {
+  constructor(row: RawCardRow) {
     console.log(row);
     this.src = row.src;
     this.title = row.title;

@@ -10,11 +10,13 @@
     "react",
     "import",
     "filenames",
-    "unicorn"
+    "unicorn",
+    "only-warn"
   ],
   "extends": [
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:sonarjs/recommended"
     // "xo",
     // "xo-react"
   ],

@@ -1,0 +1,35 @@
+import React, { useState, useEffect } from "react";
+import { useStoreState, useStoreActions } from "../../../../hooks";
+
+const LayoutsTable = () => {
+  const externalLayoutsState = useStoreState(
+    (state) => state.layoutsModel.externalLayouts
+  );
+  return (
+    <div>
+      <div>
+        <span>Current Layout</span>
+      </div>
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Date Added</th>
+          <th>Author</th>
+        </tr>
+        <tbody>
+          {externalLayoutsState.map((l, i) => {
+            return (
+              <tr key={i}>
+                <td key={i}>{l.title}</td>
+                <td>{l.added.toString()}</td>
+                <td>{l.author}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default LayoutsTable;

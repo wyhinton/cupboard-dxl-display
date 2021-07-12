@@ -1,9 +1,8 @@
-import { action, Action, thunk, Thunk, thunkOn, ThunkOn } from "easy-peasy";
-import {
-  GoogleSheet,
-  RawCardInfoRow,
-  RawLayoutRow,
-} from "../data_structs/google_sheet";
+import { action, Action, thunk, Thunk } from "easy-peasy";
+import type GoogleSheet from "../interfaces/GoogleSheet";
+import type RawCardRow from "../interfaces/RawCardRow";
+import type RawLayoutRow from "../interfaces/RawLayoutRow";
+
 import { getSheet } from "../utils";
 import cardDataSheetKey from "../static/cardDataSheetKey";
 
@@ -13,21 +12,24 @@ type Result =
 
 export interface GoogleSheetsModel {
   //state
-  cardDataGoogleSheet: GoogleSheet<RawCardInfoRow> | null;
+  cardDataGoogleSheet: GoogleSheet<RawCardRow> | null;
   layoutDataGoogleSheet: GoogleSheet<RawLayoutRow> | null;
+
   //requests
   fetchCardDataGoogleSheet: Thunk<GoogleSheetsModel>;
   fetchLayoutDataGoogleSheet: Thunk<GoogleSheetsModel>;
+
   //setters
-  setCardDataGoogleSheet: Action<
-    GoogleSheetsModel,
-    GoogleSheet<RawCardInfoRow>
-  >;
+  setCardDataGoogleSheet: Action<GoogleSheetsModel, GoogleSheet<RawCardRow>>;
   setLayoutDataGoogleSheet: Action<
     GoogleSheetsModel,
     GoogleSheet<RawLayoutRow>
   >;
 }
+/**
+ * Responsible for making requestst to google sheetst. Other models must listen this model to intercept the sheet payload.
+ * Also stores the fetch data purely for debugging purposes.
+ */
 
 const googleSheetsModel: GoogleSheetsModel = {
   //state
@@ -35,13 +37,17 @@ const googleSheetsModel: GoogleSheetsModel = {
   cardDataGoogleSheet: null,
   //requests
   fetchCardDataGoogleSheet: thunk(async (actions, _, { getState }) => {
-    getSheet<RawCardInfoRow>(cardDataSheetKey, 1).then((sheet) => {
+    getSheet<RawCardRow>(cardDataSheetKey).then((sheet) => {
       console.log(sheet);
       actions.setCardDataGoogleSheet(sheet);
     });
   }),
   fetchLayoutDataGoogleSheet: thunk(async (actions, _, { getState }) => {
-    getSheet<RawLayoutRow>(cardDataSheetKey, 2).then((sheet) => {
+    const tempCardLayout = {
+      key: cardDataSheetKey.key,
+      sheet_number: 2,
+    };
+    getSheet<RawLayoutRow>(tempCardLayout).then((sheet) => {
       console.log(sheet);
       actions.setLayoutDataGoogleSheet(sheet);
     });

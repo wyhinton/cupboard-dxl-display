@@ -4,13 +4,11 @@ import {
   Thunk,
   Action,
   thunkOn,
-  actionOn,
-  ActionOn,
   ThunkOn,
   debug,
 } from "easy-peasy";
 import LayoutData from "../data_structs/LayoutData";
-import type { GoogleSheet, RawLayoutRow } from "../data_structs/google_sheet";
+import type GoogleSheet from "../interfaces/GoogleSheet";
 import { getSheet } from "../utils";
 import { StoreModel } from "./index";
 import CardData from "../data_structs/CardData";
@@ -30,7 +28,6 @@ export interface LayoutsModel {
   onLayoutSheetLoadSuccess: ThunkOn<LayoutsModel, never, StoreModel>;
 
   //requests
-  // fetchLayoutDataGoogleSheet: Thunk<LayoutsModel>;
 
   //simple setters
   setActiveLayout: Action<LayoutsModel, LayoutData>;

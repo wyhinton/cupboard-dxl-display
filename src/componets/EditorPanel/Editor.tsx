@@ -1,14 +1,13 @@
 import React from "react";
 import { Heading } from "evergreen-ui";
-import DropDownMenu from "../Util/DropDownMenu";
+import DropDownMenu from "../Shared/DropDownMenu";
 import { AppMode } from "../../enums";
 import "../../css/editorPanel.css";
-import ContentTable from "./ContentTable";
+import ContentTable from "./EditorTabs/ContentsTab";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import PerformanceTests from "./EditorSection/PerformanceTests";
-import LayoutManager from "./EditorSection/LayoutManager";
-import LayoutsTabel from "./LayoutsTable";
+import LayoutTab from "./EditorTabs/LayoutTab/LayoutTab";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
 const Editor = (): JSX.Element => {
@@ -24,8 +23,7 @@ const Editor = (): JSX.Element => {
           <ContentTable />
         </TabPanel>
         <TabPanel>
-          <LayoutsTabel />
-          <LayoutManager />
+          <LayoutTab />
         </TabPanel>
         <TabPanel>
           <PerformanceTests />
@@ -45,28 +43,9 @@ const FormSection = ({ title, children }: FormSectionProps) => {
       <div className={"form-section-header"}>
         <Heading size={500}>{title}</Heading>
       </div>
-      {/* <div
-        className={"handle"}
-        style={{ width: 100, height: 100, backgroundColor: "red" }}
-      ></div> */}
       <div style={{ display: "flex", flexWrap: "wrap" }}>{children}</div>
     </div>
   );
-};
-
-interface FormRowProps {
-  children: JSX.Element | JSX.Element[];
-}
-
-const FormRow = ({ children }: FormRowProps) => {
-  return <div className={"form-row"}>{children}</div>;
-};
-
-interface FormFooterProps {
-  children: JSX.Element | JSX.Element[];
-}
-const FormFooter = ({ children }: FormRowProps) => {
-  return <div className={"form-footer"}>{children}</div>;
 };
 
 export default Editor;

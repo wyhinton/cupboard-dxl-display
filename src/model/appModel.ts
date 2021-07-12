@@ -11,7 +11,7 @@ import {
 } from "easy-peasy";
 import { getSheet } from "../utils";
 import CardData from "../data_structs/CardData";
-import type { RawCardInfoRow } from "../data_structs/google_sheet";
+import type RawCardRow from "../interfaces/RawCardRow";
 import { Layouts, Layout } from "react-grid-layout";
 import defaultGridLayout from "../static/defaultLayouts";
 import { AppMode } from "../enums";
@@ -58,7 +58,6 @@ export interface AppDataModel {
   //local storage
   saveLayoutLocal: Thunk<AppDataModel>;
 }
-125;
 
 const appModel: AppDataModel = {
   //state
@@ -126,7 +125,7 @@ const appModel: AppDataModel = {
     (state, target) => {
       console.log("diong on cart sheet load success");
       console.log(target.payload);
-      const cards = target.payload.data.map((c) => new CardData(c));
+      const cards = target.payload.data.map((c: RawCardRow) => new CardData(c));
       console.log(cards);
       state.availableCards = cards;
     }

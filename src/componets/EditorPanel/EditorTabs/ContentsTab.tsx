@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useStoreState } from "../../hooks";
-import IXDrop from "../IXDrop";
-import XDrag from "../XDrag";
-import CardData from "../../data_structs/CardData";
-import "../../css/table.css";
+import { useStoreState } from "../../../hooks";
+import IXDrop from "../../IXDrop";
+import XDrag from "../../XDrag";
+import CardData from "../../../data_structs/CardData";
+import "../../../css/table.css";
 import { TextInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
-import TableHeader from "./TableHeader";
+import TableHeader from "../TableHeader";
 
-const ContentTable = () => {
+const ContentsTab = () => {
   const availableCards = useStoreState(
     (state) => state.appModel.availableCards
   );
@@ -161,7 +161,7 @@ function formatDate(date: Date | undefined): string {
     return "faulty date";
   }
 }
-export default ContentTable;
+export default ContentsTab;
 
 // import React, { useState, useEffect, useRef } from "react";
 // import { Table } from "evergreen-ui";
