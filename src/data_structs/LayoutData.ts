@@ -57,10 +57,11 @@ export default class LayoutData {
     console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
       v.forEach((layoutVal, i) => {
-        console.log(layoutVal);
-        if (layoutVal.i == toRemove.sourceId) {
-          console.log(layoutVal);
-        }
+        // console.log(layoutVal);
+        this.layout[k] = v.filter((l) => l.i !== toRemove.sourceId);
+        // if (layoutVal.i == toRemove.sourceId) {
+        //   console.log(layoutVal);
+        // }
       });
     }
   }

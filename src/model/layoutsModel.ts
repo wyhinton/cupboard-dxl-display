@@ -125,7 +125,7 @@ const layoutsModel: LayoutsModel = {
   ),
   deleteCard: thunk(
     (actions, cardToDelete, { getState, getStoreState, getStoreActions }) => {
-      console.log("deleting card");
+      console.log("deleting card at layotus model");
       console.log(cardToDelete);
 
       const prevLayout = getState().activeLayout;

@@ -29,6 +29,7 @@
   top: 0;
   left: 0;
   backdrop-filter: blur(2px);
+  z-index: 10;
 }
 /* 
 .modal-backdrop-active :nth-child(0) div {

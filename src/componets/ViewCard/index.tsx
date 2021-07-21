@@ -8,10 +8,8 @@ import React, {
 import CardInfo from "./CardInfo";
 import CardData from "../../data_structs/CardData";
 import { Layout } from "react-grid-layout";
-import { AppMode } from "../../enums";
 import { useStoreState, useStoreActions } from "../../hooks";
-import { useLongPress } from "react-use";
-import { CardView } from "../../enums";
+import { CardView, DndTypes, AppMode } from "../../enums";
 import classNames from "classnames";
 import "../../css/card.css";
 import Modal from "../Modal";
@@ -23,16 +21,15 @@ import {
   InPortal,
   OutPortal,
 } from "react-reverse-portal";
-import { AddIcon } from "evergreen-ui";
-import { useDraggable } from "@dnd-kit/core";
-import { DndTypes } from "../../enums";
+import { Layouts } from "react-grid-layout";
 interface ViewCardProps {
   cardType: DndTypes;
   children?: React.ReactElement[] | React.ReactElement;
   key?: string;
   activeKey?: React.MutableRefObject<string>;
   testkey?: string;
-  dataGrid?: Layout;
+  dataGrid?: Layouts;
+  layoutRef?: React.MutableRefObject<Layouts | null>;
   data?: CardData;
   setModal?: () => void;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -49,6 +46,7 @@ const ViewCard: FC<ViewCardProps> = ({
   children,
   activeKey,
   testkey,
+  layoutRef,
   data,
   setModal,
   onDoubleClick,
@@ -100,17 +98,11 @@ const ViewCard: FC<ViewCardProps> = ({
           console.log("it was full screen");
           break;
         default:
-          console.log("got defalt");
+          console.log("got default");
           break;
       }
     }
   };
-  // https://codesandbox.io/s/dndkit-k75i3?file=/index.tsx:756-796
-  // const { attributes, isDragging, transform, setNodeRef, listeners } =
-  //   useDraggable({
-  //     id: `test-draggable-item-${data?.sourceId}`,
-  //   });
-
   return (
     //receives a drag objects
     <div
@@ -128,13 +120,6 @@ const ViewCard: FC<ViewCardProps> = ({
           setModal();
         }
       }}
-      // onMouseEnter={(e) => {
-      //   console.log("entered card with id" + data?.sourceId);
-      //   console.log("entered card with key" + testkey);
-      // }}
-      // {...attributes}
-      // {...listeners}
-      //reference to the clicked card into order to get the cards transforms and copy it to the modal
       ref={elementRef}
     >
       {children ? (
@@ -143,8 +128,44 @@ const ViewCard: FC<ViewCardProps> = ({
             {appModeState == AppMode.EDIT && data ? (
               <DeleteButton
                 onClick={() => {
+                  console.log("got delete button click");
                   deleteCardAction(data);
                 }}
+                // onClick={() => {
+                //   console.log("clicked delete button");
+                //   onDoubleClick;
+
+                //   // console.log(layoutRef);
+                //   // if (layoutRef) {
+                //   //   const old = { ...layoutRef.current };
+                //   //   for (const [k, v] of Object.entries(old)) {
+                //   //     // let newItem: Layout = {
+                //   //     //   x: pos.x,
+                //   //     //   y: pos.y,
+                //   //     //   w: 1,
+                //   //     //   h: 1,
+                //   //     //   i: toAdd.sourceId,
+                //   //     // };
+                //   //     old[k] = v.filter((l) => l.i !== data.sourceId);
+                //   //     console.log(v.filter((l) => l.i !== data.sourceId));
+                //   //   }
+
+                //   //   layoutRef.current = old;
+                //   //   console.log(layoutRef.current);
+                //   //   // layoutRef.current = old.filter(
+                //   //   (l) => l.i === data.sourceId
+                //   // );
+                //   // for (const [k, v] of Object.entries(layoutRef.current)) {
+                //   //   let newItem: Layout = {
+                //   //     x: pos.x,
+                //   //     y: pos.y,
+                //   //     w: 1,
+                //   //     h: 1,
+                //   //     i: toAdd.sourceId,
+                //   //   };
+                //   //   this.layout[k].push(newItem);
+                //   // }
+                // }}
               />
             ) : (
               <></>

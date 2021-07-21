@@ -58,6 +58,26 @@ export const CardGrid: FC = () => {
   const [filledLayout, setFilledLayout] = useState(defaultLayouts);
   const [realLayout, setRealLayout] = useState(currentLayoutState?.layout);
   const localLayout = useRef<null | Layouts>(null);
+  const remove_item = (id: string, layout: Layouts) => {
+    let old = { ...localLayout.current };
+    if (old) {
+      for (const [k, v] of Object.entries(old)) {
+        // for (const [k, v] of Object.entries(layout)) {
+        old[k] = v.filter((l) => l.i !== id);
+        console.log(v.some((v) => v.i === id));
+        console.log(v.filter((l) => l.i !== id));
+        // console.log(v.filter());
+      }
+    }
+    localLayout.current = old;
+    console.log(localLayout.current);
+    // for (const [k, v] of Object.entries(localLayout)) {
+    //   // for (const [k, v] of Object.entries(layout)) {
+    //     layout[k] = v.filter((l) => l.i !== id);
+    //     console.log(v.filter((l) => l.i !== id));
+    //   }
+  };
+
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
   useEffect(() => {
@@ -173,6 +193,10 @@ export const CardGrid: FC = () => {
                       setModal={() => {
                         console.log(card);
                         activeKeyRef.current = i.toString();
+                      }}
+                      onDoubleClick={() => {
+                        console.log("removing item");
+                        remove_item(card.sourceId, defaultLayouts);
                       }}
                       activeKey={activeKeyRef}
                     >
