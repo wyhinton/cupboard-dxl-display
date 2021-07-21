@@ -1,7 +1,6 @@
 import React, {
   PropsWithChildren,
   useState,
-  useEffect,
   useRef,
   FC,
   ReactElement,
@@ -18,14 +17,18 @@ import "../../css/card.css";
 import Modal from "../Modal";
 import type { HtmlPortalNode } from "react-reverse-portal";
 import { Component } from "evergreen-ui/node_modules/@types/react";
+import { DeleteIcon } from "evergreen-ui";
 import {
   createHtmlPortalNode,
   InPortal,
   OutPortal,
 } from "react-reverse-portal";
-
+import { AddIcon } from "evergreen-ui";
+import { useDraggable } from "@dnd-kit/core";
+import { DndTypes } from "../../enums";
 interface ViewCardProps {
-  children: React.ReactElement[] | React.ReactElement;
+  cardType: DndTypes;
+  children?: React.ReactElement[] | React.ReactElement;
   key?: string;
   activeKey?: React.MutableRefObject<string>;
   testkey?: string;
@@ -35,11 +38,14 @@ interface ViewCardProps {
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 /**
- * Wraps card content. Handles the reactive styling of componets.
+ * Wraps each of the cards in the card layouts, regardless of what type of card it is. T
+ * Click causes the component to render to the modal view, and clicking out of that modal view sets the target
+ * portal back to it's own div.
  * @component
  */
 
 const ViewCard: FC<ViewCardProps> = ({
+  cardType,
   children,
   activeKey,
   testkey,
@@ -50,11 +56,17 @@ const ViewCard: FC<ViewCardProps> = ({
   const elementRef = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [cardView, setCardView] = useState(CardView.NORMAL);
+  const deleteCardAction = useStoreActions(
+    (actions) => actions.layoutsModel.deleteCard
+  );
 
   const cardClass = classNames("card", {
     "card-edit": appModeState === AppMode.EDIT,
     "card-display": appModeState === AppMode.DISPLAY,
     "card-preview": cardView === CardView.PREVIEW,
+    "card-empty": appModeState === AppMode.EDIT && !children,
+    "card-empty-hidden": !children && appModeState == AppMode.DISPLAY,
+    "card-locked": cardType === DndTypes.CLOCK && appModeState === AppMode.EDIT,
   });
 
   const cardInfoClass = classNames("info", {
@@ -63,11 +75,11 @@ const ViewCard: FC<ViewCardProps> = ({
     "info-preview": cardView === CardView.PREVIEW,
   });
 
+  //generate a portal for each card
   const portalNode = React.useMemo(
-    // () => createHtmlPortalNode(),
     () =>
       createHtmlPortalNode({
-        attributes: { id: "div-1", style: "height: 100%" },
+        attributes: { class: "card-portal", style: "height: 100%" },
       }),
     []
   );
@@ -93,33 +105,11 @@ const ViewCard: FC<ViewCardProps> = ({
       }
     }
   };
-
-  const determineOut = (
-    chil: ReactElement | ReactElement[],
-    view: CardView,
-    node: HtmlPortalNode<Component<any>>,
-    // rect: DOMRect | undefined,
-    isActive: boolean
-  ): ReactElement => {
-    //if in preview mode or full screen mode render card to the portal
-    if (
-      (view === CardView.PREVIEW || view === CardView.FULL_SCREEN) &&
-      isActive
-    ) {
-      console.log("passed");
-      return (
-        <Modal
-          text={"hello"}
-          portal={node}
-          // boundingRect={targetBoundingBox}
-          mode={view}
-        ></Modal>
-      );
-    } else {
-      console.log("did not pass");
-      return <OutPortal node={node}></OutPortal>;
-    }
-  };
+  // https://codesandbox.io/s/dndkit-k75i3?file=/index.tsx:756-796
+  // const { attributes, isDragging, transform, setNodeRef, listeners } =
+  //   useDraggable({
+  //     id: `test-draggable-item-${data?.sourceId}`,
+  //   });
 
   return (
     //receives a drag objects
@@ -134,56 +124,111 @@ const ViewCard: FC<ViewCardProps> = ({
       }}
       onMouseUp={() => {
         onLongPress();
-        // console.log("got simple mouse up");
         if (setModal) {
           setModal();
         }
       }}
+      // onMouseEnter={(e) => {
+      //   console.log("entered card with id" + data?.sourceId);
+      //   console.log("entered card with key" + testkey);
+      // }}
+      // {...attributes}
+      // {...listeners}
       //reference to the clicked card into order to get the cards transforms and copy it to the modal
       ref={elementRef}
     >
-      <InPortal node={portalNode}>
-        <div className={"card-child-container"} style={{ height: "100%" }}>
-          {children}
-        </div>
-        {data ? <CardInfo data={data} className={cardInfoClass} /> : ""}
-      </InPortal>
-      {determineOut(
-        children,
-        cardView,
-        portalNode,
-        activeKey?.current == testkey
+      {children ? (
+        <InPortal node={portalNode}>
+          <div className={"card-child-container"} style={{ height: "100%" }}>
+            {appModeState == AppMode.EDIT && data ? (
+              <DeleteButton
+                onClick={() => {
+                  deleteCardAction(data);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+
+            {appModeState == AppMode.EDIT && cardType == DndTypes.CLOCK ? (
+              <></>
+            ) : (
+              children
+            )}
+          </div>
+          {cardView === CardView.PREVIEW &&
+          cardType !== DndTypes.CLOCK &&
+          data ? (
+            <CardInfo data={data} className={cardInfoClass} />
+          ) : (
+            <></>
+          )}
+        </InPortal>
+      ) : (
+        <></>
+      )}
+
+      {children ? (
+        setOutPutNode(
+          children,
+          cardView,
+          portalNode,
+          activeKey?.current == testkey
+        )
+      ) : (
+        <></>
       )}
     </div>
   );
 };
 
-// function memo(
-//   Component: FC<ViewCardProps>,
-//   propsAreEqual?: (
-//     prevProps: Readonly<PropsWithChildren<P>>,
-//     nextProps: Readonly<PropsWithChildren<P>>
-//   ) => boolean
-// ): NamedExoticComponent<PropsWithChildren<P>>;
-// function propsAreEqual(prev: Readonly<PropsWithChildren<>>,, next) {
-//   if (next.toChild.includes(next.number)) { return false }
-//   else if ( next.anotherProperty === next.someStaticProperty ) { return false }
-//   else { return true }
-//  }
-// function memo<P>(
-//   Component: FC<P>,
-//   propsAreEqual?: (
-//     prevProps: Readonly<PropsWithChildren<P>>,
-//     nextProps: Readonly<PropsWithChildren<P>>
-//   ) => boolean
-// );
+//depending on the view state of the card, change its html output node
+const setOutPutNode = (
+  chil: ReactElement | ReactElement[],
+  view: CardView,
+  node: HtmlPortalNode<Component<any>>,
+  isActive: boolean
+): ReactElement => {
+  //if in preview mode or full screen mode render card to the portal
+  if (
+    (view === CardView.PREVIEW || view === CardView.FULL_SCREEN) &&
+    isActive
+  ) {
+    console.log("passed");
+    return (
+      <Modal
+        text={"hello"}
+        portal={node}
+        // boundingRect={targetBoundingBox}
+        mode={view}
+      ></Modal>
+    );
+  } else {
+    console.log("did not pass");
+    return <OutPortal node={node}></OutPortal>;
+  }
+};
 
-// const propsAreEqual<P> = (
-//   prevProps: Readonly<PropsWithChildren<P>>,
-//   nextProps: Readonly<PropsWithChildren<P>>
-//  ):boolean => {
+interface DeleteButtonProps {
+  onClick: React.MouseEventHandler<HTMLDivElement>;
+}
 
-//  }
+const DeleteButton = ({ onClick }: DeleteButtonProps) => {
+  const deleteButtonStyle = {
+    position: "absolute",
+    top: "-1em",
+    left: "-1em",
+    width: "fit-content",
+    height: "fit-content",
+    // backgroundColor: "red",
+  } as React.CSSProperties;
+  return (
+    <div style={deleteButtonStyle} onMouseUp={onClick}>
+      <DeleteIcon size={25} />
+    </div>
+  );
+};
+
 function propsAreEqual(
   prevProps: Readonly<PropsWithChildren<ViewCardProps>>,
   nextProps: Readonly<PropsWithChildren<ViewCardProps>>

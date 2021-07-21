@@ -20,19 +20,6 @@ const LayoutManager = () => {
   );
   return (
     <>
-      {/* <DropDownMenu
-    onSelect={(item) => {
-      manageViewModeChange(
-        AppMode[item.label as unknown as keyof typeof AppMode]
-      );
-      console.log(item);
-    }}
-    items={Object.keys(AppMode).map(
-      (k) => ({ label: k, value: k } as SelectMenuItem)
-    )}
-    title={"View Mode"}
-  /> */}
-
       <DropDownMenu
         onSelect={(item) => {
           console.log(item);

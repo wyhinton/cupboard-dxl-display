@@ -1,0 +1,17 @@
+.clock-container {
+  backdrop-filter: "blur(4px)";
+  height: "100%";
+  padding: ".5em";
+  width: "100%";
+  font-size: "48pt";
+  font-weight: 600;
+  color: "white";
+  box-sizing: "border-box";
+  font-size: large;
+}
+
+.clock-divider {
+  height: ".5em";
+  background-color: "white";
+  width: "100%";
+}

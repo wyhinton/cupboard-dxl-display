@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import "../css/clock.css";
 /**
  * Simple clock widget for displaying the current time.
  * @component
@@ -13,12 +13,12 @@ const Clock = (): JSX.Element => {
   const containerStyle = {
     backdropFilter: "blur(4px)",
     height: "100%",
-    padding: ".5em",
+    padding: ".25em",
     width: "100%",
-    // textSize:
-    fontSize: "48pt",
+    fontSize: "36pt",
     fontWeight: 600,
     color: "white",
+    boxSizing: "border-box",
   } as React.CSSProperties;
 
   const dividerStyle = {

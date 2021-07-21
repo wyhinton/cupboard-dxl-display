@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useStoreState, useStoreActions } from "../../../../hooks";
-//test
+
+/**
+ * Table for displaying the available card layouts
+ * @returns
+ */
+
 const LayoutsTable = () => {
   const externalLayoutsState = useStoreState(
     (state) => state.layoutsModel.externalLayouts

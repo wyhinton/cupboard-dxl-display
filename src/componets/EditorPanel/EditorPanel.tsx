@@ -85,29 +85,3 @@ const PanelHeader = ({ onMinimize, visible }: PanelHeaderProps) => {
     </div>
   );
 };
-
-{
-  /* <DragAndDock.Provider>
-<DragAndDock.Area>
-  <DragAndDock.Area.Panel
-    styles={styles}
-    className={"my panel"}
-    title=""
-    defaultPosition={{ x: 100, y: 100 }}
-    defaultHeight={minimized ? 100 : 500}
-    defaultWidth={minimized ? 100 : 500}
-  >
-    <div className={editorClass} ref={parentRef}>
-      <PanelHeader
-        onMinimize={() => {
-          setMinimized(!minimized);
-        }}
-        visible={visible}
-      ></PanelHeader>
-      <EditorForm />
-    </div>
-  </DragAndDock.Area.Panel>
-</DragAndDock.Area>
-</DragAndDock.Provider>
-</> */
-}

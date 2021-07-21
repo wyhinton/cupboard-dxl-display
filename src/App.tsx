@@ -10,8 +10,10 @@ import {
   DragDropContext,
   DraggableLocation,
 } from "react-beautiful-dnd";
+import { DndContext } from "@dnd-kit/core";
 import EditorPanel from "./componets/EditorPanel/EditorPanel";
-import type { SwapInfo } from "./model/layoutsModel";
+import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
+import { GridPosition } from "./interfaces/GridPosition";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
@@ -22,8 +24,6 @@ const App: FC = () => {
   const toggleViewModeThunk = useStoreActions(
     (actions) => actions.appModel.toggleViewMode
   );
-
-  // useKeyPressEvent("F4", toggleViewModeThunk());
 
   const fetchCardDataGoogleSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchCardDataGoogleSheet
@@ -37,17 +37,17 @@ const App: FC = () => {
   const swapCardDataAction = useStoreActions(
     (actions) => actions.layoutsModel.swapCardContent
   );
+  const cardAddAction = useStoreActions(
+    (actions) => actions.layoutsModel.addCard
+  );
 
+  /**On app start make one-time fetch requests */
   useEffect(() => {
     fetchCardDataGoogleSheetThunk();
     fetchLayoutDataGoogleSheetThunk();
     loadLocalLayoutsAction();
-    console.log("fetching data");
+    // console.log("fetching data");
   }, []);
-
-  // useEffect(() => {
-  //   setAvailableLayouts(localStorageLayouts);
-  // }, [localStorageLayouts]);
 
   const containerStyle = {
     width: "100vw",
@@ -66,7 +66,26 @@ const App: FC = () => {
   //   }
   //   return false;
   // };
+  const cardIsEmpty = (cardId: string): boolean => {
+    return cardId.startsWith("empty");
+  };
+
+  const strToGridPos = (cardId: string): GridPosition => {
+    //card id's of empty cards is of "empty_card_[x, y]" format
+    const posString = cardId.split("[")[1];
+    //x,y]
+    const x = parseInt(posString.charAt(0));
+    //x
+    const y = parseInt(posString.charAt(3));
+    //y
+    return {
+      x: x,
+      y: y,
+    } as GridPosition;
+  };
+
   const onDragEnd = (res: DropResult) => {
+    console.log(res);
     console.log("processing drag end");
     if (res.destination?.droppableId == res.source?.droppableId) return;
     console.log(res);
@@ -77,11 +96,24 @@ const App: FC = () => {
         destination?.droppableId
       } current title: ${"yes"}`
     );
+
     if (!destination) return;
-    swapCardDataAction({
-      sourceId: draggableId,
-      targetId: destination.droppableId,
-    });
+    if (destination.droppableId) {
+      if (cardIsEmpty(destination.droppableId)) {
+        const cardPos = strToGridPos(destination.droppableId);
+        const addEvent = {
+          sourceId: draggableId,
+          targetPosition: cardPos,
+        } as CardAddEvent;
+        cardAddAction(addEvent);
+        console.log("dropped onto an empty card, adding card");
+      } else {
+        swapCardDataAction({
+          sourceId: draggableId,
+          targetId: destination.droppableId,
+        } as CardSwapEvent);
+      }
+    }
   };
 
   return (
@@ -99,9 +131,22 @@ const App: FC = () => {
         <Background />
         <DragDropContext onDragEnd={onDragEnd}>
           <EditorPanel />
-          {/* <EditorPanel visible={viewModeState === AppMode.EDIT} /> */}
+
           <div style={containerStyle}>
-            <CardGrid />
+            <DndContext
+              onDragStart={(e) => {
+                console.log(e);
+              }}
+              onDragEnd={(e) => {
+                const { active, over } = e;
+                console.log(event);
+                console.log(active);
+                console.log(over);
+                console.log(e);
+              }}
+            >
+              <CardGrid />
+            </DndContext>
           </div>
         </DragDropContext>
       </div>

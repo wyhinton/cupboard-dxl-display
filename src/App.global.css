@@ -17,6 +17,7 @@ body {
   background-color: gray;
   font-family: sans-serif;
   /* overflow-y: hidden; */
+  contain: layout;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,17 +27,9 @@ body {
   width: 150vw;
   height: 120vh;
 }
-h1,
-p {
-  font-family: Lato;
-}
 
 .box {
   border: 1px solid #f00;
-}
-
-.box.custom {
-  border: 1px solid #0f0;
 }
 
 .wrapper {
@@ -44,6 +37,10 @@ p {
 }
 .div {
   height: 100%;
+}
+
+.react-draggable {
+  overflow: visible !important;
 }
 .react-draggable .react-resizable-handle {
   position: absolute;
@@ -63,10 +60,12 @@ p {
   -ms-transform: none !important;
   -o-transform: none !important;
   -moz-transform: none !important;
+  overflow: visible;
 }
 
 .react-grid-item {
   display: flex;
+  overflow: visible;
 }
 
 .react-grid-item div {
@@ -83,4 +82,9 @@ p {
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+.centered-flex {
+  display: flex;
+  justify-content: center;
 }

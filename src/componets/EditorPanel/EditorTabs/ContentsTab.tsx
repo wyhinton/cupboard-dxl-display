@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, FC } from "react";
 import { useStoreState } from "../../../hooks";
 import IXDrop from "../../IXDrop";
 import XDrag from "../../XDrag";
@@ -7,24 +7,46 @@ import "../../../css/table.css";
 import { TextInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import TableHeader from "../TableHeader";
+import UseTip from "./UseTip";
+import { DndTypes } from "../../../enums";
+/**
+ * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
+ * @returns
+ */
 
-const ContentsTab = () => {
+const ContentsTab: FC = () => {
   const availableCards = useStoreState(
     (state) => state.appModel.availableCards
   );
   const [filterKey, setFilterKey] = useState<string | undefined>(undefined);
   const [cardItems, setCardItems] = useState(availableCards);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTr, setSelectedTr] = useState(null);
+  const [filteredCards, setFilteredCards] =
+    useState<CardData[]>(availableCards);
 
+  //use search input to filter cards
   useEffect(() => {
-    console.log(searchTerm);
-    const test = fuzzysort.go(
-      searchTerm,
-      cardItems.map((c) => c.title)
-    );
-    console.log(test);
-  }, [searchTerm]);
+    if (searchTerm.length > 0) {
+      const sortResult = fuzzysort.go(
+        searchTerm,
+        cardItems.map((c) => c.title)
+      );
+      // let filtered = sortResult.map((s) => s.);
+      const aboveThreshholdCardTitles: string[] = sortResult.map(
+        (s) => s.target
+      );
+      console.log(aboveThreshholdCardTitles);
+      const filtered = cardItems.filter((c) =>
+        aboveThreshholdCardTitles.includes(c.title)
+      );
+      setFilteredCards(filtered);
+    } else {
+      setFilteredCards(cardItems);
+    }
+  }, [searchTerm, cardItems]);
 
+  //sort values by column attribute
   useEffect(() => {
     const key = filterKey as keyof CardData;
     const clone = [...availableCards];
@@ -43,22 +65,19 @@ const ContentsTab = () => {
         }
         return 0;
       })
-      // setCardItems(availableCards);
     );
     console.log(filterKey);
   }, [filterKey, availableCards]);
 
   const cardList = useRef<CardData[]>(availableCards);
-  // const sortBy = () => {}
-  const sortBy = (k: keyof CardData, func: (c: CardData) => number): void => {
-    const clone = [...cardList.current];
-    cardList.current = clone.sort(func);
-  };
-  useEffect(() => {
-    console.log(availableCards);
-  }, [availableCards]);
+  // const sortBy = (k: keyof CardData, func: (c: CardData) => number): void => {
+  //   const clone = [...cardList.current];
+  //   cardList.current = clone.sort(func);
+  // };
+
   return (
     <div>
+      <UseTip tip={"Drag and drop a table row to a card to load new content"} />
       <TextInput
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
           setSearchTerm(e.currentTarget.value)
@@ -73,10 +92,10 @@ const ContentsTab = () => {
         className={"table-container"}
         droppableId={"Card Content Table"}
         isDropDisabled={true}
+        cardType={DndTypes.CLOCK}
       >
         <table>
           <tbody>
-            {/* <thead> */}
             <tr>
               <TableHeader
                 title={"Title"}
@@ -99,9 +118,10 @@ const ContentsTab = () => {
                 onClick={() => setFilterKey("interaction")}
               ></TableHeader>
             </tr>
-            {cardItems.map((card, i) => {
+            {filteredCards.map((card, i) => {
               return (
                 <XDrag
+                  dndType={DndTypes.CARD_ROW}
                   draggableId={card.sourceId}
                   index={i}
                   key={i.toString()}
@@ -114,23 +134,8 @@ const ContentsTab = () => {
                 >
                   <>
                     <td>
-                      <div style={{ display: "flex" }}>
-                        <img
-                          className={"row-favicon"}
-                          src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`}
-                        ></img>
-                        <div
-                          style={{
-                            marginTop: "auto",
-                            marginBottom: "auto",
-                            textAlign: "left",
-                          }}
-                        >
-                          {card.title}
-                        </div>
-                      </div>
+                      <TitleWithIcon card={card} />
                     </td>
-
                     <td>{formatDate(card.added)}</td>
                     <td>{card.src}</td>
                     <td>{card.author}</td>
@@ -161,46 +166,34 @@ function formatDate(date: Date | undefined): string {
     return "faulty date";
   }
 }
+
+interface CardTitleProps {
+  card: CardData;
+}
+
+/**
+ * Fetches a favicon for a card and displays the cards title
+ * @param card
+ * @returns
+ */
+const TitleWithIcon: FC<CardTitleProps> = (card) => {
+  return (
+    <div style={{ display: "flex" }}>
+      <img
+        className={"row-favicon"}
+        src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${card.card.src}`}
+      ></img>
+      <div
+        style={{
+          marginTop: "auto",
+          marginBottom: "auto",
+          textAlign: "left",
+        }}
+      >
+        {card.card.src}
+      </div>
+    </div>
+  );
+};
+
 export default ContentsTab;
-
-// import React, { useState, useEffect, useRef } from "react";
-// import { Table } from "evergreen-ui";
-// import { useStoreState, useStoreActions } from "../../hooks";
-
-// const ContentTable = () => {
-//   // const [, setcur] = useState(value);
-//   const availableCards = useStoreState((state) => state.appData.availableCards);
-//   useEffect(()=>{
-//     console.log(availableCards);
-//   },[availableCards]);
-//   return (
-//     <div>
-//       <Table>
-//         <Table.Head>
-//           <Table.SearchHeaderCell />
-//           <Table.TextHeaderCell>Title</Table.TextHeaderCell>
-//           <Table.TextHeaderCell>URL</Table.TextHeaderCell>
-//           <Table.TextHeaderCell>Date Added</Table.TextHeaderCell>
-//         </Table.Head>
-
-//         {/* <Table.VirtualBody allowAutoHeight = {true} estimatedItemSize = {40}> */}
-//         <Table.VirtualBody height = {250} estimatedItemSize = {10}>
-//           {availableCards.map((card) => (
-//             <Table.Row
-//               height = {40}
-//               key={card.src}
-//               isSelectable
-//               onSelect={() => alert(card.src)}
-//             >
-//               <Table.TextCell>{card.src}</Table.TextCell>
-//               <Table.TextCell>{card.title}</Table.TextCell>
-//               <Table.TextCell>{card.added?.toString()??"undefined"}</Table.TextCell>
-//             </Table.Row>
-//           ))}
-//         </Table.VirtualBody>
-//       </Table>
-//     </div>
-//   );
-// };
-
-// export default ContentTable;

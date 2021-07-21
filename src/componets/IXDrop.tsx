@@ -2,13 +2,15 @@ import React, { FC, ReactNode, useEffect } from "react";
 import { Droppable, DroppableProps } from "react-beautiful-dnd";
 import { AddIcon } from "evergreen-ui";
 import "../css/droppable.css";
-
+import Pulsar from "./Shared/Pulsar";
+import { DndTypes } from "../enums";
 interface IXDrop extends Omit<DroppableProps, "children"> {
   children: ReactNode;
+  cardType: DndTypes;
   className?: string;
 }
 
-const IXDrop: FC<IXDrop> = ({ children, className, ...props }) => {
+const IXDrop: FC<IXDrop> = ({ children, className, cardType, ...props }) => {
   // console.log();
   // useEffect(() => {
   //   // console.log(props);
@@ -19,7 +21,8 @@ const IXDrop: FC<IXDrop> = ({ children, className, ...props }) => {
   //   "droppable-hovered": snahsp,
   // });
   return (
-    <Droppable {...props}>
+    // <Droppable {...props}>
+    <Droppable {...props} type={"DEFAULT"}>
       {(provided, snapshot) => {
         // console.log(provided);
         return (
@@ -38,7 +41,8 @@ const IXDrop: FC<IXDrop> = ({ children, className, ...props }) => {
                   : "droppable-overlay droppable-overlay-hidden"
               }
             >
-              <AddIcon size={200}></AddIcon>
+              <Pulsar />
+              {/* <AddIcon size={200}></AddIcon> */}
             </div>
             {children}
             {provided.placeholder}

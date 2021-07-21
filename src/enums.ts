@@ -19,3 +19,10 @@ export enum InteractionType {
   ACTIVE = "ACTIVE",
   STATIC = "STATIC",
 }
+
+export enum DndTypes {
+  PLACEHOLDER = "PLACEHOLDER",
+  CLOCK = "CLOCK",
+  IFRAME = "IFRAME",
+  CARD_ROW = "CARD_ROW",
+}

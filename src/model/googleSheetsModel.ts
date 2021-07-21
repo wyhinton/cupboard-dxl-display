@@ -27,7 +27,7 @@ export interface GoogleSheetsModel {
   >;
 }
 /**
- * Responsible for making requestst to google sheetst. Other models must listen this model to intercept the sheet payload.
+ * Responsible for making requestst to google sheets. Other models must listen this model to intercept the sheet payload.
  * Also stores the fetch data purely for debugging purposes.
  */
 
@@ -36,13 +36,19 @@ const googleSheetsModel: GoogleSheetsModel = {
   layoutDataGoogleSheet: null,
   cardDataGoogleSheet: null,
   //requests
-  fetchCardDataGoogleSheet: thunk(async (actions, _, { getState }) => {
+  /**Handle a request to the google sheet containing the cards
+   * listeners: appModel.onCardSheetLoadSuccess
+   */
+  fetchCardDataGoogleSheet: thunk(async (actions) => {
     getSheet<RawCardRow>(cardDataSheetKey).then((sheet) => {
       console.log(sheet);
       actions.setCardDataGoogleSheet(sheet);
     });
   }),
-  fetchLayoutDataGoogleSheet: thunk(async (actions, _, { getState }) => {
+  /**Handle a request to the google sheet containing the layouts
+   * listeners: layoutsModel.onLayoutSheetLoadSuccess
+   */
+  fetchLayoutDataGoogleSheet: thunk(async (actions) => {
     const tempCardLayout = {
       key: cardDataSheetKey.key,
       sheet_number: 2,

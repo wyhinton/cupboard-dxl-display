@@ -13,10 +13,11 @@
   pointer-events: all;
   overflow: hidden;
   background-color: #2d2d2d;
-  border: 1px solid white;
+  border: 1px solid black;
   transition: width 0.5s, height 0.5s;
   color: white;
   border-radius: 0.5em;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .editor-panel-minimized {
   width: 10rem;

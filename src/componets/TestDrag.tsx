@@ -1,10 +1,8 @@
 import React, { FC, ReactNode } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
 import ReactTable from "react-table";
-import { DndTypes } from "../enums";
 
 interface IXDrag extends Omit<DraggableProps, "children"> {
-  dndType: DndTypes;
   className?: string;
   children: ReactNode;
   dragAll?: boolean;
@@ -15,13 +13,7 @@ interface IXDrag extends Omit<DraggableProps, "children"> {
  * @param param0
  * @returns
  */
-const XDrag: FC<IXDrag> = ({
-  dndType,
-  className,
-  children,
-  dragAll,
-  ...props
-}) => {
+const TestDrag: FC<IXDrag> = ({ className, children, dragAll, ...props }) => {
   console.log(React.isValidElement(children));
   // console.log(props);
   if (!React.isValidElement(children)) return <div />;
@@ -32,22 +24,22 @@ const XDrag: FC<IXDrag> = ({
         const dragHandleProps = dragAll ? provided.dragHandleProps : {};
         return (
           <>
-            <tr
+            <div
               className={className}
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...dragHandleProps}
             >
               {React.cloneElement(children, { provided })}
-            </tr>
-            <tr
+            </div>
+            <div
               style={{
                 display: snapshot.isDragging ? "table-row" : "none",
                 backgroundColor: snapshot.isDragging ? "green" : "none",
               }}
             >
               {React.cloneElement(children, { provided })}
-            </tr>
+            </div>
           </>
         );
       }}
@@ -55,8 +47,8 @@ const XDrag: FC<IXDrag> = ({
   );
 };
 
-XDrag.defaultProps = {
+TestDrag.defaultProps = {
   dragAll: true,
 };
 
-export default React.memo(XDrag);
+export default React.memo(TestDrag);

@@ -69,6 +69,7 @@ const appModel: AppDataModel = {
   localStorageLayouts: [],
 
   //managers
+  /**Control side effects for altering the view state of the app, and dispatch a setter for the state */
   manageViewModeChange: thunk((actions, viewModeEnum) => {
     console.log(viewModeEnum);
     actions.setAppMode(viewModeEnum);
@@ -85,6 +86,7 @@ const appModel: AppDataModel = {
   }),
   toggleViewMode: thunk((actions, _, { getState }) => {
     console.log("toggling view mod ");
+
     switch (getState().appMode) {
       case AppMode.EDIT:
         actions.setAppMode(AppMode.DISPLAY);
@@ -133,11 +135,14 @@ const appModel: AppDataModel = {
 
   onSetActiveLayout: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.setActiveLayout,
-    async (actions, payload, { getState }) => {
+    async (actions, layout, { getState }) => {
       console.log("listened for setActiveLayout at app_model");
-      const activeSources = payload.payload
+
+      //if a card source is in the active layout, then it must be active
+      const activeSources = layout.payload
         .sources()
         .filter((s) => s !== "clock");
+
       console.log(activeSources);
       //async thunk issue
       console.log(getState().availableCards);
