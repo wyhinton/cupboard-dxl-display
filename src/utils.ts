@@ -9,9 +9,9 @@ export function getSheet<T>(sheetId: SheetId): Promise<GoogleSheet<T>> {
         console.log(sheet);
         resolve(sheet);
       })
-      .catch((err: unknown) => {
+      .catch((error: unknown) => {
         console.error(
-          `Error: ${err} fetching DOC_KEY ${sheetId.key}, sheet number ${sheetId.sheet_number}`
+          `Error: ${error} fetching DOC_KEY ${sheetId.key}, sheet number ${sheetId.sheet_number}`
         );
       });
   });

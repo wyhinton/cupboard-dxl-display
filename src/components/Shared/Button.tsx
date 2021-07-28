@@ -6,7 +6,7 @@ import { Button as EverGreenButton, ButtonAppearance } from "evergreen-ui";
  * @component
  */
 
-interface ButtonProps {
+interface ButtonProperties {
   onClick: React.MouseEventHandler<HTMLDivElement>;
   text: string;
   appearance?: ButtonAppearance;
@@ -19,7 +19,7 @@ const Button = ({
   appearance,
   className,
   iconBefore,
-}: ButtonProps): JSX.Element => {
+}: ButtonProperties): JSX.Element => {
   return (
     <div onMouseUp={onClick}>
       <EverGreenButton

@@ -20,23 +20,23 @@ const XDrag: FC<IXDrag> = ({
   className,
   children,
   dragAll,
-  ...props
+  ...properties
 }) => {
   console.log(React.isValidElement(children));
   // console.log(props);
   if (!React.isValidElement(children)) return <div />;
   // const child = React.memo(children, []);
   return (
-    <Draggable {...props}>
+    <Draggable {...properties}>
       {(provided, snapshot) => {
-        const dragHandleProps = dragAll ? provided.dragHandleProps : {};
+        const dragHandleProperties = dragAll ? provided.dragHandleProps : {};
         return (
           <>
             <tr
               className={className}
               ref={provided.innerRef}
               {...provided.draggableProps}
-              {...dragHandleProps}
+              {...dragHandleProperties}
             >
               {React.cloneElement(children, { provided })}
             </tr>

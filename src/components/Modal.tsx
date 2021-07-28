@@ -12,7 +12,7 @@ import { CardView } from "../enums";
  * @component
  */
 
-interface ModalProps {
+interface ModalProperties {
   // ref: HTMLDivElement;
   text: string;
   mode?: CardView;
@@ -20,7 +20,7 @@ interface ModalProps {
   portal?: HtmlPortalNode<Component<any>>;
 }
 
-const Modal = ({ mode, onClick, portal }: ModalProps): JSX.Element => {
+const Modal = ({ mode, onClick, portal }: ModalProperties): JSX.Element => {
   const [viewMode, setViewMode] = useState(CardView.GRID);
   useEffect(() => {
     console.log("got mode change");
@@ -41,15 +41,15 @@ const Modal = ({ mode, onClick, portal }: ModalProps): JSX.Element => {
         </div>
       </MyBackdrop>
     </>,
-    document.getElementById("portal") as HTMLElement
+    document.querySelector("#portal") as HTMLElement
   );
 };
 export default Modal;
 
-interface BackdropProps {
+interface BackdropProperties {
   show: boolean;
   children: JSX.Element | JSX.Element[];
 }
-const MyBackdrop = ({ show, children }: BackdropProps) => {
+const MyBackdrop = ({ show, children }: BackdropProperties) => {
   return <div className={"modal-backdrop-active "}>{children}</div>;
 };

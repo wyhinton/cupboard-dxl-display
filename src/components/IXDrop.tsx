@@ -11,9 +11,9 @@ interface IXDrop extends Omit<DroppableProps, "children"> {
 }
 
 /**A droppable container. Wraps child widgets in a react-beautiful-dnd Droppable component, and renders a "+" if a draggable is dragging over the container */
-const IXDrop: FC<IXDrop> = ({ children, className, cardType, ...props }) => {
+const IXDrop: FC<IXDrop> = ({ children, className, cardType, ...properties }) => {
   return (
-    <Droppable {...props} type={"DEFAULT"}>
+    <Droppable {...properties} type={"DEFAULT"}>
       {(provided, snapshot) => {
         return (
           <div

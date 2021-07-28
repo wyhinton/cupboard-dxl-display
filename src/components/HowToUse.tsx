@@ -3,29 +3,36 @@ import { InfoSignIcon } from "evergreen-ui";
 import ReactDom from "react-dom";
 import "../css/howToUse.css";
 import classNames from "classnames";
-import { useStoreState } from "easy-peasy";
+// import { useStoreState } from "easy-peasy";
+import { useStoreState } from "../hooks";
 import Button from "./Shared/Button";
+import classnames from "classnames";
+import { AppMode } from "../enums";
+
 const HowToUse = (): JSX.Element => {
   const [popUpVisible, setPopUpVisible] = useState(false);
+
+  const appModeState = useStoreState((state) => state.appModel.appMode);
+
   const howToPopupContainerClass = classNames("how-to-backdrop", {
     "how-to-backdrop-active": popUpVisible,
     "how-to-backdrop-inactive": !popUpVisible,
   });
 
+  const buttonContainerClass = classNames("how-to-container", {
+    "how-to-container-active": appModeState === AppMode.DISPLAY,
+    "how-to-container-inactive": appModeState === AppMode.EDIT,
+  });
   const container = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    container.current = document.getElementById("how-to-use-popup");
+    container.current = document.querySelector("#how-to-use-popup");
     if (container.current) {
       container.current.style.display = "none";
     }
   }, []);
   useEffect(() => {
     if (container.current) {
-      if (popUpVisible) {
-        container.current.style.display = "initial";
-      } else {
-        container.current.style.display = "none";
-      }
+      container.current.style.display = popUpVisible ? "initial" : "none";
     }
   }, [popUpVisible]);
   return (
@@ -48,8 +55,23 @@ const HowToUse = (): JSX.Element => {
         }}
         className={howToPopupContainerClass}
       ></div>
-      <div className={"how-to-container"}>
-        <HowToPopup active={popUpVisible} />
+      <div className={buttonContainerClass}>
+        {appModeState === AppMode.DISPLAY ? (
+          <div>
+            <HowToPopup active={popUpVisible} />
+            <Button
+              iconBefore={<InfoSignIcon></InfoSignIcon>}
+              onClick={() => {
+                setPopUpVisible(!popUpVisible);
+              }}
+              appearance="primary"
+              text="Learn how to use this display"
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+        {/* <HowToPopup active={popUpVisible} />
         <Button
           iconBefore={<InfoSignIcon></InfoSignIcon>}
           onClick={() => {
@@ -59,7 +81,7 @@ const HowToUse = (): JSX.Element => {
           }}
           appearance="primary"
           text="Learn how to use this display"
-        />
+        /> */}
       </div>
     </div>
   );
@@ -104,7 +126,7 @@ const HowToPopup = ({ active }: { active: boolean }): JSX.Element => {
         src={process.env.PUBLIC_URL + "/masonary.png"}
       />
     </div>,
-    document.getElementById("how-to-use-popup") as HTMLElement
+    document.querySelector("#how-to-use-popup") as HTMLElement
   );
 };
 // export default HowToPopup;

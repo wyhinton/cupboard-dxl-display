@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 
-interface UseTipProps {
+interface UseTipProperties {
   tip: string;
 }
 
-const UseTip: FC<UseTipProps> = ({ tip }) => {
+const UseTip: FC<UseTipProperties> = ({ tip }) => {
   const tipStyle = {
     fontStyle: "italic",
   };

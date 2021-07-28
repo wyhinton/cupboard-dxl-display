@@ -1,7 +1,7 @@
 import React from "react";
 import "../../css/pulsar.css";
 import { AddIcon } from "evergreen-ui";
-interface PulsarProps {}
+interface PulsarProperties {}
 
 const Pulsar = () => {
   return (

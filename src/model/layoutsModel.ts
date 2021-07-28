@@ -19,6 +19,7 @@ export interface LayoutsModel {
   activeLayout: LayoutData | undefined;
   externalLayouts: LayoutData[];
   bufferLayout: Layouts;
+  tempLayout: Layouts;
   //listeners
   onLayoutSheetLoadSuccess: ThunkOn<LayoutsModel, never, StoreModel>;
   onToggleViewModeListener: ThunkOn<LayoutsModel, never, StoreModel>;
@@ -28,6 +29,7 @@ export interface LayoutsModel {
   setActiveLayout: Action<LayoutsModel, LayoutData>;
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;
+  setTempLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
 
   // storeBufferLayout: Action<LayoutsModel>;
@@ -43,6 +45,7 @@ const layoutsModel: LayoutsModel = {
   activeLayout: undefined,
   externalLayouts: [],
   bufferLayout: defaultLayouts,
+  tempLayout: defaultLayouts,
 
   //listeners
   onLayoutSheetLoadSuccess: thunkOn(
@@ -56,12 +59,12 @@ const layoutsModel: LayoutsModel = {
       // const baseLayout = LayoutData.base
       const layouts = target.payload.data.map((l) => new LayoutData(l));
       // let testDefault = new LayoutData(createDefaultLayout());
-      const defaultLayout = layouts.filter(
-        (l) => l.title === "Default_Layout_1"
-      )[0];
+      const defaultLayout = layouts.find((l) => l.title === "Default_Layout_1");
       console.log(defaultLayout);
       // actions.setActiveLayout(testDefault);
-      actions.setActiveLayout(defaultLayout);
+      if (defaultLayout) {
+        actions.setActiveLayout(defaultLayout);
+      }
       actions.setExternalLayouts(layouts);
       console.log(layouts);
     }
@@ -75,7 +78,7 @@ const layoutsModel: LayoutsModel = {
         "listened to on toggle view mode in layout model, setting layout from buffer"
       );
       const { activeLayout } = getState();
-      let buf = getState().bufferLayout;
+      const buf = getState().bufferLayout;
       if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
         console.log("IT WAS IN DISPLAY MODE");
         if (activeLayout?.layout) {
@@ -91,19 +94,19 @@ const layoutsModel: LayoutsModel = {
     console.log(newActiveLayout);
     state.activeLayout = newActiveLayout;
   }),
-  setExternalLayouts: action((state, newLayoutArr) => {
+  setExternalLayouts: action((state, newLayoutArray) => {
     console.log("setting external layouts");
-    state.externalLayouts = newLayoutArr;
+    state.externalLayouts = newLayoutArray;
   }),
   //mutators
   swapCardContent: thunk(
     (actions, swapInfo, { getState, getStoreState, getStoreActions }) => {
-      const curModel = getStoreState() as StoreModel;
+      const currentModel = getStoreState() as StoreModel;
       // const activeCards = curModel.appModel.activeCards;
-      const prevLayout = getState().activeLayout;
-      if (prevLayout) {
-        prevLayout.swapCard(swapInfo);
-        actions.setActiveLayout(prevLayout);
+      const previousLayout = getState().activeLayout;
+      if (previousLayout) {
+        previousLayout.swapCard(swapInfo);
+        actions.setActiveLayout(previousLayout);
       }
     }
   ),
@@ -119,52 +122,41 @@ const layoutsModel: LayoutsModel = {
       //     actions.setActiveLayout(activeLayout);
       //   // }
       // // }
-      const prevLayout = getState().activeLayout;
+      const previousLayout = getState().activeLayout;
       console.log("got here");
-      if (prevLayout) {
+      if (previousLayout) {
         console.log("deleting card at model");
-        prevLayout.removeCard(cardToDelete);
+        previousLayout.removeCard(cardToDelete);
         // actions.setActiveLayout(prevLayout);
-        actions.setBufferLayout(prevLayout.layout);
+        actions.setBufferLayout(previousLayout.layout);
       }
     }
   ),
   addCard: thunk((actions, cardAddEvent, { getState, getStoreState }) => {
     console.log("adding card");
     console.log(cardAddEvent);
-    // const cardToGet = getStoreState().appModel;
-    const state = getStoreState();
-    // const availableCards = state.;
     const { availableCards } = getStoreState().appModel;
     const { sourceId, targetPosition } = cardAddEvent;
-    const cardToAdd = availableCards.filter((c) => c.sourceId == sourceId)[0];
+    const cardToAdd = availableCards.find((c) => c.sourceId == sourceId);
     const { activeLayout } = getState();
-    if (activeLayout) {
+    if (activeLayout && cardToAdd) {
+      const buf = getState().bufferLayout;
+      activeLayout.layout = buf;
       activeLayout?.addCard(cardToAdd, targetPosition);
-      // console.log(activeLayout);
-      // actions.setBufferLayout(activeLayout.layout);
       actions.setActiveLayout(activeLayout);
       console.log(cardToAdd);
     }
-    // {activeLayout} = getState()
-    // let buf = getState().bufferLayout;
-    // if (activeLayout?.layout) {
-    //   activeLayout.layout = buf;
-    //   actions.setActiveLayout(activeLayout);
-    // }
-
-    // const prevLayout = getState().activeLayout;
-    // console.log("got here");
-    // if (prevLayout) {
-    //   // console.log("deleting card at model");
-    //   prevLayout.addCard(cardToAdd, { x: 3, y: 1 });
-    //   actions.setActiveLayout(prevLayout);
-    // }
   }),
   setBufferLayout: action((state, layouts) => {
     console.log("setting buffer layout");
     console.log(layouts);
     state.bufferLayout = layouts;
+    // state.tempLayout = layouts;
+  }),
+  setTempLayout: action((state, layouts) => {
+    console.log("setting buffer layout");
+    console.log(layouts);
+    state.tempLayout = layouts;
   }),
   // storeBufferLayout: action((state) => {
   //   // console.log(debug(state.bufferLayout));

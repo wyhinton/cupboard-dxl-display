@@ -64,10 +64,10 @@ const CopyField = ({ text }: { text: string }): JSX.Element => {
           setIsCopied(false);
           setIsClipBoardCorrect(false);
         }
-        console.log("Pasted content: ", clipboardText);
+        console.log("Pasted content:", clipboardText);
       })
-      .catch((err) => {
-        console.error("Failed to read clipboard contents: ", err);
+      .catch((error) => {
+        console.error("Failed to read clipboard contents:", error);
       });
   }, [text]);
   return (

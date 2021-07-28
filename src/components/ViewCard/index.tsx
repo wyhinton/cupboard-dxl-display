@@ -24,7 +24,7 @@ import {
 import { Layouts } from "react-grid-layout";
 import { useKey } from "react-use";
 
-interface ViewCardProps {
+interface ViewCardProperties {
   cardType: DndTypes;
   children?: React.ReactElement[] | React.ReactElement;
   key?: string;
@@ -43,7 +43,7 @@ interface ViewCardProps {
  * @component
  */
 
-const ViewCard: FC<ViewCardProps> = ({
+const ViewCard: FC<ViewCardProperties> = ({
   cardType,
   children,
   activeKey,
@@ -52,8 +52,8 @@ const ViewCard: FC<ViewCardProps> = ({
   data: cardData,
   onClick,
   onDoubleClick,
-}: ViewCardProps) => {
-  const elementRef = useRef<HTMLDivElement>(null);
+}: ViewCardProperties) => {
+  const elementReference = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [cardView, setCardView] = useState(CardView.GRID);
   const deleteCardAction = useStoreActions(
@@ -131,7 +131,7 @@ const ViewCard: FC<ViewCardProps> = ({
 
   return (
     //receives a drag objects
-    <div className={cardClass} style={{ height: "100%" }} ref={elementRef}>
+    <div className={cardClass} style={{ height: "100%" }} ref={elementReference}>
       {children ? (
         <InPortal node={portalNode}>
           <div
@@ -237,11 +237,11 @@ const setOutPutNode = (
   }
 };
 
-interface DeleteButtonProps {
+interface DeleteButtonProperties {
   onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const DeleteButton = ({ onClick }: DeleteButtonProps) => {
+const DeleteButton = ({ onClick }: DeleteButtonProperties) => {
   const deleteButtonStyle = {
     position: "absolute",
     top: "-1em",
@@ -257,13 +257,13 @@ const DeleteButton = ({ onClick }: DeleteButtonProps) => {
   );
 };
 
-function propsAreEqual(
-  prevProps: Readonly<PropsWithChildren<ViewCardProps>>,
-  nextProps: Readonly<PropsWithChildren<ViewCardProps>>
+function propertiesAreEqual(
+  previousProperties: Readonly<PropsWithChildren<ViewCardProperties>>,
+  nextProperties: Readonly<PropsWithChildren<ViewCardProperties>>
 ): boolean {
-  console.log(prevProps.data);
-  console.log(nextProps.data);
+  console.log(previousProperties.data);
+  console.log(nextProperties.data);
   console.log("HELLO FROM PROPS ARE EQUAL");
   return true;
 }
-export default React.memo(ViewCard, propsAreEqual);
+export default React.memo(ViewCard, propertiesAreEqual);

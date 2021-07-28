@@ -9,7 +9,7 @@ import { Layout, Layouts } from "react-grid-layout";
 //   "se",
 //   "ne",
 // ];
-const defaultGridLayoutArr: Layout[] = [
+const defaultGridLayoutArray: Layout[] = [
   { i: "clock", x: 0, y: 0, w: 2, h: 1, static: true },
   {
     i: "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
@@ -67,11 +67,11 @@ const defaultGridLayoutArr: Layout[] = [
 // ];
 
 const defaultLayouts: Layouts = {
-  lg: defaultGridLayoutArr,
-  md: defaultGridLayoutArr,
-  sm: defaultGridLayoutArr,
-  xs: defaultGridLayoutArr,
-  xxs: defaultGridLayoutArr,
+  lg: defaultGridLayoutArray,
+  md: defaultGridLayoutArray,
+  sm: defaultGridLayoutArray,
+  xs: defaultGridLayoutArray,
+  xxs: defaultGridLayoutArray,
 };
 
 console.log(JSON.stringify(defaultLayouts));

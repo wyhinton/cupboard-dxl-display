@@ -22,10 +22,10 @@ const LayoutsTable = () => {
           <th>Author</th>
         </tr>
         <tbody>
-          {externalLayoutsState.map((l, i) => {
+          {externalLayoutsState.map((l, index) => {
             return (
-              <tr key={i}>
-                <td key={i}>{l.title}</td>
+              <tr key={index}>
+                <td key={index}>{l.title}</td>
                 <td>{l.added.toString()}</td>
                 <td>{l.author}</td>
               </tr>

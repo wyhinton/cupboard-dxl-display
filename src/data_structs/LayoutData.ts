@@ -44,30 +44,30 @@ export default class LayoutData {
   }
   swapCard(swapInfo: CardSwapEvent): void {
     for (const [k, v] of Object.entries(this.layout)) {
-      v.forEach((layoutVal, i) => {
-        if (layoutVal.i == swapInfo.targetId) {
-          v[i].i = swapInfo.sourceId;
+      for (const [index, layoutValue] of v.entries()) {
+        if (layoutValue.i == swapInfo.targetId) {
+          v[index].i = swapInfo.sourceId;
         }
-      });
+      }
       this.layout[k] = v;
     }
   }
   removeCard(toRemove: CardData): void {
     console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
-      v.forEach((layoutVal, i) => {
+      for (const [index, layoutValue] of v.entries()) {
         // console.log(layoutVal);
         this.layout[k] = v.filter((l) => l.i !== toRemove.sourceId);
         // if (layoutVal.i == toRemove.sourceId) {
         //   console.log(layoutVal);
         // }
-      });
+      }
     }
   }
   addCard(toAdd: CardData, pos: GridPosition): void {
     console.log("ADDING CARD AT LAYOUT DATA");
     for (const [k, v] of Object.entries(this.layout)) {
-      let newItem: Layout = {
+      const newItem: Layout = {
         x: pos.x,
         y: pos.y,
         w: 1,
@@ -98,32 +98,32 @@ function findEmptyGridPositions(
     }
   }
   const filledSpots = findFilledPositions(layouts);
-  const stringFilledSpots = filledSpots.map((fs) => [fs.x, fs.y].toString());
+  const stringFilledSpots = new Set(filledSpots.map((fs) => [fs.x, fs.y].toString()));
 
   return allGridSpots.filter(
-    (gs) => !stringFilledSpots.includes([gs.x, gs.y].toString())
+    (gs) => !stringFilledSpots.has([gs.x, gs.y].toString())
   );
 }
 
 function findFilledPositions(layouts: Layout[]): GridPosition[] {
   const takenSpots: GridPosition[] = [];
-  layouts.forEach((l) => {
+  for (const l of layouts) {
     takenSpots.push({ x: l.x, y: l.y });
-    for (let i = 1; i < l.w; i++) {
+    for (let index = 1; index < l.w; index++) {
       const fullSpotX: GridPosition = {
-        x: l.x + i,
+        x: l.x + index,
         y: l.y,
       };
       takenSpots.push(fullSpotX);
     }
-    for (let i = 1; i < l.h; i++) {
+    for (let index = 1; index < l.h; index++) {
       const fullSpotY: GridPosition = {
         x: l.x,
-        y: l.y + i,
+        y: l.y + index,
       };
       takenSpots.push(fullSpotY);
     }
-  });
+  }
   return takenSpots;
 }
 
@@ -131,18 +131,18 @@ function parseLayout(
   data: string
 ): Result<Layouts, "failed to parse layoutJSON"> {
   try {
-    let layouts = JSON.parse(data);
+    const layouts = JSON.parse(data);
     return Ok(layouts);
-  } catch (e) {
+  } catch {
     return Err("failed to parse layoutJSON");
   }
 }
 
 function generateFilledLayout(
   layout: Layout[],
-  emptyPosArr: GridPosition[]
+  emptyPosArray: GridPosition[]
 ): Layouts {
-  const emptyCards = emptyPosArr.map((rr) => {
+  const emptyCards = emptyPosArray.map((rr) => {
     return {
       x: rr.x,
       y: rr.y,

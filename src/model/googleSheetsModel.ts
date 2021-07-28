@@ -49,11 +49,11 @@ const googleSheetsModel: GoogleSheetsModel = {
    * listeners: layoutsModel.onLayoutSheetLoadSuccess
    */
   fetchLayoutDataGoogleSheet: thunk(async (actions) => {
-    const tempCardLayout = {
+    const temporaryCardLayout = {
       key: cardDataSheetKey.key,
       sheet_number: 2,
     };
-    getSheet<RawLayoutRow>(tempCardLayout).then((sheet) => {
+    getSheet<RawLayoutRow>(temporaryCardLayout).then((sheet) => {
       console.log(sheet);
       actions.setLayoutDataGoogleSheet(sheet);
     });

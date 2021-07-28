@@ -7,8 +7,8 @@ export default class History {
   currentStep!: number;
 
   constructor() {
-    const emptyLayoutsArr: Layouts[] = [];
-    this.events = emptyLayoutsArr;
+    const emptyLayoutsArray: Layouts[] = [];
+    this.events = emptyLayoutsArray;
     this.currentStep = 0;
   }
   addEditEvent(event: Layouts) {

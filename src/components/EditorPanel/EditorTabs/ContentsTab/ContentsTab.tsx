@@ -18,7 +18,7 @@ const ContentsTab: FC = () => {
   const availableCards = useStoreState(
     (state) => state.appModel.availableCards
   );
-  const [filterKey, setFilterKey] = useState<string | undefined>(undefined);
+  const [filterKey, setFilterKey] = useState<string | undefined>();
   const [cardItems, setCardItems] = useState(availableCards);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTr, setSelectedTr] = useState(null);
@@ -118,13 +118,13 @@ const ContentsTab: FC = () => {
                 onClick={() => setFilterKey("interaction")}
               ></TableHeader>
             </tr>
-            {filteredCards.map((card, i) => {
+            {filteredCards.map((card, index) => {
               return (
                 <XDrag
                   dndType={DndTypes.CARD_ROW}
                   draggableId={card.sourceId}
-                  index={i}
-                  key={i.toString()}
+                  index={index}
+                  key={index.toString()}
                   isDragDisabled={card.isActive}
                   className={
                     card.isActive
@@ -167,7 +167,7 @@ function formatDate(date: Date | undefined): string {
   }
 }
 
-interface CardTitleProps {
+interface CardTitleProperties {
   card: CardData;
 }
 
@@ -176,7 +176,7 @@ interface CardTitleProps {
  * @param card
  * @returns
  */
-const TitleWithIcon: FC<CardTitleProps> = (card) => {
+const TitleWithIcon: FC<CardTitleProperties> = (card) => {
   return (
     <div style={{ display: "flex" }}>
       <img

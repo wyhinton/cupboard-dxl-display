@@ -33,11 +33,11 @@ const Editor = (): JSX.Element => {
   );
 };
 
-interface FormSectionProps {
+interface FormSectionProperties {
   title: string;
   children: JSX.Element | JSX.Element[];
 }
-const FormSection = ({ title, children }: FormSectionProps) => {
+const FormSection = ({ title, children }: FormSectionProperties) => {
   return (
     <div className={"form-section-container"}>
       <div className={"form-section-header"}>

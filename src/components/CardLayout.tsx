@@ -29,24 +29,22 @@ export const CardGrid = (): JSX.Element => {
   const currentLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
+  const temporaryLayoutState = useStoreState(
+    (state) => state.layoutsModel.tempLayout
+  );
   // const bufferLayoutState = useStoreState(
   //   (state) => state.layoutsModel.bufferLayout
   // );
+  //use the size of the window in order to set the height of the cards
   const [size, setSize] = useState({
     x: window.innerWidth,
     y: window.innerHeight,
   });
-  const containerRef = useRef(null);
+
   const testViewMode = useMemo(() => {
-    //only allow dragging/resizing when in edit mode
-    console.log(viewModeState);
-    console.log(AppMode.EDIT === viewModeState);
     return viewModeState === AppMode.EDIT;
   }, [viewModeState]);
 
-  const [activeCardKey, setActiveCardKey] = useState<string | undefined>(
-    undefined
-  );
   const activeCards = useStoreState((state) => state.appModel.activeCards);
   const [placeholderCards, setPlaceholderCards] = useState<string[]>([]);
   const [filledLayout, setFilledLayout] = useState(defaultLayouts);
@@ -54,10 +52,13 @@ export const CardGrid = (): JSX.Element => {
 
   //keep a local mutable reference to a layout in order to avoid making excess calls to store and causing re-renders on each new edit
   const localLayout = useRef<null | Layouts>(null);
-  //
-  const activeKeyRef = useRef("");
+
+  //each card has a unique key. Clicking a card sets the current active key. If a card's key is equal to the active key
+  //then it will be rendered into the modal popup
+  const activeKeyReference = useRef("");
+
   const removeItem = (id: string, layout: Layouts): void => {
-    let old = { ...localLayout.current };
+    const old = { ...localLayout.current };
     if (old) {
       for (const [k, v] of Object.entries(old)) {
         // for (const [k, v] of Object.entries(layout)) {
@@ -74,24 +75,18 @@ export const CardGrid = (): JSX.Element => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
   useEffect(() => {
-    console.log("cards changed");
-    console.log(currentLayoutState);
-    const allGridSpots: GridPosition[] = [];
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        allGridSpots.push({ x: x, y: y });
-      }
-    }
-    const emptyLayout: Layout[] = [];
-    const allBlank = generateFilledLayout(emptyLayout, allGridSpots);
+    // console.log("cards changed");
+    // console.log(currentLayoutState);
+    const allBlank = generateFilledLayout(rows, cols);
     const justPlaceholders = allBlank.lg
       .filter((l) => l.i.startsWith("empty"))
       .map((l) => l.i);
+
     setPlaceholderCards(justPlaceholders);
-    console.log(allBlank);
+    // console.log(allBlank);
     setFilledLayout(allBlank);
     setRealLayout(currentLayoutState?.layout);
-    console.log(currentLayoutState);
+    // console.log(currentLayoutState);
     if (currentLayoutState?.layout) {
       localLayout.current = currentLayoutState?.layout;
     }
@@ -139,15 +134,15 @@ export const CardGrid = (): JSX.Element => {
               e,
               element
             ) => {
-              const prevStyle = element.style;
-              prevStyle.border = "2px solid cyan";
+              const previousStyle = element.style;
+              previousStyle.border = "2px solid cyan";
               element.style.border = "4px solid cyan";
             }}
             onDrop={(layout, item, e) => {
               console.log(layout, item, e);
             }}
             onLayoutChange={(l) => {
-              let newLayout: Layouts = {
+              const newLayout: Layouts = {
                 lg: l,
                 md: l,
                 sm: l,
@@ -166,42 +161,36 @@ export const CardGrid = (): JSX.Element => {
               </ViewCard>
             </div>
 
-            {activeCards.map((card: CardData, i: number) => {
+            {activeCards.map((card: CardData, index: number) => {
               console.log(filledLayout);
               return (
                 <div
                   //key provided here is the means of accessing a unique identifier for the cards
                   key={card.sourceId}
                   draggable={true}
-                  ref={containerRef}
+                  // ref={containerRef}
                   // style={cardContainerStyle}
                 >
                   <IXDrop
-                    key={i}
+                    key={index}
                     droppableId={card.sourceId}
                     cardType={DndTypes.IFRAME}
                   >
                     <ViewCard
                       cardType={DndTypes.IFRAME}
                       data={card}
-                      key={i.toString()}
-                      cardId={i.toString()}
+                      key={index.toString()}
+                      cardId={index.toString()}
                       onClick={() => {
                         console.log(card);
-                        activeKeyRef.current = i.toString();
+                        activeKeyReference.current = index.toString();
                       }}
                       onDoubleClick={() => {
                         console.log("removing item");
                         removeItem(card.sourceId, defaultLayouts);
                       }}
-                      activeKey={activeKeyRef}
+                      activeKey={activeKeyReference}
                     >
-                      {activeCardKey == i.toString() ? (
-                        <Modal text={"hello"}></Modal>
-                      ) : (
-                        <div></div>
-                      )}
-
                       <IFrameView src={card.src} />
                     </ViewCard>
                   </IXDrop>
@@ -236,18 +225,18 @@ export const CardGrid = (): JSX.Element => {
             isDraggable={false}
             isResizable={false}
           >
-            {placeholderCards.map((p, i) => {
+            {placeholderCards.map((p, index) => {
               return (
                 <div key={p}>
                   <IXDrop
-                    key={i}
+                    key={index}
                     droppableId={p}
                     cardType={DndTypes.PLACEHOLDER}
                   >
                     <ViewCard
                       key={p}
                       cardId={p}
-                      activeKey={activeKeyRef}
+                      activeKey={activeKeyReference}
                       cardType={DndTypes.PLACEHOLDER}
                     ></ViewCard>
                   </IXDrop>
@@ -265,7 +254,7 @@ export const CardGrid = (): JSX.Element => {
 export default React.memo(CardGrid);
 
 const createLayout = (cards: CardData[], cols: number, rows: number) => {
-  let pos: GridPosition = { x: 0, y: 0 };
+  const pos: GridPosition = { x: 0, y: 0 };
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       // allGridSpots.push({ x: x, y: y });
@@ -273,11 +262,15 @@ const createLayout = (cards: CardData[], cols: number, rows: number) => {
   }
 };
 
-function generateFilledLayout(
-  layout: Layout[],
-  emptyPosArr: GridPosition[]
-): Layouts {
-  const emptyCards = emptyPosArr.map((rr) => {
+function generateFilledLayout(rows: number, cols: number): Layouts {
+  const allGridSpots: GridPosition[] = [];
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      allGridSpots.push({ x: x, y: y });
+    }
+  }
+
+  const emptyCards = allGridSpots.map((rr) => {
     return {
       x: rr.x,
       y: rr.y,
@@ -296,38 +289,38 @@ function generateFilledLayout(
     } as Layout;
   });
   //TODO: MORE FUNCTIONAL SOLUTION
-  const filled = layout.concat(emptyCards);
+  // const filled = layout.concat(emptyCards);
   //pop off the first two positions where the clock is
-  filled.shift();
-  filled.shift();
+  emptyCards.shift();
+  emptyCards.shift();
   return {
-    lg: filled,
-    md: filled,
-    sm: filled,
-    xs: filled,
-    xxs: filled,
+    lg: emptyCards,
+    md: emptyCards,
+    sm: emptyCards,
+    xs: emptyCards,
+    xxs: emptyCards,
   };
 }
 
 function findFilledPositions(layouts: Layout[]): GridPosition[] {
   const takenSpots: GridPosition[] = [];
-  layouts.forEach((l) => {
+  for (const l of layouts) {
     takenSpots.push({ x: l.x, y: l.y });
-    for (let i = 1; i < l.w; i++) {
+    for (let index = 1; index < l.w; index++) {
       const fullSpotX: GridPosition = {
-        x: l.x + i,
+        x: l.x + index,
         y: l.y,
       };
       takenSpots.push(fullSpotX);
     }
-    for (let i = 1; i < l.h; i++) {
+    for (let index = 1; index < l.h; index++) {
       const fullSpotY: GridPosition = {
         x: l.x,
-        y: l.y + i,
+        y: l.y + index,
       };
       takenSpots.push(fullSpotY);
     }
-  });
+  }
   return takenSpots;
 }
 function findEmptyGridPositions(
@@ -342,10 +335,10 @@ function findEmptyGridPositions(
     }
   }
   const filledSpots = findFilledPositions(layouts);
-  const stringFilledSpots = filledSpots.map((fs) => [fs.x, fs.y].toString());
+  const stringFilledSpots = new Set(filledSpots.map((fs) => [fs.x, fs.y].toString()));
 
   return allGridSpots.filter(
-    (gs) => !stringFilledSpots.includes([gs.x, gs.y].toString())
+    (gs) => !stringFilledSpots.has([gs.x, gs.y].toString())
   );
 }
 

@@ -64,13 +64,13 @@ const App = (): JSX.Element => {
     return cardId.startsWith("empty");
   };
 
-  const strToGridPos = (cardId: string): GridPosition => {
+  const stringToGridPos = (cardId: string): GridPosition => {
     //card id's of empty cards is of "empty_card_[x, y]" format
     const posString = cardId.split("[")[1];
     //x,y]
-    const x = parseInt(posString.charAt(0));
+    const x = Number.parseInt(posString.charAt(0));
     //x
-    const y = parseInt(posString.charAt(3));
+    const y = Number.parseInt(posString.charAt(3));
     //y
     return {
       x: x,
@@ -94,7 +94,7 @@ const App = (): JSX.Element => {
     if (!destination) return;
     if (destination.droppableId) {
       if (cardIsEmpty(destination.droppableId)) {
-        const cardPos = strToGridPos(destination.droppableId);
+        const cardPos = stringToGridPos(destination.droppableId);
         const addEvent = {
           sourceId: draggableId,
           targetPosition: cardPos,

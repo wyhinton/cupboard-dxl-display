@@ -3,7 +3,7 @@ import { Spinner, Pane } from "evergreen-ui";
 import classNames from "classnames";
 import Loader from "react-loader-spinner";
 import "../css/iframeView.css";
-interface IFrameViewProps {
+interface IFrameViewProperties {
   src: string;
 }
 /**
@@ -15,7 +15,7 @@ interface IFrameViewProps {
  *  <IFrameView src = {my_url}/>
  * )
  */
-const IFrameView: FC<IFrameViewProps> = ({ src }) => {
+const IFrameView: FC<IFrameViewProperties> = ({ src }) => {
   const [active, setActive] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const iframeOverlayClass = classNames("iframe-view-overlay", {
@@ -57,17 +57,17 @@ const IFrameView: FC<IFrameViewProps> = ({ src }) => {
   );
 };
 
-export default React.memo(IFrameView, propsAreEqual);
-function propsAreEqual(
-  prevProps: Readonly<PropsWithChildren<IFrameViewProps>>,
-  nextProps: Readonly<PropsWithChildren<IFrameViewProps>>
+export default React.memo(IFrameView, propertiesAreEqual);
+function propertiesAreEqual(
+  previousProperties: Readonly<PropsWithChildren<IFrameViewProperties>>,
+  nextProperties: Readonly<PropsWithChildren<IFrameViewProperties>>
 ): boolean {
-  if (prevProps.src == nextProps.src) {
-    console.log(prevProps.src);
-    console.log(nextProps.src);
+  if (previousProperties.src == nextProperties.src) {
+    console.log(previousProperties.src);
+    console.log(nextProperties.src);
     return false;
   }
-  console.log(prevProps.src);
-  console.log(nextProps.src);
+  console.log(previousProperties.src);
+  console.log(nextProperties.src);
   return true;
 }

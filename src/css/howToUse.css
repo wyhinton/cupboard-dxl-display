@@ -24,11 +24,18 @@
   left: 50%;
   bottom: 0;
   transform: translate(-50%, -50%);
-  background-color: red;
+  /* background-color: red; */
   width: fit-content;
   height: fit-content;
   z-index: 1999;
-  test: rgba(255, 0, 0, 0);
+  width: 10vw;
+  height: 4vh;
+  /* test: rgba(255, 0, 0, 0); */
+}
+
+.how-to-container-inactive {
+  border: 1px solid var(--inactive);
+  background: var(--inactive-pattern);
 }
 
 .how-to-popup-container {

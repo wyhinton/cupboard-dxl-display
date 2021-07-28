@@ -8,5 +8,5 @@ ReactDOM.render(
   <StoreProvider store={store}>
     <App />
   </StoreProvider>,
-  document.getElementById("root")
+  document.querySelector("#root")
 );

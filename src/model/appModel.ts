@@ -101,17 +101,17 @@ const appModel: AppDataModel = {
     }
     console.log(getState().appMode);
   }),
-  setCurrentLayout: action((state, layoutArr) => {
-    state.currentLayout = layoutArr;
+  setCurrentLayout: action((state, layoutArray) => {
+    state.currentLayout = layoutArray;
   }),
-  setAvailableCards: action((state, cardDataArr) => {
+  setAvailableCards: action((state, cardDataArray) => {
     console.log("setting available cards");
-    state.availableCards = cardDataArr;
+    state.availableCards = cardDataArray;
   }),
-  setActiveCards: action((state, cardDataArr) => {
+  setActiveCards: action((state, cardDataArray) => {
     console.log("setting active cards");
-    console.log(cardDataArr);
-    state.activeCards = cardDataArr;
+    console.log(cardDataArray);
+    state.activeCards = cardDataArray;
   }),
   setAppMode: action((state, viewModeEnum) => {
     console.log("setting view mode");
@@ -171,23 +171,25 @@ const appModel: AppDataModel = {
       console.log(getState().activeCards);
       const newCards = getState().activeCards.map((c) => {
         if (c.sourceId === payload.payload.targetId) {
-          const newSource = getState().availableCards.filter(
+          const newSource = getState().availableCards.find(
             (c) => c.sourceId === payload.payload.sourceId
-          )[0];
+          );
           console.log(newSource);
           return newSource;
         } else {
           return c;
         }
       });
-      actions.setActiveCards(newCards);
+      if (newCards) {
+        actions.setActiveCards(newCards as CardData[]);
+      }
       console.log(debug(payload));
     }
   ),
 
   onUndoHistory: thunkOn(
     (actions, storeActions) => storeActions.historyModel.setCurrentHistory,
-    async (actions, payload, { injections }) => {
+    async (actions, payload) => {
       console.log("got undo");
       console.log(payload.payload);
       actions.setCurrentLayout(payload.payload);
@@ -196,7 +198,7 @@ const appModel: AppDataModel = {
   ),
   onRedoHistory: thunkOn(
     (actions, storeActions) => storeActions.historyModel.setCurrentHistory,
-    async (actions, payload, { injections }) => {
+    async (actions, payload) => {
       console.log("got redo");
       console.log(payload.payload);
       actions.setCurrentLayout(payload.payload);

@@ -11,7 +11,7 @@ import { AppMode } from "../../enums";
 
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
-interface EditorPanelProps {
+interface EditorPanelProperties {
   visible: boolean;
 }
 
@@ -62,7 +62,7 @@ const EditorPanel: FC = () => {
         </div>
       </Draggable>
     </>,
-    document.getElementById("editor-panel-container") as HTMLDivElement
+    document.querySelector("#editor-panel-container") as HTMLDivElement
   );
 };
 
@@ -71,11 +71,11 @@ export default EditorPanel;
 // interface PanelHeader{
 
 // }
-interface PanelHeaderProps {
+interface PanelHeaderProperties {
   onMinimize: () => void;
   visible: boolean;
 }
-const PanelHeader = ({ onMinimize, visible }: PanelHeaderProps) => {
+const PanelHeader = ({ onMinimize, visible }: PanelHeaderProperties) => {
   return (
     <div className={"editor-panel-handle panel-header"}>
       {/* <Heading>Editor</Heading> */}

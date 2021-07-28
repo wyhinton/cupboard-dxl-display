@@ -57,7 +57,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "doc": "jsdoc2md --files ./src/* --configure ./jsdoc.conf.json > ./README.md --template README_TEMPLATE.hbs"
+    "doc": "jsdoc2md --files ./src/* --configure ./jsdoc.conf.json > ./README.md --template README_TEMPLATE.hbs",
+    "fix": "eslint --fix --ext .ts,.tsx ."
   },
   "browserslist": {
     "production": [
