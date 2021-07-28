@@ -9,7 +9,6 @@ import {
   debug,
   actionOn,
 } from "easy-peasy";
-import { getSheet } from "../utils";
 import CardData from "../data_structs/CardData";
 import type RawCardRow from "../interfaces/RawCardRow";
 import { Layouts, Layout } from "react-grid-layout";
@@ -28,13 +27,13 @@ export interface AppDataModel {
   currentLayout: Layouts;
   appMode: AppMode;
   history: History;
-  localStorageLayouts: any[];
+  // localStorageLayouts: any[];
 
   //requests
   // fetchGoogleSheet: Thunk<AppDataModel>;
 
   //loaders
-  loadLocalLayouts: Action<AppDataModel>;
+  // loadLocalLayouts: Action<AppDataModel>;
 
   //listeners
   onCardSheetLoadSuccess: ActionOn<AppDataModel, StoreModel>;
@@ -53,10 +52,10 @@ export interface AppDataModel {
   onRedoHistory: ThunkOn<AppDataModel, never, StoreModel>;
 
   //clear
-  clearLocalLayouts: Action<AppDataModel>;
+  // clearLocalLayouts: Action<AppDataModel>;
 
   //local storage
-  saveLayoutLocal: Thunk<AppDataModel>;
+  // saveLayoutLocal: Thunk<AppDataModel>;
 }
 
 const appModel: AppDataModel = {
@@ -66,7 +65,7 @@ const appModel: AppDataModel = {
   currentLayout: defaultGridLayout,
   appMode: AppMode.DISPLAY,
   history: new History(),
-  localStorageLayouts: [],
+  // localStorageLayouts: [],
 
   //managers
   /**Control side effects for altering the view state of the app, and dispatch a setter for the state */
@@ -125,7 +124,7 @@ const appModel: AppDataModel = {
       storeActions.googleSheetsModel.setCardDataGoogleSheet,
     // handler:
     (state, target) => {
-      console.log("diong on cart sheet load success");
+      console.log("doing on cart sheet load success");
       console.log(target.payload);
       const cards = target.payload.data.map((c: RawCardRow) => new CardData(c));
       console.log(cards);
@@ -206,26 +205,26 @@ const appModel: AppDataModel = {
     }
   ),
   //local storage
-  clearLocalLayouts: action((state) => {
-    localStorage.clear();
-    state.localStorageLayouts = [];
-  }),
-  loadLocalLayouts: action((state) => {
-    const layouts: any = Object.keys(localStorage)
-      .filter((k) => k.startsWith("curLayout"))
-      .map((k) => ({
-        name: k,
-        layout: JSON.parse(localStorage[k]) as Layout[],
-      }));
-    state.localStorageLayouts = layouts;
-  }),
-  saveLayoutLocal: thunk((actions, _, { getState }) => {
-    localStorage.setItem(
-      `curLayout_${localStorage.length}`,
-      JSON.stringify(getState().currentLayout)
-    );
-    actions.loadLocalLayouts();
-  }),
+  // clearLocalLayouts: action((state) => {
+  //   localStorage.clear();
+  //   state.localStorageLayouts = [];
+  // }),
+  // loadLocalLayouts: action((state) => {
+  //   const layouts: any = Object.keys(localStorage)
+  //     .filter((k) => k.startsWith("curLayout"))
+  //     .map((k) => ({
+  //       name: k,
+  //       layout: JSON.parse(localStorage[k]) as Layout[],
+  //     }));
+  //   state.localStorageLayouts = layouts;
+  // }),
+  // saveLayoutLocal: thunk((actions, _, { getState }) => {
+  //   localStorage.setItem(
+  //     `curLayout_${localStorage.length}`,
+  //     JSON.stringify(getState().currentLayout)
+  //   );
+  //   actions.loadLocalLayouts();
+  // }),
 };
 
 export default appModel;
