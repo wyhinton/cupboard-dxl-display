@@ -22,11 +22,9 @@ const IFrameView: FC<IFrameViewProps> = ({ src }) => {
     "iframe-view-overlay-hidden": isLoaded,
     "iframe-view-overlay-loading": !isLoaded,
   });
-  // const
   const iframeStyle = {
     width: "100%",
     pointerEvents: "none",
-    // height: "500px",
     height: "100%",
     border: "none",
   } as React.CSSProperties;
@@ -65,6 +63,8 @@ function propsAreEqual(
   nextProps: Readonly<PropsWithChildren<IFrameViewProps>>
 ): boolean {
   if (prevProps.src == nextProps.src) {
+    console.log(prevProps.src);
+    console.log(nextProps.src);
     return false;
   }
   console.log(prevProps.src);

@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import CardInfo from "./CardInfo";
 import CardData from "../../data_structs/CardData";
-import { Layout } from "react-grid-layout";
 import { useStoreState, useStoreActions } from "../../hooks";
 import { CardView, DndTypes, AppMode } from "../../enums";
 import classNames from "classnames";
@@ -16,22 +15,25 @@ import Modal from "../Modal";
 import type { HtmlPortalNode } from "react-reverse-portal";
 import { Component } from "evergreen-ui/node_modules/@types/react";
 import { DeleteIcon } from "evergreen-ui";
+import Button from "../Shared/Button";
 import {
   createHtmlPortalNode,
   InPortal,
   OutPortal,
 } from "react-reverse-portal";
 import { Layouts } from "react-grid-layout";
+import { useKey } from "react-use";
+
 interface ViewCardProps {
   cardType: DndTypes;
   children?: React.ReactElement[] | React.ReactElement;
   key?: string;
   activeKey?: React.MutableRefObject<string>;
-  testkey?: string;
+  cardId?: string;
   dataGrid?: Layouts;
   layoutRef?: React.MutableRefObject<Layouts | null>;
   data?: CardData;
-  setModal?: () => void;
+  onClick?: () => void;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 /**
@@ -45,15 +47,15 @@ const ViewCard: FC<ViewCardProps> = ({
   cardType,
   children,
   activeKey,
-  testkey,
+  cardId,
   layoutRef,
-  data,
-  setModal,
+  data: cardData,
+  onClick,
   onDoubleClick,
 }: ViewCardProps) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
-  const [cardView, setCardView] = useState(CardView.NORMAL);
+  const [cardView, setCardView] = useState(CardView.GRID);
   const deleteCardAction = useStoreActions(
     (actions) => actions.layoutsModel.deleteCard
   );
@@ -62,6 +64,7 @@ const ViewCard: FC<ViewCardProps> = ({
     "card-edit": appModeState === AppMode.EDIT,
     "card-display": appModeState === AppMode.DISPLAY,
     "card-preview": cardView === CardView.PREVIEW,
+    "card-fullscreen": cardView === CardView.FULL_SCREEN,
     "card-empty": appModeState === AppMode.EDIT && !children,
     "card-empty-hidden": !children && appModeState == AppMode.DISPLAY,
     "card-locked": cardType === DndTypes.CLOCK && appModeState === AppMode.EDIT,
@@ -73,117 +76,128 @@ const ViewCard: FC<ViewCardProps> = ({
     "info-preview": cardView === CardView.PREVIEW,
   });
 
+  const portalNodeClass = classNames("portal-node", {
+    "portal-node-preview": cardView === CardView.PREVIEW,
+    "portal-node-fullscreen": cardView === CardView.FULL_SCREEN,
+  });
+  const cardModalBackdrop = classNames("card-modal-backdrop", {
+    "card-modal-backdrop-active":
+      cardView === CardView.PREVIEW || cardView === CardView.FULL_SCREEN,
+    "card-modal-backdrop-inactive": cardView === CardView.GRID,
+  });
+  const cardChildContainer = classNames("card-child-container", {
+    "card-child-container-preview": cardView === CardView.PREVIEW,
+    "card-child-container-fullscreen": cardView === CardView.FULL_SCREEN,
+    "card-child-container-grid": cardView === CardView.GRID,
+  });
   //generate a portal for each card
   const portalNode = React.useMemo(
     () =>
       createHtmlPortalNode({
-        attributes: { class: "card-portal", style: "height: 100%" },
+        attributes: { class: portalNodeClass },
       }),
-    []
+    [portalNodeClass, cardView]
   );
+  useKey("Escape", () => {
+    console.log("got escape key press at card view index");
+    // if (cardView === CardView.FULL_SCREEN) {
+    if (cardView === CardView.FULL_SCREEN || cardView === CardView.PREVIEW) {
+      console.log("WAS ONE!!!");
+      setCardView(CardView.GRID);
+    }
+  });
 
+  //change the view mode when pressing a card
   const onLongPress = (): void => {
-    //only resize the card on press if app is in display mode
     if (appModeState === AppMode.DISPLAY) {
       switch (cardView) {
-        case CardView.NORMAL:
+        case CardView.GRID:
           setCardView(CardView.PREVIEW);
           console.log("it was normal");
           break;
         case CardView.PREVIEW:
           console.log("it was preview");
-          setCardView(CardView.NORMAL);
+          setCardView(CardView.FULL_SCREEN);
           break;
-        case CardView.FULL_SCREEN:
-          console.log("it was full screen");
-          break;
+        // case CardView.FULL_SCREEN:
+        //   console.log("it was full screen");
+        //   break;
         default:
           console.log("got default");
           break;
       }
     }
   };
+
   return (
     //receives a drag objects
-    <div
-      className={cardClass}
-      style={{ height: "100%" }}
-      onDoubleClick={() => {
-        onDoubleClick;
-        if (appModeState == AppMode.DISPLAY) {
-          setCardView(CardView.FULL_SCREEN);
-        }
-      }}
-      onMouseUp={() => {
-        onLongPress();
-        if (setModal) {
-          setModal();
-        }
-      }}
-      ref={elementRef}
-    >
+    <div className={cardClass} style={{ height: "100%" }} ref={elementRef}>
       {children ? (
         <InPortal node={portalNode}>
-          <div className={"card-child-container"} style={{ height: "100%" }}>
-            {appModeState == AppMode.EDIT && data ? (
-              <DeleteButton
-                onClick={() => {
-                  console.log("got delete button click");
-                  deleteCardAction(data);
-                }}
-                // onClick={() => {
-                //   console.log("clicked delete button");
-                //   onDoubleClick;
+          <div
+            className={cardModalBackdrop}
+            //click  the backdrop to return to grid view
+            onClick={(e) => {
+              if (cardView === CardView.PREVIEW) {
+                setCardView(CardView.GRID);
+              }
+            }}
+          >
+            <div
+              className={cardChildContainer}
+              //click the card to enter preview/fullscreen mode
+              onMouseUp={() => {
+                onLongPress();
+                if (onClick) {
+                  onClick();
+                }
+              }}
+            >
+              {
+                //show the card's info when in preview mode
+                cardView === CardView.PREVIEW && cardData ? (
+                  <CardInfo data={cardData} className={cardInfoClass} />
+                ) : (
+                  <></>
+                )
+              }
+              {
+                //Only show layout editing controls when in edit mode and if card carries data (is not static)
+                appModeState == AppMode.EDIT && cardData ? (
+                  <DeleteButton
+                    onClick={() => {
+                      console.log("got delete button click");
+                      deleteCardAction(cardData);
+                    }}
+                  />
+                ) : (
+                  <></>
+                )
+              }
 
-                //   // console.log(layoutRef);
-                //   // if (layoutRef) {
-                //   //   const old = { ...layoutRef.current };
-                //   //   for (const [k, v] of Object.entries(old)) {
-                //   //     // let newItem: Layout = {
-                //   //     //   x: pos.x,
-                //   //     //   y: pos.y,
-                //   //     //   w: 1,
-                //   //     //   h: 1,
-                //   //     //   i: toAdd.sourceId,
-                //   //     // };
-                //   //     old[k] = v.filter((l) => l.i !== data.sourceId);
-                //   //     console.log(v.filter((l) => l.i !== data.sourceId));
-                //   //   }
+              {
+                //Don't render children of the clock widget when in edit mode
+                appModeState == AppMode.EDIT && cardType == DndTypes.CLOCK ? (
+                  <></>
+                ) : (
+                  children
+                )
+              }
+            </div>
 
-                //   //   layoutRef.current = old;
-                //   //   console.log(layoutRef.current);
-                //   //   // layoutRef.current = old.filter(
-                //   //   (l) => l.i === data.sourceId
-                //   // );
-                //   // for (const [k, v] of Object.entries(layoutRef.current)) {
-                //   //   let newItem: Layout = {
-                //   //     x: pos.x,
-                //   //     y: pos.y,
-                //   //     w: 1,
-                //   //     h: 1,
-                //   //     i: toAdd.sourceId,
-                //   //   };
-                //   //   this.layout[k].push(newItem);
-                //   // }
-                // }}
-              />
+            {cardView === CardView.FULL_SCREEN ? (
+              <div className={"return-button-container"}>
+                <Button
+                  text={"return"}
+                  onClick={() => {
+                    setCardView(CardView.GRID);
+                  }}
+                />
+              </div>
             ) : (
               <></>
-            )}
-
-            {appModeState == AppMode.EDIT && cardType == DndTypes.CLOCK ? (
-              <></>
-            ) : (
-              children
             )}
           </div>
-          {cardView === CardView.PREVIEW &&
-          cardType !== DndTypes.CLOCK &&
-          data ? (
-            <CardInfo data={data} className={cardInfoClass} />
-          ) : (
-            <></>
-          )}
         </InPortal>
       ) : (
         <></>
@@ -194,7 +208,7 @@ const ViewCard: FC<ViewCardProps> = ({
           children,
           cardView,
           portalNode,
-          activeKey?.current == testkey
+          activeKey?.current == cardId
         )
       ) : (
         <></>
@@ -216,14 +230,7 @@ const setOutPutNode = (
     isActive
   ) {
     console.log("passed");
-    return (
-      <Modal
-        text={"hello"}
-        portal={node}
-        // boundingRect={targetBoundingBox}
-        mode={view}
-      ></Modal>
-    );
+    return <Modal text={"hello"} portal={node} mode={view}></Modal>;
   } else {
     console.log("did not pass");
     return <OutPortal node={node}></OutPortal>;
@@ -257,10 +264,6 @@ function propsAreEqual(
   console.log(prevProps.data);
   console.log(nextProps.data);
   console.log("HELLO FROM PROPS ARE EQUAL");
-  // if (prevProps.data?.src == nextProps.data?.src) {
-  //   return false;
-  // }
   return true;
 }
-export default React.memo(ViewCard);
-// export default React.memo(ViewCard, propsAreEqual);
+export default React.memo(ViewCard, propsAreEqual);

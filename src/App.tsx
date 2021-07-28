@@ -1,26 +1,20 @@
-import React, { useEffect, FC, useState } from "react";
+import React, { useEffect } from "react";
 import "./App.global.css";
-import { useStoreState, useStoreActions } from "./hooks";
-import CardGrid from "./componets/CardLayout";
-import Background from "./componets/Background";
-import { AppMode } from "./enums";
-import { useKeyPress, useKeyPressEvent } from "react-use";
-import {
-  DropResult,
-  DragDropContext,
-  DraggableLocation,
-} from "react-beautiful-dnd";
+import { useStoreActions } from "./hooks";
+import CardGrid from "./components/CardLayout";
+import Background from "./components/Background";
+import { DropResult, DragDropContext } from "react-beautiful-dnd";
 import { DndContext } from "@dnd-kit/core";
-import EditorPanel from "./componets/EditorPanel/EditorPanel";
+import EditorPanel from "./components/EditorPanel/EditorPanel";
 import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import { GridPosition } from "./interfaces/GridPosition";
-
+import HowToUse from "./components/HowToUse";
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  * @component
  */
 
-const App: FC = () => {
+const App = (): JSX.Element => {
   const toggleViewModeThunk = useStoreActions(
     (actions) => actions.appModel.toggleViewMode
   );
@@ -128,6 +122,7 @@ const App: FC = () => {
         }}
         tabIndex={0}
       >
+        <HowToUse />
         <Background />
         <DragDropContext onDragEnd={onDragEnd}>
           <EditorPanel />

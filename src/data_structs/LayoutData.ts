@@ -12,7 +12,6 @@ export default class LayoutData {
   readonly author: string;
   readonly added: Date;
   layout: Layouts;
-  // static emptyCount = 0;
   //TODO: Make this more functional
   constructor(row: RawLayoutRow) {
     this.title = row.title;

@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import ReactDom from "react-dom";
-import { Button as EverGreenButton } from "evergreen-ui";
 import { Component } from "evergreen-ui/node_modules/@types/react";
-import { createHtmlPortalNode, OutPortal } from "react-reverse-portal";
+import { OutPortal } from "react-reverse-portal";
 import type { HtmlPortalNode } from "react-reverse-portal";
-import { setTimeout } from "timers";
 import "../css/modal.css";
 import { CardView } from "../enums";
-import classNames from "classnames";
 
 /**
- * Wraps an Evergreen UI Button.
+ * Modal popup for displaying cards when in preview mode. Displays on top of the CardLayout, and renders
+ * to <div style="z-index: 10" id="portal"></div> in index.html.
  * @component
  */
 
@@ -23,7 +21,7 @@ interface ModalProps {
 }
 
 const Modal = ({ mode, onClick, portal }: ModalProps): JSX.Element => {
-  const [viewMode, setViewMode] = useState(CardView.NORMAL);
+  const [viewMode, setViewMode] = useState(CardView.GRID);
   useEffect(() => {
     console.log("got mode change");
     if (mode) {
@@ -31,20 +29,10 @@ const Modal = ({ mode, onClick, portal }: ModalProps): JSX.Element => {
     }
   }, [mode]);
 
-  // const cardClass = classNames("modal", {
-  //   "modal-full-screen": viewMode === CardView.FULL_SCREEN,
-  //   "
-  // modal-preview": viewMode === CardView.PREVIEW,
-  // });
-
   return ReactDom.createPortal(
     <>
       <MyBackdrop show={true}>
-        <div
-          className={"modal-content-container"}
-          onMouseUp={onClick}
-          // className={cardClass}
-        >
+        <div className={"modal-content-container"} onMouseUp={onClick}>
           {portal ? (
             <OutPortal node={portal}></OutPortal>
           ) : (

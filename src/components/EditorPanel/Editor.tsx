@@ -3,7 +3,7 @@ import { Heading } from "evergreen-ui";
 import DropDownMenu from "../Shared/DropDownMenu";
 import { AppMode } from "../../enums";
 import "../../css/editorPanel.css";
-import ContentTable from "./EditorTabs/ContentsTab";
+import ContentTable from "./EditorTabs/ContentsTab/ContentsTab";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import PerformanceTests from "./EditorSection/PerformanceTests";

@@ -1,0 +1,70 @@
+.how-to-backdrop {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  /* height: 100vh;
+  width: 100vw; */
+  /* background-color: red; */
+  /* z-index: 10; */
+}
+
+.how-to-backdrop-inactive {
+  /* pointer-events: none; */
+  height: fit-content;
+  width: 100vw;
+}
+.how-to-backdrop-active {
+  height: 100vh;
+  width: 100vw;
+  /* pointer-events: all; */
+}
+
+.how-to-container {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, -50%);
+  background-color: red;
+  width: fit-content;
+  height: fit-content;
+  z-index: 1999;
+  test: rgba(255, 0, 0, 0);
+}
+
+.how-to-popup-container {
+  padding: 0.5em;
+}
+
+.how-to-popup-container-hidden {
+  display: none;
+}
+
+.how-to-popup-container-display {
+  width: 100%;
+  height: 100%;
+  border-radius: 1em;
+  background-color: rgb(211, 174, 174);
+  box-shadow: var(--shadow);
+}
+
+#how-to-use-popup {
+  width: 35vw;
+  height: 80vh;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+}
+
+.how-to-image {
+  /* width: 100%; */
+  max-height: 100px;
+}
+/* https://css-tricks.com/the-shapes-of-css/ */
+#triangle-down {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-top: 100px solid red;
+}

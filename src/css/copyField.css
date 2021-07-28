@@ -1,0 +1,19 @@
+.copy-field {
+  border: 1px solid black;
+  background-color: yellow;
+  padding: 0.25em;
+  font-family: Roboto Mono;
+  border-radius: 5px;
+  font-size: small;
+  height: 100px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* color: red; */
+  /* color: darkgreen; */
+}
+.copy-field-success {
+  color: darkgreen;
+}
+.copy-field-failure {
+  color: red;
+}

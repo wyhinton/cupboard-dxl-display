@@ -2,6 +2,11 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+:root {
+  --radius: 0.5em;
+  --shadow: 0 8px 32px 0 rgba(49, 49, 49, 0.37);
+}
 #portal {
   z-index: 10;
 }
@@ -41,10 +46,11 @@ body {
   height: 100%;
 }
 
+/* REACT GRID LAYOUT */
 .react-draggable {
   overflow: visible !important;
 }
-.react-draggable .react-resizable-handle {
+/* .react-draggable .react-resizable-handle {
   position: absolute;
   width: 20px;
   height: 20px;
@@ -63,8 +69,45 @@ body {
   -o-transform: none !important;
   -moz-transform: none !important;
   overflow: visible;
+} */
+.react-draggable .react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  /* bottom: 0; */
+  /* right: 0; */
+  background-position: bottom right;
+  padding: 0 3px 3px 0;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  background-color: red;
+  border-radius: 50%;
+  cursor: se-resize;
+  transform: none !important;
+  -webkit-transform: none !important;
+  -ms-transform: none !important;
+  -o-transform: none !important;
+  -moz-transform: none !important;
+  overflow: visible;
 }
 
+.react-resizable-handle-w {
+  bottom: 0;
+  left: 0;
+}
+.react-resizable-handle-se {
+  bottom: 0;
+  right: 0;
+}
+.react-resizable-handle-e {
+  bottom: 0;
+  left: 0;
+}
+.react-resizable-handle-ne {
+  bottom: 0;
+  left: 0;
+}
 .react-grid-item {
   display: flex;
   overflow: visible;
@@ -89,4 +132,68 @@ body {
 .centered-flex {
   display: flex;
   justify-content: center;
+}
+
+/* REACT COLLAPSIBLE */
+.Collapsible {
+  background-color: white;
+}
+
+.Collapsible__contentInner {
+  padding: 10px;
+  border: 1px solid #ebebeb;
+  border-top: 0;
+}
+.Collapsible__contentInner p {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+.Collapsible__contentInner p:last-child {
+  margin-bottom: 0;
+}
+
+.Collapsible__trigger {
+  display: block;
+  font-weight: 400;
+  text-decoration: none;
+  color: #333333;
+  position: relative;
+  border: 1px solid white;
+  padding: 10px;
+  background: #00ac9d;
+  color: white;
+}
+.Collapsible__trigger:after {
+  font-family: "FontAwesome";
+  content: "\f26e";
+  position: absolute;
+  right: 100px;
+  top: 10px;
+  display: block;
+  transition: transform 300ms;
+}
+.Collapsible__trigger.is-open:after {
+  transform: rotateZ(180deg);
+}
+.Collapsible__trigger.is-disabled {
+  opacity: 0.5;
+  background-color: grey;
+}
+
+.CustomTriggerCSS {
+  background-color: lightcoral;
+  transition: background-color 200ms ease;
+}
+
+.CustomTriggerCSS--open {
+  background-color: darkslateblue;
+}
+
+.Collapsible__custom-sibling {
+  padding: 5px;
+  font-size: 12px;
+  background-color: #cbb700;
+  color: black;
 }

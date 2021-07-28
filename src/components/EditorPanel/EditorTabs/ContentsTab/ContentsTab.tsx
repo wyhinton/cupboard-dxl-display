@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, FC } from "react";
-import { useStoreState } from "../../../hooks";
-import IXDrop from "../../IXDrop";
-import XDrag from "../../XDrag";
-import CardData from "../../../data_structs/CardData";
-import "../../../css/table.css";
+import { useStoreState } from "../../../../hooks";
+import IXDrop from "../../../IXDrop";
+import XDrag from "../../../XDrag";
+import CardData from "../../../../data_structs/CardData";
+import "../../../../css/table.css";
 import { TextInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
-import TableHeader from "../TableHeader";
-import UseTip from "./UseTip";
-import { DndTypes } from "../../../enums";
+import TableHeader from "../../TableHeader";
+import UseTip from "../UseTip";
+import { DndTypes } from "../../../../enums";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
  * @returns

@@ -1,28 +1,24 @@
-import React, { useEffect, useState, FC, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Clock from "./Clock";
 import IFrameView from "./IFrameView";
-import GridLayout, { WidthProvider, Responsive } from "react-grid-layout";
+import { WidthProvider, Responsive, Layout, Layouts } from "react-grid-layout";
 import "../css/cardLayout.css";
 import ViewCard from "./ViewCard";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../data_structs/CardData";
-import { AppMode } from "../enums";
+import { AppMode, DndTypes } from "../enums";
 import Modal from "./Modal";
 import IXDrop from "./IXDrop";
 import type { GridPosition } from "../interfaces/GridPosition";
-import { Layout, Layouts } from "react-grid-layout";
-import Card from "module";
-import { DndTypes } from "../enums";
 import classNames from "classnames";
 import defaultLayouts from "../static/defaultLayouts";
-import TestDrag from "./TestDrag";
 /**
  * Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components
  * @component
  *
  */
 
-export const CardGrid: FC = () => {
+export const CardGrid = (): JSX.Element => {
   const rows = 3;
   const cols = 4;
   const viewModeState = useStoreState((state) => state.appModel.appMode);
@@ -33,6 +29,9 @@ export const CardGrid: FC = () => {
   const currentLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
+  // const bufferLayoutState = useStoreState(
+  //   (state) => state.layoutsModel.bufferLayout
+  // );
   const [size, setSize] = useState({
     x: window.innerWidth,
     y: window.innerHeight,
@@ -48,17 +47,16 @@ export const CardGrid: FC = () => {
   const [activeCardKey, setActiveCardKey] = useState<string | undefined>(
     undefined
   );
-  const lockedCardClass = classNames("locked-card", {
-    "locked-card-edit": viewModeState === AppMode.EDIT,
-    "locked-card-display": viewModeState !== AppMode.EDIT,
-  });
-
   const activeCards = useStoreState((state) => state.appModel.activeCards);
   const [placeholderCards, setPlaceholderCards] = useState<string[]>([]);
   const [filledLayout, setFilledLayout] = useState(defaultLayouts);
   const [realLayout, setRealLayout] = useState(currentLayoutState?.layout);
+
+  //keep a local mutable reference to a layout in order to avoid making excess calls to store and causing re-renders on each new edit
   const localLayout = useRef<null | Layouts>(null);
-  const remove_item = (id: string, layout: Layouts) => {
+  //
+  const activeKeyRef = useRef("");
+  const removeItem = (id: string, layout: Layouts): void => {
     let old = { ...localLayout.current };
     if (old) {
       for (const [k, v] of Object.entries(old)) {
@@ -71,11 +69,6 @@ export const CardGrid: FC = () => {
     }
     localLayout.current = old;
     console.log(localLayout.current);
-    // for (const [k, v] of Object.entries(localLayout)) {
-    //   // for (const [k, v] of Object.entries(layout)) {
-    //     layout[k] = v.filter((l) => l.i !== id);
-    //     console.log(v.filter((l) => l.i !== id));
-    //   }
   };
 
   const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -94,16 +87,19 @@ export const CardGrid: FC = () => {
     const justPlaceholders = allBlank.lg
       .filter((l) => l.i.startsWith("empty"))
       .map((l) => l.i);
-    // console.log(justPlaceholders);
     setPlaceholderCards(justPlaceholders);
-    // console.log(finalLayouts);
     console.log(allBlank);
     setFilledLayout(allBlank);
     setRealLayout(currentLayoutState?.layout);
     console.log(currentLayoutState);
+    if (currentLayoutState?.layout) {
+      localLayout.current = currentLayoutState?.layout;
+    }
   }, [activeCards, currentLayoutState]);
 
-  const activeKeyRef = useRef("");
+  // useEffect(() => {
+  //   console.log(bufferLayoutState);
+  // }, [bufferLayoutState]);
 
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
@@ -189,14 +185,14 @@ export const CardGrid: FC = () => {
                       cardType={DndTypes.IFRAME}
                       data={card}
                       key={i.toString()}
-                      testkey={i.toString()}
-                      setModal={() => {
+                      cardId={i.toString()}
+                      onClick={() => {
                         console.log(card);
                         activeKeyRef.current = i.toString();
                       }}
                       onDoubleClick={() => {
                         console.log("removing item");
-                        remove_item(card.sourceId, defaultLayouts);
+                        removeItem(card.sourceId, defaultLayouts);
                       }}
                       activeKey={activeKeyRef}
                     >
@@ -250,7 +246,7 @@ export const CardGrid: FC = () => {
                   >
                     <ViewCard
                       key={p}
-                      testkey={p}
+                      cardId={p}
                       activeKey={activeKeyRef}
                       cardType={DndTypes.PLACEHOLDER}
                     ></ViewCard>

@@ -25,8 +25,15 @@ const defaultGridLayoutArr: Layout[] = [
     y: 0,
     w: 1,
     h: 1,
-    minW: 2,
-    maxW: 4,
+    minW: 1,
+  },
+  {
+    i: "https://www.lib.ncsu.edu/huntlibrary",
+    x: 3,
+    y: 1,
+    w: 1,
+    h: 1,
+    minW: 1,
   },
 ];
 

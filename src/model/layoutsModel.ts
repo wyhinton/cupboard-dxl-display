@@ -30,7 +30,7 @@ export interface LayoutsModel {
   setBufferLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
 
-  storeBufferLayout: Action<LayoutsModel>;
+  // storeBufferLayout: Action<LayoutsModel>;
 
   //update
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;
@@ -76,7 +76,6 @@ const layoutsModel: LayoutsModel = {
       );
       const { activeLayout } = getState();
       let buf = getState().bufferLayout;
-      // let test = target.payload
       if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
         console.log("IT WAS IN DISPLAY MODE");
         if (activeLayout?.layout) {
@@ -84,21 +83,6 @@ const layoutsModel: LayoutsModel = {
           actions.setActiveLayout(activeLayout);
         }
       }
-
-      // console.log("doing on cart sheet load success");
-      // console.log(target.payload);
-      // // const baseLayout = LayoutData.base
-      // const layouts = target.payload.data.map((l) => new LayoutData(l));
-      // // let testDefault = new LayoutData(createDefaultLayout());
-      // const defaultLayout = layouts.filter(
-      //   (l) => l.title === "Default_Layout_1"
-      // )[0];
-      // console.log(defaultLayout);
-      // // actions.setActiveLayout(testDefault);
-      // actions.setActiveLayout();
-      // actions.storeBufferLayout();
-      // actions.setExternalLayouts(layouts);
-      // console.log(layouts);
     }
   ),
   //simple setters
@@ -127,13 +111,21 @@ const layoutsModel: LayoutsModel = {
     (actions, cardToDelete, { getState, getStoreState, getStoreActions }) => {
       console.log("deleting card at layotus model");
       console.log(cardToDelete);
-
+      // let buf = getState().bufferLayout;
+      // // if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
+      //   console.log("IT WAS IN DISPLAY MODE");
+      //   // if (activeLayout?.layout) {
+      //     activeLayout.layout = buf;
+      //     actions.setActiveLayout(activeLayout);
+      //   // }
+      // // }
       const prevLayout = getState().activeLayout;
       console.log("got here");
       if (prevLayout) {
         console.log("deleting card at model");
         prevLayout.removeCard(cardToDelete);
-        actions.setActiveLayout(prevLayout);
+        // actions.setActiveLayout(prevLayout);
+        actions.setBufferLayout(prevLayout.layout);
       }
     }
   ),
@@ -149,6 +141,8 @@ const layoutsModel: LayoutsModel = {
     const { activeLayout } = getState();
     if (activeLayout) {
       activeLayout?.addCard(cardToAdd, targetPosition);
+      // console.log(activeLayout);
+      // actions.setBufferLayout(activeLayout.layout);
       actions.setActiveLayout(activeLayout);
       console.log(cardToAdd);
     }
@@ -172,13 +166,13 @@ const layoutsModel: LayoutsModel = {
     console.log(layouts);
     state.bufferLayout = layouts;
   }),
-  storeBufferLayout: action((state) => {
-    // console.log(debug(state.bufferLayout));
-    // if (state.activeLayout) {
-    //   let copy = {...state.bufferLayout}
-    //   state.activeLayout.layout = state.bufferLayout;
-    // }
-  }),
+  // storeBufferLayout: action((state) => {
+  //   // console.log(debug(state.bufferLayout));
+  //   // if (state.activeLayout) {
+  //   //   let copy = {...state.bufferLayout}
+  //   //   state.activeLayout.layout = state.bufferLayout;
+  //   // }
+  // }),
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;
     if (old) {

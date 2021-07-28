@@ -5,7 +5,7 @@ export enum AppMode {
 }
 
 export enum CardView {
-  NORMAL = "NORMAL",
+  GRID = "GRID",
   PREVIEW = "PREVIEW",
   FULL_SCREEN = "FULL_SCREEN",
 }

@@ -12,9 +12,9 @@ const LayoutsTable = () => {
   );
   return (
     <div>
-      <div>
+      {/* <div>
         <span>Current Layout</span>
-      </div>
+      </div> */}
       <table>
         <tr>
           <th>Title</th>
