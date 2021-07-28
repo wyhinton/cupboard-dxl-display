@@ -109,6 +109,7 @@ const layoutsModel: LayoutsModel = {
         activeLayout.layout = buf;
         activeLayout.swapCard(swapInfo);
         actions.setActiveLayout(activeLayout);
+        // actions.setBufferLayout(activeLayout.layout);
       }
     }
   ),
@@ -140,6 +141,7 @@ const layoutsModel: LayoutsModel = {
       activeLayout.layout = buf;
       activeLayout?.addCard(cardToAdd, targetPosition);
       actions.setActiveLayout(activeLayout);
+      // actions.setBufferLayout(activeLayout.layout);
       console.log(cardToAdd);
     }
   }),

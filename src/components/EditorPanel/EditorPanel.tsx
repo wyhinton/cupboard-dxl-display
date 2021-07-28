@@ -30,12 +30,12 @@ const EditorPanel: FC = () => {
     hidden: viewModeState === AppMode.DISPLAY,
     "editor-panel-minimized": minimized,
   });
+  const editorBodyClass = classNames("editor-body", {
+    "editor-body-full": !minimized,
+    "editor-body-minimized": minimized,
+  });
   const editorClass = classNames("editor", {
     "editor-visible": viewModeState === AppMode.EDIT,
-  });
-  const panelOverlayClass = classNames("panel-overlay", {
-    "panel-overlay-visible": minimized,
-    "panel-overlay-hidden": !minimized,
   });
 
   const styles = {
@@ -50,24 +50,25 @@ const EditorPanel: FC = () => {
         defaultPosition={{ x: 100, y: 100 }}
       >
         <div className={editorClass}>
-          <PanelHeader
-            onMinimize={() => {
-              setMinimized(true);
-            }}
-            onMaximize={() => {
-              setMinimized(false);
-            }}
-            visible={viewModeState === AppMode.EDIT}
-          ></PanelHeader>
-          {/* <div
-            className={panelOverlayClass}
-            onMouseUp={() => setMinimized(false)}
-          >
-            <div className={"overlay-icon-container"}>
-              <FullscreenIcon size={30}></FullscreenIcon>
-            </div>
-          </div> */}
-          <Editor />
+          <PanelHeader visible={viewModeState === AppMode.EDIT}>
+            <WindowButton
+              icon={<PlusIcon />}
+              color={"yellow"}
+              onMouseUp={() => {
+                setMinimized(false);
+              }}
+            />
+            <WindowButton
+              icon={<MinusIcon />}
+              color={"yellow"}
+              onMouseUp={() => {
+                setMinimized(true);
+              }}
+            />
+          </PanelHeader>
+          <div className={editorBodyClass}>
+            <Editor />
+          </div>
         </div>
       </Draggable>
     </>,
@@ -77,34 +78,12 @@ const EditorPanel: FC = () => {
 
 export default EditorPanel;
 
-// interface PanelHeader{
-
-// }
 interface PanelHeaderProperties {
-  onMinimize: () => void;
-  onMaximize: () => void;
   visible: boolean;
+  children: JSX.Element | JSX.Element[];
 }
-const PanelHeader = ({
-  onMinimize,
-  onMaximize,
-  visible,
-}: PanelHeaderProperties) => {
-  return (
-    <div className={"editor-panel-handle panel-header"}>
-      {/* <Heading>Editor</Heading> */}
-      <WindowButton
-        icon={<PlusIcon />}
-        color={"yellow"}
-        onMouseUp={onMinimize}
-      />
-      <WindowButton
-        icon={<MinusIcon />}
-        color={"yellow"}
-        onMouseUp={onMaximize}
-      />
-    </div>
-  );
+const PanelHeader = ({ visible, children }: PanelHeaderProperties) => {
+  return <div className={"editor-panel-handle panel-header"}>{children}</div>;
 };
 
 const WindowButton = ({
@@ -116,20 +95,8 @@ const WindowButton = ({
   color: string;
   onMouseUp: React.MouseEventHandler<HTMLDivElement>;
 }) => {
-  const buttonStyle = {
-    width: 20,
-    // height: "100%",
-    padding: ".25em",
-    // borderRadius: 5,
-    // backgroundColor: color,
-  };
   return (
-    <div
-      style={buttonStyle}
-      onMouseUp={() => {
-        onMouseUp;
-      }}
-    >
+    <div className={"window-button"} onMouseUp={onMouseUp}>
       {icon}
     </div>
   );

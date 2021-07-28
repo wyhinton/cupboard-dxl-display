@@ -19,10 +19,19 @@
   border-radius: 0.5em;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+
 .editor-panel-minimized {
   width: 10rem;
-  height: 4rem;
+  height: fit-content;
 }
+
+.editor-body-full {
+  height: 100%;
+}
+.editor-body-minimized {
+  height: 0;
+}
+
 .editor-panel-full {
   width: 30vw;
   height: 500px;
@@ -51,27 +60,6 @@
   padding-bottom: 0.25em;
 }
 
-.form-section-header {
-  color: black;
-  background-color: darkgrey;
-  width: 100%;
-  height: fit-content;
-}
-
-.form-section-header {
-  border-top: 1px solid lightgrey;
-  border-bottom: 1px solid lightgrey;
-}
-
-.form-row {
-  width: 100%;
-  height: fit-content;
-}
-
-.form-footer {
-  border: 1px solid red;
-}
-
 .react-draggable {
   border-radius: 1%;
   overflow: hidden;
@@ -79,14 +67,8 @@
   transition: height 0.2s ease-in;
 }
 
-/* .react-draggable :nth-child(1) div {
-  height: 100%;
-  background-color: purple;
-} */
-
 .panel-header {
   width: 100%;
-  /* height: fit-content !important; */
   cursor: grab;
   display: flex;
   justify-content: flex-start;
@@ -95,57 +77,17 @@
   height: 2em;
 }
 
-.panel-minimize-button {
-  margin-top: auto;
-  margin-bottom: auto;
-  height: initial;
-  padding: 0.5em;
-  /* height: 0.25em; */
-  /* height: 100%; */
-  width: 5%;
-  /* background-color: red; */
+.window-button {
+  width: 15px;
+  position: relative;
+  padding: 0.25em;
 }
 
-.panel-minimize-button::after {
-  width: 10px;
-  height: 10px;
-  background-color: purple;
-}
-
-/* TABS */
-.react-tabs {
-  height: 100%;
-}
-
-.react-tabs__tab-panel {
-  box-sizing: border-box;
-  height: 100%;
-  padding: 1em;
-  overflow: scroll;
-}
-
-.panel-overlay {
-  height: 100%;
-}
-
-.panel-overlay-hidden {
-  pointer-events: none;
-  display: none;
-}
-
-.panel-overlay-visible {
-  pointer-events: all;
-}
-
-.overlay-icon-container {
-  width: 100%;
-  height: 100%;
+.window-button svg {
   position: absolute;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  background-color: darkblue;
-}
-.overlay-icon-container svg {
   margin: auto;
+  top: 0;
+  left: 0;
+  position: absolute;
+  transform: translate(50%, 50%);
 }
