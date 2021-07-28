@@ -25,9 +25,9 @@ const App = (): JSX.Element => {
   const fetchLayoutDataGoogleSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchLayoutDataGoogleSheet
   );
-  const loadLocalLayoutsAction = useStoreActions(
-    (actions) => actions.appModel.loadLocalLayouts
-  );
+  // const loadLocalLayoutsAction = useStoreActions(
+  //   (actions) => actions.appModel.loadLocalLayouts
+  // );
   const swapCardDataAction = useStoreActions(
     (actions) => actions.layoutsModel.swapCardContent
   );
@@ -39,27 +39,15 @@ const App = (): JSX.Element => {
   useEffect(() => {
     fetchCardDataGoogleSheetThunk();
     fetchLayoutDataGoogleSheetThunk();
-    loadLocalLayoutsAction();
+    // loadLocalLayoutsAction();
     // console.log("fetching data");
-  }, []);
+  }, [fetchCardDataGoogleSheetThunk, fetchLayoutDataGoogleSheetThunk]);
 
   const containerStyle = {
     width: "100vw",
     height: "100vh",
   };
 
-  // const onChange = (
-  //   source: DraggableLocation,
-  //   destination: DraggableLocation
-  // ) => {
-  //   if (
-  //     destination.droppableId === source.droppableId &&
-  //     destination.index === source.index
-  //   ) {
-  //     return true;
-  //   }
-  //   return false;
-  // };
   const cardIsEmpty = (cardId: string): boolean => {
     return cardId.startsWith("empty");
   };
@@ -78,12 +66,13 @@ const App = (): JSX.Element => {
     } as GridPosition;
   };
 
-  const onDragEnd = (res: DropResult) => {
-    console.log(res);
+  const onDragEnd = (response: DropResult) => {
+    console.log(response);
     console.log("processing drag end");
-    if (res.destination?.droppableId == res.source?.droppableId) return;
-    console.log(res);
-    const { source, destination, draggableId } = res;
+    if (response.destination?.droppableId == response.source?.droppableId)
+      return;
+    console.log(response);
+    const { source, destination, draggableId } = response;
     console.log(source, destination, draggableId);
     console.log(
       `dragged from ${draggableId} to ${
@@ -113,10 +102,8 @@ const App = (): JSX.Element => {
   return (
     <>
       <div
-        onKeyUp={(e) => {
-          // console.log(e);
-          // console.log(e.key);
-          if (e.key === "F4") {
+        onKeyUp={(event) => {
+          if (event.key === "F4") {
             toggleViewModeThunk();
           }
         }}
@@ -129,15 +116,15 @@ const App = (): JSX.Element => {
 
           <div style={containerStyle}>
             <DndContext
-              onDragStart={(e) => {
-                console.log(e);
-              }}
-              onDragEnd={(e) => {
-                const { active, over } = e;
+              // onDragStart={(e) => {
+              //   console.log(e);
+              // }}
+              onDragEnd={(event) => {
+                const { active, over } = event;
                 console.log(event);
                 console.log(active);
                 console.log(over);
-                console.log(e);
+                // console.log(e);
               }}
             >
               <CardGrid />

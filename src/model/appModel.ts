@@ -11,7 +11,7 @@ import {
 } from "easy-peasy";
 import CardData from "../data_structs/CardData";
 import type RawCardRow from "../interfaces/RawCardRow";
-import { Layouts, Layout } from "react-grid-layout";
+import { Layouts } from "react-grid-layout";
 import defaultGridLayout from "../static/defaultLayouts";
 import { AppMode } from "../enums";
 import History from "../data_structs/History";

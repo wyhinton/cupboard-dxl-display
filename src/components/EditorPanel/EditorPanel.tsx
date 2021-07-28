@@ -3,7 +3,13 @@ import Draggable from "react-draggable";
 import ReactDom from "react-dom";
 import DragAndDock from "react-drag-and-dock";
 import Editor from "./Editor";
-import { Heading, FullscreenIcon, MinimizeIcon } from "evergreen-ui";
+import {
+  Heading,
+  FullscreenIcon,
+  MinimizeIcon,
+  PlusIcon,
+  MinusIcon,
+} from "evergreen-ui";
 import { useStoreState, useStoreActions } from "../../hooks";
 import "../../css/editorPanel.css";
 import classNames from "classnames";
@@ -46,18 +52,21 @@ const EditorPanel: FC = () => {
         <div className={editorClass}>
           <PanelHeader
             onMinimize={() => {
-              setMinimized(!minimized);
+              setMinimized(true);
+            }}
+            onMaximize={() => {
+              setMinimized(false);
             }}
             visible={viewModeState === AppMode.EDIT}
           ></PanelHeader>
-          <div
+          {/* <div
             className={panelOverlayClass}
             onMouseUp={() => setMinimized(false)}
           >
             <div className={"overlay-icon-container"}>
               <FullscreenIcon size={30}></FullscreenIcon>
             </div>
-          </div>
+          </div> */}
           <Editor />
         </div>
       </Draggable>
@@ -73,15 +82,56 @@ export default EditorPanel;
 // }
 interface PanelHeaderProperties {
   onMinimize: () => void;
+  onMaximize: () => void;
   visible: boolean;
 }
-const PanelHeader = ({ onMinimize, visible }: PanelHeaderProperties) => {
+const PanelHeader = ({
+  onMinimize,
+  onMaximize,
+  visible,
+}: PanelHeaderProperties) => {
   return (
     <div className={"editor-panel-handle panel-header"}>
       {/* <Heading>Editor</Heading> */}
-      <div onMouseUp={onMinimize} className={"panel-minimize-button"}>
-        <MinimizeIcon></MinimizeIcon>
-      </div>
+      <WindowButton
+        icon={<PlusIcon />}
+        color={"yellow"}
+        onMouseUp={onMinimize}
+      />
+      <WindowButton
+        icon={<MinusIcon />}
+        color={"yellow"}
+        onMouseUp={onMaximize}
+      />
     </div>
   );
 };
+
+const WindowButton = ({
+  icon,
+  color,
+  onMouseUp,
+}: {
+  icon: JSX.Element;
+  color: string;
+  onMouseUp: React.MouseEventHandler<HTMLDivElement>;
+}) => {
+  const buttonStyle = {
+    width: 20,
+    // height: "100%",
+    padding: ".25em",
+    // borderRadius: 5,
+    // backgroundColor: color,
+  };
+  return (
+    <div
+      style={buttonStyle}
+      onMouseUp={() => {
+        onMouseUp;
+      }}
+    >
+      {icon}
+    </div>
+  );
+};
+//
