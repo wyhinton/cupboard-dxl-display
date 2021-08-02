@@ -1,0 +1,16 @@
+.pop-up-background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+}
+
+.popup-child-container {
+  width: fit-content;
+  height: fit-content;
+  border-radius: 0.5em;
+  padding: 1em;
+  overflow: hidden;
+}

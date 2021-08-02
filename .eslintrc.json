@@ -22,6 +22,14 @@
     // "xo-react"
   ],
   "rules": {
+    "no-warning-comments": [
+      "warn",
+      {
+        "terms": ["todo", "fixme", "TODO", "FIXME"],
+        "location": "anywhere"
+      }
+    ],
+    "no-console": ["warn"],
     "unicorn/filename-case": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",

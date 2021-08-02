@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect, FC } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { InfoSignIcon } from "evergreen-ui";
 import ReactDom from "react-dom";
 import "../css/howToUse.css";
 import classNames from "classnames";
-// import { useStoreState } from "easy-peasy";
 import { useStoreState } from "../hooks";
 import Button from "./Shared/Button";
-import classnames from "classnames";
 import { AppMode } from "../enums";
+import Modal from "./Shared/Modal";
 
 const HowToUse = (): JSX.Element => {
   const [popUpVisible, setPopUpVisible] = useState(false);
@@ -36,18 +35,9 @@ const HowToUse = (): JSX.Element => {
     }
   }, [popUpVisible]);
   return (
-    <div
-      style={{ zIndex: 10 }}
-      className={howToPopupContainerClass}
-      // onClick={(e) => {
-      //   if (popUpVisible) {
-      //     // setPopUpVisible(false);
-      //   }
-      // }}
-    >
+    <div style={{ zIndex: 10 }} className={howToPopupContainerClass}>
       <div
         style={{ zIndex: 11, backgroundColor: "rgba(255, 0, 0, 0)" }}
-        // style={{ zIndex: 11, backgroundColor: "rgba(255, 0, 0, 0)" }}
         onClick={(e) => {
           if (popUpVisible) {
             setPopUpVisible(false);
@@ -58,7 +48,12 @@ const HowToUse = (): JSX.Element => {
       <div className={buttonContainerClass}>
         {appModeState === AppMode.DISPLAY ? (
           <div>
-            <HowToPopup active={popUpVisible} />
+            <HowToPopup
+              onClose={() => {
+                setPopUpVisible(false);
+              }}
+              active={popUpVisible}
+            />
             <Button
               iconBefore={<InfoSignIcon></InfoSignIcon>}
               onClick={() => {
@@ -71,17 +66,6 @@ const HowToUse = (): JSX.Element => {
         ) : (
           <></>
         )}
-        {/* <HowToPopup active={popUpVisible} />
-        <Button
-          iconBefore={<InfoSignIcon></InfoSignIcon>}
-          onClick={() => {
-            // setPopUpVisible(true);
-            setPopUpVisible(!popUpVisible);
-            console.log(popUpVisible);
-          }}
-          appearance="primary"
-          text="Learn how to use this display"
-        /> */}
       </div>
     </div>
   );
@@ -89,14 +73,20 @@ const HowToUse = (): JSX.Element => {
 
 export default HowToUse;
 
-const HowToPopup = ({ active }: { active: boolean }): JSX.Element => {
-  const howToPopupContainerClass = classNames("how-to-popup-container", {
-    "how-to-popup-container-hidden": !active,
-    "how-to-popup-container-display": active,
-  });
-
+const HowToPopup = ({
+  active,
+  onClose,
+}: {
+  active: boolean;
+  onClose: () => void;
+}): JSX.Element => {
   return ReactDom.createPortal(
-    <div className={howToPopupContainerClass}>
+    <Modal
+      active={active}
+      containerClassName={"how-to-use-popup"}
+      onClose={onClose}
+      backdropOpacity={0}
+    >
       <h2>Connect Labtop</h2>
       <hr></hr>
       <p>
@@ -125,8 +115,23 @@ const HowToPopup = ({ active }: { active: boolean }): JSX.Element => {
         className={"how-to-image"}
         src={process.env.PUBLIC_URL + "/masonary.png"}
       />
-    </div>,
+    </Modal>,
     document.querySelector("#how-to-use-popup") as HTMLElement
   );
 };
 // export default HowToPopup;
+
+// const Modal = ({
+//   children,
+//   active,
+// }: {
+//   active: boolean;
+//   children: JSX.Element | JSX.Element[];
+// }): JSX.Element => {
+//   const howToPopupContainerClass = classNames("how-to-popup-container", {
+//     "how-to-popup-container-hidden": !active,
+//     "how-to-popup-container-display": active,
+//   });
+
+//   return <div className={howToPopupContainerClass}>{children}</div>;
+// };

@@ -50,24 +50,28 @@ const EditorPanel: FC = () => {
         defaultPosition={{ x: 100, y: 100 }}
       >
         <div className={editorClass}>
-          <PanelHeader visible={viewModeState === AppMode.EDIT}>
-            <WindowButton
-              icon={<PlusIcon />}
-              color={"yellow"}
-              onMouseUp={() => {
-                setMinimized(false);
-              }}
-            />
-            <WindowButton
-              icon={<MinusIcon />}
-              color={"yellow"}
-              onMouseUp={() => {
-                setMinimized(true);
-              }}
-            />
-          </PanelHeader>
-          <div className={editorBodyClass}>
-            <Editor />
+          <div className={"header-container"}>
+            <PanelHeader visible={viewModeState === AppMode.EDIT}>
+              <WindowButton
+                icon={<PlusIcon />}
+                color={"yellow"}
+                onMouseUp={() => {
+                  setMinimized(false);
+                }}
+              />
+              <WindowButton
+                icon={<MinusIcon />}
+                color={"yellow"}
+                onMouseUp={() => {
+                  setMinimized(true);
+                }}
+              />
+            </PanelHeader>
+          </div>
+          <div className={"body-container"}>
+            <div className={editorBodyClass}>
+              <Editor />
+            </div>
           </div>
         </div>
       </Draggable>

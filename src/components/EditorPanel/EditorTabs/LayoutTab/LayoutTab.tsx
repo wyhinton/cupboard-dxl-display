@@ -11,18 +11,38 @@ import {
 } from "evergreen-ui";
 import Button from "../../../Shared/Button";
 import classNames from "classnames";
-import "../../../../css/copyField.css";
+import GoogleFormPopup from "./GoogleFormPopup";
+
 // import {Component} from "./Component";
 import { useStoreState } from "../../../../hooks";
 const LayoutTab: FC = () => {
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
   const bufferState = useStoreState((state) => state.layoutsModel.bufferLayout);
+  const [isShown, setIsShown] = useState(false);
   const [layoutString, setLayoutString] = useState(JSON.stringify(layoutState));
   useEffect(() => {
     setLayoutString(JSON.stringify(bufferState));
   }, [layoutState, bufferState]);
+
   return (
     <>
+      <Button
+        text={"Add New Layout"}
+        onClick={(e) => {
+          setIsShown(true);
+        }}
+      />
+      {isShown ? (
+        <GoogleFormPopup
+          onCloseComplete={() => {
+            setIsShown(false);
+          }}
+          visible={isShown}
+        />
+      ) : (
+        <></>
+      )}
+
       <Collapsible trigger={<CollapseTrigger title={"Submit New Layout"} />}>
         <CopyField text={layoutString} />
         <iframe

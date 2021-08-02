@@ -9,6 +9,7 @@ import fuzzysort from "fuzzysort";
 import TableHeader from "../../TableHeader";
 import UseTip from "../UseTip";
 import { DndTypes } from "../../../../enums";
+import { Scrollbars } from "react-custom-scrollbars";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
  * @returns
@@ -77,13 +78,13 @@ const ContentsTab: FC = () => {
 
   return (
     <div>
-      <UseTip tip={"Drag and drop a table row to a card to load new content"} />
-      <TextInput
+      {/* <UseTip tip={"Drag and drop a table row to a card to load new content"} /> */}
+      {/* <TextInput
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
           setSearchTerm(e.currentTarget.value)
         }
         placeholder={"search title"}
-      ></TextInput>
+      ></TextInput> */}
 
       <div style={{ paddingBottom: ".5em", paddingTop: ".5em" }}>
         <Menu.Divider></Menu.Divider>
@@ -118,34 +119,48 @@ const ContentsTab: FC = () => {
                 onClick={() => setFilterKey("interaction")}
               ></TableHeader>
             </tr>
-            {filteredCards.map((card, index) => {
-              return (
-                <XDrag
-                  dndType={DndTypes.CARD_ROW}
-                  draggableId={card.sourceId}
-                  index={index}
-                  key={index.toString()}
-                  isDragDisabled={card.isActive}
-                  className={
-                    card.isActive
-                      ? "content-row-active"
-                      : "contnet-row-inactive"
-                  }
-                >
-                  <>
-                    <td>
-                      <TitleWithIcon card={card} />
-                    </td>
-                    <td>{formatDate(card.added)}</td>
-                    <td>{card.src}</td>
-                    <td>{card.author}</td>
-                    <td>{card.interaction}</td>
-                  </>
-                </XDrag>
-              );
-            })}
           </tbody>
         </table>
+
+        {/* <div style={{ height: 100 }}> */}
+        <Scrollbars
+          autoHeight
+          autoHeightMin={100}
+          autoHeightMax={200}
+          onScrollFrame={(v) => console.log(v)}
+        >
+          <table style={{ padding: "2em" }}>
+            <tbody>
+              {filteredCards.map((card, index) => {
+                return (
+                  <XDrag
+                    dndType={DndTypes.CARD_ROW}
+                    draggableId={card.sourceId}
+                    index={index}
+                    key={index.toString()}
+                    isDragDisabled={card.isActive}
+                    className={
+                      card.isActive
+                        ? "content-row-active"
+                        : "contnet-row-inactive"
+                    }
+                  >
+                    <>
+                      <td>
+                        <TitleWithIcon card={card} />
+                      </td>
+                      <td>{formatDate(card.added)}</td>
+                      <td>{card.src}</td>
+                      <td>{card.author}</td>
+                      <td>{card.interaction}</td>
+                    </>
+                  </XDrag>
+                );
+              })}
+            </tbody>
+          </table>
+        </Scrollbars>
+        {/* </div> */}
       </IXDrop>
     </div>
   );

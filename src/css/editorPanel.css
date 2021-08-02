@@ -7,7 +7,7 @@
   top: 0;
   pointer-events: none;
 }
-
+/* ///////////////////////////////////////// */
 /* EDITOR DRAGGABLE */
 .editor-panel {
   pointer-events: all;
@@ -18,32 +18,89 @@
   color: white;
   border-radius: 0.5em;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.editor-panel-minimized {
-  width: 10rem;
-  height: fit-content;
-}
-
-.editor-body-full {
-  height: 100%;
-}
-.editor-body-minimized {
-  height: 0;
+  /* display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px; */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.1fr 1.2fr;
+  gap: 0px 0px;
+  /* height: calc(100vh - 10px); */
+  grid-auto-flow: row;
+  grid-template-areas:
+    "header"
+    "body";
 }
 
 .editor-panel-full {
   width: 30vw;
   height: 500px;
 }
+.editor-panel-minimized {
+  width: 10rem;
+  height: fit-content;
+}
 .hidden {
   display: none;
 }
+/* ///////////////////////////////////////// */
+/* HEADER */
+.header-container {
+  height: 100%;
+  grid-area: header;
+}
+.panel-header {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: 1px solid black;
+  background-color: #1f1f1f;
+  /* grid-area: header; */
+  /* grid-area: 5 / 4 / 6 / 5; */
+}
 
-.editor {
+.window-button {
+  width: 15px;
+  position: relative;
+  padding: 0.25em;
+}
+
+.window-button svg {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  position: absolute;
+  transform: translate(50%, 50%);
+}
+
+/* ///////////////////////////////////////// */
+/* BODY */
+.body-container {
+  grid-area: body;
+  height: 100%;
+}
+.editor-body-full {
+  /* height: 95%;
+  grid-area: body; */
+  /* grid-area: 5 / 3 / 6 / 4; */
+  /* grid-row: 2; */
+  /* grid-column: 1/1; */
+}
+.editor-body-minimized {
+  height: 0;
+}
+
+/* ///////////////////////////////////////// */
+
+/* .editor {
   flex-direction: column;
   position: absolute;
-}
+} */
 
 .editor-hidden {
   display: none;
@@ -67,27 +124,8 @@
   transition: height 0.2s ease-in;
 }
 
-.panel-header {
-  width: 100%;
-  cursor: grab;
-  display: flex;
-  justify-content: flex-start;
-  border-bottom: 1px solid black;
-  background-color: #1f1f1f;
-  height: 2em;
-}
-
-.window-button {
-  width: 15px;
-  position: relative;
-  padding: 0.25em;
-}
-
-.window-button svg {
-  position: absolute;
-  margin: auto;
-  top: 0;
-  left: 0;
-  position: absolute;
-  transform: translate(50%, 50%);
+.react-tabs {
+  /* height: 50px; */
+  /* overflow: hidden; */
+  height: 100%;
 }

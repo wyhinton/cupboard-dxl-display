@@ -1,0 +1,19 @@
+.google-form-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* background-color: red; */
+  width: fit-content;
+  height: fit-content;
+  z-index: 1999;
+  width: 50%;
+  height: 80%;
+  background-color: lightgrey;
+  overflow: scroll;
+  /* test: rgba(255, 0, 0, 0); */
+}
+
+.google-form-popup-inner-container {
+  padding: 1em;
+}
