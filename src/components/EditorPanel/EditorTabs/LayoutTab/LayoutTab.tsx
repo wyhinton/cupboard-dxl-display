@@ -8,6 +8,7 @@ import {
   CaretUpIcon,
   CaretDownIcon,
   InlineAlert,
+  DocumentIcon,
 } from "evergreen-ui";
 import Button from "../../../Shared/Button";
 import classNames from "classnames";
@@ -26,12 +27,16 @@ const LayoutTab: FC = () => {
 
   return (
     <>
-      <Button
-        text={"Add New Layout"}
-        onClick={(e) => {
-          setIsShown(true);
-        }}
-      />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button
+          iconBefore={<DocumentIcon />}
+          text={"Add New Layout"}
+          onClick={(e) => {
+            setIsShown(true);
+          }}
+          width={250}
+        />
+      </div>
       {isShown ? (
         <GoogleFormPopup
           onCloseComplete={() => {
@@ -42,20 +47,6 @@ const LayoutTab: FC = () => {
       ) : (
         <></>
       )}
-
-      <Collapsible trigger={<CollapseTrigger title={"Submit New Layout"} />}>
-        <CopyField text={layoutString} />
-        <iframe
-          src={formEmbedUrl}
-          width={"100%"}
-          frameBorder={0}
-          marginHeight={0}
-          marginWidth={0}
-          style={{ height: "60em" }}
-        >
-          Loading…
-        </iframe>
-      </Collapsible>
       <div style={{ paddingTop: "1em" }}>
         <LayoutTable />
       </div>

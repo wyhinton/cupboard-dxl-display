@@ -2,7 +2,7 @@
 export default interface RawLayoutRow {
   title: string;
   author: string;
-  Timestamp: string;
+  timestamp: string;
   layout: string;
   interaction: string;
 }

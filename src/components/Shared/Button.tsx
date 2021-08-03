@@ -12,6 +12,7 @@ interface ButtonProperties {
   appearance?: ButtonAppearance;
   className?: string;
   iconBefore?: JSX.Element;
+  width?: number;
 }
 const Button = ({
   onClick,
@@ -19,10 +20,13 @@ const Button = ({
   appearance,
   className,
   iconBefore,
+  width,
 }: ButtonProperties): JSX.Element => {
   return (
     <div onMouseUp={onClick}>
       <EverGreenButton
+        //use evergreen's default button with if no width is provided
+        width={width ?? null}
         iconBefore={iconBefore ?? null}
         className={className}
         appearance={appearance ?? "default"}

@@ -5,6 +5,7 @@ import type RawLayoutRow from "../interfaces/RawLayoutRow";
 
 import { getSheet } from "../utils";
 import cardDataSheetKey from "../static/cardDataSheetKey";
+import layoutsGoogleSheetKey from "../static/layoutsGoogleSheetKey";
 
 type Result =
   | { success: true; value: unknown }
@@ -49,11 +50,11 @@ const googleSheetsModel: GoogleSheetsModel = {
    * listeners: layoutsModel.onLayoutSheetLoadSuccess
    */
   fetchLayoutDataGoogleSheet: thunk(async (actions) => {
-    const temporaryCardLayout = {
-      key: cardDataSheetKey.key,
-      sheet_number: 2,
-    };
-    getSheet<RawLayoutRow>(temporaryCardLayout).then((sheet) => {
+    // const temporaryCardLayout = {
+    //   key: cardDataSheetKey.key,
+    //   sheet_number: 2,
+    // };
+    getSheet<RawLayoutRow>(layoutsGoogleSheetKey).then((sheet) => {
       console.log(sheet);
       actions.setLayoutDataGoogleSheet(sheet);
     });

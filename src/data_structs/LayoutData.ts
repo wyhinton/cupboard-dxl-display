@@ -7,40 +7,24 @@ import defaultLayouts from "../static/defaultLayouts";
 import { v4 as uuidv4 } from "uuid";
 import type { GridPosition } from "../interfaces/GridPosition";
 
+//TODO: Google form columns and layoutData fields should have the same capitilization
 export default class LayoutData {
   readonly title: string;
   readonly author: string;
   readonly added: Date;
+  readonly id: string;
   layout: Layouts;
-  //TODO: Make this more functional
   constructor(row: RawLayoutRow) {
+    this.id = row.title + "_" + row.timestamp;
     this.title = row.title;
     this.author = row.author;
-    this.added = new Date(row.Timestamp);
-    ///SAVE SAVE SAVE
+    //7/26/2021 14:38:57
+    //7/26/2021
+    // console.log(row.timestamp);
+    this.added = new Date(row.timestamp.split(" ")[0]);
+    // console.log(row);
     const startLayout: Layouts = JSON.parse(row.layout);
-    console.log(startLayout);
-    //TEMP TRIM DEFAULT LAYOUT TO TEST
-    for (const [k, v] of Object.entries(startLayout)) {
-      startLayout[k] = v.slice(0, 3);
-    }
-
     this.layout = startLayout;
-    ///SAVE SAVE SAVE
-
-    const emptyPositions = findEmptyGridPositions(defaultLayouts.lg, 3, 4);
-    const finalLayouts = generateFilledLayout(
-      defaultLayouts.lg,
-      emptyPositions
-    );
-    console.log(defaultLayouts);
-    console.log(finalLayouts);
-    console.log(emptyPositions);
-    // this.layout = finalLayouts;
-    // this.layout = finalLayouts;
-    this.layout = defaultLayouts;
-
-    // this.layout = JSON.parse(row.layout);
   }
   swapCard(swapInfo: CardSwapEvent): void {
     for (const [k, v] of Object.entries(this.layout)) {
@@ -98,7 +82,9 @@ function findEmptyGridPositions(
     }
   }
   const filledSpots = findFilledPositions(layouts);
-  const stringFilledSpots = new Set(filledSpots.map((fs) => [fs.x, fs.y].toString()));
+  const stringFilledSpots = new Set(
+    filledSpots.map((fs) => [fs.x, fs.y].toString())
+  );
 
   return allGridSpots.filter(
     (gs) => !stringFilledSpots.has([gs.x, gs.y].toString())

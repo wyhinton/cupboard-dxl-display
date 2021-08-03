@@ -9,6 +9,7 @@ import EditorPanel from "./components/EditorPanel/EditorPanel";
 import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import { GridPosition } from "./interfaces/GridPosition";
 import HowToUse from "./components/HowToUse";
+import { DragSource } from "./enums";
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  * @component
@@ -81,21 +82,30 @@ const App = (): JSX.Element => {
     );
 
     if (!destination) return;
-    if (destination.droppableId) {
-      if (cardIsEmpty(destination.droppableId)) {
-        const cardPos = stringToGridPos(destination.droppableId);
-        const addEvent = {
-          sourceId: draggableId,
-          targetPosition: cardPos,
-        } as CardAddEvent;
-        cardAddAction(addEvent);
-        console.log("dropped onto an empty card, adding card");
-      } else {
-        swapCardDataAction({
-          sourceId: draggableId,
-          targetId: destination.droppableId,
-        } as CardSwapEvent);
-      }
+    switch (source.droppableId) {
+      case DragSource.CARD_TABLE:
+        if (destination.droppableId) {
+          if (cardIsEmpty(destination.droppableId)) {
+            const cardPos = stringToGridPos(destination.droppableId);
+            const addEvent = {
+              sourceId: draggableId,
+              targetPosition: cardPos,
+            } as CardAddEvent;
+            cardAddAction(addEvent);
+            console.log("dropped onto an empty card, adding card");
+          } else {
+            swapCardDataAction({
+              sourceId: draggableId,
+              targetId: destination.droppableId,
+            } as CardSwapEvent);
+          }
+        }
+        break;
+      case DragSource.LAYOUT_TABLE:
+        console.log("dragged from the layout table!");
+        break;
+      default:
+        console.log("got unkown drag source");
     }
   };
 

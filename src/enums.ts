@@ -25,4 +25,10 @@ export enum DndTypes {
   CLOCK = "CLOCK",
   IFRAME = "IFRAME",
   CARD_ROW = "CARD_ROW",
+  LAYOUT = "LAYOUT",
+}
+
+export enum DragSource {
+  LAYOUT_TABLE = "LAYOUT_TABLE",
+  CARD_TABLE = "CARD_TABLE",
 }

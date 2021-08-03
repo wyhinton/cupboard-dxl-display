@@ -6,11 +6,9 @@ import "../css/cardLayout.css";
 import ViewCard from "./ViewCard";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../data_structs/CardData";
-import { AppMode, DndTypes } from "../enums";
-import Modal from "./Modal";
+import { AppMode, DndTypes, DragSource } from "../enums";
 import IXDrop from "./IXDrop";
 import type { GridPosition } from "../interfaces/GridPosition";
-import classNames from "classnames";
 import defaultLayouts from "../static/defaultLayouts";
 /**
  * Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components
@@ -335,7 +333,9 @@ function findEmptyGridPositions(
     }
   }
   const filledSpots = findFilledPositions(layouts);
-  const stringFilledSpots = new Set(filledSpots.map((fs) => [fs.x, fs.y].toString()));
+  const stringFilledSpots = new Set(
+    filledSpots.map((fs) => [fs.x, fs.y].toString())
+  );
 
   return allGridSpots.filter(
     (gs) => !stringFilledSpots.has([gs.x, gs.y].toString())

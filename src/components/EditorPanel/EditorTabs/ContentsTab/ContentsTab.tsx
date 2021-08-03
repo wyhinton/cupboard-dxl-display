@@ -4,11 +4,11 @@ import IXDrop from "../../../IXDrop";
 import XDrag from "../../../XDrag";
 import CardData from "../../../../data_structs/CardData";
 import "../../../../css/table.css";
-import { TextInput, Menu, StatusIndicator } from "evergreen-ui";
+import { SearchInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import TableHeader from "../../TableHeader";
 import UseTip from "../UseTip";
-import { DndTypes } from "../../../../enums";
+import { DndTypes, DragSource } from "../../../../enums";
 import { Scrollbars } from "react-custom-scrollbars";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
@@ -71,27 +71,21 @@ const ContentsTab: FC = () => {
   }, [filterKey, availableCards]);
 
   const cardList = useRef<CardData[]>(availableCards);
-  // const sortBy = (k: keyof CardData, func: (c: CardData) => number): void => {
-  //   const clone = [...cardList.current];
-  //   cardList.current = clone.sort(func);
-  // };
 
   return (
-    <div>
-      {/* <UseTip tip={"Drag and drop a table row to a card to load new content"} /> */}
-      {/* <TextInput
-        onChange={(e: React.FormEvent<HTMLInputElement>) =>
-          setSearchTerm(e.currentTarget.value)
-        }
-        placeholder={"search title"}
-      ></TextInput> */}
-
-      <div style={{ paddingBottom: ".5em", paddingTop: ".5em" }}>
-        <Menu.Divider></Menu.Divider>
+    <div className={"contents-tab-container"}>
+      <div style={{ padding: "0.5em" }}>
+        <SearchInput
+          width={"100%"}
+          onChange={(e: React.FormEvent<HTMLInputElement>) =>
+            setSearchTerm(e.currentTarget.value)
+          }
+          placeholder={"search title"}
+        ></SearchInput>
       </div>
       <IXDrop
         className={"table-container"}
-        droppableId={"Card Content Table"}
+        droppableId={DragSource.CARD_TABLE}
         isDropDisabled={true}
         cardType={DndTypes.CLOCK}
       >
@@ -121,12 +115,10 @@ const ContentsTab: FC = () => {
             </tr>
           </tbody>
         </table>
-
-        {/* <div style={{ height: 100 }}> */}
         <Scrollbars
           autoHeight
           autoHeightMin={100}
-          autoHeightMax={200}
+          autoHeightMax={319}
           onScrollFrame={(v) => console.log(v)}
         >
           <table style={{ padding: "2em" }}>
@@ -160,7 +152,6 @@ const ContentsTab: FC = () => {
             </tbody>
           </table>
         </Scrollbars>
-        {/* </div> */}
       </IXDrop>
     </div>
   );

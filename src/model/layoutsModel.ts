@@ -59,7 +59,8 @@ const layoutsModel: LayoutsModel = {
       // const baseLayout = LayoutData.base
       const layouts = target.payload.data.map((l) => new LayoutData(l));
       // let testDefault = new LayoutData(createDefaultLayout());
-      const defaultLayout = layouts.find((l) => l.title === "Default_Layout_1");
+      const defaultLayout = layouts[0];
+      // const defaultLayout = layouts.find((l) => l.title === "Default_Layout_1");
       console.log(defaultLayout);
       // actions.setActiveLayout(testDefault);
       if (defaultLayout) {
