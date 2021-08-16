@@ -4,12 +4,14 @@ import IXDrop from "../../../IXDrop";
 import XDrag from "../../../XDrag";
 import CardData from "../../../../data_structs/CardData";
 import "../../../../css/table.css";
+import "../../../../css/contentTable.css";
 import { SearchInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import TableHeader from "../../TableHeader";
 import UseTip from "../UseTip";
 import { DndTypes, DragSource } from "../../../../enums";
 import { Scrollbars } from "react-custom-scrollbars";
+import { formatDate } from "../../../../utils";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
  * @returns
@@ -71,7 +73,7 @@ const ContentsTab: FC = () => {
   }, [filterKey, availableCards]);
 
   const cardList = useRef<CardData[]>(availableCards);
-
+  const contentTabHeader = "contents-table-header";
   return (
     <div className={"contents-tab-container"}>
       <div style={{ padding: "0.5em" }}>
@@ -89,26 +91,31 @@ const ContentsTab: FC = () => {
         isDropDisabled={true}
         cardType={DndTypes.CLOCK}
       >
-        <table>
+        <table className={"contents-tab-table"}>
           <tbody>
             <tr>
               <TableHeader
+                className={contentTabHeader}
                 title={"Title"}
                 onClick={() => setFilterKey("title")}
               ></TableHeader>
               <TableHeader
+                className={contentTabHeader}
                 title={"Date Added"}
                 onClick={() => setFilterKey("added")}
               ></TableHeader>
               <TableHeader
+                className={contentTabHeader}
                 title={"URL"}
                 onClick={() => setFilterKey("sourceId")}
               ></TableHeader>
               <TableHeader
+                className={contentTabHeader}
                 title={"Author"}
                 onClick={() => setFilterKey("author")}
               ></TableHeader>
               <TableHeader
+                className={contentTabHeader}
                 title={"Interaction"}
                 onClick={() => setFilterKey("interaction")}
               ></TableHeader>
@@ -124,27 +131,27 @@ const ContentsTab: FC = () => {
           <table style={{ padding: "2em" }}>
             <tbody>
               {filteredCards.map((card, index) => {
+                const { added, src, author, interaction, sourceId, isActive } =
+                  card;
                 return (
                   <XDrag
                     dndType={DndTypes.CARD_ROW}
-                    draggableId={card.sourceId}
+                    draggableId={sourceId}
                     index={index}
                     key={index.toString()}
-                    isDragDisabled={card.isActive}
+                    isDragDisabled={isActive}
                     className={
-                      card.isActive
-                        ? "content-row-active"
-                        : "contnet-row-inactive"
+                      isActive ? "content-row-active" : "content-row-inactive"
                     }
                   >
                     <>
                       <td>
                         <TitleWithIcon card={card} />
                       </td>
-                      <td>{formatDate(card.added)}</td>
-                      <td>{card.src}</td>
-                      <td>{card.author}</td>
-                      <td>{card.interaction}</td>
+                      <td>{formatDate(added)}</td>
+                      <td>{src}</td>
+                      <td>{author}</td>
+                      <td>{interaction}</td>
                     </>
                   </XDrag>
                 );
@@ -156,22 +163,6 @@ const ContentsTab: FC = () => {
     </div>
   );
 };
-
-function formatDate(date: Date | undefined): string {
-  if (date) {
-    const d = new Date(date);
-    let month = "" + (d.getMonth() + 1);
-    let day = "" + d.getDate();
-    const year = d.getFullYear();
-
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-
-    return [year, month, day].join("-");
-  } else {
-    return "faulty date";
-  }
-}
 
 interface CardTitleProperties {
   card: CardData;

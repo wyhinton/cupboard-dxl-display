@@ -1,23 +1,9 @@
-.content-row-inactive {
-  color: darkgrey;
-  transition: color 0.5s ease-out;
-}
-.content-row-active {
-  /* color: red; */
-  color: darkgrey;
-  background-color: #393939;
-  transition: color 0.5s ease-out;
-}
-
 table {
   border-radius: 5px;
   overflow: hidden;
   border: 1px solid black;
 }
 
-tr:nth-child(1) {
-  border-bottom: 2px solid black;
-}
 tr {
   background-color: #393939;
   border-bottom: 1px solid black;
@@ -53,7 +39,7 @@ th {
 }
 
 td {
-  text-align: left;
+  text-align: center;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
   overflow: hidden;
@@ -61,37 +47,31 @@ td {
   white-space: nowrap;
   transition: color 0.25s ease-out;
 }
-th:nth-child(1) {
-  /* text-decoration:  */
-  text-align: left;
-  width: 30%;
-  width: 10rem;
-}
-th:nth-child(2) {
-  max-width: 7em;
-  min-width: 7em;
-}
-
-td:nth-child(1) {
-  width: 40%;
-}
-td:nth-child(2) {
-  text-align: center;
-  width: 20%;
-}
-
-td:nth-child(3) {
-  width: 50%;
-}
-td:nth-child(4) {
-  width: 10%;
-  text-align: center;
-}
-td:nth-child(5) {
-  width: 10%;
-  text-align: center;
-}
-
 .status-indicator {
   width: 10%;
+}
+
+/* card is not currently in the grid */
+.content-row-inactive {
+  color: darkgrey;
+  transition: color 0.5s ease-out;
+}
+/* card is in the grid */
+.content-row-active {
+  /* color: red; */
+  color: darkgrey;
+  background-color: #393939;
+  transition: color 0.5s ease-out;
+}
+
+.layout-row-active {
+  font-weight: bold;
+  background-color: grey;
+  /* background-color: red; */
+  /* outline: 1px solid var(--success); */
+}
+.layout-row-active {
+  font-weight: bold;
+  /* background-color: red; */
+  /* outline: 1px solid var(--success); */
 }

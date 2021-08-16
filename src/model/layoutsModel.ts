@@ -14,6 +14,8 @@ import { Layout, Layouts } from "react-grid-layout";
 import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
 import defaultLayouts from "../static/defaultLayouts";
 import { AppMode } from "../enums";
+import RawCardRow from "../interfaces/RawCardRow";
+import RawLayoutRow from "../interfaces/RawLayoutRow";
 export interface LayoutsModel {
   //state
   activeLayout: LayoutData | undefined;
@@ -21,7 +23,7 @@ export interface LayoutsModel {
   bufferLayout: Layouts;
   tempLayout: Layouts;
   //listeners
-  onLayoutSheetLoadSuccess: ThunkOn<LayoutsModel, never, StoreModel>;
+  onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
   onToggleViewModeListener: ThunkOn<LayoutsModel, never, StoreModel>;
   //requests
 
@@ -48,26 +50,27 @@ const layoutsModel: LayoutsModel = {
   tempLayout: defaultLayouts,
 
   //listeners
-  onLayoutSheetLoadSuccess: thunkOn(
-    // targetResolver:
+  /**On setAppGoogleSheetData, create an array of LayoutData objects from the provided rows */
+  onSetAppGoogleSheetData: thunkOn(
     (actions, storeActions) =>
-      storeActions.googleSheetsModel.setLayoutDataGoogleSheet,
-    // handler:
+      storeActions.googleSheetsModel.setAppGoogleSheetData,
     (actions, target) => {
-      console.log("doing on cart sheet load success");
-      console.log(target.payload);
-      // const baseLayout = LayoutData.base
-      const layouts = target.payload.data.map((l) => new LayoutData(l));
-      // let testDefault = new LayoutData(createDefaultLayout());
+      //extract only the needed properties from the GoogleSheetRow
+      const rawLayoutRows = target.payload.getSheetRows(1).map((l) => {
+        return {
+          title: l.title,
+          author: l.author,
+          timestamp: l.timestamp,
+          layout: l.layout,
+          interaction: l.interaction,
+        } as RawLayoutRow;
+      });
+      const layouts = rawLayoutRows.map((l) => new LayoutData(l));
       const defaultLayout = layouts[0];
-      // const defaultLayout = layouts.find((l) => l.title === "Default_Layout_1");
-      console.log(defaultLayout);
-      // actions.setActiveLayout(testDefault);
       if (defaultLayout) {
         actions.setActiveLayout(defaultLayout);
       }
       actions.setExternalLayouts(layouts);
-      console.log(layouts);
     }
   ),
   onToggleViewModeListener: thunkOn(
@@ -91,8 +94,8 @@ const layoutsModel: LayoutsModel = {
   ),
   //simple setters
   setActiveLayout: action((state, newActiveLayout) => {
-    console.log("setting active layout");
-    console.log(newActiveLayout);
+    // console.log("setting active layout");
+    // console.log(newActiveLayout);
     state.activeLayout = newActiveLayout;
   }),
   setExternalLayouts: action((state, newLayoutArray) => {

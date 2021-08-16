@@ -7,11 +7,17 @@ import React, { useState } from "react";
 const TableHeader = ({
   title,
   onClick,
+  className,
 }: {
   title: string;
   onClick?: () => void;
+  className?: string;
 }): JSX.Element => {
-  return <th onClick={onClick}>{title}</th>;
+  return (
+    <th className={className ?? "editor-panel-table-header"} onClick={onClick}>
+      {title}
+    </th>
+  );
 };
 
 export default TableHeader;

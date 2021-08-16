@@ -200,6 +200,7 @@ export const CardGrid = (): JSX.Element => {
           <div className={"centered-flex"}>not loaded</div>
         )}
       </div>
+
       <div
         style={{
           position: "absolute",

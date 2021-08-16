@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.global.css";
-import { useStoreActions } from "./hooks";
+import { useStoreActions, useStoreState } from "./hooks";
 import CardGrid from "./components/CardLayout";
 import Background from "./components/Background";
 import { DropResult, DragDropContext } from "react-beautiful-dnd";
@@ -10,6 +10,8 @@ import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import { GridPosition } from "./interfaces/GridPosition";
 import HowToUse from "./components/HowToUse";
 import { DragSource } from "./enums";
+import { AddIcon } from "evergreen-ui";
+import Pulsar from "./components/Shared/Pulsar";
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  * @component
@@ -35,13 +37,18 @@ const App = (): JSX.Element => {
   const cardAddAction = useStoreActions(
     (actions) => actions.layoutsModel.addCard
   );
+  const setActiveLayout = useStoreActions(
+    (actions) => actions.layoutsModel.setActiveLayout
+  );
+  const allLayouts = useStoreState(
+    (state) => state.layoutsModel.externalLayouts
+  );
+  const [isDraggingLayout, setIsDraggingLayout] = useState(false);
 
   /**On app start make one-time fetch requests */
   useEffect(() => {
     fetchCardDataGoogleSheetThunk();
     fetchLayoutDataGoogleSheetThunk();
-    // loadLocalLayoutsAction();
-    // console.log("fetching data");
   }, [fetchCardDataGoogleSheetThunk, fetchLayoutDataGoogleSheetThunk]);
 
   const containerStyle = {
@@ -103,6 +110,12 @@ const App = (): JSX.Element => {
         break;
       case DragSource.LAYOUT_TABLE:
         console.log("dragged from the layout table!");
+        setIsDraggingLayout(false);
+        const newLayout = allLayouts.filter((l) => l.id === draggableId)[0];
+        console.log(draggableId);
+        console.log(allLayouts);
+        console.log(newLayout);
+        setActiveLayout(newLayout);
         break;
       default:
         console.log("got unkown drag source");
@@ -121,22 +134,21 @@ const App = (): JSX.Element => {
       >
         <HowToUse />
         <Background />
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext
+          onBeforeDragStart={(e) => {
+            console.log(e);
+            const { source } = e;
+            if (source.droppableId === DragSource.LAYOUT_TABLE) {
+              console.log("setting is dragging layout");
+              setIsDraggingLayout(true);
+            }
+          }}
+          onDragEnd={onDragEnd}
+        >
           <EditorPanel />
-
           <div style={containerStyle}>
-            <DndContext
-              // onDragStart={(e) => {
-              //   console.log(e);
-              // }}
-              onDragEnd={(event) => {
-                const { active, over } = event;
-                console.log(event);
-                console.log(active);
-                console.log(over);
-                // console.log(e);
-              }}
-            >
+            {isDraggingLayout ? <LayoutOverlay /> : <></>}
+            <DndContext>
               <CardGrid />
             </DndContext>
           </div>
@@ -147,3 +159,11 @@ const App = (): JSX.Element => {
 };
 
 export default App;
+
+const LayoutOverlay = ({ active }: { active?: boolean }): JSX.Element => {
+  return (
+    <div className={"layout-overlay-active"}>
+      <Pulsar></Pulsar>
+    </div>
+  );
+};

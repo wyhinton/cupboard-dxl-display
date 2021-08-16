@@ -3,6 +3,8 @@ import { useStoreState, useStoreActions } from "../../../../hooks";
 import IXDrop from "../../../IXDrop";
 import XDrag from "../../../XDrag";
 import { DndTypes, DragSource } from "../../../../enums";
+import { StatusIndicator } from "evergreen-ui";
+import { formatDate } from "../../../../utils";
 /**
  * Table for displaying the available card layouts
  * @returns
@@ -11,6 +13,9 @@ import { DndTypes, DragSource } from "../../../../enums";
 const LayoutTable = (): JSX.Element => {
   const externalLayoutsState = useStoreState(
     (state) => state.layoutsModel.externalLayouts
+  );
+  const activeLayoutState = useStoreState(
+    (state) => state.layoutsModel.activeLayout
   );
   return (
     <div>
@@ -35,19 +40,31 @@ const LayoutTable = (): JSX.Element => {
         <table>
           <tbody>
             {externalLayoutsState.map((l, index) => {
+              const { id, title, author, added } = l;
               return (
                 <XDrag
                   dndType={DndTypes.LAYOUT}
-                  draggableId={l.id}
+                  draggableId={id}
                   index={index}
                   key={index.toString()}
                   isDragDisabled={false}
-                  className={"layout-row-active"}
+                  className={
+                    id === activeLayoutState?.id
+                      ? "layout-row-active"
+                      : "layout-row-inactive"
+                  }
                 >
                   <>
-                    <td key={index}>{l.title}</td>
-                    <td>{l.added.toString()}</td>
-                    <td>{l.author}</td>
+                    <td key={index}>
+                      {id === activeLayoutState?.id ? (
+                        <StatusIndicator color="success" />
+                      ) : (
+                        <></>
+                      )}
+                      {title}
+                    </td>
+                    <td>{formatDate(added)}</td>
+                    <td>{author}</td>
                   </>
                 </XDrag>
               );

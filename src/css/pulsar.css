@@ -54,6 +54,10 @@
   animation: icon_pulse 2s 0.5s alternate infinite;
 }
 
+.pulsar svg {
+  margin: auto;
+}
+
 .pulsar .ring {
   box-sizing: border-box;
   position: absolute;

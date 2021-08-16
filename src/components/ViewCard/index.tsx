@@ -131,7 +131,11 @@ const ViewCard: FC<ViewCardProperties> = ({
 
   return (
     //receives a drag objects
-    <div className={cardClass} style={{ height: "100%" }} ref={elementReference}>
+    <div
+      className={cardClass}
+      style={{ height: "100%" }}
+      ref={elementReference}
+    >
       {children ? (
         <InPortal node={portalNode}>
           <div
@@ -188,7 +192,8 @@ const ViewCard: FC<ViewCardProperties> = ({
             {cardView === CardView.FULL_SCREEN ? (
               <div className={"return-button-container"}>
                 <Button
-                  text={"return"}
+                  text={"Return"}
+                  width={300}
                   onClick={() => {
                     setCardView(CardView.GRID);
                   }}
@@ -267,3 +272,10 @@ function propertiesAreEqual(
   return true;
 }
 export default React.memo(ViewCard, propertiesAreEqual);
+
+const spreadsheetId = "1Ap2nHHKTT12paRyVBJSn2VEpcOYBbH85pO-tgUv2oIc";
+const url = `https://spreadsheets.google.com/feeds/cells/${spreadsheetId}/od6/public/basic?alt=json1`;
+// var url = 'https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/?key={yourAPIKey}&includeGridData=true';
+const sheetRes = fetch(url).catch((err) => {
+  `failed to get sheet with key ${spreadsheetId}`;
+});

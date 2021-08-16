@@ -31,4 +31,5 @@ export enum DndTypes {
 export enum DragSource {
   LAYOUT_TABLE = "LAYOUT_TABLE",
   CARD_TABLE = "CARD_TABLE",
+  CARD_GRID = "CARD_GRID",
 }

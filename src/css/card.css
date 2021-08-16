@@ -106,9 +106,12 @@ iframe {
 .return-button-container {
   position: fixed;
   bottom: 0;
-  /* left: 0; */
-  width: fit-content;
-  height: fit-content;
+  width: 100vw;
+  height: 4vh;
+  display: flex;
+  justify-content: center;
+  background-color: red;
+  padding: 0.25em;
 }
 
 .card-modal-backdrop {

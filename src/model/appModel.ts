@@ -121,12 +121,22 @@ const appModel: AppDataModel = {
   onCardSheetLoadSuccess: actionOn(
     // targetResolver:
     (actions, storeActions) =>
-      storeActions.googleSheetsModel.setCardDataGoogleSheet,
+      storeActions.googleSheetsModel.setAppGoogleSheetData,
     // handler:
     (state, target) => {
-      console.log("doing on cart sheet load success");
-      console.log(target.payload);
-      const cards = target.payload.data.map((c: RawCardRow) => new CardData(c));
+      // console.log("got on card sheet load success");
+      const cardRowsArray = target.payload.getSheetRows(0);
+      const rawCardRowsArray = cardRowsArray.map((row) => {
+        return {
+          src: row.src,
+          title: row.title,
+          added: row.added,
+          sourceid: row.sourceid,
+          author: row.author,
+          interaction: row.interaction,
+        } as RawCardRow;
+      });
+      const cards = rawCardRowsArray.map((c: RawCardRow) => new CardData(c));
       console.log(cards);
       state.availableCards = cards;
     }
