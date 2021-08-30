@@ -27,12 +27,6 @@ export const CardGrid = (): JSX.Element => {
   const currentLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
-  const temporaryLayoutState = useStoreState(
-    (state) => state.layoutsModel.tempLayout
-  );
-  // const bufferLayoutState = useStoreState(
-  //   (state) => state.layoutsModel.bufferLayout
-  // );
   //use the size of the window in order to set the height of the cards
   const [size, setSize] = useState({
     x: window.innerWidth,
@@ -59,40 +53,27 @@ export const CardGrid = (): JSX.Element => {
     const old = { ...localLayout.current };
     if (old) {
       for (const [k, v] of Object.entries(old)) {
-        // for (const [k, v] of Object.entries(layout)) {
         old[k] = v.filter((l) => l.i !== id);
-        console.log(v.some((v) => v.i === id));
-        console.log(v.filter((l) => l.i !== id));
-        // console.log(v.filter());
       }
     }
     localLayout.current = old;
-    console.log(localLayout.current);
   };
 
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
   useEffect(() => {
-    // console.log("cards changed");
-    // console.log(currentLayoutState);
     const allBlank = generateFilledLayout(rows, cols);
     const justPlaceholders = allBlank.lg
       .filter((l) => l.i.startsWith("empty"))
       .map((l) => l.i);
 
     setPlaceholderCards(justPlaceholders);
-    // console.log(allBlank);
     setFilledLayout(allBlank);
     setRealLayout(currentLayoutState?.layout);
-    // console.log(currentLayoutState);
     if (currentLayoutState?.layout) {
       localLayout.current = currentLayoutState?.layout;
     }
   }, [activeCards, currentLayoutState]);
-
-  // useEffect(() => {
-  //   console.log(bufferLayoutState);
-  // }, [bufferLayoutState]);
 
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
@@ -120,8 +101,7 @@ export const CardGrid = (): JSX.Element => {
             {...sharedGridSettings}
             className="card-layout"
             layouts={realLayout}
-            resizeHandles={["se", "ne", "e", "w"]}
-            // onLayoutChange={(l, l ays) => addEditHistory(lays)}
+            resizeHandles={["se"]}
             preventCollision={true}
             verticalCompact={false}
             onDragStart={(
@@ -160,14 +140,12 @@ export const CardGrid = (): JSX.Element => {
             </div>
 
             {activeCards.map((card: CardData, index: number) => {
-              console.log(filledLayout);
               return (
                 <div
                   //key provided here is the means of accessing a unique identifier for the cards
                   key={card.sourceId}
                   draggable={true}
-                  // ref={containerRef}
-                  // style={cardContainerStyle}
+                  className = {cardContainerClass(card, viewModeState)}
                 >
                   <IXDrop
                     key={index}
@@ -189,7 +167,7 @@ export const CardGrid = (): JSX.Element => {
                       }}
                       activeKey={activeKeyReference}
                     >
-                      <IFrameView src={card.src} />
+                      <IFrameView card = {card} src={card.src} />
                     </ViewCard>
                   </IXDrop>
                 </div>
@@ -218,9 +196,6 @@ export const CardGrid = (): JSX.Element => {
             layouts={filledLayout}
             resizeHandles={[]}
             preventCollision={true}
-            onDrop={(layout, item, e) => {
-              console.log(layout, item, e);
-            }}
             isDraggable={false}
             isResizable={false}
           >
@@ -251,6 +226,17 @@ export const CardGrid = (): JSX.Element => {
   );
 };
 export default React.memo(CardGrid);
+
+const cardContainerClass =(card: CardData, appMode: AppMode): string=>{
+    const isFailed = card.failed;
+    if(isFailed && appMode === AppMode.DISPLAY){
+      return "card-container-hidden"
+    } else if (isFailed && appMode === AppMode.EDIT){
+      return "card-container-error"
+    } else {
+      return "card-container"
+    }
+}
 
 const createLayout = (cards: CardData[], cols: number, rows: number) => {
   const pos: GridPosition = { x: 0, y: 0 };
@@ -342,77 +328,3 @@ function findEmptyGridPositions(
     (gs) => !stringFilledSpots.has([gs.x, gs.y].toString())
   );
 }
-
-// activeCards.map((card: CardData, i: number) => {
-//   return (
-//     <div
-//       //key provided here is the means of accesing a unique identifier for the cards
-//       key={card.sourceId}
-//       // style={cardContainerStyle}
-//     >
-//       <IXDrop key={i} droppableId={card.sourceId}>
-//         <ViewCard
-//           data={card}
-//           key={i.toString()}
-//           testkey={i.toString()}
-//           setModal={() => {
-//             console.log(card);
-//             // if (card.sourceId !== "clock") {
-//             activeKeyRef.current = i.toString();
-//             // }
-//           }}
-//           activeKey={activeKeyRef}
-//         >
-//           {activeCardKey == i.toString() ? (
-//             <Modal text={"hello"}></Modal>
-//           ) : (
-//             <div></div>
-//           )}
-
-//           <IFrameView src={card.src} />
-//         </ViewCard>
-//       </IXDrop>
-//     </div>
-//   );
-// });
-
-// we need to memo any children of the gird layout to avoid re-renders
-//github.com/react-grid-layout/react-grid-layout
-// const memoCards = useMemo(() => {
-//   return activeCards.map((card: CardData, i: number) => {
-//     return (
-//       <div
-//         //key provided here is the means of accesing a unique identifier for the cards
-//         key={card.sourceId}
-//         // style={cardContainerStyle}
-//         onMouseUp={(e) => {
-//           console.log(e.target);
-//           console.log(i);
-//         }}
-//         onMouseDown={(e) => {
-//           console.log(e);
-//         }}
-//       >
-//         <IXDrop key={i} droppableId={card.sourceId}>
-//           <ViewCard
-//             data={card}
-//             key={i.toString()}
-//             testkey={i.toString()}
-//             setModal={() => {
-//               activeKeyRef.current = i.toString();
-//             }}
-//             activeKey={activeKeyRef}
-//           >
-//             {activeCardKey == i.toString() ? (
-//               <Modal text={"hello"}></Modal>
-//             ) : (
-//               <div></div>
-//             )}
-
-//             <IFrameView src={card.src} />
-//           </ViewCard>
-//         </IXDrop>
-//       </div>
-//     );
-//   });
-// }, [activeCards]);

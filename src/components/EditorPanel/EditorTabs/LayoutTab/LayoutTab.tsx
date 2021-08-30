@@ -27,14 +27,14 @@ const LayoutTab: FC = () => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <Button
           iconBefore={<DocumentIcon />}
           text={"Add New Layout"}
           onClick={(e) => {
             setIsShown(true);
           }}
-          width={250}
+          width={400}
         />
       </div>
       {isShown ? (
@@ -47,7 +47,7 @@ const LayoutTab: FC = () => {
       ) : (
         <></>
       )}
-      <div style={{ paddingTop: "1em" }}>
+      <div>
         <LayoutTable />
       </div>
     </>

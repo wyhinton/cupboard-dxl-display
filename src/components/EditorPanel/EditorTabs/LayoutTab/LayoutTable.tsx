@@ -5,6 +5,7 @@ import XDrag from "../../../XDrag";
 import { DndTypes, DragSource } from "../../../../enums";
 import { StatusIndicator } from "evergreen-ui";
 import { formatDate } from "../../../../utils";
+import "../../../../css/table.css";
 /**
  * Table for displaying the available card layouts
  * @returns
@@ -19,9 +20,6 @@ const LayoutTable = (): JSX.Element => {
   );
   return (
     <div>
-      {/* <div>
-        <span>Current Layout</span>
-      </div> */}
       <IXDrop
         className={"table-container"}
         droppableId={DragSource.LAYOUT_TABLE}

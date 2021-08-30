@@ -6,8 +6,9 @@
   border-radius: 5px;
   font-size: small;
   height: 100px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
+  margin-top: 1em;
+  margin-bottom: 1em;
   /* color: red; */
   /* color: darkgreen; */
 }

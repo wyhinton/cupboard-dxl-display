@@ -47,6 +47,7 @@ export interface AppDataModel {
   setCurrentLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
+  registerCardLoadFailure: Thunk<AppDataModel, CardData, never, StoreModel>
   //listeners
   onUndoHistory: ThunkOn<AppDataModel, never, StoreModel>;
   onRedoHistory: ThunkOn<AppDataModel, never, StoreModel>;
@@ -139,39 +140,52 @@ const appModel: AppDataModel = {
       const cards = rawCardRowsArray.map((c: RawCardRow) => new CardData(c));
       console.log(cards);
       state.availableCards = cards;
+      console.log(debug(state.availableCards));
     }
   ),
 
   onSetActiveLayout: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.setActiveLayout,
     async (actions, layout, { getState }) => {
-      console.log("listened for setActiveLayout at app_model");
-
+      // console.log("listened for setActiveLayout at app_model");
       //if a card source is in the active layout, then it must be active
+      // const sources = layout.payload.sources();
+      // console.log(sources);
       const activeSources = layout.payload
         .sources()
         .filter((s) => s !== "clock");
 
-      console.log(activeSources);
-      //async thunk issue
-      console.log(getState().availableCards);
       const availableCardsUpdated = getState().availableCards.map((card) => {
         if (activeSources.includes(card.sourceId)) {
-          card.set_active(true);
+          card.setActive(true);
         } else {
-          card.set_active(false);
+          card.setActive(false);
         }
         return card;
       });
       const activeCards = getState().availableCards.filter((card) => {
         return activeSources.includes(card.sourceId);
       });
+      // console.log(availableCardsUpdated);
       actions.setAvailableCards(availableCardsUpdated);
       actions.setActiveCards(activeCards);
-      console.log(activeCards);
+      // console.log(activeCards);
     }
   ),
-
+  registerCardLoadFailure: thunk((actions, failedCard, { getState, getStoreState }) => {
+    console.log("Got card Register Load Failure at Layouts Model");
+    console.log(failedCard);
+    const { activeCards } = getState();
+    const failedId = failedCard.sourceId;
+    let newCards = activeCards.map(c=>{
+      if (c.sourceId === failedId) {
+        console.log("found failed");
+        c.fail();
+      }
+      return c
+    })
+    actions.setActiveCards(newCards);
+  }),
   onSwapCardContent: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.swapCardContent,
     async (actions, payload, { getState }) => {

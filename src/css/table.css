@@ -26,8 +26,13 @@ table {
   white-space: nowrap;
 }
 
-.row-favicon {
+.row-favicon-active {
   padding: 0.5em;
+  opacity: 0.5;
+}
+.row-favicon-inactive {
+  padding: 0.5em;
+  opacity: 1;
 }
 
 th {
@@ -53,7 +58,7 @@ td {
 
 /* card is not currently in the grid */
 .content-row-inactive {
-  color: darkgrey;
+  color: white;
   transition: color 0.5s ease-out;
 }
 /* card is in the grid */

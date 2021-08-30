@@ -23,14 +23,8 @@ const App = (): JSX.Element => {
   );
 
   const fetchCardDataGoogleSheetThunk = useStoreActions(
-    (actions) => actions.googleSheetsModel.fetchCardDataGoogleSheet
+    (actions) => actions.googleSheetsModel.fetchAppGoogleSheet
   );
-  const fetchLayoutDataGoogleSheetThunk = useStoreActions(
-    (actions) => actions.googleSheetsModel.fetchLayoutDataGoogleSheet
-  );
-  // const loadLocalLayoutsAction = useStoreActions(
-  //   (actions) => actions.appModel.loadLocalLayouts
-  // );
   const swapCardDataAction = useStoreActions(
     (actions) => actions.layoutsModel.swapCardContent
   );
@@ -48,8 +42,7 @@ const App = (): JSX.Element => {
   /**On app start make one-time fetch requests */
   useEffect(() => {
     fetchCardDataGoogleSheetThunk();
-    fetchLayoutDataGoogleSheetThunk();
-  }, [fetchCardDataGoogleSheetThunk, fetchLayoutDataGoogleSheetThunk]);
+  }, [fetchCardDataGoogleSheetThunk]);
 
   const containerStyle = {
     width: "100vw",

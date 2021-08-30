@@ -14,7 +14,7 @@ import "../../css/card.css";
 import Modal from "../Modal";
 import type { HtmlPortalNode } from "react-reverse-portal";
 import { Component } from "evergreen-ui/node_modules/@types/react";
-import { DeleteIcon } from "evergreen-ui";
+import { DeleteIcon, ButtonAppearance, InlineAlert, Pane } from "evergreen-ui";
 import Button from "../Shared/Button";
 import {
   createHtmlPortalNode,
@@ -49,7 +49,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   activeKey,
   cardId,
   layoutRef,
-  data: cardData,
+  data,
   onClick,
   onDoubleClick,
 }: ViewCardProperties) => {
@@ -68,6 +68,7 @@ const ViewCard: FC<ViewCardProperties> = ({
     "card-empty": appModeState === AppMode.EDIT && !children,
     "card-empty-hidden": !children && appModeState == AppMode.DISPLAY,
     "card-locked": cardType === DndTypes.CLOCK && appModeState === AppMode.EDIT,
+    "card-error": data?.failed,
   });
 
   const cardInfoClass = classNames("info", {
@@ -113,17 +114,10 @@ const ViewCard: FC<ViewCardProperties> = ({
       switch (cardView) {
         case CardView.GRID:
           setCardView(CardView.PREVIEW);
-          console.log("it was normal");
           break;
         case CardView.PREVIEW:
-          console.log("it was preview");
-          setCardView(CardView.FULL_SCREEN);
           break;
-        // case CardView.FULL_SCREEN:
-        //   console.log("it was full screen");
-        //   break;
         default:
-          console.log("got default");
           break;
       }
     }
@@ -136,7 +130,9 @@ const ViewCard: FC<ViewCardProperties> = ({
       style={{ height: "100%" }}
       ref={elementReference}
     >
-      {children ? (
+      {data?.failed ? (
+        <FailureNotice errors={data.validator.errorMessages()} />
+      ) : children ? (
         <InPortal node={portalNode}>
           <div
             className={cardModalBackdrop}
@@ -159,19 +155,19 @@ const ViewCard: FC<ViewCardProperties> = ({
             >
               {
                 //show the card's info when in preview mode
-                cardView === CardView.PREVIEW && cardData ? (
-                  <CardInfo data={cardData} className={cardInfoClass} />
+                cardView === CardView.PREVIEW && data ? (
+                  <CardInfo data={data} className={cardInfoClass} />
                 ) : (
                   <></>
                 )
               }
               {
                 //Only show layout editing controls when in edit mode and if card carries data (is not static)
-                appModeState == AppMode.EDIT && cardData ? (
+                appModeState == AppMode.EDIT && data ? (
                   <DeleteButton
                     onClick={() => {
                       console.log("got delete button click");
-                      deleteCardAction(cardData);
+                      deleteCardAction(data);
                     }}
                   />
                 ) : (
@@ -208,7 +204,7 @@ const ViewCard: FC<ViewCardProperties> = ({
         <></>
       )}
 
-      {children ? (
+      {children && !data?.failed ? (
         setOutPutNode(
           children,
           cardView,
@@ -251,13 +247,41 @@ const DeleteButton = ({ onClick }: DeleteButtonProperties) => {
     position: "absolute",
     top: "-1em",
     left: "-1em",
-    width: "fit-content",
-    height: "fit-content",
-    // backgroundColor: "red",
+  } as React.CSSProperties;
+  const subContStyle = {
+    position: "absolute",
+    left: -8,
   } as React.CSSProperties;
   return (
-    <div style={deleteButtonStyle} onMouseUp={onClick}>
-      <DeleteIcon size={25} />
+    <div
+      style={deleteButtonStyle}
+      className="delete-button-container"
+      onMouseUp={onClick}
+    >
+      <div style={subContStyle}>
+        <Button
+          onClick={onClick}
+          text={""}
+          width={80}
+          height={40}
+          appearance={"danger" as ButtonAppearance}
+          iconBefore={<DeleteIcon size={30} />}
+        ></Button>
+      </div>
+    </div>
+  );
+};
+
+const FailureNotice = ({ errors }: { errors: string[] }): JSX.Element => {
+  return (
+    <div className={"failure-notice-container"}>
+      {/* <Pane> */}
+      {errors.map((e) => (
+        <div className={"failure-message"}>
+          <InlineAlert intent="danger">{e}</InlineAlert>
+        </div>
+      ))}
+      {/* </Pane> */}
     </div>
   );
 };

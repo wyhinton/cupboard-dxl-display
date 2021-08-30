@@ -3,3 +3,11 @@
   height: 100%;
   /* display: none; */
 }
+/* Prevent any interactions with the card if it's failed when in display mode */
+.card-container-hidden{
+  display: none !important;
+}
+
+/* .card-container-error{
+  outline: 1px solid red;
+} */

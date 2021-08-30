@@ -4,7 +4,6 @@ import IXDrop from "../../../IXDrop";
 import XDrag from "../../../XDrag";
 import CardData from "../../../../data_structs/CardData";
 import "../../../../css/table.css";
-import "../../../../css/contentTable.css";
 import { SearchInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import TableHeader from "../../TableHeader";
@@ -22,6 +21,7 @@ const ContentsTab: FC = () => {
     (state) => state.appModel.availableCards
   );
   const [filterKey, setFilterKey] = useState<string | undefined>();
+  const [filterDirection, setFilterDirection] = useState(true);
   const [cardItems, setCardItems] = useState(availableCards);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTr, setSelectedTr] = useState(null);
@@ -39,7 +39,7 @@ const ContentsTab: FC = () => {
       const aboveThreshholdCardTitles: string[] = sortResult.map(
         (s) => s.target
       );
-      console.log(aboveThreshholdCardTitles);
+      // console.log(aboveThreshholdCardTitles);
       const filtered = cardItems.filter((c) =>
         aboveThreshholdCardTitles.includes(c.title)
       );
@@ -49,30 +49,28 @@ const ContentsTab: FC = () => {
     }
   }, [searchTerm, cardItems]);
 
-  //sort values by column attribute
+  //sort values by column attribute, if filterDirection is true, sort descending, else sort ascending
   useEffect(() => {
     const key = filterKey as keyof CardData;
     const clone = [...availableCards];
-    setCardItems(
-      clone.sort((a, b) => {
-        const aText = a[key];
-        const bText = b[key];
-        console.log(aText, bText);
-        if (aText && bText) {
-          if (aText < bText) {
-            return -1;
-          }
-          if (aText > bText) {
-            return 1;
-          }
-        }
-        return 0;
-      })
-    );
-    console.log(filterKey);
-  }, [filterKey, availableCards]);
 
-  const cardList = useRef<CardData[]>(availableCards);
+    const sortedItems = clone.sort((a, b) => {
+      const aText = a[key];
+      const bText = b[key];
+      if (aText && bText) {
+        if (aText < bText) {
+          return -1;
+        }
+        if (aText > bText) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    !filterDirection ? sortedItems.reverse() : null;
+    setCardItems(sortedItems);
+  }, [filterKey, availableCards, filterDirection]);
+
   const contentTabHeader = "contents-table-header";
   return (
     <div className={"contents-tab-container"}>
@@ -94,31 +92,20 @@ const ContentsTab: FC = () => {
         <table className={"contents-tab-table"}>
           <tbody>
             <tr>
-              <TableHeader
-                className={contentTabHeader}
-                title={"Title"}
-                onClick={() => setFilterKey("title")}
-              ></TableHeader>
-              <TableHeader
-                className={contentTabHeader}
-                title={"Date Added"}
-                onClick={() => setFilterKey("added")}
-              ></TableHeader>
-              <TableHeader
-                className={contentTabHeader}
-                title={"URL"}
-                onClick={() => setFilterKey("sourceId")}
-              ></TableHeader>
-              <TableHeader
-                className={contentTabHeader}
-                title={"Author"}
-                onClick={() => setFilterKey("author")}
-              ></TableHeader>
-              <TableHeader
-                className={contentTabHeader}
-                title={"Interaction"}
-                onClick={() => setFilterKey("interaction")}
-              ></TableHeader>
+              {["title", "added", "sourceId", "author", "interaction"].map(
+                (s, i) => {
+                  return (
+                    <TableHeader
+                      key={i}
+                      className={contentTabHeader}
+                      propName={s}
+                      setFilter={setFilterKey}
+                      activeFilter={filterKey}
+                      setFilterDirection={setFilterDirection}
+                    ></TableHeader>
+                  );
+                }
+              )}
             </tr>
           </tbody>
         </table>
@@ -133,6 +120,7 @@ const ContentsTab: FC = () => {
               {filteredCards.map((card, index) => {
                 const { added, src, author, interaction, sourceId, isActive } =
                   card;
+                console.log(isActive);
                 return (
                   <XDrag
                     dndType={DndTypes.CARD_ROW}
@@ -173,12 +161,14 @@ interface CardTitleProperties {
  * @param card
  * @returns
  */
-const TitleWithIcon: FC<CardTitleProperties> = (card) => {
+const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   return (
     <div style={{ display: "flex" }}>
       <img
-        className={"row-favicon"}
-        src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${card.card.src}`}
+        className={
+          card.isActive ? "row-favicon-active" : "row-favicon-inactive"
+        }
+        src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`}
       ></img>
       <div
         style={{
@@ -187,7 +177,7 @@ const TitleWithIcon: FC<CardTitleProperties> = (card) => {
           textAlign: "left",
         }}
       >
-        {card.card.src}
+        {card.src}
       </div>
     </div>
   );

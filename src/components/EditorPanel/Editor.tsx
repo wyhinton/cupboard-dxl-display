@@ -17,16 +17,12 @@ const Editor = (): JSX.Element => {
         <TabList>
           <Tab>Content</Tab>
           <Tab>Layouts</Tab>
-          <Tab>Performance Tests</Tab>
         </TabList>
         <TabPanel>
           <ContentTable />
         </TabPanel>
         <TabPanel>
           <LayoutTab />
-        </TabPanel>
-        <TabPanel>
-          <PerformanceTests />
         </TabPanel>
       </Tabs>
     </div>

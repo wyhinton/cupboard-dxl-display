@@ -7,8 +7,9 @@ import formEmbedUrl from "../../../../static/formEmbedUrl";
 import { useStoreState } from "../../../../hooks";
 import classNames from "classnames";
 import Button from "../../../Shared/Button";
-import { ClipboardIcon, InlineAlert, CrossIcon } from "evergreen-ui";
+import { ClipboardIcon, InlineAlert, CrossIcon, Heading } from "evergreen-ui";
 import "../../../../css/copyField.css";
+import Scrollbars from "react-custom-scrollbars";
 /**
  * Modal popup for displaying cards when in preview mode. Displays on top of the CardLayout, and renders
  * to <div id="google-form-popup"></div> in index.html.
@@ -26,7 +27,9 @@ const GoogleFormPopup = ({
 }: GoogleFormPopupProperties): JSX.Element => {
   const [isShown, setIsShown] = React.useState(visible);
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
-  const [layoutString, setLayoutString] = useState(JSON.stringify(layoutState));
+  const [layoutString, setLayoutString] = useState(
+    JSON.stringify(layoutState?.layout)
+  );
   const copyString = useRef("");
   return ReactDom.createPortal(
     <Modal
@@ -42,21 +45,7 @@ const GoogleFormPopup = ({
             flexDirection: "row",
             justifyContent: "center",
           }}
-        >
-          {/* <Button
-            iconBefore={<ClipboardIcon />}
-            text={"Copy Layout To Clip Board"}
-            onClick={(e) => {
-              navigator.clipboard.writeText(text);
-              setIsCopied(true);
-            }}
-          /> */}
-          {/* <Button
-            iconBefore={<CrossIcon />}
-            text={"Cancel"}
-            onClick={onCloseComplete}
-          /> */}
-        </div>
+        ></div>
         <CopyField onCloseComplete={onCloseComplete} text={layoutString} />
       </div>
       <iframe
@@ -69,7 +58,6 @@ const GoogleFormPopup = ({
       >
         Loading…
       </iframe>
-      {/* <div>hello</div> */}
     </Modal>,
     document.querySelector("#google-form-popup") as HTMLElement
   );
@@ -111,42 +99,46 @@ const CopyField = ({
       });
   }, [text]);
   return (
+    // <Scrollbars width={500} height={400}>
     <div>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            iconBefore={<ClipboardIcon />}
-            text={"Copy Layout To Clip Board"}
-            onClick={(e) => {
-              navigator.clipboard.writeText(text);
-              setIsCopied(true);
-            }}
-          />
-          <Button
-            iconBefore={<CrossIcon />}
-            text={"Cancel"}
-            onClick={onCloseComplete}
-          />
-        </div>
         <div>Copy and paste the following JSON into the Content Field</div>
-        {!isClipBoardCorrect ? (
-          <InlineAlert intent="warning">
-            Current clipboard content is out of sync with current layout, copy
-            the layout to clipboard again.
-          </InlineAlert>
-        ) : (
-          <InlineAlert intent="success">Clipboard is current</InlineAlert>
-        )}
       </div>
+
       <div className={copyFieldClass}>
-        {/* <div>ClipboardIcon</div> */}
-        {text}
+        <Scrollbars autoHeightMin={0} autoHeightMax={200}>
+          {text}
+        </Scrollbars>
+      </div>
+      {!isClipBoardCorrect ? (
+        <InlineAlert intent="warning">
+          Current clipboard content is out of sync with current layout, copy the
+          layout to clipboard again.
+        </InlineAlert>
+      ) : (
+        <InlineAlert intent="success">Clipboard is current</InlineAlert>
+      )}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          paddingTop: "1em",
+        }}
+      >
+        <Button
+          iconBefore={<ClipboardIcon />}
+          text={"Copy Layout To Clip Board"}
+          onClick={(e) => {
+            navigator.clipboard.writeText(text);
+            setIsCopied(true);
+          }}
+        />
+        <Button
+          iconBefore={<CrossIcon />}
+          text={"Return"}
+          onClick={onCloseComplete}
+        />
       </div>
     </div>
   );

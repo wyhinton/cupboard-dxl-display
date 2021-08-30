@@ -16,6 +16,7 @@ import defaultLayouts from "../static/defaultLayouts";
 import { AppMode } from "../enums";
 import RawCardRow from "../interfaces/RawCardRow";
 import RawLayoutRow from "../interfaces/RawLayoutRow";
+import IFrameValidator from "../IFrameValidator";
 export interface LayoutsModel {
   //state
   activeLayout: LayoutData | undefined;
@@ -40,6 +41,7 @@ export interface LayoutsModel {
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;
   deleteCard: Thunk<LayoutsModel, CardData, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
+  registerCardLoadFailure: Thunk<LayoutsModel, CardData, never, StoreModel>
 }
 
 const layoutsModel: LayoutsModel = {
@@ -67,10 +69,12 @@ const layoutsModel: LayoutsModel = {
       });
       const layouts = rawLayoutRows.map((l) => new LayoutData(l));
       const defaultLayout = layouts[0];
+      // const bufferLayout = layouts[0]
       if (defaultLayout) {
         actions.setActiveLayout(defaultLayout);
       }
       actions.setExternalLayouts(layouts);
+      actions.setBufferLayout(layouts[0].layout);
     }
   ),
   onToggleViewModeListener: thunkOn(
@@ -142,12 +146,30 @@ const layoutsModel: LayoutsModel = {
     const { activeLayout } = getState();
     if (activeLayout && cardToAdd) {
       const buf = getState().bufferLayout;
-      activeLayout.layout = buf;
+      console.log(debug(buf));
+      activeLayout.setGridLayout(buf);
       activeLayout?.addCard(cardToAdd, targetPosition);
       actions.setActiveLayout(activeLayout);
       // actions.setBufferLayout(activeLayout.layout);
       console.log(cardToAdd);
     }
+  }),
+  registerCardLoadFailure: thunk((actions, failedCard, { getState, getStoreState }) => {
+    console.log("Got card Register Load Failure at Layouts Model");
+    console.log(failedCard);
+    const { activeLayout } = getState();
+    if (activeLayout){
+      activeLayout.failCard(failedCard)
+    }
+    // if (activeLayout && cardToAdd) {
+    //   const buf = getState().bufferLayout;
+    //   console.log(debug(buf));
+    //   activeLayout.setGridLayout(buf);
+    //   activeLayout?.addCard(cardToAdd, targetPosition);
+    //   actions.setActiveLayout(activeLayout);
+    //   // actions.setBufferLayout(activeLayout.layout);
+    //   console.log(cardToAdd);
+    // }
   }),
   setBufferLayout: action((state, layouts) => {
     console.log("setting buffer layout");

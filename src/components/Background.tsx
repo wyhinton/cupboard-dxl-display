@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Particles from "react-particles-js";
 import { useStoreState } from "../hooks";
 import { AppMode } from "../enums";
-import GridLines from "react-gridlines";
 /**
  * Background with particle animation.
  * @component

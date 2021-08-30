@@ -20,9 +20,7 @@ export default class LayoutData {
     this.author = row.author;
     //7/26/2021 14:38:57
     //7/26/2021
-    // console.log(row.timestamp);
     this.added = new Date(row.timestamp.split(" ")[0]);
-    // console.log(row);
     const startLayout: Layouts = JSON.parse(row.layout);
     this.layout = startLayout;
   }
@@ -50,6 +48,7 @@ export default class LayoutData {
   }
   addCard(toAdd: CardData, pos: GridPosition): void {
     console.log("ADDING CARD AT LAYOUT DATA");
+    console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
         x: pos.x,
@@ -61,12 +60,17 @@ export default class LayoutData {
       this.layout[k].push(newItem);
     }
   }
+  failCard(toFail: CardData){
+    console.log("FAILING CARD AT LAYOUT DATA");
+    // console.log()
+  }
   setGridLayout(newGridLayout: Layouts): void {
     console.log(newGridLayout);
     this.layout = newGridLayout;
   }
   sources(): string[] {
-    return this.layout.lg.map((l) => l.i);
+    const lg = Object.entries(this.layout)[0][1];
+    return lg.map((l: any) => l.i);
   }
 }
 

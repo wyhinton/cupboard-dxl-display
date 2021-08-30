@@ -2,8 +2,6 @@ import { action, Action, thunk, Thunk } from "easy-peasy";
 import type GoogleSheet from "../interfaces/GoogleSheet";
 import type RawCardRow from "../interfaces/RawCardRow";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
-
-import { getSheet } from "../utils";
 import cardDataSheetKey from "../static/cardDataSheetKey";
 import layoutsGoogleSheetKey from "../static/layoutsGoogleSheetKey";
 import GoogleSheetData from "../data_structs/GoogleSheetData";
@@ -20,8 +18,8 @@ export interface GoogleSheetsModel {
   layoutDataGoogleSheet: GoogleSheet<RawLayoutRow> | null;
 
   //requests
-  fetchCardDataGoogleSheet: Thunk<GoogleSheetsModel>;
-  fetchLayoutDataGoogleSheet: Thunk<GoogleSheetsModel>;
+  fetchAppGoogleSheet: Thunk<GoogleSheetsModel>;
+  // fetchLayoutDataGoogleSheet: Thunk<GoogleSheetsModel>;
 
   //setters
   setAppGoogleSheetData: Action<GoogleSheetsModel, GoogleSheetData>;
@@ -46,16 +44,14 @@ const googleSheetsModel: GoogleSheetsModel = {
   /**Handle a request to the google sheet containing the cards
    * listeners: appModel.onCardSheetLoadSuccess
    */
-  fetchCardDataGoogleSheet: thunk(async (actions) => {
-    console.log(process.env.REACT_APP_GCP_TOKEN);
-    const xxTest = GoogleSheetData.prototype
+  fetchAppGoogleSheet: thunk(async (actions) => {
+    GoogleSheetData.prototype
       .loadSheets(
         cardDataSheetKey.key,
         process.env.REACT_APP_GCP_TOKEN as string
       )
       .then((response) => {
         Promise.all(response).then((responseData) => {
-          console.log(responseData);
           const studentsGoogleSheet = new GoogleSheetData(
             "DSC App",
             cardDataSheetKey.key,
@@ -71,12 +67,12 @@ const googleSheetsModel: GoogleSheetsModel = {
   /**Handle a request to the google sheet containing the layouts
    * listeners: layoutsModel.onLayoutSheetLoadSuccess
    */
-  fetchLayoutDataGoogleSheet: thunk(async (actions) => {
-    getSheet<RawLayoutRow>(layoutsGoogleSheetKey).then((sheet) => {
-      console.log(sheet);
-      actions.setLayoutDataGoogleSheet(sheet);
-    });
-  }),
+  // fetchLayoutDataGoogleSheet: thunk(async (actions) => {
+  //   // getSheet<RawLayoutRow>(layoutsGoogleSheetKey).then((sheet) => {
+  //   //   console.log(sheet);
+  //   //   actions.setLayoutDataGoogleSheet(sheet);
+  //   // });
+  // }),
   //setters
   setCardDataGoogleSheet: action((state, sheet) => {
     state.cardDataGoogleSheet = sheet;

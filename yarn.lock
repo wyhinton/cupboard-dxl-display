@@ -6384,6 +6384,11 @@ fbjs@^0.8.12, fbjs@^0.8.16:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.18"
 
+fetch-jsonp@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/fetch-jsonp/-/fetch-jsonp-1.2.1.tgz#a3ea630a992ae594cfbf5676e7f5fe4d2f8f03aa"
+  integrity sha512-5UwejksxssYwlwl/9OhEQU+OrVaxdChOQntpJO/GUw6NpfPS6fd08fPvbNOq0Ym6hxfLWD6cGN0Ln/V/hWcluw==
+
 figgy-pudding@^3.5.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
@@ -6768,11 +6773,6 @@ get-package-type@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
   integrity sha512-pjzuKtY64GYfWizNAJ0fr9VqttZkNiK2iS430LtIHzjBEr6bX8Am2zm4sW4Ro5wjWW5cAlRL1qAMTcXbjNAO2Q==
-
-get-sheet-done@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/get-sheet-done/-/get-sheet-done-0.1.5.tgz#ced776e389425a99644f3b42de00e227e734ff67"
-  integrity sha512-fV4VT+8Z4zCKWMAsIcVed72BOJ4oFeyNzFd6CLW5e7sIA8wZPrTjif9wqXTbePv6U7ufowDQZ0U53R7YE1qF6w==
 
 get-stream@^4.0.0, get-stream@^4.1.0:
   version "4.1.0"

@@ -26,3 +26,9 @@
   display: flex;
   margin: auto;
 }
+
+.iframe-container-hidden{
+  display: none;
+}
+
+/* .iframe */

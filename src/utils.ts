@@ -1,29 +1,27 @@
 import type GoogleSheet from "./interfaces/GoogleSheet";
 import type SheetId from "./interfaces/SheetId";
-import GetSheetDone from "get-sheet-done";
-import PublicGoogleSheetsParser from "public-google-sheets-parser";
-import EasySheets from "easy-sheets";
-export function getSheet<T>(sheetId: SheetId): Promise<GoogleSheet<T>> {
-  return new Promise<GoogleSheet<T>>(function (resolve, reject) {
-    fetch(
-      "https://spreadsheets.google.com/feeds/list/1wQ1TGqnCTmaqqDak1rTRxPMSGSGLMilwrecf7TuqDGc/1/public/values?alt=json"
-    ).then((res) => {
-      console.log(res);
-      res.json();
-    });
-    // labeledCols(sheetId.key, sheetId.sheet_number)
-    GetSheetDone.labeledCols(sheetId.key, sheetId.sheet_number)
-      .then((sheet: GoogleSheet<T>) => {
-        console.log(sheet);
-        resolve(sheet);
-      })
-      .catch((error: unknown) => {
-        console.error(
-          `Error: ${error} fetching DOC_KEY ${sheetId.key}, sheet number ${sheetId.sheet_number}`
-        );
-      });
-  });
-}
+
+// export function getSheet<T>(sheetId: SheetId): Promise<GoogleSheet<T>> {
+//   return new Promise<GoogleSheet<T>>(function (resolve, reject) {
+//     fetch(
+//       "https://spreadsheets.google.com/feeds/list/1wQ1TGqnCTmaqqDak1rTRxPMSGSGLMilwrecf7TuqDGc/1/public/values?alt=json"
+//     ).then((res) => {
+//       console.log(res);
+//       res.json();
+//     });
+//     // labeledCols(sheetId.key, sheetId.sheet_number)
+//     GetSheetDone.labeledCols(sheetId.key, sheetId.sheet_number)
+//       .then((sheet: GoogleSheet<T>) => {
+//         console.log(sheet);
+//         resolve(sheet);
+//       })
+//       .catch((error: unknown) => {
+//         console.error(
+//           `Error: ${error} fetching DOC_KEY ${sheetId.key}, sheet number ${sheetId.sheet_number}`
+//         );
+//       });
+//   });
+// }
 
 export function formatDate(date: Date | undefined): string {
   if (date) {
@@ -40,3 +38,59 @@ export function formatDate(date: Date | undefined): string {
     return "faulty date";
   }
 }
+
+// String.prototype.toTitleCase = function () { return this.valueOf().toLowerCase().replace(this.valueOf()[0], this.valueOf()[0].toUpperCase()); }
+export function toTitleCase(str: string) {
+  const words = str.split(" ");
+  const title = words.map((w) => titleCapitilization(w)).join(" ");
+  return title;
+}
+function titleCapitilization(str: string) {
+  const regex = /^[a-z]{0,1}|\s\w/gi;
+
+  str = str.toLowerCase();
+
+  str.match(regex)?.forEach((char) => {
+    str = str.replace(char, char.toUpperCase());
+  });
+
+  return str;
+}
+
+// function
+
+// const toTitleCase = (str: string) => {
+//   const articles = ['a', 'an', 'the'];
+//   const conjunctions = ['for', 'and', 'nor', 'but', 'or', 'yet', 'so'];
+//   const prepositions = [
+//     'with', 'at', 'from', 'into','upon', 'of', 'to', 'in', 'for',
+//     'on', 'by', 'like', 'over', 'plus', 'but', 'up', 'down', 'off', 'near'
+//   ];
+
+//   // The list of spacial characters can be tweaked here
+//   const replaceCharsWithSpace = (str) => str.replace(/[^0-9a-z&/\\]/gi, ' ').replace(/(\s\s+)/gi, ' ');
+//   const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.substr(1);
+//   const normalizeStr = (str) => str.toLowerCase().trim();
+//   const shouldCapitalize = (word, fullWordList, posWithinStr) => {
+//     if ((posWithinStr == 0) || (posWithinStr == fullWordList.length - 1)) {
+//       return true;
+//     }
+
+//     return !(articles.includes(word) || conjunctions.includes(word) || prepositions.includes(word));
+//   }
+
+//   str = replaceCharsWithSpace(str);
+//   str = normalizeStr(str);
+
+//   let words = str.split(' ');
+//   if (words.length <= 2) { // Strings less than 3 words long should always have first words capitalized
+//     words = words.map(w => capitalizeFirstLetter(w));
+//   }
+//   else {
+//     for (let i = 0; i < words.length; i++) {
+//       words[i] = (shouldCapitalize(words[i], words, i) ? capitalizeFirstLetter(words[i], words, i) : words[i]);
+//     }
+//   }
+
+//   return words.join(' ');
+// }
