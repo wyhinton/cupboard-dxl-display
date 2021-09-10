@@ -1,0 +1,35 @@
+.card-footer{
+  -webkit-animation: slide-in-left 0.3s  cubic-bezier(0.785, 0.135, 0.150, 0.860) 0.5s reverse both;
+  animation: slide-in-left 0.3s  cubic-bezier(0.785, 0.135, 0.150, 0.860) 0.5s reverse both;
+}
+
+/**
+ * ----------------------------------------
+ * animation slide-in-left
+ * ----------------------------------------
+ */
+/* @-webkit-keyframes slide-in-left {
+    0% {
+      -webkit-transform: translateX(-1000px);
+              transform: translateX(-1000px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateX(0);
+              transform: translateX(0);
+      opacity: 1;
+    }
+  } */
+  @keyframes slide-in-left {
+    0% {
+      -webkit-transform: translateX(00px);
+              transform: translateX(00px);
+      /* opacity: 0; */
+    }
+    100% {
+      -webkit-transform: translateX(300px);
+              transform: translateX(300px);
+      /* opacity: 1; */
+    }
+  }
+  
