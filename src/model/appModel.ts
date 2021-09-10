@@ -13,7 +13,7 @@ import CardData from "../data_structs/CardData";
 import type RawCardRow from "../interfaces/RawCardRow";
 import { Layouts } from "react-grid-layout";
 import defaultGridLayout from "../static/defaultLayouts";
-import { AppMode } from "../enums";
+import { AppMode, SheetNames } from "../enums";
 import History from "../data_structs/History";
 import { StoreModel } from "./index";
 /**
@@ -36,7 +36,7 @@ export interface AppDataModel {
   // loadLocalLayouts: Action<AppDataModel>;
 
   //listeners
-  onCardSheetLoadSuccess: ActionOn<AppDataModel, StoreModel>;
+  onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
   onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
   onSetActiveLayout: ThunkOn<AppDataModel, never, StoreModel>;
   //managers
@@ -119,28 +119,37 @@ const appModel: AppDataModel = {
   }),
 
   //listeners
-  onCardSheetLoadSuccess: actionOn(
+  onCardSheetLoadSuccess: thunkOn(
+    
     // targetResolver:
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     // handler:
-    (state, target) => {
+    async (actions, target) => {
+      console.log("TRIGGERD");
       // console.log("got on card sheet load success");
-      const cardRowsArray = target.payload.getSheetRows(0);
-      const rawCardRowsArray = cardRowsArray.map((row) => {
-        return {
-          src: row.src,
-          title: row.title,
-          added: row.added,
-          sourceid: row.sourceid,
-          author: row.author,
-          interaction: row.interaction,
-        } as RawCardRow;
-      });
-      const cards = rawCardRowsArray.map((c: RawCardRow) => new CardData(c));
-      console.log(cards);
-      state.availableCards = cards;
-      console.log(debug(state.availableCards));
+      console.log(target.payload);
+    target.payload.getSheetRows<RawCardRow>(SheetNames.CARDS).then((rows) =>
+      {
+        console.log(rows);
+        const rawCardRowsArray = rows.map((row) => {
+          return {
+            src: row.src,
+            title: row.title,
+            added: row.added,
+            sourceid: row.sourceid,
+            author: row.author,
+            interaction: row.interaction,
+          } as RawCardRow;
+        });
+        
+        const cards = rawCardRowsArray.map((c: RawCardRow) => new CardData(c));
+        console.log(cards);
+        // actions.setActiveCards(cards)
+        actions.setAvailableCards(cards)
+      }
+      );
+
     }
   ),
 

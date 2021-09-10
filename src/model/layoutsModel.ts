@@ -13,7 +13,7 @@ import { StoreModel } from "./index";
 import { Layout, Layouts } from "react-grid-layout";
 import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
 import defaultLayouts from "../static/defaultLayouts";
-import { AppMode } from "../enums";
+import { AppMode, SheetNames } from "../enums";
 import RawCardRow from "../interfaces/RawCardRow";
 import RawLayoutRow from "../interfaces/RawLayoutRow";
 import IFrameValidator from "../IFrameValidator";
@@ -58,23 +58,17 @@ const layoutsModel: LayoutsModel = {
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     (actions, target) => {
       //extract only the needed properties from the GoogleSheetRow
-      const rawLayoutRows = target.payload.getSheetRows(1).map((l) => {
-        return {
-          title: l.title,
-          author: l.author,
-          timestamp: l.timestamp,
-          layout: l.layout,
-          interaction: l.interaction,
-        } as RawLayoutRow;
-      });
-      const layouts = rawLayoutRows.map((l) => new LayoutData(l));
-      const defaultLayout = layouts[0];
-      // const bufferLayout = layouts[0]
-      if (defaultLayout) {
-        actions.setActiveLayout(defaultLayout);
-      }
-      actions.setExternalLayouts(layouts);
-      actions.setBufferLayout(layouts[0].layout);
+      target.payload.getSheetRows<RawLayoutRow>(SheetNames.LAYOUTS).then(rows=>{
+        const rawLayoutRows = rows;
+        const layouts = rawLayoutRows.map((l) => new LayoutData(l));
+        const defaultLayout = layouts[0];
+        // const bufferLayout = layouts[0]
+        if (defaultLayout) {
+          actions.setActiveLayout(defaultLayout);
+        }
+        actions.setExternalLayouts(layouts);
+        actions.setBufferLayout(layouts[0].layout);
+      })
     }
   ),
   onToggleViewModeListener: thunkOn(

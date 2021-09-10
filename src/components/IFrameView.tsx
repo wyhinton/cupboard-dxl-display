@@ -23,14 +23,17 @@ const IFrameView: FC<IFrameViewProperties> = ({card, src }) => {
   const [active, setActive] = useState(false);
   const [valid, setIsValid] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+
   const iframeOverlayClass = classNames("iframe-view-overlay", {
     "iframe-view-overlay-hidden": isLoaded,
     "iframe-view-overlay-loading": !isLoaded,
   });
+
   const iFrameContainerClass = classNames("iframe-container", {
     "iframe-container-hidden": !valid,
   });
-  const registerCardLoadFailure = useStoreActions((actions) => actions.appModel.registerCardLoadFailure);
+  //TODO: Fix or remove card error handling
+  // const registerCardLoadFailure = useStoreActions((actions) => actions.appModel.registerCardLoadFailure);
   
   const iframeStyle = {
     width: "100%",
@@ -38,6 +41,7 @@ const IFrameView: FC<IFrameViewProperties> = ({card, src }) => {
     height: "100%",
     border: "none",
   } as React.CSSProperties;
+
   const iframeActive = {
     width: "100%",
     pointerEvents: "none",
@@ -57,15 +61,16 @@ const IFrameView: FC<IFrameViewProperties> = ({card, src }) => {
         <Loader type="Grid" color="white" height={80} width={80} />
       </div>
       <iframe
+        //TODO: FIX ERROR HANDLING
         onLoad={(event) => {
-          const yt= "https://www.youtube.com/";
+          // const yt= "https://www.youtube.com/";
           // card.validator.url = yt;
-          card.validator.validate(event);
-          console.log(card.validator.isValid());
+          // card.validator.validate(event);
+          // console.log(card.validator.isValid());
           //if the card is not valid and the card has not already been marked as failed, send a message to fail the card 
-          if (!card.validator.isValid() && !card.failed){
-            registerCardLoadFailure(card)
-          } 
+          // if (!card.validator.isValid() && !card.failed){
+          //   registerCardLoadFailure(card)
+          // } 
           setIsLoaded(true);
         }}
         // src={"https://www.youtube.com/"}

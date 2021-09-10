@@ -35,6 +35,7 @@
     "gts": "^3.1.0",
     "install": "^0.13.0",
     "npm": "^7.15.0",
+    "papaparse": "^5.3.1",
     "public-google-sheets-parser": "^1.2.4",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.0.0",
@@ -81,6 +82,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.2.0",
+    "@types/papaparse": "^5.2.6",
     "@types/react-table": "^7.7.1",
     "@welldone-software/why-did-you-render": "^6.2.0",
     "better-docs": "^2.3.2",

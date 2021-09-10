@@ -33,3 +33,9 @@ export enum DragSource {
   CARD_TABLE = "CARD_TABLE",
   CARD_GRID = "CARD_GRID",
 }
+
+
+export enum SheetNames{
+  CARDS = "CARDS",
+  LAYOUTS = "LAYOUTS",
+}

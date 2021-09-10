@@ -1,41 +1,29 @@
-import { ConsoleIcon } from "evergreen-ui";
-import {
-  GoogleSpreadsheet,
-  GoogleSpreadsheetRow,
-  GoogleSpreadsheetWorksheet,
-} from "google-spreadsheet";
+import { SheetNames } from "../enums";
 
 export default class GoogleSheetData {
   title!: string;
   sheetId!: string;
-  sheets!: GoogleSpreadsheetRow[][];
-
+  sheets!: Map<SheetNames, unknown[]>;
   constructor(
     title: string,
     sheetId: string,
-    sheets: GoogleSpreadsheetRow[][]
   ) {
     this.title = title;
     this.sheetId = sheetId;
-    this.sheets = sheets;
+    this.sheets = new Map();
   }
-  getSheetRows(sheetIndex: number): GoogleSpreadsheetRow[] {
-    return this.sheets[sheetIndex];
+  getSheetRows<P>(title: SheetNames): Promise<P[]>{
+    // const typedArr = this.rows.map(r=>r as P)
+    return new Promise<P[]>((resolve, reject)=>{
+      const rowArray = this.sheets.get(title);
+      if (rowArray){
+        resolve(rowArray.map(r=>r as P))
+      } else {
+        reject(`sheet with title ${title} did not exist`)
+      }
+    })
   }
-  loadSheets(
-    sheetId: string,
-    apikey: string
-  ): Promise<Promise<GoogleSpreadsheetRow[]>[]> {
-    const document = new GoogleSpreadsheet(sheetId);
-    document.useApiKey(apikey);
-    const sheetPromiseArray: Promise<GoogleSpreadsheetRow[]>[] = [];
-    return document.loadInfo().then(() => {
-      document.sheetsByIndex.forEach((element) => {
-        const myTest = element.getRows();
-        console.log(myTest);
-        sheetPromiseArray.push(myTest);
-      });
-      return sheetPromiseArray;
-    });
+  addSheet(title: SheetNames, rows: unknown[]){
+    this.sheets.set(title, rows);
   }
 }

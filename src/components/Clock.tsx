@@ -11,11 +11,11 @@ const Clock = (): JSX.Element => {
     fontSize: "large",
   };
   const containerStyle = {
-    backdropFilter: "blur(4px)",
+    // backdropFilter: "blur(4px)",
     height: "100%",
     padding: ".25em",
     width: "100%",
-    fontSize: "36pt",
+    fontSize: "5em",
     fontWeight: 600,
     color: "white",
     boxSizing: "border-box",
@@ -40,10 +40,10 @@ const Clock = (): JSX.Element => {
 
   return (
     <div style={containerStyle}>
-      <div>D.H. HILL</div>
-      <div>DATA EXPERIENCE LAB</div>
+      {/* <div>D.H. Hill</div> */}
+      <div>Data Experience Lab</div>
       <div style={dividerStyle}></div>
-      <div>{date.toLocaleTimeString()}.</div>
+      <div>{date.toLocaleTimeString('en-IT', {hour12: true, timeStyle: 'short'})}</div>
     </div>
   );
 };

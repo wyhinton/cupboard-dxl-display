@@ -14,7 +14,7 @@ import "../../css/card.css";
 import Modal from "../Modal";
 import type { HtmlPortalNode } from "react-reverse-portal";
 import { Component } from "evergreen-ui/node_modules/@types/react";
-import { DeleteIcon, ButtonAppearance, InlineAlert, Pane } from "evergreen-ui";
+import { DeleteIcon, ButtonAppearance, InlineAlert } from "evergreen-ui";
 import Button from "../Shared/Button";
 import {
   createHtmlPortalNode,
@@ -81,16 +81,19 @@ const ViewCard: FC<ViewCardProperties> = ({
     "portal-node-preview": cardView === CardView.PREVIEW,
     "portal-node-fullscreen": cardView === CardView.FULL_SCREEN,
   });
+
   const cardModalBackdrop = classNames("card-modal-backdrop", {
     "card-modal-backdrop-active":
       cardView === CardView.PREVIEW || cardView === CardView.FULL_SCREEN,
     "card-modal-backdrop-inactive": cardView === CardView.GRID,
   });
+
   const cardChildContainer = classNames("card-child-container", {
     "card-child-container-preview": cardView === CardView.PREVIEW,
     "card-child-container-fullscreen": cardView === CardView.FULL_SCREEN,
     "card-child-container-grid": cardView === CardView.GRID,
   });
+
   //generate a portal for each card
   const portalNode = React.useMemo(
     () =>
@@ -242,16 +245,18 @@ interface DeleteButtonProperties {
   onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const DeleteButton = ({ onClick }: DeleteButtonProperties) => {
+const DeleteButton = ({ onClick }: DeleteButtonProperties): JSX.Element => {
   const deleteButtonStyle = {
     position: "absolute",
     top: "-1em",
     left: "-1em",
   } as React.CSSProperties;
+
   const subContStyle = {
     position: "absolute",
     left: -8,
   } as React.CSSProperties;
+  
   return (
     <div
       style={deleteButtonStyle}
@@ -275,13 +280,11 @@ const DeleteButton = ({ onClick }: DeleteButtonProperties) => {
 const FailureNotice = ({ errors }: { errors: string[] }): JSX.Element => {
   return (
     <div className={"failure-notice-container"}>
-      {/* <Pane> */}
-      {errors.map((e) => (
-        <div className={"failure-message"}>
-          <InlineAlert intent="danger">{e}</InlineAlert>
+      {errors.map((error, index) => (
+        <div key ={index} className={"failure-message"}>
+          <InlineAlert key ={index} intent="danger">{error}</InlineAlert>
         </div>
       ))}
-      {/* </Pane> */}
     </div>
   );
 };
@@ -290,9 +293,6 @@ function propertiesAreEqual(
   previousProperties: Readonly<PropsWithChildren<ViewCardProperties>>,
   nextProperties: Readonly<PropsWithChildren<ViewCardProperties>>
 ): boolean {
-  console.log(previousProperties.data);
-  console.log(nextProperties.data);
-  console.log("HELLO FROM PROPS ARE EQUAL");
   return true;
 }
 export default React.memo(ViewCard, propertiesAreEqual);
