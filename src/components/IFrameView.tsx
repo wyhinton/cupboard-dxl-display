@@ -1,4 +1,4 @@
-import React, { useState, FC, PropsWithChildren } from "react";
+import React, { useState, FC, PropsWithChildren, PureComponent } from "react";
 // import { Spinner, Pane } from "evergreen-ui";
 import classNames from "classnames";
 import Loader from "react-loader-spinner";
@@ -6,6 +6,8 @@ import "../css/iframeView.css";
 import IFrameValidator from "../IFrameValidator";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../data_structs/CardData";
+import ReactPlayer from "react-player"
+
 interface IFrameViewProperties {
   card: CardData;
   src: string;
@@ -23,6 +25,8 @@ const IFrameView: FC<IFrameViewProperties> = ({card, src }) => {
   const [active, setActive] = useState(false);
   const [valid, setIsValid] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const isYouTubeVideo =  new RegExp('youtube').test(src)
+
 
   const iframeOverlayClass = classNames("iframe-view-overlay", {
     "iframe-view-overlay-hidden": isLoaded,
@@ -55,35 +59,36 @@ const IFrameView: FC<IFrameViewProperties> = ({card, src }) => {
         setActive(!active);
       }}
       className={iFrameContainerClass}
-      style={{ height: "100%" }}
     >
       <div className={iframeOverlayClass}>
         <Loader type="Grid" color="white" height={80} width={80} />
       </div>
-      <iframe
-        //TODO: FIX ERROR HANDLING
+      {
+        isYouTubeVideo?
+        <ResponsivePlayer src = {src} onReady = {(event)=>{setIsLoaded(true)}}/>
+        :<iframe
         onLoad={(event) => {
-          // const yt= "https://www.youtube.com/";
-          // card.validator.url = yt;
-          // card.validator.validate(event);
-          // console.log(card.validator.isValid());
-          //if the card is not valid and the card has not already been marked as failed, send a message to fail the card 
-          // if (!card.validator.isValid() && !card.failed){
-          //   registerCardLoadFailure(card)
-          // } 
           setIsLoaded(true);
         }}
-        // src={"https://www.youtube.com/"}
         src={src}
         style={active ? iframeActive : iframeStyle}
       ></iframe>
+      }
     </div>
   );
 };
 
+// function determineoOutput(src: string, onLoad: (e)): JSX.Element{
+//   const out = (new RegExp('youtube')).test(src)
+//   console.log(out);
+  
+//   return (
+//     out?<ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' />:<div>b</div>
+//   )
+// }
 
 
-export default React.memo(IFrameView, propertiesAreEqual);
+export default React.memo(IFrameView);
 function propertiesAreEqual(
   previousProperties: Readonly<PropsWithChildren<IFrameViewProperties>>,
   nextProperties: Readonly<PropsWithChildren<IFrameViewProperties>>
@@ -96,4 +101,42 @@ function propertiesAreEqual(
   console.log(previousProperties.src);
   console.log(nextProperties.src);
   return true;
+}
+
+
+const ResponsivePlayer = ({src, onReady}:{src: string, onReady: (e: ReactPlayer)=>void}): JSX.Element=>{
+  return (
+    <div className='player-wrapper'>
+      <ReactPlayer
+        className='react-player'
+        url={src}
+        width='100%'
+        height='100%'
+        onReady={onReady}
+      />
+    </div>
+  )
+}
+
+
+class Content extends React.PureComponent<{src: string}>{
+  renderCount = 0;
+  render() {
+    this.renderCount++;
+    return (
+      <div
+        style={{
+          background: "#afa",
+          padding: 8,
+          borderRadius: 8,
+          display: "inline-block"
+        }}
+      >
+        {this.props.src}
+        Hello from{" "}
+        <span style={{ fontFamily: "monospace" }}>{"<Content />"}</span> ! I've
+        rendered {this.renderCount} times.
+      </div>
+    );
+  }
 }

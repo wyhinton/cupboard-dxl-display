@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.global.css";
-import { useStoreActions, useStoreState } from "./hooks";
+import { useStoreActions, useStoreState, useKeyboardShortcut} from "./hooks";
 import CardGrid from "./components/CardLayout";
 import Background from "./components/Background";
 import { DropResult, DragDropContext } from "react-beautiful-dnd";
@@ -10,9 +10,8 @@ import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import { GridPosition } from "./interfaces/GridPosition";
 import HowToUse from "./components/HowToUse";
 import { DragSource } from "./enums";
-import { AddIcon } from "evergreen-ui";
 import Pulsar from "./components/Shared/Pulsar";
-import { useKeyboardShortcut } from './hooks'
+
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
@@ -39,17 +38,13 @@ const App = (): JSX.Element => {
   const allLayouts = useStoreState(
     (state) => state.layoutsModel.externalLayouts
   );
-  
-  const submit = () => {
-    toggleViewModeThunk()
-  }
 
+  //F4 TO TRANSITION MODE
   const {enable, disable} = useKeyboardShortcut({
     keyCode: 115,
-    action: submit,
-    disabled: false // This key is not required
+    action: ()=>{toggleViewModeThunk()},
+    disabled: false 
   })
-
   
   const [isDraggingLayout, setIsDraggingLayout] = useState(false);
 
@@ -82,7 +77,6 @@ const App = (): JSX.Element => {
   };
 
   const onDragEnd = (response: DropResult) => {
-    console.log(response);
     console.log("processing drag end");
     if (response.destination?.droppableId == response.source?.droppableId)
       return;
@@ -132,11 +126,6 @@ const App = (): JSX.Element => {
   return (
     <>
       <div
-        onKeyUp={(event) => {
-          if (event.key === "F4") {
-            toggleViewModeThunk();
-          }
-        }}
         tabIndex={0}
       >
         <HowToUse />

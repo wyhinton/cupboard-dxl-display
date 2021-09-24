@@ -3,7 +3,7 @@ import Clock from "./Clock";
 import IFrameView from "./IFrameView";
 import { WidthProvider, Responsive, Layout, Layouts } from "react-grid-layout";
 import "../css/cardLayout.css";
-import ViewCard from "./ViewCard";
+import ViewCard from "./ViewCard/ViewCard";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../data_structs/CardData";
 import { AppMode, DndTypes, DragSource } from "../enums";
@@ -33,7 +33,7 @@ export const CardGrid = (): JSX.Element => {
     y: window.innerHeight,
   });
 
-  const testViewMode = useMemo(() => {
+  const isEditMode = useMemo(() => {
     return viewModeState === AppMode.EDIT;
   }, [viewModeState]);
 
@@ -130,11 +130,11 @@ export const CardGrid = (): JSX.Element => {
               localLayout.current = newLayout;
               setBufferLayoutAction(localLayout.current);
             }}
-            isDraggable={testViewMode}
-            isResizable={testViewMode}
+            isDraggable={isEditMode}
+            isResizable={isEditMode}
           >
             <div key={"clock"}>
-              <ViewCard cardType={DndTypes.CLOCK}>
+              <ViewCard cardType={DndTypes.CLOCK} onClick = {()=>{console.log("clock clicked");}}>
                 <Clock />
               </ViewCard>
             </div>

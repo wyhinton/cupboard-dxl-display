@@ -30,6 +30,7 @@ const XDrag: FC<IXDrag> = ({
     <Draggable {...properties}>
       {(provided, snapshot) => {
         const dragHandleProperties = dragAll ? provided.dragHandleProps : {};
+
         return (
           <>
             <tr
@@ -37,6 +38,9 @@ const XDrag: FC<IXDrag> = ({
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...dragHandleProperties}
+              // style = {{
+              //   // display: snapshot.isDragging ? "none" : "table-row",
+              // }}
             >
               {React.cloneElement(children, { provided })}
             </tr>

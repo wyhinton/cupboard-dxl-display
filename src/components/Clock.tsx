@@ -6,16 +6,13 @@ import "../css/clock.css";
  */
 const Clock = (): JSX.Element => {
   const [date, setDate] = useState(new Date());
-  const clockText = {
-    margin: 0,
-    fontSize: "large",
-  };
+
   const containerStyle = {
     // backdropFilter: "blur(4px)",
     height: "100%",
     padding: ".25em",
     width: "100%",
-    fontSize: "5em",
+    fontSize: "36pt",
     fontWeight: 600,
     color: "white",
     boxSizing: "border-box",
@@ -26,7 +23,7 @@ const Clock = (): JSX.Element => {
     backgroundColor: "white",
     width: "100%",
   } as React.CSSProperties;
-  //Replaces componentDidMount and componentWillUnmount
+  
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);
     return function cleanup() {
@@ -34,13 +31,12 @@ const Clock = (): JSX.Element => {
     };
   });
 
-  function tick() {
+  function tick():void {
     setDate(new Date());
   }
 
   return (
     <div style={containerStyle}>
-      {/* <div>D.H. Hill</div> */}
       <div>Data Experience Lab</div>
       <div style={dividerStyle}></div>
       <div>{date.toLocaleTimeString('en-IT', {hour12: true, timeStyle: 'short'})}</div>

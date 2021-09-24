@@ -21,6 +21,8 @@ export default class LayoutData {
     //7/26/2021 14:38:57
     //7/26/2021
     this.added = new Date(row.timestamp.split(" ")[0]);
+    console.log(row);
+    console.log(row.layout);
     const startLayout: Layouts = JSON.parse(row.layout);
     this.layout = startLayout;
   }

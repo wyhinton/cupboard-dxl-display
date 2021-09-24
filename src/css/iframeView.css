@@ -14,7 +14,10 @@
   transition: opacity .5s; 
   outline: 4px solid white;
 }
+.player-wrapper{
+  /* display: flex; */
 
+}
 .iframe-view-overlay-loading {
   position: absolute;
   display: flex;
@@ -22,8 +25,6 @@
   justify-content: center;
   background-color: grey;
   /* background-color: red; */
-  opacity: 1;
-  /* transition: opacity .5s;  */
 }
 
 /* Centers Loader */
@@ -34,6 +35,10 @@
 .iframe-view-overlay :nth-child(1) {
   display: flex;
   margin: auto;
+}
+
+.iframe-container{
+  height: 100%
 }
 
 .iframe-container-hidden{

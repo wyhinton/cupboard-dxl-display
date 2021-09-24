@@ -8,12 +8,34 @@
   height: fit-content;
   z-index: 1999;
   width: 50%;
-  height: 80%;
+  /* height: 80%; */
+  height: fit-content;
+  max-height:  80%;
   background-color: lightgrey;
   overflow: scroll;
-  /* test: rgba(255, 0, 0, 0); */
+}
+
+.google-form-popup iframe{
+  height: 60em
 }
 
 .google-form-popup-inner-container {
   padding: 1em;
+}
+
+
+.copy-field-container-class{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.copy-field-container-closed{
+  height: 0;
+  overflow: hidden;
+}
+
+
+.google-form-iframe{
+
 }

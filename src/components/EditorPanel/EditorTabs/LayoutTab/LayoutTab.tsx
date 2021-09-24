@@ -13,13 +13,16 @@ import {
 import Button from "../../../Shared/Button";
 import classNames from "classnames";
 import GoogleFormPopup from "./GoogleFormPopup";
+import { useStoreState, useStoreActions } from "../../../../hooks";
+import Panel from "../../../Shared/Panel"; 
 
-// import {Component} from "./Component";
-import { useStoreState } from "../../../../hooks";
 const LayoutTab: FC = () => {
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
   const bufferState = useStoreState((state) => state.layoutsModel.bufferLayout);
   const [isShown, setIsShown] = useState(false);
+  const fetchCardDataGoogleSheetThunk = useStoreActions(
+    (actions) => actions.googleSheetsModel.fetchAppGoogleSheet
+  );
   const [layoutString, setLayoutString] = useState(JSON.stringify(layoutState));
   useEffect(() => {
     setLayoutString(JSON.stringify(bufferState));
@@ -27,6 +30,7 @@ const LayoutTab: FC = () => {
 
   return (
     <>
+      <Panel>
       <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <Button
           iconBefore={<DocumentIcon />}
@@ -40,6 +44,8 @@ const LayoutTab: FC = () => {
       {isShown ? (
         <GoogleFormPopup
           onCloseComplete={() => {
+            //reload the layouts after closing the add layout dialog
+            fetchCardDataGoogleSheetThunk()
             setIsShown(false);
           }}
           visible={isShown}
@@ -50,7 +56,9 @@ const LayoutTab: FC = () => {
       <div>
         <LayoutTable />
       </div>
+      </Panel>
     </>
+
   );
 };
 

@@ -48,6 +48,7 @@
     "react-grid-layout": "^1.2.5",
     "react-gridlines": "^1.1.7",
     "react-particles-js": "^3.5.2",
+    "react-player": "^2.9.0",
     "react-reverse-portal": "^2.1.0",
     "react-script": "^2.0.5",
     "react-smooth-image": "^1.1.0",

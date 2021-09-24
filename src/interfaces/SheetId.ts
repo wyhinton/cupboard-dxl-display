@@ -1,4 +1,6 @@
 export default interface SheetId {
+  //the id of a google sheets documen 
   key: string;
-  sheet_number: number;
+  //the unique gid for each sheet in the document
+  gid: number;
 }

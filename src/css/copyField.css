@@ -18,3 +18,8 @@
 .copy-field-failure {
   color: red;
 }
+
+
+.copy-field-closed{
+  height: 0
+}

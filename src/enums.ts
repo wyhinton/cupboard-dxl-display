@@ -18,6 +18,8 @@ export enum DragType {
 export enum InteractionType {
   ACTIVE = "ACTIVE",
   STATIC = "STATIC",
+  FIXED = "FIXED",
+  IMAGE = "IMAGE",
 }
 
 export enum DndTypes {
@@ -39,3 +41,4 @@ export enum SheetNames{
   CARDS = "CARDS",
   LAYOUTS = "LAYOUTS",
 }
+

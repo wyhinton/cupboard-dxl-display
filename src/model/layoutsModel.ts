@@ -59,6 +59,7 @@ const layoutsModel: LayoutsModel = {
     (actions, target) => {
       //extract only the needed properties from the GoogleSheetRow
       target.payload.getSheetRows<RawLayoutRow>(SheetNames.LAYOUTS).then(rows=>{
+        console.log(rows);
         const rawLayoutRows = rows;
         const layouts = rawLayoutRows.map((l) => new LayoutData(l));
         const defaultLayout = layouts[0];
@@ -92,8 +93,6 @@ const layoutsModel: LayoutsModel = {
   ),
   //simple setters
   setActiveLayout: action((state, newActiveLayout) => {
-    // console.log("setting active layout");
-    // console.log(newActiveLayout);
     state.activeLayout = newActiveLayout;
   }),
   setExternalLayouts: action((state, newLayoutArray) => {

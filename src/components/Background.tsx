@@ -32,6 +32,11 @@ const Background = (): JSX.Element => {
     // console.log(viewMode);
     setBackgroundStyle(style);
   }, [viewMode]);
+
+  // div {
+  //   -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  //   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  // }
   const bgFillSolid = {
     position: "absolute",
     height: "100vh",
@@ -41,11 +46,6 @@ const Background = (): JSX.Element => {
     backgroundColor: "lightgrey",
     transition: "background-color 0.5s ease",
   } as React.CSSProperties;
-  return (
-    <div style={backgroundStyle}>
-      {viewMode === AppMode.EDIT ? (
-        <div style={bgFillSolid}></div>
-      ) : (
         // <GridLines
         //   cellWidth={size.x / 50}
         //   strokeWidth={2}
@@ -53,6 +53,12 @@ const Background = (): JSX.Element => {
         //   className="grid-area"
         //   lineColor="gray"
         // />
+
+  return (
+    <div style={backgroundStyle}>
+      {viewMode === AppMode.EDIT ? (
+        <div style={bgFillSolid}></div>
+      ) : (
         <Particles />
       )}
     </div>

@@ -7,29 +7,21 @@ import layoutsGoogleSheetKey from "../static/layoutsGoogleSheetKey";
 import GoogleSheetData from "../data_structs/GoogleSheetData";
 import Papa from "papaparse";
 import { SheetNames } from "../enums";
-
-type Result =
-  | { success: true; value: unknown }
-  | { success: false; error: Error };
+import SheetId from "../interfaces/SheetId";
 
 export interface GoogleSheetsModel {
   //state
   appGoogleSheet: GoogleSheetData | undefined;
   cardDataGoogleSheet: RawCardRow[] | null;
-  // cardDataGoogleSheet: GoogleSheet<RawCardRow> | null;
-  layoutDataGoogleSheet: GoogleSheet<RawLayoutRow> | null;
-
+  layoutDataGoogleSheet: RawLayoutRow[]| null;
   //requests
   fetchAppGoogleSheet: Thunk<GoogleSheetsModel>;
-  // fetchLayoutDataGoogleSheet: Thunk<GoogleSheetsModel>;
-  // completSheetLoad: Thunk<
   //setters
   setAppGoogleSheetData: Action<GoogleSheetsModel, GoogleSheetData>;
   setCardDataGoogleSheet: Action<GoogleSheetsModel, RawCardRow[]>;
-  // setCardDataGoogleSheet: Action<GoogleSheetsModel, GoogleSheet<RawCardRow>>;
   setLayoutDataGoogleSheet: Action<
     GoogleSheetsModel,
-    GoogleSheet<RawLayoutRow>
+    RawLayoutRow[]
   >;
 }
 /**
@@ -37,25 +29,26 @@ export interface GoogleSheetsModel {
  * Also stores the fetch data purely for debugging purposes.
  */
 
+ interface LoadSheetResult{
+  rows: unknown[];
+  sheetTitle: SheetNames;
+}
+
 const googleSheetsModel: GoogleSheetsModel = {
   //state
   layoutDataGoogleSheet: null,
   cardDataGoogleSheet: null,
   appGoogleSheet: undefined,
   //requests
-  /**Handle a request to the google sheet containing the cards
-   * listeners: appModel.onCardSheetLoadSuccess
-   */
   fetchAppGoogleSheet: thunk(async (actions) => {
-  interface loadSheetResult{
-    rows: unknown[];
-    sheetTitle: SheetNames;
-  }
 
-  function parseData(url: string, sheetTitle: SheetNames): Promise<loadSheetResult>{
+
+  function parseData(sheetTitle: SheetNames, sheetId: SheetId): Promise<LoadSheetResult>{
       let data;
-      return new Promise<loadSheetResult>( (resolve) => {
-        Papa.parse(url, {
+      // https://docs.google.com/spreadsheets/d/1zwPZV75EhBLseFpcpQhHXEjLTV6JDrwfIGNhaI2GCXI/export?format=csv&gid=996942125
+      const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId.key}/export?format=csv&gid=${sheetId.gid}`
+      return new Promise<LoadSheetResult>( (resolve) => {
+        Papa.parse(csvUrl, {
           download: true,
           header: true,
           delimiter: ',',
@@ -68,14 +61,17 @@ const googleSheetsModel: GoogleSheetsModel = {
       });
   }
 
-  const getCardDataResponse = parseData("https://docs.google.com/spreadsheets/d/1o-R04VC8cIbcmqM68q4ESguaaNYb-0jhoPNgEuKa0i4/export?format=csv&gid=0", SheetNames.CARDS)
-  const getLayoutDataResponse = parseData("https://docs.google.com/spreadsheets/d/1o-R04VC8cIbcmqM68q4ESguaaNYb-0jhoPNgEuKa0i4/export?format=csv&gid=1949477709", SheetNames.LAYOUTS)
+  const getCardDataResponse = parseData(SheetNames.CARDS, cardDataSheetKey)
+  const getLayoutDataResponse = parseData( SheetNames.LAYOUTS, layoutsGoogleSheetKey)
+
   Promise.allSettled([getCardDataResponse, getLayoutDataResponse]).then(results=>{
+    
     const sheetData = new GoogleSheetData(
       "DSC App",
       cardDataSheetKey.key,
-  ); 
-    const goodValues: PromiseFulfilledResult<loadSheetResult>[] = [];
+    ); 
+    const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
+    
     results.forEach((result, num) => {
       if (result.status == "fulfilled") {
         goodValues.push(result)
@@ -85,63 +81,18 @@ const googleSheetsModel: GoogleSheetsModel = {
         console.error("failed ")
       }
     });
-    // return goodValues
-    // Promise.resolve(sheets), 
-    // sheets.forEach(sheet => {
-    //     sheetData.addSheet(sheet.sheetTitle, sheet.rows)
-    // });
-    // console.log(sheetData)
     actions.setAppGoogleSheetData(sheetData)
+    sheetData.getSheetRows(SheetNames.CARDS).then(r=>{
+      actions.setCardDataGoogleSheet(r as RawCardRow[])
+    })
+    sheetData.getSheetRows(SheetNames.LAYOUTS).then(r=>{
+      actions.setLayoutDataGoogleSheet(r as RawLayoutRow[])
+    })
   })
-  // .then(s=>{
-  //   const sheetData = new GoogleSheetData(
-  //     "DSC App",
-  //     cardDataSheetKey.key,
-  // ); 
-  //   s.forEach((result, num) => {
-  //     sheetData.addSheet(result.value.sheetTitle, result.value.rows)
-  //   })
-  //   console.log(sheetData);
-  //       actions.setAppGoogleSheetData(sheetData);
-  // })
-//   getCardDataResponse.then(d=>{
-//       sheetData.addSheet("Cards", d)
-//   })
-//   getLayoutDataResponse.then(d=>{
-//     console.log(d);
-//     sheetData.addSheet("Layouts", d)
-// })
-  
-//  Promise.all([getCar])
-    // GoogleSheetData.prototype
-    //   .loadSheets(
-    //     cardDataSheetKey.key,
-    //     process.env.REACT_APP_GCP_TOKEN as string
-    //   )
-    //   .then((response) => {
-    //     Promise.all(response).then((responseData) => {
-    //       const studentsGoogleSheet = new GoogleSheetData(
-    //         "DSC App",
-    //         cardDataSheetKey.key,
-    //         responseData
-    //       );
-    //       actions.setAppGoogleSheetData(studentsGoogleSheet);
-    //     });
-    //   });
   }),
   setAppGoogleSheetData: action((state, googleSheet) => {
     state.appGoogleSheet = googleSheet;
   }),
-  /**Handle a request to the google sheet containing the layouts
-   * listeners: layoutsModel.onLayoutSheetLoadSuccess
-   */
-  // fetchLayoutDataGoogleSheet: thunk(async (actions) => {
-  //   // getSheet<RawLayoutRow>(layoutsGoogleSheetKey).then((sheet) => {
-  //   //   console.log(sheet);
-  //   //   actions.setLayoutDataGoogleSheet(sheet);
-  //   // });
-  // }),
-  //setters
   setCardDataGoogleSheet: action((state, sheet) => {
     state.cardDataGoogleSheet = sheet;
   }),

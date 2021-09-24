@@ -30,6 +30,7 @@
   z-index: 1999;
   width: 10vw;
   height: 4vh;
+  padding: 1em;
   /* test: rgba(255, 0, 0, 0); */
 }
 
@@ -38,6 +39,12 @@
   background: var(--inactive-pattern);
 }
 
+.how-to-use-button{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .how-to-popup-container {
   padding: 0.5em;
 }
