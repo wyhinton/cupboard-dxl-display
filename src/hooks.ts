@@ -1,5 +1,6 @@
 import { createTypedHooks } from "easy-peasy";
 import { StoreModel } from "./model";
+import React from 'react'
 
 const typedHooks = createTypedHooks<StoreModel>();
 
@@ -10,4 +11,30 @@ export const useStoreActions = typedHooks.useStoreActions;
 export const useStoreDispatch = typedHooks.useStoreDispatch;
 export const useStoreState = typedHooks.useStoreState;
 
+export const useKeyboardShortcut = ({keyCode, action, disabled}:{keyCode: number, action: (e: KeyboardEvent)=>void, disabled: boolean}) => {
+  React.useEffect(() => {
+    if(!disabled){
+      enable()
+    }
+    return () => {
+      disable()
+    }
+  })
 
+  const enable = () => {
+    document.addEventListener('keydown', handleAction)
+  }
+
+  const disable = () => {
+    document.removeEventListener('keydown', handleAction)
+  }
+
+  const handleAction = (e: KeyboardEvent) => {
+    if(e.keyCode === keyCode){
+      e.preventDefault()
+      action(e)
+    }
+  }
+
+  return {enable, disable}
+}

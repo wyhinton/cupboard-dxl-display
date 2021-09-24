@@ -12,6 +12,8 @@ import HowToUse from "./components/HowToUse";
 import { DragSource } from "./enums";
 import { AddIcon } from "evergreen-ui";
 import Pulsar from "./components/Shared/Pulsar";
+import { useKeyboardShortcut } from './hooks'
+
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  * @component
@@ -37,6 +39,18 @@ const App = (): JSX.Element => {
   const allLayouts = useStoreState(
     (state) => state.layoutsModel.externalLayouts
   );
+  
+  const submit = () => {
+    toggleViewModeThunk()
+  }
+
+  const {enable, disable} = useKeyboardShortcut({
+    keyCode: 115,
+    action: submit,
+    disabled: false // This key is not required
+  })
+
+  
   const [isDraggingLayout, setIsDraggingLayout] = useState(false);
 
   /**On app start make one-time fetch requests */

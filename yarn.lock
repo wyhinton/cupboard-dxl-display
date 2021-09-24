@@ -4655,6 +4655,14 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+crooks@^1.0.23:
+  version "1.0.23"
+  resolved "https://registry.yarnpkg.com/crooks/-/crooks-1.0.23.tgz#506f3a881ba4e353a81e28032ead27be7a1d5e45"
+  integrity sha512-hQdX+lyRqeH+AocJnzIpewIy5F8zArsr6PEKAVE7tFfU29JUXjjr7igOfIfxkzpPyQtoJ48ikDW0LjC7DlqnvQ==
+  dependencies:
+    local-storage "^1.4.2"
+    shortid "^2.2.14"
+
 cross-spawn@7.0.3, cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
@@ -9164,6 +9172,11 @@ loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4.0:
     emojis-list "^3.0.0"
     json5 "^1.0.1"
 
+local-storage@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/local-storage/-/local-storage-1.4.2.tgz#7ec2d3fb7f1ea91a85b160d3a785058f87bfbfa5"
+  integrity sha1-fsLT+38eqRqFsWDTp4UFj4e/v6U=
+
 locate-path@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-2.0.0.tgz#2b568b265eec944c6d9c0de9c3dbbbca0354cd8e"
@@ -9847,6 +9860,11 @@ nano-css@^5.3.1:
     sourcemap-codec "^1.4.8"
     stacktrace-js "^2.0.2"
     stylis "^4.0.6"
+
+nanoid@^2.1.0:
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.1.11.tgz#ec24b8a758d591561531b4176a01e3ab4f0f0280"
+  integrity sha512-s/snB+WGm6uwi0WjsZdaVcuf3KJXlfGl2LcxgwkEwJF0D/BWzVWAZW/XY4bFaiR7s0Jk3FPvlnepg1H1b1UwlA==
 
 nanoid@^3.1.23:
   version "3.1.23"
@@ -12248,6 +12266,11 @@ react-reverse-portal@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-reverse-portal/-/react-reverse-portal-2.1.0.tgz#3c572e1c0d9e49b8febf4bf2fd43b9819ce6f508"
   integrity sha512-ck1igNI4tUFozJ89X7qqFtWy1wSL7WEd/5iZbjBjyf+6vjZ3leg4JJxdVPbFt9+zwMLcQSPsIkw9xGu9E+VqCQ==
 
+react-script@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-script/-/react-script-2.0.5.tgz#9dac20f97cff1fb40f5b4084e3f44b82e3001572"
+  integrity sha1-nawg+Xz/H7QPW0CE4/RLguMAFXI=
+
 react-scripts@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-4.0.3.tgz#b1cafed7c3fa603e7628ba0f187787964cb5d345"
@@ -13290,6 +13313,13 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
+
+shortid@^2.2.14:
+  version "2.2.16"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.16.tgz#b742b8f0cb96406fd391c76bfc18a67a57fe5608"
+  integrity sha512-Ugt+GIZqvGXCIItnsL+lvFJOiN7RYqlGy7QE41O3YC1xbNSeDGIRO7xg2JJXIAj1cAGnOeC1r7/T9pgrtQbv4g==
+  dependencies:
+    nanoid "^2.1.0"
 
 side-channel@^1.0.4:
   version "1.0.4"
