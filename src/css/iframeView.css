@@ -14,10 +14,8 @@
   transition: opacity .5s; 
   outline: 4px solid white;
 }
-.player-wrapper{
-  /* display: flex; */
 
-}
+
 .iframe-view-overlay-loading {
   position: absolute;
   display: flex;

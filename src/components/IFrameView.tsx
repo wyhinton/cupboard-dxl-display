@@ -21,7 +21,7 @@ interface IFrameViewProperties {
  *  <IFrameView src = {my_url}/>
  * )
  */
-const IFrameView: FC<IFrameViewProperties> = ({card, src }) => {
+const IFrameView: FC<IFrameViewProperties> = ({card, src,  }) => {
   const [active, setActive] = useState(false);
   const [valid, setIsValid] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -41,14 +41,12 @@ const IFrameView: FC<IFrameViewProperties> = ({card, src }) => {
   
   const iframeStyle = {
     width: "100%",
-    pointerEvents: "none",
     height: "100%",
     border: "none",
   } as React.CSSProperties;
 
   const iframeActive = {
     width: "100%",
-    pointerEvents: "none",
     height: "100%",
     border: "5px blue",
   } as React.CSSProperties;
