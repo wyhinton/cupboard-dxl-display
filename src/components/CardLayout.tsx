@@ -158,12 +158,7 @@ export const CardGrid = (): JSX.Element => {
                       key={index.toString()}
                       cardId={index.toString()}
                       onClick={() => {
-                        console.log(card);
                         activeKeyReference.current = index.toString();
-                      }}
-                      onDoubleClick={() => {
-                        console.log("removing item");
-                        removeItem(card.sourceId, defaultLayouts);
                       }}
                       activeKey={activeKeyReference}
                     >

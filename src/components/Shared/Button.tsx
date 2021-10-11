@@ -29,7 +29,6 @@ const Button = ({
       <EverGreenButton
         //use evergreen's default button with if no width is provided
         height={height ?? undefined}
-        // width={width ?? undefined}
         iconBefore={iconBefore ?? undefined}
         className={className}
         appearance={appearance ?? "default"}

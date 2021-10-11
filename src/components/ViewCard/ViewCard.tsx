@@ -28,14 +28,12 @@ import { Layouts } from "react-grid-layout";
 interface ViewCardProperties {
   cardType: DndTypes;
   children?: React.ReactElement[] | React.ReactElement;
-  key?: string;
   activeKey?: React.MutableRefObject<string>;
   cardId?: string;
   dataGrid?: Layouts;
   layoutRef?: React.MutableRefObject<Layouts | null>;
   data?: CardData;
   onClick?: () => void;
-  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 /**
  * Wraps each of the cards in the card layouts, regardless of what type of card it is. T
@@ -46,7 +44,6 @@ interface ViewCardProperties {
 
 const ViewCard: FC<ViewCardProperties> = ({
   cardType,
-  
   children,
   activeKey,
   cardId,
@@ -120,7 +117,8 @@ const ViewCard: FC<ViewCardProperties> = ({
 
   //change the view mode when pressing a card
   const onCardPress = (): void => {
-    if (appModeState === AppMode.DISPLAY) {
+    console.log(data?.sourceId);
+    if (appModeState === AppMode.DISPLAY && cardId != undefined) {
       switch (cardView) {
         case CardView.GRID:
           cardView

@@ -20,9 +20,8 @@ const DropDownMenu = ({
   title: string;
   items: SelectMenuItem[];
 }): JSX.Element => {
-  // const [selected, setSelected] = useState(false);
   const [value, setValue] = useState(items[0]?.label);
-  type Test = string | string[] | undefined;
+
   return (
     <div>
       {`${title}: `}
@@ -47,4 +46,3 @@ const DropDownMenu = ({
 
 export default DropDownMenu;
 
-// { label, value: label }

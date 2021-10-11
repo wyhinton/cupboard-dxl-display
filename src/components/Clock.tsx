@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
 import "../css/clock.css";
+
+import React, { useEffect, useState } from "react";
+
 /**
  * Simple clock widget for displaying the current time.
  * @component
@@ -8,11 +10,10 @@ const Clock = (): JSX.Element => {
   const [date, setDate] = useState(new Date());
 
   const containerStyle = {
-    // backdropFilter: "blur(4px)",
     height: "100%",
     padding: ".25em",
     width: "100%",
-    fontSize: "36pt",
+    fontSize: "4vw",
     fontWeight: 600,
     color: "white",
     boxSizing: "border-box",
@@ -23,7 +24,7 @@ const Clock = (): JSX.Element => {
     backgroundColor: "white",
     width: "100%",
   } as React.CSSProperties;
-  
+
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);
     return function cleanup() {
@@ -31,7 +32,7 @@ const Clock = (): JSX.Element => {
     };
   });
 
-  function tick():void {
+  function tick(): void {
     setDate(new Date());
   }
 
@@ -39,7 +40,9 @@ const Clock = (): JSX.Element => {
     <div style={containerStyle}>
       <div>Data Experience Lab</div>
       <div style={dividerStyle}></div>
-      <div>{date.toLocaleTimeString('en-IT', {hour12: true, timeStyle: 'short'})}</div>
+      <div>
+        {date.toLocaleTimeString("en-IT", { hour12: true, timeStyle: "short" })}
+      </div>
     </div>
   );
 };

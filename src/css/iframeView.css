@@ -1,4 +1,8 @@
 /* Iframe view overlay used for displaying a loading animation */
+.iframe-container{
+  height: 100%;
+}
+
 .iframe-view-overlay {
   position: absolute;
   width: 100%;
@@ -13,6 +17,18 @@
   opacity: 0;
   transition: opacity .5s; 
   outline: 4px solid white;
+}
+
+.iframe-view-display{
+  pointer-events: none;
+}
+
+.iframe-view-edit{
+  pointer-events: none;
+}
+
+.iframe-view-preview{
+  pointer-events: all;
 }
 
 
@@ -35,13 +51,7 @@
   margin: auto;
 }
 
-.iframe-container{
-  height: 100%
-}
 
-.iframe-container-hidden{
-  display: none;
-}
 
 .card-child-container-preview{
   transform: translate(-50%, -50%);

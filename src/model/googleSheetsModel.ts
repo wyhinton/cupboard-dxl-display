@@ -45,7 +45,6 @@ const googleSheetsModel: GoogleSheetsModel = {
 
   function parseData(sheetTitle: SheetNames, sheetId: SheetId): Promise<LoadSheetResult>{
       let data;
-      // https://docs.google.com/spreadsheets/d/1zwPZV75EhBLseFpcpQhHXEjLTV6JDrwfIGNhaI2GCXI/export?format=csv&gid=996942125
       const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId.key}/export?format=csv&gid=${sheetId.gid}`
       return new Promise<LoadSheetResult>( (resolve) => {
         Papa.parse(csvUrl, {

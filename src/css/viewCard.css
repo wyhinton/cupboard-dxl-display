@@ -1,12 +1,12 @@
 .pulse {
-  margin:100px;
+  margin: 100px;
   display: block;
   width: 22px;
   height: 22px;
   border-radius: 50%;
   background: #cca92c;
   cursor: pointer;
-  box-shadow: 0 0 0 rgba(204,169,44, 0.4);
+  box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
   animation: pulse 2s infinite;
 }
 .pulse:hover {
@@ -18,24 +18,24 @@
     -webkit-box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
   }
   70% {
-      -webkit-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+    -webkit-box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
   }
   100% {
-      -webkit-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+    -webkit-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
 @keyframes pulse {
   0% {
-    -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
-    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.4);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0.4);
   }
   70% {
-      -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
-      box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+    -moz-box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 10px rgba(204, 169, 44, 0);
   }
   100% {
-      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
-      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+    -moz-box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
+    box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
 
@@ -45,7 +45,7 @@
   width: 100%;
   display: flex;
   transform: translate(0, 0px);
-  transition: transform .5s ease-out
+  transition: transform 0.5s ease-out;
 }
 
 /*  */
@@ -57,6 +57,16 @@
   width: 100%;
   height: 100%;
 }
+.card-child-container-grid {
+  height: 100%;
+}
+.card-child-container-grid iframe {
+  height: 100%;
+  pointer-events: none;
+}
+.card-child-container-edit iframe {
+  pointer-events: none;
+}
 
 .card-child-container-preview {
   width: 60vw;
@@ -67,7 +77,15 @@
   left: 50%;
   box-shadow: #00000038 0px 0px 50px 10px;
   animation: pulse 2s infinite;
+  /* pointer-events: all; */
+}
 
+.card-child-container-preview {
+  pointer-events: all;
+}
+
+.card-child-container-display {
+  pointer-events: none;
 }
 
 .card-edit {
@@ -75,9 +93,17 @@
   box-shadow: none;
   /* transform: translate(0, 40px); */
 }
+
+.card-edit iframe {
+  pointer-events: none;
+}
+
 .card-display {
   border: 1px solid rgba(255, 255, 255, 0.294);
   box-shadow: 0 8px 32px 0 rgba(49, 49, 49, 0.37);
+}
+.card-display iframe {
+  pointer-events: none;
 }
 
 .card-fullscreen {
@@ -90,8 +116,6 @@
   width: 60vw;
   height: 40vw;
 }
-
-
 
 .card-footer {
   background-color: grey;
