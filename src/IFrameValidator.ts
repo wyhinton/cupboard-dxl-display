@@ -16,9 +16,6 @@ class IFrameValidator {
     this.url = url;
   }
   validate(event: React.SyntheticEvent<HTMLIFrameElement, Event>): void {
-    const xoCheckArray = checkForXO(event);
-    console.log(xoCheckArray);
-    this.errors.push(...xoCheckArray);
     console.log(this.errors);
     const malformedUrlCheckArray = validURL(this.url);
     this.warnings.push(...malformedUrlCheckArray);
@@ -46,24 +43,7 @@ class IFrameValidator {
 
 export default IFrameValidator;
 
-function checkForXO(
-  event: React.SyntheticEvent<HTMLIFrameElement, Event>
-): IFrameLoadError[] {
-  let errorsArray: IFrameLoadError[] = [];
-  const test = event.target as HTMLIFrameElement;
-//   console.log(test.contentDocument);
-//   console.log(test.contentWindow);
-  try { 
-      
-    test.contentWindow?.name;
-  } catch (e) {
-    if (e.message.includes("cross-origin")) {
-      console.log(e.message);
-      errorsArray.push(IFrameLoadError.CROSS_ORIGIN);
-    } else return [];
-  }
-  return errorsArray;
-}
+
 
 function validURL(str: string): IFrameLoadWarning[] {
   let warningsArray = [];

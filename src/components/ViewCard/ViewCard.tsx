@@ -17,7 +17,7 @@ import type { HtmlPortalNode } from "react-reverse-portal";
 import { Component } from "evergreen-ui/node_modules/@types/react";
 import { DeleteIcon, ButtonAppearance, InlineAlert } from "evergreen-ui";
 import Button from "../Shared/Button";
-
+import DeleteButton from "./DeleteButton"
 import {
   createHtmlPortalNode,
   InPortal,
@@ -245,37 +245,7 @@ interface DeleteButtonProperties {
   onClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const DeleteButton = ({ onClick }: DeleteButtonProperties): JSX.Element => {
-  const deleteButtonStyle = {
-    position: "absolute",
-    top: "-1em",
-    left: "-1em",
-  } as React.CSSProperties;
 
-  const subContStyle = {
-    position: "absolute",
-    left: -8,
-  } as React.CSSProperties;
-  
-  return (
-    <div
-      style={deleteButtonStyle}
-      className="delete-button-container"
-      onMouseUp={onClick}
-    >
-      <div style={subContStyle}>
-        <Button
-          onClick={onClick}
-          text={""}
-          width={80}
-          height={40}
-          appearance={"danger" as ButtonAppearance}
-          iconBefore={<DeleteIcon size={30} />}
-        ></Button>
-      </div>
-    </div>
-  );
-};
 
 const FailureNotice = ({ errors }: { errors: string[] }): JSX.Element => {
   return (

@@ -1,0 +1,38 @@
+.background-container{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    transition: "background-color 0.5s ease",
+}
+
+.background-container-display-mode{
+    /* background: #D84EA8; */
+    /* background: -webkit-linear-gradient(top left, #D84EA8, #FE2766);
+    background: -moz-linear-gradient(top left, #D84EA8, #FE2766);
+    background: linear-gradient(to bottom right, #D84EA8, #FE2766); */
+}
+
+.background-container-edit-mode{
+    /* background-color: white; */
+}
+
+
+.particle-container{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    transition: "background-color 0.5s ease",
+}
+
+.shader-container{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    transition: "background-color 0.5s ease",
+}

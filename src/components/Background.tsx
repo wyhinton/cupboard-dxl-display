@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import Particles from "react-particles-js";
-import { useStoreState } from "../hooks";
-import { AppMode } from "../enums";
-/**
- * Background with particle animation.
- * @component
- */
+import Particles from 'react-particles-js';
+import React, { useEffect, useState } from 'react';
+import { AppMode } from '../enums';
+import { useStoreState } from '../hooks';
+import '../css/background.css';
+import classNames from 'classnames';
+import BackgroundShader from "./Background/BackgroundShader"
+import ReactDOM from 'react-dom';
+
 
 const Background = (): JSX.Element => {
   const viewMode = useStoreState((state) => state.appModel.appMode);
@@ -33,10 +34,12 @@ const Background = (): JSX.Element => {
     setBackgroundStyle(style);
   }, [viewMode]);
 
-  // div {
-  //   -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
-  //   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
-  // }
+  const backgroundClass = classNames("background-container",{
+    "background-container-display-mode": viewMode == AppMode.DISPLAY,
+    "background-container-edit-mode": viewMode == AppMode.EDIT,
+  })
+
+
   const bgFillSolid = {
     position: "absolute",
     height: "100vh",
@@ -46,22 +49,23 @@ const Background = (): JSX.Element => {
     backgroundColor: "lightgrey",
     transition: "background-color 0.5s ease",
   } as React.CSSProperties;
-        // <GridLines
-        //   cellWidth={size.x / 50}
-        //   strokeWidth={2}
-        //   cellWidth2={size.x / 50}
-        //   className="grid-area"
-        //   lineColor="gray"
-        // />
 
-  return (
-    <div style={backgroundStyle}>
+
+  return ReactDOM.createPortal(
+    <div style={backgroundStyle} className = {backgroundClass} >
       {viewMode === AppMode.EDIT ? (
         <div style={bgFillSolid}></div>
       ) : (
-        <Particles />
+        <div className = "background-container">
+        <div className = "shader-container">
+        <BackgroundShader/>
+        </div>
+        <div className = "particle-container">
+        {/* <Particles /> */}
+        </div>
+        </div>
       )}
-    </div>
+    </div>,     document.querySelector("#background") as HTMLElement
   );
 };
 

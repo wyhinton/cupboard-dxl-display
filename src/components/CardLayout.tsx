@@ -1,20 +1,26 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import Clock from "./Clock";
-import IFrameView from "./IFrameView";
-import { WidthProvider, Responsive, Layout, Layouts } from "react-grid-layout";
-import "../css/cardLayout.css";
-import ViewCard from "./ViewCard/ViewCard";
-import { useStoreState, useStoreActions } from "../hooks";
-import CardData from "../data_structs/CardData";
-import { AppMode, DndTypes, DragSource } from "../enums";
-import IXDrop from "./IXDrop";
+import CardData from '../data_structs/CardData';
+import Clock from './Clock';
+import defaultLayouts from '../static/defaultLayouts';
+import IFrameView from './IFrameView';
+import IXDrop from './IXDrop';
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+  } from 'react';
+import ViewCard from './ViewCard/ViewCard';
+import { AppMode, DndTypes } from '../enums';
+import {
+  Layout,
+  Layouts,
+  Responsive,
+  WidthProvider
+  } from 'react-grid-layout';
+import { useStoreActions, useStoreState } from '../hooks';
+import '../css/cardLayout.css';
 import type { GridPosition } from "../interfaces/GridPosition";
-import defaultLayouts from "../static/defaultLayouts";
-/**
- * Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components
- * @component
- *
- */
+
 
 export const CardGrid = (): JSX.Element => {
   const rows = 3;
@@ -66,7 +72,6 @@ export const CardGrid = (): JSX.Element => {
     const justPlaceholders = allBlank.lg
       .filter((l) => l.i.startsWith("empty"))
       .map((l) => l.i);
-
     setPlaceholderCards(justPlaceholders);
     setFilledLayout(allBlank);
     setRealLayout(currentLayoutState?.layout);
@@ -74,7 +79,7 @@ export const CardGrid = (): JSX.Element => {
       localLayout.current = currentLayoutState?.layout;
     }
   }, [activeCards, currentLayoutState]);
-
+  useEffect(()=>{},[realLayout])
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: { lg: 4, md: 4, sm: 4, xs: 4, xxs: 4 },
@@ -96,82 +101,90 @@ export const CardGrid = (): JSX.Element => {
           zIndex: 1,
         }}
       >
-        {realLayout ? (
-          <ResponsiveGridLayout
-            {...sharedGridSettings}
-            className="card-layout"
-            layouts={realLayout}
-            resizeHandles={["se"]}
-            preventCollision={true}
-            verticalCompact={false}
-            onDragStart={(
-              layout,
-              oldItem,
-              newItem,
-              placeholder,
-              e,
-              element
-            ) => {
-              const previousStyle = element.style;
-              previousStyle.border = "2px solid cyan";
-              element.style.border = "4px solid cyan";
-            }}
-            onDrop={(layout, item, e) => {
-              console.log(layout, item, e);
-            }}
-            onLayoutChange={(l) => {
-              const newLayout: Layouts = {
-                lg: l,
-                md: l,
-                sm: l,
-                xs: l,
-                xxs: l,
-              };
-              localLayout.current = newLayout;
-              setBufferLayoutAction(localLayout.current);
-            }}
-            isDraggable={isEditMode}
-            isResizable={isEditMode}
-          >
-            <div key={"clock"}>
-              <ViewCard cardType={DndTypes.CLOCK} onClick = {()=>{console.log("clock clicked");}}>
-                <Clock />
-              </ViewCard>
-            </div>
-
-            {activeCards.map((card: CardData, index: number) => {
-              return (
-                <div
-                  //key provided here is the means of accessing a unique identifier for the cards
-                  key={card.sourceId}
-                  draggable={true}
-                  className = {cardContainerClass(card, viewModeState)}
-                >
-                  <IXDrop
-                    key={index}
-                    droppableId={card.sourceId}
-                    cardType={DndTypes.IFRAME}
+              <ResponsiveGridLayout
+              {...sharedGridSettings}
+              className="card-layout"
+              layouts={realLayout}
+              resizeHandles={["se"]}
+              preventCollision={true}
+              verticalCompact={true}
+              onDragStart={(
+                layout,
+                oldItem,
+                newItem,
+                placeholder,
+                e,
+                element
+              ) => {
+                const previousStyle = element.style;
+                previousStyle.border = "2px solid cyan";
+                element.style.border = "4px solid cyan";
+              }}
+              // onDragEnd={(
+              //   layout,
+              //   oldItem,
+              //   newItem,
+              //   placeholder,
+              //   e,
+              //   element
+              // ) => {
+              //   const previousStyle = element.style;
+              //   previousStyle.border = "2px solid cyan";
+              //   element.style.border = "4px solid cyan";
+              // }}
+              onDrop={(layout, item, e) => {
+                console.log(layout, item, e);
+              }}
+              onLayoutChange={(l) => {
+                const newLayout: Layouts = {
+                  lg: l,
+                  md: l,
+                  sm: l,
+                  xs: l,
+                  xxs: l,
+                };
+                localLayout.current = newLayout;
+                setBufferLayoutAction(localLayout.current);
+              }}
+              isDraggable={isEditMode}
+              isResizable={isEditMode}
+            >
+              <div key={"clock"}>
+                <ViewCard cardType={DndTypes.CLOCK} onClick = {()=>{console.log("clock clicked");}}>
+                  <Clock />
+                </ViewCard>
+              </div>
+  
+              {activeCards.map((card: CardData, index: number) => {
+                return (
+                  <div
+                    //key provided here is the means of accessing a unique identifier for the cards
+                    key={card.sourceId}
+                    draggable={true}
+                    className = {cardContainerClass(card, viewModeState)}
                   >
-                    <ViewCard
+                    <IXDrop
+                      key={index}
+                      droppableId={card.sourceId}
                       cardType={DndTypes.IFRAME}
-                      data={card}
-                      key={index.toString()}
-                      cardId={index.toString()}
-                      onClick={() => {
-                        activeKeyReference.current = index.toString();
-                      }}
-                      activeKey={activeKeyReference}
                     >
-                      <IFrameView card = {card} src={card.src} />
-                    </ViewCard>
-                  </IXDrop>
-                </div>
-              );
-            })}
-          </ResponsiveGridLayout>
-        ) : (
-          <div className={"centered-flex"}>not loaded</div>
-        )}
+                      <ViewCard
+                        cardType={DndTypes.IFRAME}
+                        data={card}
+                        key={index.toString()}
+                        cardId={index.toString()}
+                        onClick={() => {
+                          activeKeyReference.current = index.toString();
+                        }}
+                        activeKey={activeKeyReference}
+                      >
+                        <IFrameView card = {card} src={card.src} />
+                      </ViewCard>
+                    </IXDrop>
+                  </div>
+                );
+              })}
+            </ResponsiveGridLayout>
       </div>
 
       <div

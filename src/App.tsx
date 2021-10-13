@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.global.css";
+import "./css/global.css"
 import { useStoreActions, useStoreState, useKeyboardShortcut} from "./hooks";
 import CardGrid from "./components/CardLayout";
 import Background from "./components/Background";
@@ -11,6 +12,7 @@ import { GridPosition } from "./interfaces/GridPosition";
 import HowToUse from "./components/HowToUse";
 import { DragSource } from "./enums";
 import Pulsar from "./components/Shared/Pulsar";
+import ModeChangeButton from "./components/ModeChangeButton";
 
 
 /**
@@ -130,6 +132,7 @@ const App = (): JSX.Element => {
       >
         <HowToUse />
         <Background />
+        <ModeChangeButton/>
         <DragDropContext
           onBeforeDragStart={(e) => {
             console.log(e);

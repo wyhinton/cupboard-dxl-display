@@ -19,11 +19,6 @@ const Clock = (): JSX.Element => {
     boxSizing: "border-box",
   } as React.CSSProperties;
 
-  const dividerStyle = {
-    height: ".5em",
-    backgroundColor: "white",
-    width: "100%",
-  } as React.CSSProperties;
 
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);
@@ -39,7 +34,6 @@ const Clock = (): JSX.Element => {
   return (
     <div style={containerStyle}>
       <div>Data Experience Lab</div>
-      <div style={dividerStyle}></div>
       <div>
         {date.toLocaleTimeString("en-IT", { hour12: true, timeStyle: "short" })}
       </div>

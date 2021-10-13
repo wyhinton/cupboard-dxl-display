@@ -1,3 +1,11 @@
+import CardData from '../data_structs/CardData';
+import defaultLayouts from '../static/defaultLayouts';
+import LayoutData from '../data_structs/LayoutData';
+import RawLayoutRow from '../interfaces/RawLayoutRow';
+import { AppMode, SheetNames } from '../enums';
+import { CardAddEvent, CardSwapEvent } from '../interfaces/CardEvents';
+import { Layouts } from 'react-grid-layout';
+import { StoreModel } from './index';
 import {
   action,
   thunk,
@@ -7,22 +15,14 @@ import {
   ThunkOn,
   debug,
 } from "easy-peasy";
-import CardData from "../data_structs/CardData";
-import LayoutData from "../data_structs/LayoutData";
-import { StoreModel } from "./index";
-import { Layout, Layouts } from "react-grid-layout";
-import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
-import defaultLayouts from "../static/defaultLayouts";
-import { AppMode, SheetNames } from "../enums";
-import RawCardRow from "../interfaces/RawCardRow";
-import RawLayoutRow from "../interfaces/RawLayoutRow";
-import IFrameValidator from "../IFrameValidator";
+
 export interface LayoutsModel {
   //state
   activeLayout: LayoutData | undefined;
   externalLayouts: LayoutData[];
   bufferLayout: Layouts;
   tempLayout: Layouts;
+  
   //listeners
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
   onToggleViewModeListener: ThunkOn<LayoutsModel, never, StoreModel>;
@@ -34,8 +34,6 @@ export interface LayoutsModel {
   setBufferLayout: Action<LayoutsModel, Layouts>;
   setTempLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
-
-  // storeBufferLayout: Action<LayoutsModel>;
 
   //update
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;

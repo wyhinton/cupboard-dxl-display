@@ -1,10 +1,7 @@
-import { Layout, Layouts } from "react-grid-layout";
+import CardData from './CardData';
+import { Layout, Layouts } from 'react-grid-layout';
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import type { CardSwapEvent, CardAddEvent } from "../interfaces/CardEvents";
-import CardData from "./CardData";
-import { Ok, Err, Result } from "ts-results";
-import defaultLayouts from "../static/defaultLayouts";
-import { v4 as uuidv4 } from "uuid";
 import type { GridPosition } from "../interfaces/GridPosition";
 
 //TODO: Google form columns and layoutData fields should have the same capitilization
@@ -119,102 +116,4 @@ function findFilledPositions(layouts: Layout[]): GridPosition[] {
   return takenSpots;
 }
 
-function parseLayout(
-  data: string
-): Result<Layouts, "failed to parse layoutJSON"> {
-  try {
-    const layouts = JSON.parse(data);
-    return Ok(layouts);
-  } catch {
-    return Err("failed to parse layoutJSON");
-  }
-}
 
-function generateFilledLayout(
-  layout: Layout[],
-  emptyPosArray: GridPosition[]
-): Layouts {
-  const emptyCards = emptyPosArray.map((rr) => {
-    return {
-      x: rr.x,
-      y: rr.y,
-      w: 1,
-      h: 1,
-      i: `empty_card_${uuidv4()}`,
-      minW: 1,
-      maxW: 1,
-      minH: 1,
-      maxH: 1,
-      static: true,
-      isDraggable: false,
-      isResizable: false,
-      resizeHandles: [],
-    } as Layout;
-  });
-  const filled = layout.concat(emptyCards);
-  return {
-    lg: filled,
-    md: filled,
-    sm: filled,
-    xs: filled,
-    xxs: filled,
-  };
-}
-// function getCount(): Promise<Result<number, Error>> {
-//   return fetch("/index-count")
-//     .then((res) => res.json())
-//     .then((body): Ok<number, Error> => ok(body["count"]))
-//     .catch(() => err(new Error("Something when wrong while fetching count")));
-// }
-
-// // To access the count, we'll first have to check if the calculation succeeded.
-// if (res.isOk()) {
-//   // Now we can access the value.
-//   console.log("Count is:", res.value);
-// }
-
-// if (res.isErr()) {
-//   // Now we can access the error.
-//   console.error("Oh no, there was an error:", res.error);
-// }
-
-// // https://dev.to/duunitori/mimicing-rust-s-result-type-in-typescript-3pn1
-// // type Result =
-// //   | { success: true; value: unknown }
-// //   | { success: false; error: Error };
-
-// export type Result<T, E> = Ok<T, E> | Err<T, E>;
-
-// export class Ok<T, E> {
-//   public constructor(public readonly value: T) {}
-
-//   public isOk(): this is Ok<T, E> {
-//     return true;
-//   }
-
-//   public isErr(): this is Err<T, E> {
-//     return false;
-//   }
-// }
-
-// export class Err<T, E> {
-//   public constructor(public readonly error: E) {}
-
-//   public isOk(): this is Ok<T, E> {
-//     return false;
-//   }
-
-//   public isErr(): this is Err<T, E> {
-//     return true;
-//   }
-// }
-
-// /**
-//  * Construct a new Ok result value.
-//  */
-// export const ok = <T, E>(value: T): Ok<T, E> => new Ok(value);
-
-// /**
-//  * Construct a new Err result value.
-//  */
-// export const err = <T, E>(error: E): Err<T, E> => new Err(error);
