@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.global.css";
 import "./css/global.css"
 import { useStoreActions, useStoreState, useKeyboardShortcut} from "./hooks";
-import CardGrid from "./components/CardLayout";
+import CardGrid from "./components/CardLayout/CardLayout";
 import Background from "./components/Background";
 import { DropResult, DragDropContext } from "react-beautiful-dnd";
 import { DndContext } from "@dnd-kit/core";

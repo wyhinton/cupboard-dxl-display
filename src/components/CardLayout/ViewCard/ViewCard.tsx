@@ -7,16 +7,16 @@ import React, {
   MouseEventHandler,
 } from "react";
 import CardInfo from "./CardInfo";
-import CardData from "../../data_structs/CardData";
-import { useStoreState, useStoreActions, useKeyboardShortcut } from "../../hooks";
-import { CardView, DndTypes, AppMode, InteractionType } from "../../enums";
+import CardData from "../../../data_structs/CardData";
+import { useStoreState, useStoreActions, useKeyboardShortcut } from "../../../hooks";
+import { CardView, DndTypes, AppMode, InteractionType } from "../../../enums";
 import classNames from "classnames";
-import "../../css/viewCard.css";
-import Modal from "../Modal";
+import "../../../css/viewCard.css";
+import Modal from "../../Modal";
 import type { HtmlPortalNode } from "react-reverse-portal";
 import { Component } from "evergreen-ui/node_modules/@types/react";
 import { DeleteIcon, ButtonAppearance, InlineAlert } from "evergreen-ui";
-import Button from "../Shared/Button";
+import Button from "../../Shared/Button";
 import DeleteButton from "./DeleteButton"
 import {
   createHtmlPortalNode,

@@ -1,7 +1,7 @@
 import React from "react";
-import "../../css/viewCard.css";
+import "../../../css/viewCard.css";
 import { DeleteIcon, ButtonAppearance } from "evergreen-ui";
-import Button from "../Shared/Button";
+import Button from "../../Shared/Button";
 
 interface DeleteButtonProperties {
     onClick: React.MouseEventHandler<HTMLDivElement>;

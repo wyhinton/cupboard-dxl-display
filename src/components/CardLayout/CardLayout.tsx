@@ -1,8 +1,8 @@
-import CardData from '../data_structs/CardData';
-import Clock from './Clock';
-import defaultLayouts from '../static/defaultLayouts';
-import IFrameView from './IFrameView';
-import IXDrop from './IXDrop';
+import CardData from '../../data_structs/CardData';
+import Clock from '../Clock';
+import defaultLayouts from '../../static/defaultLayouts';
+import IFrameView from '../IFrameView';
+import IXDrop from '../IXDrop';
 import React, {
   useEffect,
   useMemo,
@@ -10,17 +10,17 @@ import React, {
   useState
   } from 'react';
 import ViewCard from './ViewCard/ViewCard';
-import { AppMode, DndTypes } from '../enums';
+import { AppMode, DndTypes } from '../../enums';
 import {
   Layout,
   Layouts,
   Responsive,
   WidthProvider
   } from 'react-grid-layout';
-import { useStoreActions, useStoreState } from '../hooks';
-import '../css/cardLayout.css';
-import type { GridPosition } from "../interfaces/GridPosition";
-
+import { useStoreActions, useStoreState } from '../../hooks';
+import '../../css/cardLayout.css';
+import type { GridPosition } from "../../interfaces/GridPosition";
+import GuideGrid from './GuideGrid';
 
 export const CardGrid = (): JSX.Element => {
   const rows = 3;
@@ -108,6 +108,7 @@ export const CardGrid = (): JSX.Element => {
               resizeHandles={["se"]}
               preventCollision={true}
               verticalCompact={true}
+              isBounded={true}
               onDragStart={(
                 layout,
                 oldItem,
@@ -116,26 +117,32 @@ export const CardGrid = (): JSX.Element => {
                 e,
                 element
               ) => {
+                console.log(oldItem);
+                console.log(newItem);
+                console.log(e);
                 const previousStyle = element.style;
                 previousStyle.border = "2px solid cyan";
                 element.style.border = "4px solid cyan";
               }}
-              // onDragEnd={(
-              //   layout,
-              //   oldItem,
-              //   newItem,
-              //   placeholder,
-              //   e,
-              //   element
-              // ) => {
-              //   const previousStyle = element.style;
-              //   previousStyle.border = "2px solid cyan";
-              //   element.style.border = "4px solid cyan";
-              // }}
+              onDragStop={(
+                layout,
+                oldItem,
+                newItem,
+                placeholder,
+                e,
+                element
+              ) => {
+                console.log(oldItem);
+                console.log(newItem);
+                // const previousStyle = element.style;
+                // previousStyle.border = "2px solid cyan";
+                // element.style.border = "4px solid cyan";
+              }}
               onDrop={(layout, item, e) => {
                 console.log(layout, item, e);
               }}
               onLayoutChange={(l) => {
+                console.log(l);
                 const newLayout: Layouts = {
                   lg: l,
                   md: l,
@@ -197,7 +204,8 @@ export const CardGrid = (): JSX.Element => {
           zIndex: 0,
         }}
       >
-        {filledLayout ? (
+        <GuideGrid layout={filledLayout} gridSettings={sharedGridSettings} cards = {placeholderCards}></GuideGrid>
+        {/* {filledLayout ? (
           <ResponsiveGridLayout
             {...sharedGridSettings}
             className="card-layout"
@@ -228,7 +236,7 @@ export const CardGrid = (): JSX.Element => {
           </ResponsiveGridLayout>
         ) : (
           <div className={"centered-flex"}>not loaded</div>
-        )}
+        )} */}
       </div>
     </div>
   );
