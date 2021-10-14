@@ -3,20 +3,7 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
-:root {
-  --radius: 0.5em;
-  --shadow: 0 8px 32px 0 rgba(49, 49, 49, 0.37);
-  --inactive: rgb(169 169 169 / 52%);
-  --modal-background: rgb(0, 0, 0, 0.1);
-  --success: green;
-  --inactive-pattern: repeating-linear-gradient(
-    45deg,
-    rgba(169, 169, 169, 0.493),
-    rgba(169, 169, 169, 0.493) 5px,
-    #46529800 5px,
-    #46529800 20px
-  );
-}
+
 #portal {
   z-index: 10;
 }
@@ -25,15 +12,8 @@ body {
   color: black;
   height: 100vh;
   width: 100vw;
-  /* background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  ); */
   background-color: gray;
   font-family: sans-serif;
-  /* overflow-y: hidden; */
   contain: layout;
   display: flex;
   justify-content: center;
@@ -45,18 +25,10 @@ body {
   height: 120vh;
 }
 
-.box {
-  border: 1px solid #f00;
-}
-
 .wrapper {
   border: 1px solid #000;
 }
-.div {
-  height: 100%;
-}
-
-/* REACT GRID LAYOUT */
+/* 
 .react-draggable {
   overflow: visible !important;
 }
@@ -108,11 +80,11 @@ body {
 .react-grid-item {
   display: flex;
   overflow: visible;
-}
+} */
 
-.react-grid-item div {
+/* .react-grid-item div {
   width: 100%;
-}
+} */
 
 .react-grid-item.react-grid-placeholder {
   background: green;

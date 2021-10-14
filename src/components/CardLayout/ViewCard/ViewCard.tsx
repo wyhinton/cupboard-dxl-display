@@ -22,6 +22,7 @@ import React, {
   FC,
   ReactElement,
   MouseEventHandler,
+  useEffect,
 } from "react";
 import type { HtmlPortalNode } from "react-reverse-portal";
 import {
@@ -56,7 +57,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   onClick,
 }: ViewCardProperties) => {
 
-  const elementReference = useRef<HTMLDivElement>(null);
+  const cardContainerRef = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [cardView, setCardView] = useState(CardView.GRID);
 
@@ -98,15 +99,7 @@ const ViewCard: FC<ViewCardProperties> = ({
     "card-child-container-grid": cardView === CardView.GRID,
   });
 
-  //generate a portal for each card
-  // const portalNode = React.useMemo(
-  //   () =>
-  //     createHtmlPortalNode({
-  //       // attributes: { class: portalNodeClass },
-  //     }),
-  //   []
-  // );
-
+  
   const portalNode = createHtmlPortalNode()
   const {enable, disable} = useKeyboardShortcut({
     keyCode: 27, //escape
@@ -129,7 +122,8 @@ const ViewCard: FC<ViewCardProperties> = ({
           setCardView(CardView.PREVIEW);
           break;
         case CardView.PREVIEW:
-          setCardView(CardView.FULL_SCREEN)
+          // setCardView(CardView.FULL_SCREEN)
+          // setC
           break;
         default:
           break;
@@ -164,13 +158,91 @@ const ViewCard: FC<ViewCardProperties> = ({
       }}/>
     }
   }
+  // const childPosition = () =>{
+  //   if(cardView === CardView.PREVIEW && data ){
+  //     setCard
+  // }
+  
+  const [cardPos, setCardPos] = useState([0, 0])
+  const [transform, setTransform] = useState("translate(0px, 0px)")
+  useEffect(()=>{
+    if(cardView == CardView.PREVIEW){
+      setCardPos([400, 100])
+
+    const boundingBox = cardContainerRef.current?.getBoundingClientRect()
+    if (boundingBox){
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const vw = window.innerWidth/100;
+      const vh = window.innerWidth/100; 
+      const futureWidth = vw * 60; 
+      const futureHeight = vh * 40;
+
+      const centeredX = (windowWidth/2)-(futureWidth/2);
+      // const centeredX = (windowWidth/2)-(boundingBox.width/2);
+      const centeredY = (windowHeight/2)-(futureHeight/2);
+
+
+
+      const currentX = boundingBox.x;
+      const currentY = boundingBox.y;
+      let differenceX = centeredX - currentX;
+      let differenceY = centeredY - currentY;
+
+      if (currentX > centeredX){
+          console.log("WAS FURTHER");
+          differenceX = currentX - centeredX
+          differenceX *= -1;
+      }
+      if (currentY > centeredY){
+          console.log("WAS FURTHER");
+          differenceY = currentY- centeredY
+          differenceY *= -1;
+      }
+      const parentParent = cardContainerRef.current?.parentElement?.parentElement;
+      if (parentParent){
+        console.log(parentParent.style.transform);
+        parentParent.style.zIndex = "1";
+      }
+      console.log(`window width: ${windowWidth}, currentX: ${currentX}, centeredX: ${centeredX}, difference ${differenceX}`);
+  
+
+      const transform = `translate(${differenceX}px, ${differenceY}px)`
+      setTransform(transform)
+      console.log(transform);
+    }
+
+  }
+  if(cardView === CardView.GRID){
+    const transform = `translate(${0}px, ${0}px)`
+    setTransform(transform)
+    const parentParent = cardContainerRef.current?.parentElement?.parentElement;
+    if (parentParent){
+      console.log(parentParent.style.transform);
+      parentParent.style.zIndex = "0";
+    }
+  }
+  // if(cardView === CardView.GRID){
+  //   const transform = `translate(${0}px, ${0}px)`
+  //   setTransform(transform)
+  //   const parentParent = cardContainerRef.current?.parentElement?.parentElement;
+  //   if (parentParent){
+  //     console.log(parentParent.style.transform);
+  //     parentParent.style.zIndex = "0";
+  //   }
+  // }
+
+  },[cardView])
+
+  
+  
 
   return (
     //receives a drag objects
     <div
       className={cardClass}
-      style={{ height: "100%" }}
-      ref={elementReference}
+      style={{ height: "100%", transform: transform }}
+      ref={cardContainerRef}
     >
       {data?.failed ? (
         <FailureNotice errors={data.validator.errorMessages()} />
@@ -228,7 +300,8 @@ const setOutPutNode = (
     isActive
   ) {
     console.log("passed");
-    return <Modal text={"hello"} portal={node} mode={view}></Modal>;
+    // return <Modal text={"hello"} portal={node} mode={view}></Modal>;
+    return <OutPortal node={node}></OutPortal>;
   } else {
     console.log("did not pass");
     return <OutPortal node={node}></OutPortal>;

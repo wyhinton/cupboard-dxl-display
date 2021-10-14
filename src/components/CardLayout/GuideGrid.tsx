@@ -37,6 +37,7 @@ export const GuideGrid = ({cards, gridSettings, layout}:{ cards: string[], gridS
                     key={index}
                     droppableId={p}
                     cardType={DndTypes.PLACEHOLDER}
+                    className = {"droppable-guide"}
                   >
                     <ViewCard
                       key={p}

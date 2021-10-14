@@ -37,7 +37,6 @@ const IFrameView: FC<IFrameViewProperties> = ({card, src,  }) => {
     "iframe-container-hidden": !valid,
   });
   //TODO: Fix or remove card error handling
-  // const registerCardLoadFailure = useStoreActions((actions) => actions.appModel.registerCardLoadFailure);
   
   const iframeStyle = {
     width: "100%",

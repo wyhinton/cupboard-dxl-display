@@ -1,8 +1,25 @@
 @font-face {
     font-family: 'Satoshi-Regular';
     src:  url('./fonts/Satoshi-Regular.ttf') format('truetype')
+    
 }
 
 *{
     /* font-family: Satoshi-Regular; */
+}
+
+:root{
+    --theme-primary: white; 
+    --radius: 0.5em;
+    --shadow: 0 8px 32px 0 rgba(49, 49, 49, 0.37);
+    --inactive: rgb(169 169 169 / 52%);
+    --modal-background: rgb(0, 0, 0, 0.1);
+    --success: green;
+    --inactive-pattern: repeating-linear-gradient(
+      45deg,
+      rgba(169, 169, 169, 0.493),
+      rgba(169, 169, 169, 0.493) 5px,
+      #46529800 5px,
+      #46529800 20px
+    );
 }

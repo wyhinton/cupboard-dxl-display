@@ -19,6 +19,7 @@ import {
   } from 'react-grid-layout';
 import { useStoreActions, useStoreState } from '../../hooks';
 import '../../css/cardLayout.css';
+import '../../css/libs/reactDraggable.css';
 import type { GridPosition } from "../../interfaces/GridPosition";
 import GuideGrid from './GuideGrid';
 
@@ -165,6 +166,7 @@ export const CardGrid = (): JSX.Element => {
                 key={index}
                 droppableId={card.sourceId}
                 cardType={DndTypes.IFRAME}
+                className = {"droppable-card"}
               >
                 <ViewCard
                   cardType={DndTypes.IFRAME}

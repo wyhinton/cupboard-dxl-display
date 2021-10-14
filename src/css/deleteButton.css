@@ -1,0 +1,15 @@
+.delete-button-container {
+    position: absolute;
+    top: -1em;
+    left: -1em;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    z-index: 100;
+    background: white;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }

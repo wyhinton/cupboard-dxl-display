@@ -22,7 +22,8 @@ export interface LayoutsModel {
   externalLayouts: LayoutData[];
   bufferLayout: Layouts;
   tempLayout: Layouts;
-  
+  defaultLayoutName: string;
+
   //listeners
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
   onToggleViewModeListener: ThunkOn<LayoutsModel, never, StoreModel>;
@@ -45,6 +46,7 @@ export interface LayoutsModel {
 const layoutsModel: LayoutsModel = {
   //state
   activeLayout: undefined,
+  defaultLayoutName: "Full Grid 1",
   externalLayouts: [],
   bufferLayout: defaultLayouts,
   tempLayout: defaultLayouts,
@@ -54,19 +56,18 @@ const layoutsModel: LayoutsModel = {
   onSetAppGoogleSheetData: thunkOn(
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
-    (actions, target) => {
+    (actions, target, {getState}) => {
       //extract only the needed properties from the GoogleSheetRow
       target.payload.getSheetRows<RawLayoutRow>(SheetNames.LAYOUTS).then(rows=>{
         console.log(rows);
         const rawLayoutRows = rows;
         const layouts = rawLayoutRows.map((l) => new LayoutData(l));
-        const defaultLayout = layouts[0];
-        // const bufferLayout = layouts[0]
+        const defaultLayout = layouts.filter(layout=>layout.title === getState().defaultLayoutName)[0]
         if (defaultLayout) {
           actions.setActiveLayout(defaultLayout);
         }
         actions.setExternalLayouts(layouts);
-        actions.setBufferLayout(layouts[0].layout);
+        actions.setBufferLayout(layouts.filter(layout=>layout.title === getState().defaultLayoutName)[0].layout);
       })
     }
   ),
