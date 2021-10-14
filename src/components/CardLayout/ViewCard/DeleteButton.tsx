@@ -1,6 +1,6 @@
 import React from "react";
 import "../../../css/deleteButton.css";
-import { DeleteIcon, ButtonAppearance } from "evergreen-ui";
+import { DeleteIcon } from "evergreen-ui";
 
 interface DeleteButtonProperties {
     onClick: React.MouseEventHandler<HTMLDivElement>;

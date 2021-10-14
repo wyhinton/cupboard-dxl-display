@@ -1,40 +1,20 @@
-import Button from '../../Shared/Button';
-import React from 'react';
-import { ButtonAppearance, CogIcon } from 'evergreen-ui';
-import '../../../css/viewCard.css';
+import React, { useRef } from "react";
+import "../../../css/card/settingsButton.css";
+import { CogIcon, Popover } from "evergreen-ui";
+import SettingsMenu from "./SettingsMenu"
 
-interface DeleteButtonProperties {
-    onClick: React.MouseEventHandler<HTMLDivElement>;
-  }
-  
-
-const SettingsButton = ({ onClick }: DeleteButtonProperties): JSX.Element => {
-    const deleteButtonStyle = {
-      position: "absolute",
-      top: "-1em",
-      left: "-1em",
-    } as React.CSSProperties;
-  
-    const subContStyle = {
-      position: "absolute",
-      left: -8,
-    } as React.CSSProperties;
-    
+const SettingsButton = ({ onClick }: {onClick?: React.MouseEventHandler<HTMLDivElement>;}): JSX.Element => {
+     const target = useRef()
     return (
       <div
-        style={deleteButtonStyle}
-        className="delete-button-container"
-        onMouseUp={onClick}
+        className="settings-button-container"
+        // onMouseUp={onClick}
       >
-        <div style={subContStyle}>
-          <Button
-            onClick={onClick}
-            text={""}
-            width={80}
-            height={40}
-            appearance={"danger" as ButtonAppearance}
-            iconBefore={<CogIcon size={30} />}
-          ></Button>
+        <div
+        //   onClick={onClick}
+        style={{display: "flex"}}>
+          <CogIcon size={15} />
+          
         </div>
       </div>
     );

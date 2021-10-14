@@ -3,6 +3,7 @@ import CardData from '../../../data_structs/CardData';
 import CardInfo from './CardInfo';
 import classNames from 'classnames';
 import DeleteButton from './DeleteButton';
+import SettingsButton from './SettingsButton';
 import Modal from '../../Modal';
 import {
   AppMode,
@@ -10,10 +11,10 @@ import {
   DndTypes,
   InteractionType
   } from '../../../enums';
-import { InlineAlert } from 'evergreen-ui';
+import { InlineAlert, Popover } from 'evergreen-ui';
 import { Component } from 'evergreen-ui/node_modules/@types/react';
 import { Layouts } from 'react-grid-layout';
-import { useKeyboardShortcut, useStoreActions, useStoreState } from '../../../hooks';
+import { useKeyboardShortcut, useStoreActions, useStoreState, useToggle } from '../../../hooks';
 import '../../../css/viewCard.css';
 import React, {
   PropsWithChildren,
@@ -30,6 +31,7 @@ import {
   InPortal,
   OutPortal,
 } from "react-reverse-portal";
+import SettingsMenu from "./SettingsMenu"
 
 interface ViewCardProperties {
   cardType: DndTypes;
@@ -60,7 +62,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   const cardContainerRef = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [cardView, setCardView] = useState(CardView.GRID);
-
+  const [showMenu, toggleMenu] = useToggle(false)
   const deleteCardAction = useStoreActions(
     (actions) => actions.layoutsModel.deleteCard
   );
@@ -133,12 +135,20 @@ const ViewCard: FC<ViewCardProperties> = ({
 
   const showDeleteButton = (): JSX.Element | undefined  =>{
     if (    appModeState == AppMode.EDIT && data ){
-      return       <DeleteButton
+      return(       
+        <>
+      <DeleteButton
       onClick={() => {
         console.log("got delete button click");
         deleteCardAction(data);
-      }}
-    />
+      }} />
+                    <Popover content = {<SettingsMenu/>}>
+                  <SettingsButton/>
+              </Popover>
+
+      </>
+      )
+   
     }
   }
   const renderCardInfo = (): JSX.Element | undefined  =>{
@@ -260,6 +270,7 @@ const ViewCard: FC<ViewCardProperties> = ({
                 }
               }}
             >
+
               {renderInternals()}
               {children}
             </div>

@@ -1,0 +1,17 @@
+.settings-button-container {
+    position: absolute;
+    /* top: -2em; */
+    bottom: 40%;
+    left: 0;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    z-index: 100;
+    background: white;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    transform: translate(-50%, 0px);
+  }
