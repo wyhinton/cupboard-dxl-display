@@ -1,13 +1,19 @@
 .card-layout {
   width: 100%;
   height: 100%;
-  /* display: none; */
 }
+
+.card-grid-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
 /* Prevent any interactions with the card if it's failed when in display mode */
 .card-container-hidden{
   display: none !important;
 }
 
-/* .card-container-error{
-  outline: 1px solid red;
-} */

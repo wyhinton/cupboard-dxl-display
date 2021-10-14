@@ -18,16 +18,10 @@
   color: white;
   border-radius: 0.5em;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  /* display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px; */
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 0.1fr 1.2fr;
   gap: 0px 0px;
-  /* height: calc(100vh - 10px); */
   grid-auto-flow: row;
   grid-template-areas:
     "header"
@@ -35,7 +29,7 @@
 }
 
 .editor-panel-full {
-  width: 30vw;
+  width: 500px;
   height: 500px;
 }
 .editor-panel-minimized {

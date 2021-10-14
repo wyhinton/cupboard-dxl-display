@@ -1,3 +1,20 @@
+import Button from '../../Shared/Button';
+import CardData from '../../../data_structs/CardData';
+import CardInfo from './CardInfo';
+import classNames from 'classnames';
+import DeleteButton from './DeleteButton';
+import Modal from '../../Modal';
+import {
+  AppMode,
+  CardView,
+  DndTypes,
+  InteractionType
+  } from '../../../enums';
+import { InlineAlert } from 'evergreen-ui';
+import { Component } from 'evergreen-ui/node_modules/@types/react';
+import { Layouts } from 'react-grid-layout';
+import { useKeyboardShortcut, useStoreActions, useStoreState } from '../../../hooks';
+import '../../../css/viewCard.css';
 import React, {
   PropsWithChildren,
   useState,
@@ -6,24 +23,12 @@ import React, {
   ReactElement,
   MouseEventHandler,
 } from "react";
-import CardInfo from "./CardInfo";
-import CardData from "../../../data_structs/CardData";
-import { useStoreState, useStoreActions, useKeyboardShortcut } from "../../../hooks";
-import { CardView, DndTypes, AppMode, InteractionType } from "../../../enums";
-import classNames from "classnames";
-import "../../../css/viewCard.css";
-import Modal from "../../Modal";
 import type { HtmlPortalNode } from "react-reverse-portal";
-import { Component } from "evergreen-ui/node_modules/@types/react";
-import { DeleteIcon, ButtonAppearance, InlineAlert } from "evergreen-ui";
-import Button from "../../Shared/Button";
-import DeleteButton from "./DeleteButton"
 import {
   createHtmlPortalNode,
   InPortal,
   OutPortal,
 } from "react-reverse-portal";
-import { Layouts } from "react-grid-layout";
 
 interface ViewCardProperties {
   cardType: DndTypes;
@@ -54,7 +59,6 @@ const ViewCard: FC<ViewCardProperties> = ({
   const elementReference = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [cardView, setCardView] = useState(CardView.GRID);
-  const testRefCardView = useRef(CardView.GRID)
 
   const deleteCardAction = useStoreActions(
     (actions) => actions.layoutsModel.deleteCard
@@ -133,6 +137,34 @@ const ViewCard: FC<ViewCardProperties> = ({
     }
   };
 
+  const showDeleteButton = (): JSX.Element | undefined  =>{
+    if (    appModeState == AppMode.EDIT && data ){
+      return       <DeleteButton
+      onClick={() => {
+        console.log("got delete button click");
+        deleteCardAction(data);
+      }}
+    />
+    }
+  }
+  const renderCardInfo = (): JSX.Element | undefined  =>{
+    if(cardView === CardView.PREVIEW && data ){
+        return <CardInfo data={data} className={cardInfoClass} />
+    }
+  }
+
+  const renderInternals = () =>{
+    return [showDeleteButton(), renderCardInfo()]
+  }
+
+  const renderReturnButton = (): JSX.Element | undefined =>{
+    if (cardView === CardView.FULL_SCREEN){
+      return       <ReturnButton  onClick={() => {
+        setCardView(CardView.GRID);
+      }}/>
+    }
+  }
+
   return (
     //receives a drag objects
     <div
@@ -146,13 +178,9 @@ const ViewCard: FC<ViewCardProperties> = ({
         <InPortal node={portalNode}>
           <div
             className={cardModalBackdrop}
-            onClick={(e) => {
-              onCardPress()
-            }}
           >
             <div
               className={cardChildContainer}
-              //click the card to enter preview/fullscreen mode
               onMouseUp={() => {
                 onCardPress();
                 if (onClick) {
@@ -160,44 +188,10 @@ const ViewCard: FC<ViewCardProperties> = ({
                 }
               }}
             >
-
-              {
-                cardView === CardView.PREVIEW && data ? (
-                  <CardInfo data={data} className={cardInfoClass} />
-                ) : (
-                  <></>
-                )
-              }
-              {
-                //Only show layout editing controls when in edit mode and if card carries data (is not static)
-                appModeState == AppMode.EDIT && data ? (
-                  <DeleteButton
-                    onClick={() => {
-                      console.log("got delete button click");
-                      deleteCardAction(data);
-                    }}
-                  />
-                ) : (
-                  <></>
-                )
-              }
-
-              {
-                //Don't render children of the clock widget when in edit mode
-                appModeState == AppMode.EDIT && cardType == DndTypes.CLOCK ? (
-                  <></>
-                ) : (
-                  children
-                )
-              }
+              {renderInternals()}
+              {children}
             </div>
-            {cardView === CardView.FULL_SCREEN ? (
-              <ReturnButton  onClick={() => {
-                setCardView(CardView.GRID);
-              }}/>
-            ) : (
-              <></>
-            )}
+              {renderReturnButton()}
           </div>
 
         </InPortal>
@@ -240,12 +234,6 @@ const setOutPutNode = (
     return <OutPortal node={node}></OutPortal>;
   }
 };
-
-interface DeleteButtonProperties {
-  onClick: React.MouseEventHandler<HTMLDivElement>;
-}
-
-
 
 const FailureNotice = ({ errors }: { errors: string[] }): JSX.Element => {
   return (
