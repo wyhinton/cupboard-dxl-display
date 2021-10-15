@@ -1,27 +1,17 @@
-import CardData from '../../data_structs/CardData';
-import Clock from '../Clock';
-import defaultLayouts from '../../static/defaultLayouts';
-import IFrameView from '../IFrameView';
-import IXDrop from '../IXDrop';
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-  } from 'react';
-import ViewCard from './ViewCard/ViewCard';
-import { AppMode, DndTypes } from '../../enums';
-import {
-  Layout,
-  Layouts,
-  Responsive,
-  WidthProvider
-  } from 'react-grid-layout';
-import { useStoreActions, useStoreState } from '../../hooks';
-import '../../css/cardLayout.css';
-import '../../css/libs/reactDraggable.css';
+import CardData from "../../data_structs/CardData";
+import Clock from "../Clock";
+import defaultLayouts from "../../static/defaultLayouts";
+import IFrameView from "../IFrameView";
+import IXDrop from "../IXDrop";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import ViewCard from "./ViewCard/ViewCard";
+import { AppMode, DndTypes } from "../../enums";
+import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
+import { useStoreActions, useStoreState } from "../../hooks";
+import "../../css/cardLayout.css";
+import "../../css/libs/reactDraggable.css";
 import type { GridPosition } from "../../interfaces/GridPosition";
-import GuideGrid from './GuideGrid';
+import GuideGrid from "./GuideGrid";
 
 export const CardGrid = (): JSX.Element => {
   const rows = 3;
@@ -80,8 +70,7 @@ export const CardGrid = (): JSX.Element => {
       localLayout.current = currentLayoutState?.layout;
     }
   }, [activeCards, currentLayoutState]);
-  useEffect(()=>{},[realLayout])
-
+  useEffect(() => {}, [realLayout]);
 
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
@@ -94,114 +83,114 @@ export const CardGrid = (): JSX.Element => {
 
   return (
     <div>
-      <div
-        className = "card-grid-container"
-      >
+      <div className="card-grid-container">
         <ResponsiveGridLayout
-        {...sharedGridSettings}
-        className="card-layout"
-        layouts={realLayout}
-        resizeHandles={["se"]}
-        preventCollision={true}
-        verticalCompact={true}
-        isBounded={true}
-        onDragStart={(
-          layout,
-          oldItem,
-          newItem,
-          placeholder,
-          e,
-          element
-        ) => {
-          console.log(oldItem);
-          console.log(newItem);
-          console.log(e);
-          const previousStyle = element.style;
-          previousStyle.border = "2px solid cyan";
-          element.style.border = "4px solid cyan";
-        }}
-        onDragStop={(
-          layout,
-          oldItem,
-          newItem,
-          placeholder,
-          e,
-          element
-        ) => {
-          console.log(oldItem);
-          console.log(newItem);
-          // const previousStyle = element.style;
-          // previousStyle.border = "2px solid cyan";
-          // element.style.border = "4px solid cyan";
-        }}
-        onLayoutChange={(l) => {
-          console.log(l);
-          const newLayout: Layouts = {
-            lg: l,
-            md: l,
-            sm: l,
-            xs: l,
-            xxs: l,
-          };
-          localLayout.current = newLayout;
-          setBufferLayoutAction(localLayout.current);
-        }}
-        isDraggable={isEditMode}
-        isResizable={isEditMode}
-      >
-        <div key={"clock"}>
-          <ViewCard cardType={DndTypes.CLOCK} onClick = {()=>{console.log("clock clicked");}}>
-            <Clock />
-          </ViewCard>
-        </div>
-
-        {activeCards.map((card: CardData, index: number) => {
-          return (
-            <div
-              key={card.sourceId}
-              draggable={true}
-              className = {cardContainerClass(card, viewModeState)}
+          {...sharedGridSettings}
+          className="card-layout"
+          layouts={realLayout}
+          resizeHandles={["se"]}
+          preventCollision={true}
+          verticalCompact={true}
+          isBounded={true}
+          onDragStart={(layout, oldItem, newItem, placeholder, e, element) => {
+            console.log(oldItem);
+            console.log(newItem);
+            console.log(e);
+            const previousStyle = element.style;
+            previousStyle.border = "2px solid cyan";
+            element.style.border = "4px solid cyan";
+          }}
+          onDragStop={(layout, oldItem, newItem, placeholder, e, element) => {
+            console.log(oldItem);
+            console.log(newItem);
+            // const previousStyle = element.style;
+            // previousStyle.border = "2px solid cyan";
+            // element.style.border = "4px solid cyan";
+          }}
+          onLayoutChange={(l) => {
+            console.log(l);
+            const newLayout: Layouts = {
+              lg: l,
+              md: l,
+              sm: l,
+              xs: l,
+              xxs: l,
+            };
+            localLayout.current = newLayout;
+            setBufferLayoutAction(localLayout.current);
+          }}
+          isDraggable={isEditMode}
+          isResizable={isEditMode}
+        >
+          <div key={"clock"}>
+            <ViewCard
+              cardType={DndTypes.CLOCK}
+              onClick={() => {
+                console.log("clock clicked");
+              }}
             >
-              <IXDrop
-                key={index}
-                droppableId={card.sourceId}
-                cardType={DndTypes.IFRAME}
-                className = {"droppable-card"}
+              {(scale) => {
+                return <Clock />;
+              }}
+            </ViewCard>
+          </div>
+
+          {activeCards.map((card: CardData, index: number) => {
+            return (
+              <div
+                key={card.sourceId}
+                draggable={true}
+                className={cardContainerClass(card, viewModeState)}
               >
-                <ViewCard
+                <IXDrop
+                  key={index}
+                  droppableId={card.sourceId}
                   cardType={DndTypes.IFRAME}
-                  data={card}
-                  key={index.toString()}
-                  cardId={index.toString()}
-                  onClick={() => {
-                    activeKeyReference.current = index.toString();
-                  }}
-                  activeKey={activeKeyReference}
+                  className={"droppable-card"}
                 >
-                  <IFrameView card = {card} src={card.src} />
-                </ViewCard>
-              </IXDrop>
-            </div>
-          );
-        })}
-      </ResponsiveGridLayout>
+                  <ViewCard
+                    cardType={DndTypes.IFRAME}
+                    data={card}
+                    key={index.toString()}
+                    cardId={index.toString()}
+                    onClick={() => {
+                      activeKeyReference.current = index.toString();
+                    }}
+                    activeKey={activeKeyReference}
+                  >
+                    {(scale) => {
+                      return (
+                        <IFrameView card={card} src={card.src} scale={scale} />
+                      );
+                    }}
+                    {/* <IFrameView card = {card} src={card.src} /> */}
+                  </ViewCard>
+                </IXDrop>
+              </div>
+            );
+          })}
+        </ResponsiveGridLayout>
       </div>
-        <GuideGrid layout={filledLayout} gridSettings={sharedGridSettings} cards = {placeholderCards}></GuideGrid>
+      <GuideGrid
+        layout={filledLayout}
+        gridSettings={sharedGridSettings}
+        cards={placeholderCards}
+      ></GuideGrid>
     </div>
   );
 };
 export default React.memo(CardGrid);
 
-const cardContainerClass =(card: CardData, appMode: AppMode): string=>{
-    const isFailed = card.failed;
-    if(isFailed && appMode === AppMode.DISPLAY){
-      return "card-container-hidden"
-    } else if (isFailed && appMode === AppMode.EDIT){
-      return "card-container-error"
-    } else {
-      return "card-container"
-    }
-}
+const cardContainerClass = (card: CardData, appMode: AppMode): string => {
+  const isFailed = card.failed;
+  if (isFailed && appMode === AppMode.DISPLAY) {
+    return "card-container-hidden";
+  } else if (isFailed && appMode === AppMode.EDIT) {
+    return "card-container-error";
+  } else {
+    return "card-container";
+  }
+};
 
 function generateFilledLayout(rows: number, cols: number): Layouts {
   const allGridSpots: GridPosition[] = [];

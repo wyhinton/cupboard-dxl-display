@@ -13,6 +13,7 @@ import React, {
   MouseEventHandler,
   PropsWithChildren,
   ReactElement,
+  ReactNode,
   RefObject,
   useRef,
   useState,
@@ -45,16 +46,6 @@ import {
   useLocalStore,
 } from "easy-peasy";
 
-interface ViewCardProperties {
-  cardType: DndTypes;
-  children?: React.ReactElement[] | React.ReactElement;
-  activeKey?: React.MutableRefObject<string>;
-  cardId?: string;
-  dataGrid?: Layouts;
-  layoutRef?: React.MutableRefObject<Layouts | null>;
-  data?: CardData;
-  onClick?: () => void;
-}
 /**
  * Wraps each of the cards in the card layouts, regardless of what type of card it is. T
  * Click causes the component to render to the modal view, and clicking out of that modal view sets the target
@@ -72,6 +63,21 @@ export interface CardModel {
   cardClass: Computed<CardModel, string>;
   cardInfoClass: Computed<CardModel, string>;
   handleCardPress: Thunk<CardModel>;
+}
+
+interface ChildProps extends Pick<CardModel, "scale"> {
+  [key: string]: any;
+}
+
+interface ViewCardProperties {
+  cardType: DndTypes;
+  children?: (scale: number) => ReactNode;
+  activeKey?: React.MutableRefObject<string>;
+  cardId?: string;
+  dataGrid?: Layouts;
+  layoutRef?: React.MutableRefObject<Layouts | null>;
+  data?: CardData;
+  onClick?: () => void;
 }
 
 const ViewCard: FC<ViewCardProperties> = ({
@@ -260,22 +266,22 @@ const ViewCard: FC<ViewCardProperties> = ({
     // Checking isValidElement is the safe way and avoids a typescript
     // error too.
     const { scale } = state;
+    // <>{children(scale)}</>
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { scale });
     }
-    return child;
+    // return child;
   });
+
   return (
     //receives a drag objects
     <div
       className={state.cardClass}
-      // className={cardClass}
       style={{
         willChange: "transform",
         height: "100%",
         transform: state.transform,
       }}
-      // style={{ willChange: "transform", height: "100%", transform: transform }}
       ref={cardContainerRef}
     >
       {data?.failed ? (
@@ -292,8 +298,10 @@ const ViewCard: FC<ViewCardProperties> = ({
               }
             }}
           >
-            {renderInternals()}
-            {children}
+            {/* {renderInternals()} */}
+            {children(state.scale)}
+            {/* {React.c} */}
+            {/* {childrenWithProps} */}
             <SettingsMenu {...settingsMenuProperties} isShown={showMenu} />
           </div>
           {renderReturnButton()}
