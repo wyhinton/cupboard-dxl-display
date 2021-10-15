@@ -281,37 +281,23 @@ const ViewCard: FC<ViewCardProperties> = ({
       {data?.failed ? (
         <FailureNotice errors={data.validator.errorMessages()} />
       ) : children ? (
-        <InPortal node={portalNode}>
-          <div className={cardModalBackdrop}>
-            <div
-              className={cardChildContainer}
-              onMouseUp={() => {
-                actions.handleCardPress();
-                // onCardPress();
-                if (onClick) {
-                  onClick();
-                }
-              }}
-            >
-              {renderInternals()}
-              {children}
-              <SettingsMenu {...settingsMenuProperties} isShown={showMenu} />
-            </div>
-            {renderReturnButton()}
+        <div className={cardModalBackdrop}>
+          <div
+            className={cardChildContainer}
+            onMouseUp={() => {
+              actions.handleCardPress();
+              // onCardPress();
+              if (onClick) {
+                onClick();
+              }
+            }}
+          >
+            {renderInternals()}
+            {children}
+            <SettingsMenu {...settingsMenuProperties} isShown={showMenu} />
           </div>
-        </InPortal>
-      ) : (
-        <></>
-      )}
-
-      {children && !data?.failed ? (
-        setOutPutNode(
-          childrenWithProps,
-          // children,
-          oldCardView,
-          portalNode,
-          activeKey?.current == cardId
-        )
+          {renderReturnButton()}
+        </div>
       ) : (
         <></>
       )}
@@ -359,25 +345,6 @@ const setGpZindex = (
   }
 };
 //depending on the view state of the card, change its html output node
-const setOutPutNode = (
-  chil: ReactElement | ReactElement[],
-  view: CardView,
-  node: HtmlPortalNode<Component<any>>,
-  isActive: boolean
-): ReactElement => {
-  //if in preview mode or full screen mode render card to the portal
-  if (
-    (view === CardView.PREVIEW || view === CardView.FULL_SCREEN) &&
-    isActive
-  ) {
-    console.log("passed");
-    // return <Modal text={"hello"} portal={node} mode={view}></Modal>;
-    return <OutPortal node={node}></OutPortal>;
-  } else {
-    console.log("did not pass");
-    return <OutPortal node={node}></OutPortal>;
-  }
-};
 
 const FailureNotice = ({ errors }: { errors: string[] }): JSX.Element => {
   return (
