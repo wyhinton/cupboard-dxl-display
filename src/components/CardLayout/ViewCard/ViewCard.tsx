@@ -65,10 +65,6 @@ export interface CardModel {
   handleCardPress: Thunk<CardModel>;
 }
 
-interface ChildProps extends Pick<CardModel, "scale"> {
-  [key: string]: any;
-}
-
 interface ViewCardProperties {
   cardType: DndTypes;
   children?: (scale: number) => ReactNode;
@@ -262,16 +258,6 @@ const ViewCard: FC<ViewCardProperties> = ({
     }
   };
 
-  const childrenWithProps = React.Children.map(children, (child) => {
-    // Checking isValidElement is the safe way and avoids a typescript
-    // error too.
-    const { scale } = state;
-    // <>{children(scale)}</>
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { scale });
-    }
-    // return child;
-  });
 
   return (
     //receives a drag objects
@@ -301,7 +287,6 @@ const ViewCard: FC<ViewCardProperties> = ({
             {/* {renderInternals()} */}
             {children(state.scale)}
             {/* {React.c} */}
-            {/* {childrenWithProps} */}
             <SettingsMenu {...settingsMenuProperties} isShown={showMenu} />
           </div>
           {renderReturnButton()}
