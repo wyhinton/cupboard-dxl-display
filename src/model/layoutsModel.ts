@@ -72,8 +72,8 @@ const layoutsModel: LayoutsModel = {
     }
   ),
   onToggleViewModeListener: thunkOn(
-    // targetResolver:
-    (actions, storeActions) => storeActions.appModel.toggleViewMode,
+    // targetResolver:toggleAppMode
+    (actions, storeActions) => storeActions.appModel.toggleAppMode,
     // handler:
     (actions, target, { getState, getStoreState }) => {
       console.log(

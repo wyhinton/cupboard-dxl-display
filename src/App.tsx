@@ -10,9 +10,10 @@ import EditorPanel from "./components/EditorPanel/EditorPanel";
 import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import { GridPosition } from "./interfaces/GridPosition";
 import HowToUse from "./components/HowToUse";
-import { DragSource } from "./enums";
+import { AppMode, DragSource } from "./enums";
 import Pulsar from "./components/Shared/Pulsar";
 import ModeChangeButton from "./components/ModeChangeButton";
+import { useIdle } from "react-use";
 
 
 /**
@@ -21,10 +22,11 @@ import ModeChangeButton from "./components/ModeChangeButton";
  */
 
 const App = (): JSX.Element => {
-  const toggleViewModeThunk = useStoreActions(
-    (actions) => actions.appModel.toggleViewMode
-  );
+  const isIdle = useIdle(5000, false);
 
+  const toggleAppModeThunk = useStoreActions(
+    (actions) => actions.appModel.toggleAppMode
+  );
   const fetchCardDataGoogleSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchAppGoogleSheet
   );
@@ -34,17 +36,27 @@ const App = (): JSX.Element => {
   const cardAddAction = useStoreActions(
     (actions) => actions.layoutsModel.addCard
   );
-  const setActiveLayout = useStoreActions(
+  const setActiveLayoutAction = useStoreActions(
     (actions) => actions.layoutsModel.setActiveLayout
   );
-  const allLayouts = useStoreState(
+  const externalLayoutsState = useStoreState(
     (state) => state.layoutsModel.externalLayouts
   );
+  const appModeState = useStoreState(
+    (state) => state.appModel.appMode
+  );
+
+  useEffect(()=>{
+    if (appModeState === AppMode.EDIT){
+      toggleAppModeThunk()
+    }
+  },[isIdle])
+
 
   //F4 TO TRANSITION MODE
   const {enable, disable} = useKeyboardShortcut({
     keyCode: 115,
-    action: ()=>{toggleViewModeThunk()},
+    action: ()=>{toggleAppModeThunk()},
     disabled: false 
   })
   
@@ -112,13 +124,14 @@ const App = (): JSX.Element => {
         }
         break;
       case DragSource.LAYOUT_TABLE:
+        console.log("dragged ");
         console.log("dragged from the layout table!");
         setIsDraggingLayout(false);
-        const newLayout = allLayouts.filter((l) => l.id === draggableId)[0];
+        const newLayout = externalLayoutsState.filter((l) => l.id === draggableId)[0];
         console.log(draggableId);
-        console.log(allLayouts);
+        console.log(externalLayoutsState);
         console.log(newLayout);
-        setActiveLayout(newLayout);
+        setActiveLayoutAction(newLayout);
         break;
       default:
         console.log("got unkown drag source");
@@ -135,10 +148,8 @@ const App = (): JSX.Element => {
         <ModeChangeButton/>
         <DragDropContext
           onBeforeDragStart={(e) => {
-            console.log(e);
             const { source } = e;
             if (source.droppableId === DragSource.LAYOUT_TABLE) {
-              console.log("setting is dragging layout");
               setIsDraggingLayout(true);
             }
           }}
