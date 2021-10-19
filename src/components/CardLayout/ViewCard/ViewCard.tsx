@@ -57,6 +57,8 @@ export interface CardModel {
   showMenu: boolean;
   cardType: DndTypes;
   scale: number;
+  cardBackgroundColor: string;
+  setBackgroundColor: Action<CardModel, string>;
   setScale: Action<CardModel, number>;
   transform: Computed<CardModel, string>;
   setCardView: Action<CardModel, CardView>;
@@ -101,6 +103,10 @@ const ViewCard: FC<ViewCardProperties> = ({
       scale: 1.0,
       setScale: action((state, scale) => {
         state.scale += scale;
+      }),
+      cardBackgroundColor: "",
+      setBackgroundColor: action((state, color) => {
+        state.cardBackgroundColor = color
       }),
       transform: computed([(state) => state.cardView], (cardView) => {
         if (cardView == CardView.PREVIEW) {

@@ -1,17 +1,17 @@
-import React from "react";
-import "../../../css/card/settingsMenu.css";
+import Button from '../../Shared/Button';
+import React from 'react';
+import SettingsButton from './SettingsButton';
+import { ActionCreator, Actions } from 'easy-peasy';
+import { CardModel } from './ViewCard';
+import '../../../css/card/settingsMenu.css';
 import {
-  Popover,
-  IconButton,
   ChevronLeftIcon,
   ChevronRightIcon,
   TextInput,
 } from "evergreen-ui";
-import { CardModel } from "./ViewCard";
-import SettingsButton from "./SettingsButton";
-import { ActionCreator, Actions } from "easy-peasy";
-import Button from "../../Shared/Button";
-interface SettingsMenuProps extends Pick<Actions<CardModel>, "setScale"> {
+import {ChromePicker} from "react-color";
+
+interface SettingsMenuProperties extends Pick<Actions<CardModel>, "setScale" | "setBackgroundColor"> {
   isShown: boolean;
   scale: number;
 }
@@ -19,8 +19,10 @@ interface SettingsMenuProps extends Pick<Actions<CardModel>, "setScale"> {
 const SettingsMenu = ({
   isShown,
   setScale,
+  setBackgroundColor,
   scale,
-}: SettingsMenuProps): JSX.Element => {
+}: SettingsMenuProperties): JSX.Element => {
+
   const menuStyle = {
     width: "230px",
     height: "300px",
@@ -34,6 +36,7 @@ const SettingsMenu = ({
 
   return (
     <div style={menuStyle}>
+        <ChromePicker onChangeComplete={(col, event)=>{setBackgroundColor(col.hex)}}/>
       <ScaleControls setScale={setScale} scale={scale} />
     </div>
   );

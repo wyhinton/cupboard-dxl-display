@@ -36,6 +36,7 @@ module.exports = {
 
       return babelLoaderOptions;
     },
+    plugins:["macros"]
   },
   // if you want to track react-redux selectors
   webpack: {
