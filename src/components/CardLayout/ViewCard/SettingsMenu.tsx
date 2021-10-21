@@ -1,5 +1,5 @@
 import Button from '../../Shared/Button';
-import React from 'react';
+import React, { useRef } from 'react';
 import SettingsButton from './SettingsButton';
 import { ActionCreator, Actions } from 'easy-peasy';
 import { CardModel } from './ViewCard';
@@ -9,9 +9,10 @@ import {
   ChevronRightIcon,
   TextInput,
 } from "evergreen-ui";
-import {ChromePicker} from "react-color";
+// import {useOnClickOutside } from "crooks"
+import {useOnClickOutside} from "../../../hooks"
 
-interface SettingsMenuProperties extends Pick<Actions<CardModel>, "setScale" | "setBackgroundColor"> {
+interface SettingsMenuProperties extends Pick<Actions<CardModel>, "setScale" | "setBackgroundColor" | "setShowMenu"> {
   isShown: boolean;
   scale: number;
 }
@@ -20,27 +21,45 @@ const SettingsMenu = ({
   isShown,
   setScale,
   setBackgroundColor,
+  setShowMenu,
   scale,
+  
 }: SettingsMenuProperties): JSX.Element => {
-
+  const onOutside = () =>{console.log("got click outisde");}
+  const menuRef = useRef(null)
+  const handleClickOutside = useOnClickOutside(menuRef, ()=>{setShowMenu(false)})
   const menuStyle = {
-    width: "230px",
-    height: "300px",
-    position: "absolute",
-    left: "-250px",
-    backgroundColor: "red",
     display: isShown ? "flex" : "none",
-    top: "50%",
-    zIndex: 100,
   } as React.CSSProperties;
 
   return (
-    <div style={menuStyle}>
-        <ChromePicker onChangeComplete={(col, event)=>{setBackgroundColor(col.hex)}}/>
-      <ScaleControls setScale={setScale} scale={scale} />
+    <div ref = {menuRef} className ={"menu-container"} style={menuStyle} {...handleClickOutside}>
+        <InputRow title = {"Background Color:"
+        }>
+       <input
+        className="nodrag"
+        type="color"
+        onChange={(e)=>{setBackgroundColor(e.target.value)}}
+      />
+        </InputRow>
+
+        <InputRow title = {"Scale: "}>
+        <ScaleControls setScale={setScale} scale={scale} />
+        </InputRow>
     </div>
   );
 };
+
+const InputRow = ({title, children}:{title: string, children: JSX.Element | JSX.Element[]}): JSX.Element=>{
+    return (
+        <>
+        <div className={"menu-input-row"}>
+            {title}
+            {children}
+        </div>
+        </>
+    )
+}
 
 const ScaleControls = ({
   setScale,
@@ -53,6 +72,7 @@ const ScaleControls = ({
     <div className={"scale-controls-grid"}>
       <Button
         width={20}
+        height = {20}
         containerClass={"scale-controls-left"}
         // className={"scale-controls-left"}
         iconBefore={<ChevronLeftIcon size={30} />}
@@ -61,12 +81,16 @@ const ScaleControls = ({
         }}
         // style={{ width: "fill-available" }}
       />
-      <TextInput
-        className={"scale-controls-input"}
+      {/* <TextInput
+        // width = {20}
+        // className={"scale-controls-input"}
+
         placeholder={scale.toString()}
-      />
+      /> */}
+      <input type="text" style ={{width: 30}}value = {scale.toString().slice(0, 3)}/>
       <Button
         width={20}
+        height = {20}
         containerClass={"scale-controls-right"}
         // className={"scale-controls-right"}
         iconBefore={<ChevronRightIcon size={30} />}

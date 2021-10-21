@@ -22,4 +22,9 @@
       #46529800 5px,
       #46529800 20px
     );
+    --ui-bg: #2d2d2d;
+    --ui-border: black;
+    --ui-text: white; 
+    --ui-radius: 0.5em;
+    --ui-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }

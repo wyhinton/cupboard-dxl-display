@@ -4,8 +4,15 @@
 [![Framework: React](https://badges.aleen42.com/src/react.svg)](https://badges.aleen42.com/src/react.svg)
 
 
-# D.H. Hill Touch Display Web App
-A large interactive NEC V864Q 86”display with infrared touch screen that: 1) presents a collection of interactive and non-interactive data and visualization media to DXL patrons and 2) serves as a presentation tool for impromptu gatherings. (For fall of 2020 all content for the screen will be static on a slide deck, due the COVID 19 response)
+# Cuboard
+Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard allows you to curate and design attractive masonry grids for touch displays. Types of content you can display include iframes, videos, and images. Cuboard is designed to be lightweight as possible, and requires no dedicated backend. See [Set Up](#Set Up) for details.
+
+
+# Features
+- Proven, scalable, and easy to understand project structure
+- Written in modern React, only functional components with hooks 
+- A variety of custom light-weight UI components such as datepicker, modal, various form elements etc
+- State management with easy-peasy
 
 # Live Demo
 - https://iframeprototype-83a96.web.app/
@@ -262,7 +269,10 @@ Provides jsdoc-to-markdown with a template format.
 
 **Example**  
 ```js
-const my_url = "https://www.youtube.com/embed/tgbNymZ7vqY";return( <IFrameView src = {my_url}/>)
+const my_url = "https://www.youtube.com/embed/tgbNymZ7vqY";
+return(
+ <IFrameView src = {my_url}/>
+)
 ```
 <a name="Toolbar"></a>
 

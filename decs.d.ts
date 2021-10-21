@@ -1,1 +1,1 @@
-declare module "react-drag-and-dock";
+declare module "crooks"

@@ -55,6 +55,8 @@ import {
 export interface CardModel {
   cardView: CardView;
   showMenu: boolean;
+  setShowMenu: Action<CardModel, boolean>;
+  toggleMenu: Action<CardModel>;
   cardType: DndTypes;
   scale: number;
   cardBackgroundColor: string;
@@ -121,6 +123,12 @@ const ViewCard: FC<ViewCardProperties> = ({
         }
         return `translate(${0}px, ${0}px)`;
       }),
+      setShowMenu: action((state, show) => {
+        state.showMenu = show;
+      }),
+      toggleMenu: action((state) => {
+        state.showMenu = !state.showMenu;
+      }),
       showMenu: false,
       cardType: cardType,
       cardClass: computed([(state) => state.cardView], (cardView) => {
@@ -171,12 +179,9 @@ const ViewCard: FC<ViewCardProperties> = ({
   const settingsMenuProperties = {
     scale: state.scale,
     setScale: actions.setScale,
+    setBackgroundColor: actions.setBackgroundColor,
+    setShowMenu: actions.setShowMenu
   };
-
-  const portalNodeClass = classNames("portal-node", {
-    "portal-node-preview": oldCardView === CardView.PREVIEW,
-    "portal-node-fullscreen": oldCardView === CardView.FULL_SCREEN,
-  });
 
   const cardModalBackdrop = classNames("card-modal-backdrop", {
     "card-modal-backdrop-active":
@@ -190,7 +195,6 @@ const ViewCard: FC<ViewCardProperties> = ({
     "card-child-container-grid": state.cardView === CardView.GRID,
   });
 
-  const portalNode = createHtmlPortalNode();
   const { enable, disable } = useKeyboardShortcut({
     keyCode: 27, //escape
     action: () => {
@@ -234,7 +238,8 @@ const ViewCard: FC<ViewCardProperties> = ({
           />
           <SettingsButton
             onClick={(e) => {
-              toggleMenu();
+              // toggleMenu();
+              actions.toggleMenu()
             }}
           />
         </>
@@ -273,6 +278,7 @@ const ViewCard: FC<ViewCardProperties> = ({
         willChange: "transform",
         height: "100%",
         transform: state.transform,
+        backgroundColor: state.cardBackgroundColor,
       }}
       ref={cardContainerRef}
     >
@@ -290,10 +296,10 @@ const ViewCard: FC<ViewCardProperties> = ({
               }
             }}
           >
-            {/* {renderInternals()} */}
+            {renderInternals()}
             {children(state.scale)}
             {/* {React.c} */}
-            <SettingsMenu {...settingsMenuProperties} isShown={showMenu} />
+            <SettingsMenu {...settingsMenuProperties} isShown={state.showMenu} />
           </div>
           {renderReturnButton()}
         </div>

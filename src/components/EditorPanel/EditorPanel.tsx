@@ -1,12 +1,8 @@
 import React, { useState, FC } from "react";
 import Draggable from "react-draggable";
 import ReactDom from "react-dom";
-import DragAndDock from "react-drag-and-dock";
 import Editor from "./Editor";
 import {
-  Heading,
-  FullscreenIcon,
-  MinimizeIcon,
   PlusIcon,
   MinusIcon,
 } from "evergreen-ui";

@@ -3,7 +3,7 @@ interface AppConfig{
 }
 
 const appConfig: AppConfig = {
-    idleTime: 10000000,
+    idleTime: process.env.NODE_ENV === "development"?100000000:10000000
 }
 
 export default appConfig

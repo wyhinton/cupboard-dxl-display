@@ -1,10 +1,32 @@
+.menu-container{
+  width: 230px;
+  height: fit-content;
+  position: absolute;
+  left: 0px;
+  background-color: var(--ui-bg);
+  color: var(--ui-text);
+  border: var(--ui-radius);
+  padding: .25em;
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-shadow);
+  top: 50%;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.menu-input-row{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ui-border)
+}
+
 .scale-controls-grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  width: 40%;
+  display: flex;
+  /* grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(5, 1fr);
   grid-column-gap: 0px;
-  grid-row-gap: 0px;
+  grid-row-gap: 0px; */
 }
 
 .scale-controls-left {

@@ -14,7 +14,7 @@ import { AppMode, DragSource } from "./enums";
 import Pulsar from "./components/Shared/Pulsar";
 import ModeChangeButton from "./components/ModeChangeButton";
 import { useIdle } from "react-use";
-
+import appConfig from "./static/appConfig";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
@@ -22,7 +22,7 @@ import { useIdle } from "react-use";
  */
 
 const App = (): JSX.Element => {
-  const isIdle = useIdle(5000, false);
+  const isIdle = useIdle(appConfig.idleTime, false);
 
   const toggleAppModeThunk = useStoreActions(
     (actions) => actions.appModel.toggleAppMode
