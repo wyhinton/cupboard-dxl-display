@@ -8,7 +8,9 @@
 
 
 # Cuboard
-Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard is meant to be as a starting point for your display app project. Out of the box, Cuboard allows you to curate and design attractive masonry grids for displays. Each card in the grid can display an iframe, video, or image. 
+**Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard is meant to be as a starting point for your display app project.** 
+
+Out of the box, Cuboard allows you to curate and design attractive masonry grids for displays. Each card in the grid can display an iframe, video, or image. 
 
 Your Cuboard content is provided 100% client side by your Google Sheet, so need for a custom sever or database. Within the apps editor mode, drag and drop your content into the grid, and resize them as desired. 
 

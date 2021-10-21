@@ -1,7 +1,6 @@
 import React, { useState, useEffect, FC } from "react";
 import LayoutTable from "./LayoutTable";
 import formEmbedUrl from "../../../../static/formEmbedUrl";
-import Collapsible from "react-collapsible";
 import {
   Menu,
   ClipboardIcon,
