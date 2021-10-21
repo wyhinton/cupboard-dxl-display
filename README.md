@@ -51,20 +51,6 @@ const appConfig: AppConfig = {
 export default appConfig
 ```
 
-
-
-# Table of Contents
-- [Quick Start](#quick-start)
-- [Dev Environment](#dev-environment)
-  - [Chrome Plugins](#chrome-plugins)
-  - [VSCode](#vs-code)
-  - [CLIs](#clis)
-- [Available Scripts](#available-scripts)
-- [Components](#components)
-- [Configs](#configs)
-- [Documentation](#documentation)
-- [Libraries](#libraries)
-
 # Quick Start
 
 1. Clone the repository and change directory.
@@ -86,75 +72,13 @@ yarn install
 yarn start
 ```
 
-# Dev Environment
-## Chrome Plugins 
+### Dev Environment 
+When developing your Cuboard, we suggest the following plugins:
+
+### Chrome Plugins 
 - [Redux DevTool](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) - for debugging application's state
 - [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en) - inspect the React component hierarchies 
-## VSCode
-- TBD
-## CLIs 
-- git
-- yarn
 
-# Available Scripts
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn doc`
-Outputs a README.md via the jsdoc-to-markdown package. See [Documentation](#documentation) for more information.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-# Configs
-## Typescript
-### ```tsconfig.json```
-Describes the settings type script compiler with use for the project. This projects tsconfig is the default one geneated by ```npx create-react-app my-app --template typescript```. For a full list of settings see [this page](https://www.typescriptlang.org/tsconfig) from the official typescript docs. 
-### ```decs.d.ts```
-Describe the shape of JavaScript values to the TypeScript compiler. Or put another way, it is the way to describe, (usually in an external file), the types present in an external JavaScript code. Allows us to use javascript libaries which lack type definitions.
-## Firebase
-### ```firebase.json```
-Configuration options for our firebase project. Notably the ```public``` is set to our ```build``` folder rather than ```public```. We need to build our project with ```yarn build``` if we want our deployment to update with changes from our ```src```.
-### ```.firebaserc```
-Specifies the deploy target for our app, in this case, my personal project in my personal firebase account, "studentmapdisplay".
-## Eslint
-### ```.eslintrc```
-- TBD
-### ```.eslintignore```
-- TBD
-## JSDoc
-### ```jsdoc.conf.json```
-Configures jsdoc settings.
-### ```README_TEMPLATE.hbs```
-Provides jsdoc-to-markdown with a template format. 
 
 # Libraries
 - [react-use](https://github.com/streamich/react-use#readme) - Provides useful hooks for event handling like ```useIdle``` and ```useLongPress```
