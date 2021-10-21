@@ -12,7 +12,7 @@ Cuboard is an open source content-sharing app built with touch screens in mind. 
 
 Your Cuboard content is provided 100% client side by your Google Sheet, so need for a custom sever or database. Within the apps editor mode, drag and drop your content into the grid, and resize them as desired. 
 
- Once you're satisfied, push new layouts to your Google Sheet via an embedded google form. See [Backend Setup](#backend-setup) for details on setting up your sheet and form. Cuboard is made with React + Typescript. 
+ Once you're satisfied, push new layouts to your Google Sheet via an embedded google form. Drag and drop layouts to switch between them, or use Cycle mode to switch between them at a custom interval. See [Backend Setup](#backend-setup) for details on setting up your sheet and form. Cuboard is made with React + Typescript. 
 
 # Live Demo
 - https://iframeprototype-83a96.web.app/

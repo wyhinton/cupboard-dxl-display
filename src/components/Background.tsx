@@ -1,4 +1,3 @@
-import Particles from 'react-particles-js';
 import React, { useEffect, useState } from 'react';
 import { AppMode } from '../enums';
 import { useStoreState } from '../hooks';
