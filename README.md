@@ -4,15 +4,47 @@
 [![Framework: React](https://badges.aleen42.com/src/react.svg)](https://badges.aleen42.com/src/react.svg)
 
 
+![Cuboard](.github/Cuboard_Logo.svg)
+
+
 # Cuboard
-Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard allows you to curate and design attractive masonry grids for touch displays. Types of content you can display include iframes, videos, and images. Cuboard is designed to be lightweight as possible, and requires no dedicated backend. See [Set Up](#Set Up) for details.
+Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard allows you to curate and design attractive masonry grids for touch displays. Types of content you can display include iframes, videos, and images. Cuboard is designed to be lightweight as possible, and requires no dedicated backend. See [Backend Setup](#backend-setup) for details.
 
 
 # Features
 - Proven, scalable, and easy to understand project structure
 - Written in modern React, only functional components with hooks 
-- A variety of custom light-weight UI components such as datepicker, modal, various form elements etc
-- State management with easy-peasy
+- Centralized and easy to debug state management with easy-peasy
+
+# Backend Setup
+To set up your custom backend, just follow these steps:
+
+## Setup a Google Sheet for your Content
+This sheet will store the list of available content to use in your display. Cuboard will fetch this sheet. 
+1. Create a copy of [this template google sheet](https://docs.google.com/spreadsheets/d/1BR1AQ5Zmt_o_0dOm9AvDht0G3Q6RXQUhX71Vi4H7tTU/edit?usp=sharing)
+2. In your new sheet, got to File>Publish to Web. Select "Entire Document" and "Comma-seperated values (.csv)". 
+3. Hit the "Share" button, make sure permissions are set to "Anyone with link", then hit "Copy Link" and 
+
+
+## Setup a Google Form for adding New Layouts
+This form allows you to push new layouts to a google sheet. 
+1. Create a copy of [this google form](https://docs.google.com/forms/d/1Y2621OA3qI_Cv-Tf5zZvlV0pzVQWq2XUi90odYThzeY/edit?usp=sharing). 
+2. Go to Responses, then click the Google Sheets Icon to connect the from to the Google Sheet. 
+3. Select the sheet you created in Part 1. 
+
+## Add From Links to appConfig.ts
+Now connect the app to your form and sheet by supplying the links to ```static/appConfig.ts```:
+
+```typescript
+const appConfig: AppConfig = {
+    idleTime: process.env.NODE_ENV === "development"?100000000:10000000,
+    sheetLink: YOUR_SHEET_LINK,
+    formLink: YOUR_FORM_LINK,
+}
+
+export default appConfig
+```
+
 
 # Live Demo
 - https://iframeprototype-83a96.web.app/
