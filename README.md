@@ -8,8 +8,14 @@
 
 
 # Cuboard
-Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard allows you to curate and design attractive masonry grids for touch displays. Types of content you can display include iframes, videos, and images. Cuboard is designed to be lightweight as possible, and requires no dedicated backend. See [Backend Setup](#backend-setup) for details.
+Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard allows you to curate and design attractive masonry grids for displays. Types of content you can display include iframes, videos, and images, just provide a link to the source and Cuboard will take care of appropriately resizing it. 
 
+Your Cuboard content is provided 100% client side by your Google Sheet, so need for a custom sever or database. Within the apps editor mode, drag and drop your content into the grid, and resize them as desired. 
+
+ Once you're satisfied, push new layouts to your Google Sheet via an embedded google form. See [Backend Setup](#backend-setup) for details on setting up your sheet and form. Cuboard is made with React + Typescript. 
+
+# Live Demo
+- https://iframeprototype-83a96.web.app/
 
 # Features
 - Proven, scalable, and easy to understand project structure
@@ -46,8 +52,7 @@ export default appConfig
 ```
 
 
-# Live Demo
-- https://iframeprototype-83a96.web.app/
+
 # Table of Contents
 - [Quick Start](#quick-start)
 - [Dev Environment](#dev-environment)
@@ -166,161 +171,6 @@ Provides jsdoc-to-markdown with a template format.
 - [Five tips I wish I knew when I started with Typescript](https://codeburst.io/five-tips-i-wish-i-knew-when-i-started-with-typescript-c9e8609029db)
 - [Learn TypeScript #6, Advanced Classes](https://www.youtube.com/watch?v=OaxeCPWTdcA)
 # Components
-
-## Classes
-
-<dl>
-<dt><a href="#Background">Background</a></dt>
-<dd></dd>
-<dt><a href="#Button">Button</a></dt>
-<dd></dd>
-<dt><a href="#CardInfo">CardInfo</a></dt>
-<dd></dd>
-<dt><a href="#ViewCard">ViewCard</a></dt>
-<dd></dd>
-<dt><a href="#CardGrid">CardGrid</a></dt>
-<dd></dd>
-<dt><a href="#Clock">Clock</a></dt>
-<dd></dd>
-<dt><a href="#DropDownMenu">DropDownMenu</a></dt>
-<dd></dd>
-<dt><a href="#IFrameView">IFrameView</a></dt>
-<dd></dd>
-<dt><a href="#Toolbar">Toolbar</a></dt>
-<dd></dd>
-</dl>
-
-## Interfaces
-
-<dl>
-<dt><a href="#AppDataModel">AppDataModel</a></dt>
-<dd><p>Core app model</p></dd>
-</dl>
-
-<a name="AppDataModel"></a>
-
-## AppDataModel
-<p>Core app model</p>
-
-**Kind**: global interface  
-
-|  |
-|
-| 
-
-<a name="Background"></a>
-
-## Background
-**Kind**: global class  
-**Component**:   
-<a name="new_Background_new"></a>
-
-### new Background()
-<p>Background with particle animation.</p>
-
-<a name="Button"></a>
-
-## Button
-**Kind**: global class  
-**Component**:   
-<a name="new_Button_new"></a>
-
-### new Button()
-<p>Wraps an Evergreen UI Button.</p>
-
-<a name="CardInfo"></a>
-
-## CardInfo
-**Kind**: global class  
-**Component**:   
-<a name="new_CardInfo_new"></a>
-
-### new CardInfo()
-<p>Formats text from a CardData object, including it's title and source url.</p>
-
-<a name="ViewCard"></a>
-
-## ViewCard
-**Kind**: global class  
-**Component**:   
-<a name="new_ViewCard_new"></a>
-
-### new ViewCard()
-<p>Wraps card content.</p>
-
-<a name="CardGrid"></a>
-
-## CardGrid
-**Kind**: global class  
-**Component**:   
-<a name="new_CardGrid_new"></a>
-
-### new exports.CardGrid()
-<p>Responsible for managing the layout of card components. Accesses a list of available card data from the store, then maps them into Card Components</p>
-<pre class="prettyprint source"><code> {availableCards.map((card: CardData, i: number) => {
-  console.log(i.toString());
-  return (
-  &lt;div key={i.toString()}>
-    &lt;ViewCard data={card} key={i.toString()}>
-      &lt;IFrameView src={rand&lt;string>(testSources)} />
-      &lt;/ViewCard>
-      &lt;/div>
-    );
-  })}
-</code></pre>
-
-<a name="Clock"></a>
-
-## Clock
-**Kind**: global class  
-**Component**:   
-<a name="new_Clock_new"></a>
-
-### new Clock()
-<p>Simple clock widget for displaying the current time.</p>
-
-<a name="DropDownMenu"></a>
-
-## DropDownMenu
-**Kind**: global class  
-**Component**:   
-<a name="new_DropDownMenu_new"></a>
-
-### new DropDownMenu()
-<p>Wraps an Evergreen UI DropDownMenu.</p>
-
-<a name="IFrameView"></a>
-
-## IFrameView
-**Kind**: global class  
-**Component**:   
-<a name="new_IFrameView_new"></a>
-
-### new IFrameView()
-<p>Minimal warpper for an <iframe>. Can be toggled between a full screen, active view, and a regular card view.</p>
-
-**Example**  
-```js
-const my_url = "https://www.youtube.com/embed/tgbNymZ7vqY";
-return(
- <IFrameView src = {my_url}/>
-)
-```
-<a name="Toolbar"></a>
-
-## Toolbar
-**Kind**: global class  
-**Component**:   
-<a name="new_Toolbar_new"></a>
-
-### new Toolbar()
-<p>Wraps navigation controls</p>
-
-
-* * *
-
-# Documentation
-
 
 
 
