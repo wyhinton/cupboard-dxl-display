@@ -29,7 +29,6 @@ const Background = (): JSX.Element => {
       backgroundColor: isEditMode ? "white" : "gray",
       transition: "background-color 0.5s ease",
     } as React.CSSProperties;
-    // console.log(viewMode);
     setBackgroundStyle(style);
   }, [viewMode]);
 
@@ -60,7 +59,6 @@ const Background = (): JSX.Element => {
         <BackgroundShader/>
         </div>
         <div className = "particle-container">
-        {/* <Particles /> */}
         </div>
         </div>
       )}
