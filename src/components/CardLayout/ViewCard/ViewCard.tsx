@@ -1,13 +1,10 @@
 import "../../../css/viewCard.css";
 
 import { AppMode, CardView, DndTypes, InteractionType } from "../../../enums";
-import {
-  InPortal,
-  OutPortal,
-  createHtmlPortalNode,
-} from "react-reverse-portal";
 import { InlineAlert, Position } from "evergreen-ui";
 // import { Popover } from "react-tiny-popover";
+
+
 import React, {
   FC,
   MouseEventHandler,
