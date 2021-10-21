@@ -27,7 +27,6 @@ import CardData from "../../../data_structs/CardData";
 import CardInfo from "./CardInfo";
 import { Component } from "evergreen-ui/node_modules/@types/react";
 import DeleteButton from "./DeleteButton";
-import type { HtmlPortalNode } from "react-reverse-portal";
 import { Layouts } from "react-grid-layout";
 import Modal from "../../Modal";
 import SettingsButton from "./SettingsButton";
