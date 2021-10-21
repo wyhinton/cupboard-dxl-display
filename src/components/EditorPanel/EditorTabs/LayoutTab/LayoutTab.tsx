@@ -2,15 +2,9 @@ import React, { useState, useEffect, FC } from "react";
 import LayoutTable from "./LayoutTable";
 import formEmbedUrl from "../../../../static/formEmbedUrl";
 import {
-  Menu,
-  ClipboardIcon,
-  CaretUpIcon,
-  CaretDownIcon,
-  InlineAlert,
   DocumentIcon,
 } from "evergreen-ui";
 import Button from "../../../Shared/Button";
-import classNames from "classnames";
 import GoogleFormPopup from "./GoogleFormPopup";
 import { useStoreState, useStoreActions } from "../../../../hooks";
 import Panel from "../../../Shared/Panel"; 

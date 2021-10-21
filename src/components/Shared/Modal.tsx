@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 //TODO: UNIFY MODAL CSS
 import "../../css/howToUse.css";
 import "../../css/popup.css";
-import classNames from "classnames";
 
 const Modal = ({
   children,

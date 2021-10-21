@@ -28,7 +28,6 @@ import CardInfo from "./CardInfo";
 import { Component } from "evergreen-ui/node_modules/@types/react";
 import DeleteButton from "./DeleteButton";
 import { Layouts } from "react-grid-layout";
-import Modal from "../../Modal";
 import SettingsButton from "./SettingsButton";
 import SettingsMenu from "./SettingsMenu";
 import classNames from "classnames";
