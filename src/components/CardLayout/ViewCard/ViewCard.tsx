@@ -42,9 +42,8 @@ import {
 } from "easy-peasy";
 
 /**
- * Wraps each of the cards in the card layouts, regardless of what type of card it is. T
- * Click causes the component to render to the modal view, and clicking out of that modal view sets the target
- * portal back to it's own div.
+ * Wraps each of the cards in the card layouts.
+ * Click/Touch => Change the cards view mode 
  * @component
  */
 export interface CardModel {

@@ -8,13 +8,13 @@
 
 
 # Cuboard
-**Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard is meant to be as a starting point for your display app project.** 
+**Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard is a starting point for your display app project.** 
 
-Out of the box, Cuboard allows you to curate and design attractive masonry grids for displays. Each card in the grid can display an iframe, video, or image. 
+Out of the box, Cuboard allows you to curate and design attractive masonry displays for digital signage. Load your content from links into a **Card**, then arrange cards to form a **Layout**. Select a layout from your layout collection, or cycle between layouts. 
 
-Your Cuboard content is provided 100% client side by your Google Sheet, so need for a custom sever or database. Within the apps editor mode, drag and drop your content into the grid, and resize them as desired. 
+Your cards and layouts are provided client side by a Google Sheet, while a Google Form Embed allows you to author and save new layouts. We've provided templates for both of these, and instruction on how to connect them to them to Cuboard. 
 
- Once you're satisfied, push new layouts to your Google Sheet via an embedded google form. Drag and drop layouts to switch between them, or use Cycle mode to switch between them at a custom interval. See [Backend Setup](#backend-setup) for details on setting up your sheet and form. Cuboard is made with React + Typescript. 
+Built with React and Typescript, Cuboard has a heavy focus on providing an excellent developer experience. Components and app structure are thoroughly documented, and a high level AppConfig gives you quick access to high level design choices. 
 
 # Live Demo
 - https://iframeprototype-83a96.web.app/
