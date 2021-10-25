@@ -14,7 +14,6 @@ import type RawCardRow from "../interfaces/RawCardRow";
 import { Layouts } from "react-grid-layout";
 import defaultGridLayout from "../static/defaultLayouts";
 import { AppMode, SheetNames } from "../enums";
-import History from "../data_structs/History";
 import { StoreModel } from "./index";
 /**
  * Core app model
@@ -26,14 +25,6 @@ export interface AppDataModel {
   activeCards: CardData[];
   currentLayout: Layouts;
   appMode: AppMode;
-  history: History;
-  // localStorageLayouts: any[];
-
-  //requests
-  // fetchGoogleSheet: Thunk<AppDataModel>;
-
-  //loaders
-  // loadLocalLayouts: Action<AppDataModel>;
 
   //listeners
   onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
@@ -47,16 +38,7 @@ export interface AppDataModel {
   setCurrentLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
-  registerCardLoadFailure: Thunk<AppDataModel, CardData, never, StoreModel>
-  //listeners
-  onUndoHistory: ThunkOn<AppDataModel, never, StoreModel>;
-  onRedoHistory: ThunkOn<AppDataModel, never, StoreModel>;
-
-  //clear
-  // clearLocalLayouts: Action<AppDataModel>;
-
-  //local storage
-  // saveLayoutLocal: Thunk<AppDataModel>;
+  registerCardLoadFailure: Thunk<AppDataModel, CardData, never, StoreModel>;
 }
 
 const appModel: AppDataModel = {
@@ -65,7 +47,6 @@ const appModel: AppDataModel = {
   activeCards: [],
   currentLayout: defaultGridLayout,
   appMode: AppMode.DISPLAY,
-  history: new History(),
   // localStorageLayouts: [],
 
   //managers
@@ -120,7 +101,6 @@ const appModel: AppDataModel = {
 
   //listeners
   onCardSheetLoadSuccess: thunkOn(
-    
     // targetResolver:
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
@@ -129,8 +109,7 @@ const appModel: AppDataModel = {
       console.log("TRIGGERD");
       // console.log("got on card sheet load success");
       console.log(target.payload);
-    target.payload.getSheetRows<RawCardRow>(SheetNames.CARDS).then((rows) =>
-      {
+      target.payload.getSheetRows<RawCardRow>(SheetNames.CARDS).then((rows) => {
         console.log(rows);
         const rawCardRowsArray = rows.map((row) => {
           return {
@@ -142,14 +121,12 @@ const appModel: AppDataModel = {
             interaction: row.interaction,
           } as RawCardRow;
         });
-        
+
         const cards = rawCardRowsArray.map((c: RawCardRow) => new CardData(c));
         console.log(cards);
         // actions.setActiveCards(cards)
-        actions.setAvailableCards(cards)
-      }
-      );
-
+        actions.setAvailableCards(cards);
+      });
     }
   ),
 
@@ -181,20 +158,22 @@ const appModel: AppDataModel = {
       // console.log(activeCards);
     }
   ),
-  registerCardLoadFailure: thunk((actions, failedCard, { getState, getStoreState }) => {
-    console.log("Got card Register Load Failure at Layouts Model");
-    console.log(failedCard);
-    const { activeCards } = getState();
-    const failedId = failedCard.sourceId;
-    let newCards = activeCards.map(c=>{
-      if (c.sourceId === failedId) {
-        console.log("found failed");
-        c.fail();
-      }
-      return c
-    })
-    actions.setActiveCards(newCards);
-  }),
+  registerCardLoadFailure: thunk(
+    (actions, failedCard, { getState, getStoreState }) => {
+      console.log("Got card Register Load Failure at Layouts Model");
+      console.log(failedCard);
+      const { activeCards } = getState();
+      const failedId = failedCard.sourceId;
+      let newCards = activeCards.map((c) => {
+        if (c.sourceId === failedId) {
+          console.log("found failed");
+          c.fail();
+        }
+        return c;
+      });
+      actions.setActiveCards(newCards);
+    }
+  ),
   onSwapCardContent: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.swapCardContent,
     async (actions, payload, { getState }) => {
@@ -218,46 +197,6 @@ const appModel: AppDataModel = {
       console.log(debug(payload));
     }
   ),
-
-  onUndoHistory: thunkOn(
-    (actions, storeActions) => storeActions.historyModel.setCurrentHistory,
-    async (actions, payload) => {
-      console.log("got undo");
-      console.log(payload.payload);
-      actions.setCurrentLayout(payload.payload);
-      console.log(debug(payload));
-    }
-  ),
-  onRedoHistory: thunkOn(
-    (actions, storeActions) => storeActions.historyModel.setCurrentHistory,
-    async (actions, payload) => {
-      console.log("got redo");
-      console.log(payload.payload);
-      actions.setCurrentLayout(payload.payload);
-      console.log(debug(payload));
-    }
-  ),
-  //local storage
-  // clearLocalLayouts: action((state) => {
-  //   localStorage.clear();
-  //   state.localStorageLayouts = [];
-  // }),
-  // loadLocalLayouts: action((state) => {
-  //   const layouts: any = Object.keys(localStorage)
-  //     .filter((k) => k.startsWith("curLayout"))
-  //     .map((k) => ({
-  //       name: k,
-  //       layout: JSON.parse(localStorage[k]) as Layout[],
-  //     }));
-  //   state.localStorageLayouts = layouts;
-  // }),
-  // saveLayoutLocal: thunk((actions, _, { getState }) => {
-  //   localStorage.setItem(
-  //     `curLayout_${localStorage.length}`,
-  //     JSON.stringify(getState().currentLayout)
-  //   );
-  //   actions.loadLocalLayouts();
-  // }),
 };
 
 export default appModel;

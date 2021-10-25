@@ -39,9 +39,13 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
   //TODO: Fix or remove card error handling
 
   const iframeStyle = {
-    width: "100%",
-    height: "100%",
+    // width: "100%",
+    // height: "100%",
     border: "none",
+    transform: `scale(${scale})`,
+    width: `${100 * (1 / scale)}%`,
+    height: `${100 * (1 / scale)}%`,
+    transformOrigin: "top left",
   } as React.CSSProperties;
 
   const iframeActive = {

@@ -4,7 +4,6 @@ import { AppMode, CardView, DndTypes, InteractionType } from "../../../enums";
 import { InlineAlert, Position } from "evergreen-ui";
 // import { Popover } from "react-tiny-popover";
 
-
 import React, {
   FC,
   MouseEventHandler,
@@ -40,37 +39,38 @@ import {
   thunk,
   useLocalStore,
 } from "easy-peasy";
+import appConfig from "../../../static/appConfig";
 
 /**
  * Wraps each of the cards in the card layouts.
- * Click/Touch => Change the cards view mode 
+ * Click/Touch => Change the cards view mode
  * @component
  */
 export interface CardModel {
-  cardView: CardView;
-  showMenu: boolean;
-  setShowMenu: Action<CardModel, boolean>;
-  toggleMenu: Action<CardModel>;
-  cardType: DndTypes;
-  scale: number;
   cardBackgroundColor: string;
-  setBackgroundColor: Action<CardModel, string>;
-  setScale: Action<CardModel, number>;
-  transform: Computed<CardModel, string>;
-  setCardView: Action<CardModel, CardView>;
   cardClass: Computed<CardModel, string>;
   cardInfoClass: Computed<CardModel, string>;
+  cardType: DndTypes;
+  cardView: CardView;
   handleCardPress: Thunk<CardModel>;
+  scale: number;
+  setBackgroundColor: Action<CardModel, string>;
+  setCardView: Action<CardModel, CardView>;
+  setScale: Action<CardModel, number>;
+  setShowMenu: Action<CardModel, boolean>;
+  showMenu: boolean;
+  toggleMenu: Action<CardModel>;
+  transform: Computed<CardModel, string>;
 }
 
 interface ViewCardProperties {
-  cardType: DndTypes;
-  children?: (scale: number) => ReactNode;
   activeKey?: React.MutableRefObject<string>;
   cardId?: string;
+  cardType: DndTypes;
+  children?: (scale: number) => ReactNode;
+  data?: CardData;
   dataGrid?: Layouts;
   layoutRef?: React.MutableRefObject<Layouts | null>;
-  data?: CardData;
   onClick?: () => void;
 }
 
@@ -96,13 +96,15 @@ const ViewCard: FC<ViewCardProperties> = ({
       setCardView: action((state, cardView) => {
         state.cardView = cardView;
       }),
-      scale: 1.0,
+      scale: data?.src.includes("embed")
+        ? appConfig.defaultEmbedScale
+        : appConfig.defaultIframeScale,
       setScale: action((state, scale) => {
         state.scale += scale;
       }),
       cardBackgroundColor: "",
       setBackgroundColor: action((state, color) => {
-        state.cardBackgroundColor = color
+        state.cardBackgroundColor = color;
       }),
       transform: computed([(state) => state.cardView], (cardView) => {
         if (cardView == CardView.PREVIEW) {
@@ -167,14 +169,17 @@ const ViewCard: FC<ViewCardProperties> = ({
         }
       }),
     }),
-    [appModeState]
+    [appModeState],
+    (s) => {
+      return { devTools: false };
+    }
   );
 
   const settingsMenuProperties = {
     scale: state.scale,
     setScale: actions.setScale,
     setBackgroundColor: actions.setBackgroundColor,
-    setShowMenu: actions.setShowMenu
+    setShowMenu: actions.setShowMenu,
   };
 
   const cardModalBackdrop = classNames("card-modal-backdrop", {
@@ -196,29 +201,11 @@ const ViewCard: FC<ViewCardProperties> = ({
         oldCardView === CardView.FULL_SCREEN ||
         oldCardView === CardView.PREVIEW
       ) {
-        console.log("WAS ONE!!!");
         setCardView(CardView.GRID);
       }
     },
     disabled: false,
   });
-
-  //change the view mode when pressing a card
-  // const onCardPress = (): void => {
-  //   console.log(data?.sourceId);
-  //   if (appModeState === AppMode.DISPLAY && cardId != undefined) {
-  //     switch (oldCardView) {
-  //       case CardView.GRID:
-  //         oldCardView;
-  //         setCardView(CardView.PREVIEW);
-  //         break;
-  //       case CardView.PREVIEW:
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   }
-  // };
 
   const showDeleteButton = (): JSX.Element | undefined => {
     if (appModeState == AppMode.EDIT && data) {
@@ -233,7 +220,7 @@ const ViewCard: FC<ViewCardProperties> = ({
           <SettingsButton
             onClick={(e) => {
               // toggleMenu();
-              actions.toggleMenu()
+              actions.toggleMenu();
             }}
           />
         </>
@@ -262,7 +249,6 @@ const ViewCard: FC<ViewCardProperties> = ({
       );
     }
   };
-
 
   return (
     //receives a drag objects
@@ -293,7 +279,10 @@ const ViewCard: FC<ViewCardProperties> = ({
             {renderInternals()}
             {children(state.scale)}
             {/* {React.c} */}
-            <SettingsMenu {...settingsMenuProperties} isShown={state.showMenu} />
+            <SettingsMenu
+              {...settingsMenuProperties}
+              isShown={state.showMenu}
+            />
           </div>
           {renderReturnButton()}
         </div>
