@@ -6,15 +6,7 @@ import { AppMode, SheetNames } from "../enums";
 import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
 import { Layouts } from "react-grid-layout";
 import { StoreModel } from "./index";
-import {
-  action,
-  thunk,
-  Thunk,
-  Action,
-  thunkOn,
-  ThunkOn,
-  debug,
-} from "easy-peasy";
+import { action, thunk, Thunk, Action, thunkOn, ThunkOn } from "easy-peasy";
 import appConfig from "../static/appConfig";
 
 export interface LayoutsModel {
@@ -55,12 +47,11 @@ const layoutsModel: LayoutsModel = {
   onSetAppGoogleSheetData: thunkOn(
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
-    (actions, target, { getState }) => {
+    (actions, target) => {
       //extract only the needed properties from the GoogleSheetRow
       target.payload
         .getSheetRows<RawLayoutRow>(SheetNames.LAYOUTS)
         .then((rows) => {
-          console.log(rows);
           const rawLayoutRows = rows;
           const layouts = rawLayoutRows.map((l) => new LayoutData(l));
           const defaultLayout = layouts.filter(
@@ -108,8 +99,6 @@ const layoutsModel: LayoutsModel = {
   //mutators
   swapCardContent: thunk(
     (actions, swapInfo, { getState, getStoreState, getStoreActions }) => {
-      const currentModel = getStoreState() as StoreModel;
-      // const activeCards = curModel.appModel.activeCards;
       const { activeLayout } = getState();
       if (activeLayout) {
         const buf = getState().bufferLayout;
@@ -122,11 +111,6 @@ const layoutsModel: LayoutsModel = {
   ),
   deleteCard: thunk(
     (actions, cardToDelete, { getState, getStoreState, getStoreActions }) => {
-      console.log("deleting card at layotus model");
-      console.log(cardToDelete);
-      // let buf = getState().bufferLayout;
-      const previousLayout = getState().activeLayout;
-      console.log("got here");
       const { activeLayout } = getState();
       if (activeLayout) {
         const buf = getState().bufferLayout;
@@ -137,57 +121,36 @@ const layoutsModel: LayoutsModel = {
     }
   ),
   addCard: thunk((actions, cardAddEvent, { getState, getStoreState }) => {
-    console.log("adding card");
-    console.log(cardAddEvent);
     const { availableCards } = getStoreState().appModel;
     const { sourceId, targetPosition } = cardAddEvent;
     const cardToAdd = availableCards.find((c) => c.sourceId == sourceId);
     const { activeLayout } = getState();
     if (activeLayout && cardToAdd) {
       const buf = getState().bufferLayout;
-      console.log(debug(buf));
       activeLayout.setGridLayout(buf);
       activeLayout?.addCard(cardToAdd, targetPosition);
       actions.setActiveLayout(activeLayout);
-      // actions.setBufferLayout(activeLayout.layout);
-      console.log(cardToAdd);
     }
   }),
   registerCardLoadFailure: thunk(
     (actions, failedCard, { getState, getStoreState }) => {
       console.log("Got card Register Load Failure at Layouts Model");
-      console.log(failedCard);
       const { activeLayout } = getState();
       if (activeLayout) {
         activeLayout.failCard(failedCard);
       }
-      // if (activeLayout && cardToAdd) {
-      //   const buf = getState().bufferLayout;
-      //   console.log(debug(buf));
-      //   activeLayout.setGridLayout(buf);
-      //   activeLayout?.addCard(cardToAdd, targetPosition);
-      //   actions.setActiveLayout(activeLayout);
-      //   // actions.setBufferLayout(activeLayout.layout);
-      //   console.log(cardToAdd);
-      // }
     }
   ),
   setBufferLayout: action((state, layouts) => {
-    console.log("setting buffer layout");
-    console.log(layouts);
     state.bufferLayout = layouts;
-    // state.tempLayout = layouts;
   }),
   setTempLayout: action((state, layouts) => {
-    console.log("setting buffer layout");
-    console.log(layouts);
     state.tempLayout = layouts;
   }),
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;
     if (old) {
       old.swapCard(swap);
-      console.log(old.layout);
       state.activeLayout = old;
     }
   }),
