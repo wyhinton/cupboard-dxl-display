@@ -1,5 +1,5 @@
-import CardData from './CardData';
-import { Layout, Layouts } from 'react-grid-layout';
+import CardData from "./CardData";
+import { Layout, Layouts } from "react-grid-layout";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import type { CardSwapEvent, CardAddEvent } from "../interfaces/CardEvents";
 import type { GridPosition } from "../interfaces/GridPosition";
@@ -15,11 +15,7 @@ export default class LayoutData {
     this.id = row.title + "_" + row.timestamp;
     this.title = row.title;
     this.author = row.author;
-    //7/26/2021 14:38:57
-    //7/26/2021
     this.added = new Date(row.timestamp.split(" ")[0]);
-    console.log(row);
-    console.log(row.layout);
     const startLayout: Layouts = JSON.parse(row.layout);
     this.layout = startLayout;
   }
@@ -37,11 +33,7 @@ export default class LayoutData {
     console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
-        // console.log(layoutVal);
         this.layout[k] = v.filter((l) => l.i !== toRemove.sourceId);
-        // if (layoutVal.i == toRemove.sourceId) {
-        //   console.log(layoutVal);
-        // }
       }
     }
   }
@@ -59,7 +51,7 @@ export default class LayoutData {
       this.layout[k].push(newItem);
     }
   }
-  failCard(toFail: CardData){
+  failCard(toFail: CardData) {
     console.log("FAILING CARD AT LAYOUT DATA");
     // console.log()
   }
@@ -115,5 +107,3 @@ function findFilledPositions(layouts: Layout[]): GridPosition[] {
   }
   return takenSpots;
 }
-
-

@@ -7,6 +7,8 @@ import IFrameValidator from "../IFrameValidator";
 import { useStoreState, useStoreActions } from "../hooks";
 import CardData from "../data_structs/CardData";
 import ReactPlayer from "react-player";
+import QRCode from "react-qr-code";
+import CardLayout from "./CardLayout/CardLayout";
 
 interface IFrameViewProperties {
   card: CardData;
@@ -53,6 +55,13 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
     height: "100%",
     border: "5px blue",
   } as React.CSSProperties;
+  const qrContainerStyle = {
+    width: "100%",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 10,
+  } as React.CSSProperties;
 
   return (
     <div
@@ -64,6 +73,9 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
       <div className={iframeOverlayClass}>
         <Loader type="Grid" color="white" height={80} width={80} />
       </div>
+      {/* <div style={qrContainerStyle}>
+        <QRCode value={card?.src ?? ""} />
+      </div> */}
       {isYouTubeVideo ? (
         <ResponsivePlayer
           src={src}

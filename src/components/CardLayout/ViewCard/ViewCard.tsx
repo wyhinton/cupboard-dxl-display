@@ -2,6 +2,7 @@ import "../../../css/viewCard.css";
 
 import { AppMode, CardView, DndTypes, InteractionType } from "../../../enums";
 import { InlineAlert, Position } from "evergreen-ui";
+
 // import { Popover } from "react-tiny-popover";
 
 import React, {
@@ -19,6 +20,7 @@ import {
   useStoreActions,
   useStoreState,
   useToggle,
+  useOnClickOutside,
 } from "../../../hooks";
 
 import Button from "../../Shared/Button";
@@ -40,7 +42,7 @@ import {
   useLocalStore,
 } from "easy-peasy";
 import appConfig from "../../../static/appConfig";
-
+import QRCode from "react-qr-code";
 /**
  * Wraps each of the cards in the card layouts.
  * Click/Touch => Change the cards view mode
@@ -130,7 +132,8 @@ const ViewCard: FC<ViewCardProperties> = ({
       cardClass: computed([(state) => state.cardView], (cardView) => {
         const test = classNames("card", {
           "card-edit": appModeState === AppMode.EDIT,
-          "card-display": appModeState === AppMode.DISPLAY,
+          "card-display":
+            appModeState === AppMode.DISPLAY && cardView == CardView.GRID,
           "card-preview": cardView === CardView.PREVIEW,
           "card-fullscreen": cardView === CardView.FULL_SCREEN,
           "card-empty": appModeState === AppMode.EDIT && !children,
@@ -150,18 +153,17 @@ const ViewCard: FC<ViewCardProperties> = ({
         });
       }),
       handleCardPress: thunk((actions, _, { getState }) => {
-        console.log("HANDLED PRESS");
+        // console.log("HANDLED PRESS");
         console.log(getState().cardClass);
-        console.log(appModeState);
+        // console.log(appModeState);
         if (appModeState === AppMode.DISPLAY && cardId != undefined) {
           switch (getState().cardView) {
             case CardView.GRID:
-              // cardView;
               actions.setCardView(CardView.PREVIEW);
+              console.log("SETTING CARD VIEW TO PREVIEW");
               break;
             case CardView.PREVIEW:
               actions.setCardView(CardView.GRID);
-              // actions.setCardView(CardView.FULL_SCREEN);
               break;
             default:
               break;
@@ -249,6 +251,33 @@ const ViewCard: FC<ViewCardProperties> = ({
       );
     }
   };
+  const containerRef = useRef(null);
+  useOnClickOutside(containerRef, () => {
+    if (state.cardView == CardView.PREVIEW) {
+      actions.setCardView(CardView.GRID);
+    }
+  });
+
+  const qrContainerStyle = {
+    width: "fit-content",
+    position: "absolute",
+    // top: 0,
+    bottom: 0,
+    // left: 0,
+    zIndex: 1,
+    right: 0,
+    transform: "translate(50%, 50%)",
+  } as React.CSSProperties;
+
+  const renderQrCode = (): JSX.Element | undefined => {
+    if (state.cardView === CardView.PREVIEW && data?.src) {
+      return (
+        <div style={qrContainerStyle}>
+          <QRCode value={data?.src ?? ""} size={128} />
+        </div>
+      );
+    }
+  };
 
   return (
     //receives a drag objects
@@ -268,6 +297,7 @@ const ViewCard: FC<ViewCardProperties> = ({
         <div className={cardModalBackdrop}>
           <div
             className={cardChildContainer}
+            ref={containerRef}
             onMouseUp={() => {
               actions.handleCardPress();
               // onCardPress();
@@ -276,9 +306,9 @@ const ViewCard: FC<ViewCardProperties> = ({
               }
             }}
           >
+            {renderQrCode()}
             {renderInternals()}
             {children(state.scale)}
-            {/* {React.c} */}
             <SettingsMenu
               {...settingsMenuProperties}
               isShown={state.showMenu}

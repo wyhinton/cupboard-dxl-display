@@ -49,14 +49,21 @@ const layoutsModel: LayoutsModel = {
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     (actions, target) => {
       //extract only the needed properties from the GoogleSheetRow
+      //TODO: ERROR HANDLING FOR LAYOUTS
       target.payload
         .getSheetRows<RawLayoutRow>(SheetNames.LAYOUTS)
         .then((rows) => {
+          console.log(
+            "GOT HEREGOT HEREGOT HEREGOT HEREGOT HEREGOT HEREGOT HERE"
+          );
           const rawLayoutRows = rows;
+
           const layouts = rawLayoutRows.map((l) => new LayoutData(l));
+          console.log(layouts);
           const defaultLayout = layouts.filter(
             (layout) => layout.title === appConfig.defaultLayoutName
           )[0];
+          console.log(defaultLayout);
           if (defaultLayout) {
             actions.setActiveLayout(defaultLayout);
           }

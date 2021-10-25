@@ -20,7 +20,8 @@ const appConfig: AppConfig = {
   formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1.0,
-  defaultLayoutName: "Data Charts 2",
+  //   defaultLayoutName: "Full Grid 1",
+  defaultLayoutName: "Data Charts",
 };
 
 export default appConfig;

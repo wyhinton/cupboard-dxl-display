@@ -13,9 +13,9 @@ export default class CardData {
   validator!: IFrameValidator;
   isActive!: boolean;
   failed!: boolean;
-  
+
   constructor(row: RawCardRow) {
-    console.log(`GOT IMAGE CARD ROW: ${isImgLink(row.src)}`);
+    // console.log(`GOT IMAGE CARD ROW: ${isImgLink(row.src)}`);
     this.src = row.src;
     this.title = row.title;
     this.added = new Date(row.added);
@@ -24,22 +24,23 @@ export default class CardData {
     this.interaction =
       InteractionType[row.interaction as keyof typeof InteractionType];
     this.isActive = false;
-    this.validator = new IFrameValidator(this.src)
-    this.failed = false; 
+    this.validator = new IFrameValidator(this.src);
+    this.failed = false;
   }
   setActive(b: boolean): void {
     this.isActive = b;
   }
 
-  fail(): void{
+  fail(): void {
     console.log(this.validator.errors);
-    this.failed = true; 
-    // this.error = 
+    this.failed = true;
+    // this.error =
   }
-  
 }
 
 function isImgLink(url: string) {
-  if(typeof url !== 'string') return false;
-  return(url.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gmi) != null);
+  if (typeof url !== "string") return false;
+  return (
+    url.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) != null
+  );
 }
