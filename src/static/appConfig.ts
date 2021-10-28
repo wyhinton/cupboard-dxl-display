@@ -11,6 +11,7 @@ interface AppConfig {
   defaultEmbedScale: number;
   //the default layout to display on page load;
   defaultLayoutName: string;
+  showModeSwitchButton: boolean; 
 }
 
 const appConfig: AppConfig = {
@@ -20,6 +21,7 @@ const appConfig: AppConfig = {
   formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1.0,
+  showModeSwitchButton: false,
   //   defaultLayoutName: "Full Grid 1",
   defaultLayoutName: "Data Charts",
 };
