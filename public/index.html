@@ -34,16 +34,29 @@
       left: 0;
       z-index: 10;
     }
+    #how-to-use-button{
+      position: absolute;
+      bottom: 0;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      height: 5vh;
+      /* background-color: red; */
+      z-index: 11;
+      padding: 1em;
+      pointer-events: none;
+    }
   </style>
-  <body>
+  <div>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id = "mode-change-button"></div>
     <div id ="background"></div>
     <div id="root"></div>
     <div style="z-index: 10" id="portal"></div>
-    <div style="z-index: 10" id="how-to-use-popup"></div>
+    <div style="z-index: 100" id="how-to-use-popup"></div>
     <div id="panel-minimize"></div>
     <div id="editor-panel-container"></div>
     <div id="google-form-popup" style="z-index: 200"></div>
+    <div id = "how-to-use-button"></div>
   </body>
 </html>

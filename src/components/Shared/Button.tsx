@@ -16,6 +16,7 @@ interface ButtonProperties {
   height?: number | string;
   containerClass?: string;
   style?: React.CSSProperties;
+  fontSize?: string;
 }
 const Button = ({
   onClick,
@@ -27,6 +28,7 @@ const Button = ({
   height,
   style,
   containerClass,
+  fontSize,
 }: ButtonProperties): JSX.Element => {
   return (
     <div onMouseUp={onClick} className={containerClass}>
@@ -39,6 +41,7 @@ const Button = ({
         className={className}
         appearance={appearance ?? "default"}
         style={style}
+        fontSize = {fontSize}
       >
         {text}
       </EverGreenButton>

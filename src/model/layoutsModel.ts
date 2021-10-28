@@ -22,6 +22,7 @@ export interface LayoutsModel {
   //requests
 
   //simple setters
+  // setActiveLayout: Action<LayoutsModel, te>;
   setActiveLayout: Action<LayoutsModel, LayoutData>;
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;

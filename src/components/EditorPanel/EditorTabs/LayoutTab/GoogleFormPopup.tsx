@@ -34,7 +34,6 @@ const GoogleFormPopup = ({
     JSON.stringify(layoutState?.layout)
   );
 
-  const copyString = useRef("");
 
   const copyFieldContainerClass = classNames("copy-field-container", {
     "copy-field-container-closed": isCopiedJSON,

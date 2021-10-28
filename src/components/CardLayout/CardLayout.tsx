@@ -1,5 +1,5 @@
 import CardData from "../../data_structs/CardData";
-import Clock from "../Clock";
+import Clock from "../Widgets/Clock";
 import defaultLayouts from "../../static/defaultLayouts";
 import IFrameView from "../IFrameView";
 import IXDrop from "../IXDrop";
@@ -12,10 +12,12 @@ import "../../css/cardLayout.css";
 import "../../css/libs/reactDraggable.css";
 import type { GridPosition } from "../../interfaces/GridPosition";
 import GuideGrid from "./GuideGrid";
+import appConfig from "../../static/appConfig";
 
 export const CardGrid = (): JSX.Element => {
-  const rows = 3;
-  const cols = 4;
+  const rows = appConfig.gridRows;
+  const cols = appConfig.gridCols;
+  
   const viewModeState = useStoreState((state) => state.appModel.appMode);
   const setBufferLayoutAction = useStoreActions(
     (actions) => actions.layoutsModel.setBufferLayout
@@ -75,7 +77,8 @@ export const CardGrid = (): JSX.Element => {
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: { lg: 4, md: 4, sm: 4, xs: 4, xxs: 4 },
-    rowHeight: size.y / 3.5,
+    // rowHeight: size.y / 3.5*2,
+    rowHeight: size.y / 6,
     margin: [20, 20] as [number, number],
     preventCollision: true,
     compactType: null,

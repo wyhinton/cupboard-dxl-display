@@ -3,7 +3,7 @@ import { Heading } from "evergreen-ui";
 import DropDownMenu from "../Shared/DropDownMenu";
 import { AppMode } from "../../enums";
 import "../../css/editorPanel.css";
-import ContentTable from "./EditorTabs/ContentsTab/ContentsTab";
+import ContentTab from "./EditorTabs/ContentsTab/ContentsTab";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import PerformanceTests from "./EditorSection/PerformanceTests";
@@ -16,14 +16,19 @@ const Editor = (): JSX.Element => {
       <Tabs>
         <TabList>
           <Tab>Content</Tab>
+          <Tab>Widgets</Tab>
           <Tab>Layouts</Tab>
         </TabList>
         <TabPanel>
-          <ContentTable />
+          <ContentTab />
+        </TabPanel>
+        <TabPanel>
+          {/* <WidgetsTable /> */}
         </TabPanel>
         <TabPanel>
           <LayoutTab />
         </TabPanel>
+
       </Tabs>
     </div>
   );

@@ -18,6 +18,8 @@ const LayoutTable = (): JSX.Element => {
   const activeLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
+
+  const setActiveLayoutAction = useStoreActions((actions)=>actions.layoutsModel.setActiveLayout)
   return (
     <div>
       <IXDrop
@@ -40,31 +42,18 @@ const LayoutTable = (): JSX.Element => {
             {externalLayoutsState.map((l, index) => {
               const { id, title, author, added } = l;
               return (
-                <XDrag
-                  dndType={DndTypes.LAYOUT}
-                  draggableId={id}
-                  index={index}
-                  key={index.toString()}
-                  isDragDisabled={false}
-                  className={
-                    id === activeLayoutState?.id
-                      ? "layout-row-active"
-                      : "layout-row-inactive"
-                  }
-                >
-                  <>
-                    <td key={index}>
-                      {id === activeLayoutState?.id ? (
-                        <StatusIndicator color="success" />
-                      ) : (
-                        <></>
-                      )}
-                      {title}
-                    </td>
-                    <td>{formatDate(added)}</td>
-                    <td>{author}</td>
-                  </>
-                </XDrag>
+                <tr key={index} onClick={(e)=>setActiveLayoutAction(l)}>
+                  <td key={index} >
+                    {id === activeLayoutState?.id ? (
+                      <StatusIndicator color="success" />
+                    ) : (
+                      <></>
+                    )}
+                    {title}
+                  </td>
+                  <td>{formatDate(added)}</td>
+                  <td>{author}</td>
+                </tr>
               );
             })}
           </tbody>

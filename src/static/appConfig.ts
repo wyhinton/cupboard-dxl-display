@@ -5,6 +5,8 @@ interface AppConfig {
   sheetLink: string;
   //google sheets form link for saving new layouts
   formLink: string;
+  gridRows: number,
+  gridCols: number,
   //scale for regular web pages
   defaultIframeScale: number;
   //scale of content which meant for embedding, i.e. includes "embed" in the url
@@ -19,11 +21,15 @@ const appConfig: AppConfig = {
   idleTime: process.env.NODE_ENV === "development" ? 100000000 : 10000000,
   sheetLink:
     "https://docs.google.com/spreadsheets/d/1BR1AQ5Zmt_o_0dOm9AvDht0G3Q6RXQUhX71Vi4H7tTU/edit#gid=0",
-  formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1.0,
-  showModeSwitchButton: false,
   defaultLayoutName: "Data Charts",
+  formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
+  // gridRows: 3,
+  // gridCols: 4,
+  gridRows: 3*2,
+  gridCols: 4*2,
+  showModeSwitchButton: false,
 };
 
 export default appConfig;

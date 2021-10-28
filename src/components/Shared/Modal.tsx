@@ -17,11 +17,9 @@ const Modal = ({
   backdropOpacity?: number;
 }): JSX.Element => {
   return (
-    <div className={"modal-container"}>
+    <div className={"modal-container"} style = {{display: active?"flex":"none"}}>
       <MyBackdrop onClose={onClose} backdropOpacity={backdropOpacity ?? 0} />
-      {/* <div className={"popup-child-container"}> */}
       <div className={containerClassName}>{children}</div>
-      {/* </div> */}
     </div>
   );
 };
