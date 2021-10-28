@@ -31,6 +31,7 @@ const Button = ({
   return (
     <div onMouseUp={onClick} className={containerClass}>
       <EverGreenButton
+        cursor="pointer"
         //use evergreen's default button with if no width is provided
         width={width ?? undefined}
         height={height ?? undefined}

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { InfoSignIcon, Heading, Text } from "evergreen-ui";
+import { InfoSignIcon, Heading, Text, HandUpIcon } from "evergreen-ui";
 import ReactDom from "react-dom";
 import "../css/howToUse.css";
 import classNames from "classnames";
@@ -57,9 +57,10 @@ const HowToUse = (): JSX.Element => {
             />
             <Button
               // height={}
+     
               height={"10vh"}
               width={"30vw"}
-              iconBefore={<InfoSignIcon></InfoSignIcon>}
+              iconBefore={<HandUpIcon/>}
               onClick={toggleVisible}
               appearance="primary"
               text="Learn how to use this display"
