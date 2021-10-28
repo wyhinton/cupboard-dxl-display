@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
-import ReactTable from "react-table";
 
 interface IXDrag extends Omit<DraggableProps, "children"> {
   className?: string;
@@ -10,8 +9,6 @@ interface IXDrag extends Omit<DraggableProps, "children"> {
 
 /**
  * A draggable table row.
- * @param param0
- * @returns
  */
 const TestDrag: FC<IXDrag> = ({ className, children, dragAll, ...properties }) => {
   console.log(React.isValidElement(children));
