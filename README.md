@@ -20,6 +20,8 @@ Built with React and Typescript, Cuboard has a heavy focus on providing an excel
 # Live Demo
 
 - https://iframeprototype-83a96.web.app/
+- https://wyhinton.github.io/cuboard/
+
 
 # Features
 
