@@ -1,15 +1,12 @@
 import "../../../css/viewCard.css";
 
 import { AppMode, CardView, DndTypes, InteractionType } from "../../../enums";
-import { InlineAlert, Position } from "evergreen-ui";
-
-// import { Popover } from "react-tiny-popover";
+import { InlineAlert } from "evergreen-ui";
 
 import React, {
   FC,
   MouseEventHandler,
   PropsWithChildren,
-  ReactElement,
   ReactNode,
   RefObject,
   useRef,
@@ -26,7 +23,6 @@ import {
 import Button from "../../Shared/Button";
 import CardData from "../../../data_structs/CardData";
 import CardInfo from "./CardInfo";
-import { Component } from "evergreen-ui/node_modules/@types/react";
 import DeleteButton from "./DeleteButton";
 import { Layouts } from "react-grid-layout";
 import SettingsButton from "./SettingsButton";

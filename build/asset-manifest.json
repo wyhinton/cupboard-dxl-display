@@ -1,23 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.b52a6c90.chunk.css",
-    "main.js": "/static/js/main.b52fa6a1.chunk.js",
-    "main.js.map": "/static/js/main.b52fa6a1.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.a9a0a57f.js",
-    "runtime-main.js.map": "/static/js/runtime-main.a9a0a57f.js.map",
-    "static/css/2.27175f2b.chunk.css": "/static/css/2.27175f2b.chunk.css",
-    "static/js/2.1dd3b786.chunk.js": "/static/js/2.1dd3b786.chunk.js",
-    "static/js/2.1dd3b786.chunk.js.map": "/static/js/2.1dd3b786.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/2.27175f2b.chunk.css.map": "/static/css/2.27175f2b.chunk.css.map",
-    "static/css/main.b52a6c90.chunk.css.map": "/static/css/main.b52a6c90.chunk.css.map",
-    "static/js/2.1dd3b786.chunk.js.LICENSE.txt": "/static/js/2.1dd3b786.chunk.js.LICENSE.txt"
+    "main.css": "/cuboard.github.io/static/css/main.2f531b31.chunk.css",
+    "main.js": "/cuboard.github.io/static/js/main.b85d1a2e.chunk.js",
+    "main.js.map": "/cuboard.github.io/static/js/main.b85d1a2e.chunk.js.map",
+    "runtime-main.js": "/cuboard.github.io/static/js/runtime-main.a149aec4.js",
+    "runtime-main.js.map": "/cuboard.github.io/static/js/runtime-main.a149aec4.js.map",
+    "static/css/2.27175f2b.chunk.css": "/cuboard.github.io/static/css/2.27175f2b.chunk.css",
+    "static/js/2.e9eab3f5.chunk.js": "/cuboard.github.io/static/js/2.e9eab3f5.chunk.js",
+    "static/js/2.e9eab3f5.chunk.js.map": "/cuboard.github.io/static/js/2.e9eab3f5.chunk.js.map",
+    "index.html": "/cuboard.github.io/index.html",
+    "static/css/2.27175f2b.chunk.css.map": "/cuboard.github.io/static/css/2.27175f2b.chunk.css.map",
+    "static/css/main.2f531b31.chunk.css.map": "/cuboard.github.io/static/css/main.2f531b31.chunk.css.map",
+    "static/js/2.e9eab3f5.chunk.js.LICENSE.txt": "/cuboard.github.io/static/js/2.e9eab3f5.chunk.js.LICENSE.txt",
+    "static/media/global.css": "/cuboard.github.io/static/media/Satoshi-Regular.fe762acc.ttf",
+    "static/media/reactDraggable.css": "/cuboard.github.io/static/media/expand-icon.9d3ba9dd.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.a9a0a57f.js",
+    "static/js/runtime-main.a149aec4.js",
     "static/css/2.27175f2b.chunk.css",
-    "static/js/2.1dd3b786.chunk.js",
-    "static/css/main.b52a6c90.chunk.css",
-    "static/js/main.b52fa6a1.chunk.js"
+    "static/js/2.e9eab3f5.chunk.js",
+    "static/css/main.2f531b31.chunk.css",
+    "static/js/main.b85d1a2e.chunk.js"
   ]
 }

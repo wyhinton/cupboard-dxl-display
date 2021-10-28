@@ -1,7 +1,10 @@
 {
-  "name": "iframe_pt",
+
+  "name": "cuboard",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "license": "MIT",
+  "homepage": "https://wyhinton.github.io/cuboard",
   "dependencies": {
     "@dnd-kit/core": "^4.0.0",
     "@react-three/drei": "^7.14.2",
@@ -48,7 +51,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "doc": "jsdoc2md --files ./src/* --configure ./jsdoc.conf.json > ./README.md --template README_TEMPLATE.hbs",
-    "fix": "eslint --fix --ext .ts,.tsx ."
+    "fix": "eslint --fix --ext .ts,.tsx .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [
