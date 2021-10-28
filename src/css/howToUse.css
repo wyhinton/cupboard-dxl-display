@@ -2,21 +2,15 @@
   position: absolute;
   left: 0;
   bottom: 0;
-  /* height: 100vh;
-  width: 100vw; */
-  /* background-color: red; */
-  /* z-index: 10; */
 }
 
 .how-to-backdrop-inactive {
-  /* pointer-events: none; */
   height: fit-content;
   width: 100vw;
 }
 .how-to-backdrop-active {
   height: 100vh;
   width: 100vw;
-  /* pointer-events: all; */
 }
 
 .how-to-container {
@@ -27,7 +21,7 @@
   width: fit-content;
   height: fit-content;
   z-index: 1999;
-  width: 10vw;
+  width: 20vw;
   height: auto;
   padding: 1em;
 }

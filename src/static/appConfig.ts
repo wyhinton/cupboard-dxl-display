@@ -9,8 +9,9 @@ interface AppConfig {
   defaultIframeScale: number;
   //scale of content which meant for embedding, i.e. includes "embed" in the url
   defaultEmbedScale: number;
-  //the default layout to display on page load;
+  //the default layout from your "layouts" google sheet to display
   defaultLayoutName: string;
+  //
   showModeSwitchButton: boolean; 
 }
 
@@ -22,7 +23,6 @@ const appConfig: AppConfig = {
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1.0,
   showModeSwitchButton: false,
-  //   defaultLayoutName: "Full Grid 1",
   defaultLayoutName: "Data Charts",
 };
 

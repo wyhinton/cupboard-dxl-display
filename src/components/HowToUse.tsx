@@ -56,6 +56,9 @@ const HowToUse = (): JSX.Element => {
               active={visible}
             />
             <Button
+              // height={}
+              height={"10vh"}
+              width={"30vw"}
               iconBefore={<InfoSignIcon></InfoSignIcon>}
               onClick={toggleVisible}
               appearance="primary"

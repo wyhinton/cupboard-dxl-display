@@ -12,8 +12,8 @@ interface ButtonProperties {
   appearance?: ButtonAppearance;
   className?: string;
   iconBefore?: JSX.Element;
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
   containerClass?: string;
   style?: React.CSSProperties;
 }
