@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
-import ReactTable from "react-table";
 import { DndTypes } from "../enums";
 
 interface IXDrag extends Omit<DraggableProps, "children"> {
