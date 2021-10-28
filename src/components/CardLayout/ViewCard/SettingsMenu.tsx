@@ -9,7 +9,6 @@ import {
   ChevronRightIcon,
   TextInput,
 } from "evergreen-ui";
-// import {useOnClickOutside } from "crooks"
 import {useOnClickOutside} from "../../../hooks"
 
 interface SettingsMenuProperties extends Pick<Actions<CardModel>, "setScale" | "setBackgroundColor" | "setShowMenu"> {
