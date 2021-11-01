@@ -3,6 +3,27 @@ import { Layout, Layouts } from "react-grid-layout";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import type { CardSwapEvent, CardAddEvent } from "../interfaces/CardEvents";
 import type { GridPosition } from "../interfaces/GridPosition";
+import extendedLayoutTest from "../static/extendedLayoutTest";
+
+export interface CardOptions{
+  id: string, 
+  scale: number,
+  backgroundColor: string,
+  objectPosition: string,
+}
+
+export interface GridSettings{
+  defaultBackgroundColor: string
+}
+export interface LayoutSettings{
+  cardSettings: CardOptions[],
+  gridSettings: GridSettings,
+}
+
+export interface ExtendedLayout{
+  layout: Layouts;
+  layoutSettings: LayoutSettings;
+}
 
 //TODO: Google form columns and layoutData fields should have the same capitilization
 export default class LayoutData {
@@ -11,13 +32,14 @@ export default class LayoutData {
   readonly added: Date;
   readonly id: string;
   layout: Layouts;
+  extendedLayout!: ExtendedLayout;
   constructor(row: RawLayoutRow) {
     this.id = row.title + "_" + row.timestamp;
     this.title = row.title;
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
-    const startLayout: Layouts = JSON.parse(row.layout);
-    this.layout = startLayout;
+    this.extendedLayout = testGetLayout(row)
+    this.layout = JSON.parse(row.layout);
   }
   swapCard(swapInfo: CardSwapEvent): void {
     for (const [k, v] of Object.entries(this.layout)) {
@@ -62,6 +84,15 @@ export default class LayoutData {
   sources(): string[] {
     const lg = Object.entries(this.layout)[0][1];
     return lg.map((l: any) => l.i);
+  }
+}
+//TOOD: TEMPORRARY
+function testGetLayout(row: RawLayoutRow): ExtendedLayout{
+  try {
+    let extended: ExtendedLayout = JSON.parse(row.layout)
+    return extended
+  } catch (error) {
+    return extendedLayoutTest
   }
 }
 

@@ -73,37 +73,36 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
       <div className={iframeOverlayClass}>
         <Loader type="Grid" color="white" height={80} width={80} />
       </div>
-      {/* <div style={qrContainerStyle}>
-        <QRCode value={card?.src ?? ""} />
-      </div> */}
-      {isYouTubeVideo ? (
-        <ResponsivePlayer
-          src={src}
+      {/* {renderContent(card, (e)=>{       setIsLoaded(true);} )} */}
+      { 
+        card.contentType === "video"?(
+          <ResponsivePlayer
+          src={card.src}
           onReady={(event) => {
             setIsLoaded(true);
           }}
         />
-      ) : (
-        <iframe
+        ):card.contentType === "image"?(
+          <img
+          style = {{width: "100%", height: "100%", objectFit: "cover", objectPosition: "center"}}
+          src = {card.src}
+          onLoad={(event) => {
+            setIsLoaded(true);
+          }}></img>
+        ):(       
+           <iframe
           onLoad={(event) => {
             setIsLoaded(true);
           }}
           src={src}
           style={active ? iframeActive : iframeStyle}
-        ></iframe>
-      )}
+        ></iframe>)
+  }
+
     </div>
   );
 };
 
-// function determineoOutput(src: string, onLoad: (e)): JSX.Element{
-//   const out = (new RegExp('youtube')).test(src)
-//   console.log(out);
-
-//   return (
-//     out?<ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' />:<div>b</div>
-//   )
-// }
 
 export default React.memo(IFrameView);
 function propertiesAreEqual(

@@ -1,12 +1,9 @@
 import React from "react";
 import { Heading } from "evergreen-ui";
-import DropDownMenu from "../Shared/DropDownMenu";
-import { AppMode } from "../../enums";
 import "../../css/editorPanel.css";
 import ContentTab from "./EditorTabs/ContentsTab/ContentsTab";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import PerformanceTests from "./EditorSection/PerformanceTests";
 import LayoutTab from "./EditorTabs/LayoutTab/LayoutTab";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
@@ -28,7 +25,6 @@ const Editor = (): JSX.Element => {
         <TabPanel>
           <LayoutTab />
         </TabPanel>
-
       </Tabs>
     </div>
   );

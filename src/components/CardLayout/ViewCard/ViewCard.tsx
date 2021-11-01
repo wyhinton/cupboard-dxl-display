@@ -83,18 +83,17 @@ const ViewCard: FC<ViewCardProperties> = ({
   const cardContainerRef = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [oldCardView, setCardView] = useState(CardView.GRID);
-  const [showMenu, toggleMenu] = useToggle(false);
   const deleteCardAction = useStoreActions(
     (actions) => actions.layoutsModel.deleteCard
   );
 
-  const [state, actions, store] = useLocalStore<CardModel>(
+  const [state, actions] = useLocalStore<CardModel>(
     () => ({
       cardView: CardView.GRID,
       setCardView: action((state, cardView) => {
         state.cardView = cardView;
       }),
-      scale: data?.src.includes("embed")
+      scale: data?.contentType === "embed"
         ? appConfig.defaultEmbedScale
         : appConfig.defaultIframeScale,
       setScale: action((state, scale) => {

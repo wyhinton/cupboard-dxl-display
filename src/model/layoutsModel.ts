@@ -18,11 +18,10 @@ export interface LayoutsModel {
 
   //listeners
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
-  onToggleViewModeListener: ThunkOn<LayoutsModel, never, StoreModel>;
+  onToggleViewMode: ThunkOn<LayoutsModel, never, StoreModel>;
   //requests
 
   //simple setters
-  // setActiveLayout: Action<LayoutsModel, te>;
   setActiveLayout: Action<LayoutsModel, LayoutData>;
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;
@@ -49,22 +48,15 @@ const layoutsModel: LayoutsModel = {
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     (actions, target) => {
-      //extract only the needed properties from the GoogleSheetRow
       //TODO: ERROR HANDLING FOR LAYOUTS
       target.payload
         .getSheetRows<RawLayoutRow>(SheetNames.LAYOUTS)
         .then((rows) => {
-          console.log(
-            "GOT HEREGOT HEREGOT HEREGOT HEREGOT HEREGOT HEREGOT HERE"
-          );
           const rawLayoutRows = rows;
-
           const layouts = rawLayoutRows.map((l) => new LayoutData(l));
-          console.log(layouts);
           const defaultLayout = layouts.filter(
             (layout) => layout.title === appConfig.defaultLayoutName
           )[0];
-          console.log(defaultLayout);
           if (defaultLayout) {
             actions.setActiveLayout(defaultLayout);
           }
@@ -77,14 +69,11 @@ const layoutsModel: LayoutsModel = {
         });
     }
   ),
-  onToggleViewModeListener: thunkOn(
+  onToggleViewMode: thunkOn(
     // targetResolver:toggleAppMode
     (actions, storeActions) => storeActions.appModel.toggleAppMode,
     // handler:
     (actions, target, { getState, getStoreState }) => {
-      console.log(
-        "listened to on toggle view mode in layout model, setting layout from buffer"
-      );
       const { activeLayout } = getState();
       const buf = getState().bufferLayout;
       if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
@@ -106,19 +95,18 @@ const layoutsModel: LayoutsModel = {
   }),
   //mutators
   swapCardContent: thunk(
-    (actions, swapInfo, { getState, getStoreState, getStoreActions }) => {
+    (actions, swapInfo, { getState}) => {
       const { activeLayout } = getState();
       if (activeLayout) {
         const buf = getState().bufferLayout;
         activeLayout.layout = buf;
         activeLayout.swapCard(swapInfo);
         actions.setActiveLayout(activeLayout);
-        // actions.setBufferLayout(activeLayout.layout);
       }
     }
   ),
   deleteCard: thunk(
-    (actions, cardToDelete, { getState, getStoreState, getStoreActions }) => {
+    (actions, cardToDelete, { getState}) => {
       const { activeLayout } = getState();
       if (activeLayout) {
         const buf = getState().bufferLayout;
@@ -142,7 +130,6 @@ const layoutsModel: LayoutsModel = {
   }),
   registerCardLoadFailure: thunk(
     (actions, failedCard, { getState, getStoreState }) => {
-      console.log("Got card Register Load Failure at Layouts Model");
       const { activeLayout } = getState();
       if (activeLayout) {
         activeLayout.failCard(failedCard);
