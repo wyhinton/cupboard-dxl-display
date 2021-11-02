@@ -13,11 +13,8 @@ import { AppMode } from "../../enums";
 
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
-interface EditorPanelProperties {
-  visible: boolean;
-}
 
-const EditorPanel: FC = () => {
+const EditorPanel = ():JSX.Element => {
   const [minimized, setMinimized] = useState(false);
   const viewModeState = useStoreState((state) => state.appModel.appMode);
 
@@ -34,10 +31,7 @@ const EditorPanel: FC = () => {
     "editor-visible": viewModeState === AppMode.EDIT,
   });
 
-  const styles = {
-    root: { display: "none !important", border: "5px solid red !important" },
-    handle: { display: "none" },
-  };
+
   return ReactDom.createPortal(
     <>
       <Draggable
@@ -101,4 +95,3 @@ const WindowButton = ({
     </div>
   );
 };
-//

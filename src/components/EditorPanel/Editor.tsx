@@ -5,6 +5,7 @@ import ContentTab from "./EditorTabs/ContentsTab/ContentsTab";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import LayoutTab from "./EditorTabs/LayoutTab/LayoutTab";
+import WidgetsTab from "./EditorTabs/WidgetsTab/WidgetsTab";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
 const Editor = (): JSX.Element => {
@@ -20,7 +21,7 @@ const Editor = (): JSX.Element => {
           <ContentTab />
         </TabPanel>
         <TabPanel>
-          {/* <WidgetsTable /> */}
+          <WidgetsTab />
         </TabPanel>
         <TabPanel>
           <LayoutTab />

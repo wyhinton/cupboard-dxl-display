@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, FC } from "react";
-import { useStoreState } from "../../../../hooks";
+import { useStoreActions, useStoreState } from "../../../../hooks";
 import IXDrop from "../../../IXDrop";
 import XDrag from "../../../XDrag";
 import CardData from "../../../../data_structs/CardData";
@@ -7,19 +7,22 @@ import "../../../../css/table.css";
 import { SearchInput, Menu, StatusIndicator } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import TableHeader from "../../TableHeader";
-import UseTip from "../UseTip";
 import { DndTypes, DragSource } from "../../../../enums";
 import { Scrollbars } from "react-custom-scrollbars";
 import { formatDate } from "../../../../utils";
+import Button from "../../../Shared/Button";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
  * @returns
  */
 
+//TODO: REFACTOR
+
 const ContentsTab: FC = () => {
   const availableCards = useStoreState(
     (state) => state.appModel.availableCards
   );
+  const clearCardsAction = useStoreActions(actions=>actions.layoutsModel.clearCards)
   const [filterKey, setFilterKey] = useState<string | undefined>();
   const [filterDirection, setFilterDirection] = useState(true);
   const [cardItems, setCardItems] = useState(availableCards);
@@ -71,14 +74,19 @@ const ContentsTab: FC = () => {
     setCardItems(sortedItems);
   }, [filterKey, availableCards, filterDirection]);
 
+
   const contentTabHeader = "contents-table-header";
   return (
     <div className={"contents-tab-container"}>
       <div style={{ padding: "0.5em" }}>
+        <Button
+          text = "Clear All"
+          onClick={(e)=>{clearCardsAction()}}
+        />
         <SearchInput
           width={"100%"}
-          onChange={(e: React.FormEvent<HTMLInputElement>) =>
-            setSearchTerm(e.currentTarget.value)
+          onChange={(event: React.FormEvent<HTMLInputElement>) =>
+            setSearchTerm(event.currentTarget.value)
           }
           placeholder={"search title"}
         ></SearchInput>
@@ -152,9 +160,7 @@ const ContentsTab: FC = () => {
   );
 };
 
-interface CardTitleProperties {
-  card: CardData;
-}
+
 
 /**
  * Fetches a favicon for a card and displays the cards title

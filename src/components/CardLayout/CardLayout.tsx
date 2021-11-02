@@ -96,7 +96,7 @@ export const CardGrid = (): JSX.Element => {
           isDraggable={isEditMode}
           isResizable={isEditMode}
         >
-          <div key={"clock"}>
+          {/* <div key={"clock"}>
             <ViewCard
               cardType={DndTypes.CLOCK}
               onClick={() => {
@@ -107,7 +107,7 @@ export const CardGrid = (): JSX.Element => {
                 return <Clock />;
               }}
             </ViewCard>
-          </div>
+          </div> */}
 
           {activeCards.map((card: CardData, index: number) => {
             return (

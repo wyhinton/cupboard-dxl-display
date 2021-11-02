@@ -39,7 +39,8 @@ export default class LayoutData {
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
     this.extendedLayout = testGetLayout(row)
-    this.layout = JSON.parse(row.layout);
+    // this.layout = JSON.parse(row.layout);
+    this.layout = this.extendedLayout.layout
   }
   swapCard(swapInfo: CardSwapEvent): void {
     for (const [k, v] of Object.entries(this.layout)) {
@@ -56,6 +57,14 @@ export default class LayoutData {
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
         this.layout[k] = v.filter((l) => l.i !== toRemove.sourceId);
+      }
+    }
+  }
+  clearCards(): void {
+    console.log(this.layout);
+    for (const [k, v] of Object.entries(this.layout)) {
+      for (const [index, layoutValue] of v.entries()) {
+        this.layout[k] = []
       }
     }
   }
@@ -86,55 +95,13 @@ export default class LayoutData {
     return lg.map((l: any) => l.i);
   }
 }
-//TOOD: TEMPORRARY
+//TODO: TEMPORRARY!!!!!
 function testGetLayout(row: RawLayoutRow): ExtendedLayout{
-  try {
-    let extended: ExtendedLayout = JSON.parse(row.layout)
-    return extended
-  } catch (error) {
+  let test = JSON.parse(row.layout)
+  if (test.layout){
+    return test
+  } else {
     return extendedLayoutTest
   }
 }
 
-function findEmptyGridPositions(
-  layouts: Layout[],
-  rows: number,
-  cols: number
-): GridPosition[] {
-  const allGridSpots: GridPosition[] = [];
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      allGridSpots.push({ x: x, y: y });
-    }
-  }
-  const filledSpots = findFilledPositions(layouts);
-  const stringFilledSpots = new Set(
-    filledSpots.map((fs) => [fs.x, fs.y].toString())
-  );
-
-  return allGridSpots.filter(
-    (gs) => !stringFilledSpots.has([gs.x, gs.y].toString())
-  );
-}
-
-function findFilledPositions(layouts: Layout[]): GridPosition[] {
-  const takenSpots: GridPosition[] = [];
-  for (const l of layouts) {
-    takenSpots.push({ x: l.x, y: l.y });
-    for (let index = 1; index < l.w; index++) {
-      const fullSpotX: GridPosition = {
-        x: l.x + index,
-        y: l.y,
-      };
-      takenSpots.push(fullSpotX);
-    }
-    for (let index = 1; index < l.h; index++) {
-      const fullSpotY: GridPosition = {
-        x: l.x,
-        y: l.y + index,
-      };
-      takenSpots.push(fullSpotY);
-    }
-  }
-  return takenSpots;
-}

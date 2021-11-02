@@ -31,8 +31,10 @@ export interface LayoutsModel {
   //update
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;
   deleteCard: Thunk<LayoutsModel, CardData, StoreModel>;
+  clearCards: Thunk<LayoutsModel, never, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   registerCardLoadFailure: Thunk<LayoutsModel, CardData, never, StoreModel>;
+  
 }
 
 const layoutsModel: LayoutsModel = {
@@ -112,6 +114,17 @@ const layoutsModel: LayoutsModel = {
         const buf = getState().bufferLayout;
         activeLayout.layout = buf;
         activeLayout.removeCard(cardToDelete);
+        actions.setActiveLayout(activeLayout);
+      }
+    }
+  ),
+  clearCards: thunk(
+    (actions, cardToDelete, { getState}) => {
+      const { activeLayout } = getState();
+      if (activeLayout) {
+        const buf = getState().bufferLayout;
+        activeLayout.layout = buf;
+        activeLayout.clearCards();
         actions.setActiveLayout(activeLayout);
       }
     }
