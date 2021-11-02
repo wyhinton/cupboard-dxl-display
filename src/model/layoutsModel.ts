@@ -34,7 +34,7 @@ export interface LayoutsModel {
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   registerCardLoadFailure: Thunk<LayoutsModel, CardData, never, StoreModel>;
-  
+  resetLayout: Thunk<LayoutsModel, never, StoreModel>
 }
 
 const layoutsModel: LayoutsModel = {

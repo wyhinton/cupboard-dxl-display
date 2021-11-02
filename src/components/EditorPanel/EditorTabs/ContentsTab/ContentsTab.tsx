@@ -1,24 +1,26 @@
-import React, { useState, useEffect, useRef, FC } from "react";
-import { useStoreActions, useStoreState } from "../../../../hooks";
-import IXDrop from "../../../IXDrop";
-import XDrag from "../../../XDrag";
-import CardData from "../../../../data_structs/CardData";
-import "../../../../css/table.css";
-import { SearchInput, Menu, StatusIndicator } from "evergreen-ui";
-import fuzzysort from "fuzzysort";
-import TableHeader from "../../TableHeader";
-import { DndTypes, DragSource } from "../../../../enums";
-import { Scrollbars } from "react-custom-scrollbars";
-import { formatDate } from "../../../../utils";
-import Button from "../../../Shared/Button";
+import Button from '../../../Shared/Button';
+import CardData from '../../../../data_structs/CardData';
+import fuzzysort from 'fuzzysort';
+import IXDrop from '../../../IXDrop';
+import React, {
+  useEffect,
+  useState
+  } from 'react';
+import TableHeader from '../../TableHeader';
+import XDrag from '../../../XDrag';
+import { DndTypes, DragSource } from '../../../../enums';
+import { formatDate } from '../../../../utils';
+import { SearchInput } from 'evergreen-ui';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { useStoreActions, useStoreState } from '../../../../hooks';
+import '../../../../css/table.css';
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
- * @returns
  */
 
 //TODO: REFACTOR
 
-const ContentsTab: FC = () => {
+const ContentsTab = (): JSX.Element => {
   const availableCards = useStoreState(
     (state) => state.appModel.availableCards
   );
@@ -27,7 +29,6 @@ const ContentsTab: FC = () => {
   const [filterDirection, setFilterDirection] = useState(true);
   const [cardItems, setCardItems] = useState(availableCards);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTr, setSelectedTr] = useState(null);
   const [filteredCards, setFilteredCards] =
     useState<CardData[]>(availableCards);
 
@@ -38,11 +39,9 @@ const ContentsTab: FC = () => {
         searchTerm,
         cardItems.map((c) => c.title)
       );
-      // let filtered = sortResult.map((s) => s.);
       const aboveThreshholdCardTitles: string[] = sortResult.map(
         (s) => s.target
       );
-      // console.log(aboveThreshholdCardTitles);
       const filtered = cardItems.filter((c) =>
         aboveThreshholdCardTitles.includes(c.title)
       );
@@ -81,6 +80,14 @@ const ContentsTab: FC = () => {
       <div style={{ padding: "0.5em" }}>
         <Button
           text = "Clear All"
+          intent = "danger"
+          appearance="primary"
+          onClick={(e)=>{clearCardsAction()}}
+        />
+          <Button
+          text = "Reset Layout"
+          intent = "danger"
+          appearance="primary"
           onClick={(e)=>{clearCardsAction()}}
         />
         <SearchInput
@@ -128,7 +135,6 @@ const ContentsTab: FC = () => {
               {filteredCards.map((card, index) => {
                 const { added, src, author, interaction, sourceId, isActive } =
                   card;
-                console.log(isActive);
                 return (
                   <XDrag
                     dndType={DndTypes.CARD_ROW}
@@ -164,8 +170,6 @@ const ContentsTab: FC = () => {
 
 /**
  * Fetches a favicon for a card and displays the cards title
- * @param card
- * @returns
  */
 const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   return (
