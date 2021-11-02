@@ -1,4 +1,4 @@
-![Cuboard](.github/CUBOARD_LOGO_CENTERED.svg)
+![Cuboard](.public/CUBOARD_LOGO_CENTERED.svg)
 
 <p align="center">
 <img src = "https://github.com/wyhinton/dx_display_iframe_prototype/actions/workflows/firebase.js.yml/badge.svg">
@@ -7,9 +7,9 @@
 <img src = "https://badges.aleen42.com/src/react.svg">
 </p>
 
-# Cuboard
+# Cupboard
 
-**Cuboard is an open source content-sharing app built with touch screens in mind. Cuboard is a starting point for your display app project.**
+**Cupboard is an open source content-sharing app built with touch screens in mind. Cupboard is a starting point for your display app project.**
 
 Out of the box, Cuboard allows you to curate and design attractive masonry displays for digital signage. Load your content from links into a **Card**, then arrange cards to form a **Layout**. Select a layout from your layout collection, or cycle between layouts.
 
@@ -19,9 +19,7 @@ Built with React and Typescript, Cuboard has a heavy focus on providing an excel
 
 # Live Demo
 
-- https://iframeprototype-83a96.web.app/
 - https://wyhinton.github.io/cuboard/
-
 
 # Features
 
