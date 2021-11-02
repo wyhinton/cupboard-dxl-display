@@ -1,19 +1,19 @@
-import Button from '../../../Shared/Button';
-import CardData from '../../../../data_structs/CardData';
-import fuzzysort from 'fuzzysort';
-import IXDrop from '../../../IXDrop';
-import React, {
-  useEffect,
-  useState
-  } from 'react';
-import TableHeader from '../../TableHeader';
-import XDrag from '../../../XDrag';
-import { DndTypes, DragSource } from '../../../../enums';
-import { formatDate } from '../../../../utils';
-import { SearchInput } from 'evergreen-ui';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { useStoreActions, useStoreState } from '../../../../hooks';
-import '../../../../css/table.css';
+import "../../../../css/table.css";
+
+import { SearchInput } from "evergreen-ui";
+import fuzzysort from "fuzzysort";
+import React, { useEffect, useState } from "react";
+import { Scrollbars } from "react-custom-scrollbars";
+
+import CardData from "../../../../data_structs/CardData";
+import { DndTypes, DragSource } from "../../../../enums";
+import { useStoreActions, useStoreState } from "../../../../hooks";
+import { formatDate } from "../../../../utils";
+import IXDrop from "../../../IXDrop";
+import Button from "../../../Shared/Button";
+import FlexRow from "../../../Shared/FlexRow";
+import XDrag from "../../../XDrag";
+import TableHeader from "../../TableHeader";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
  */
@@ -24,7 +24,13 @@ const ContentsTab = (): JSX.Element => {
   const availableCards = useStoreState(
     (state) => state.appModel.availableCards
   );
-  const clearCardsAction = useStoreActions(actions=>actions.layoutsModel.clearCards)
+  const clearCardsAction = useStoreActions(
+    (actions) => actions.layoutsModel.clearCards
+  );
+  const resetLayoutAction = useStoreActions(
+    (actions) => actions.layoutsModel.resetLayout
+  );
+
   const [filterKey, setFilterKey] = useState<string | undefined>();
   const [filterDirection, setFilterDirection] = useState(true);
   const [cardItems, setCardItems] = useState(availableCards);
@@ -34,7 +40,7 @@ const ContentsTab = (): JSX.Element => {
 
   //use search input to filter cards
   useEffect(() => {
-    if (searchTerm.length > 0) {
+    if (0 < searchTerm.length) {
       const sortResult = fuzzysort.go(
         searchTerm,
         cardItems.map((c) => c.title)
@@ -63,7 +69,7 @@ const ContentsTab = (): JSX.Element => {
         if (aText < bText) {
           return -1;
         }
-        if (aText > bText) {
+        if (bText < aText) {
           return 1;
         }
       }
@@ -73,49 +79,52 @@ const ContentsTab = (): JSX.Element => {
     setCardItems(sortedItems);
   }, [filterKey, availableCards, filterDirection]);
 
-
   const contentTabHeader = "contents-table-header";
   return (
-    <div className={"contents-tab-container"}>
-      <div style={{ padding: "0.5em" }}>
-        <Button
-          text = "Clear All"
-          intent = "danger"
-          appearance="primary"
-          onClick={(e)=>{clearCardsAction()}}
-        />
-          <Button
-          text = "Reset Layout"
-          intent = "danger"
-          appearance="primary"
-          onClick={(e)=>{clearCardsAction()}}
-        />
+    <div className="contents-tab-container">
+      <FlexRow padding="0.5em">
         <SearchInput
-          width={"100%"}
           onChange={(event: React.FormEvent<HTMLInputElement>) =>
             setSearchTerm(event.currentTarget.value)
           }
-          placeholder={"search title"}
-        ></SearchInput>
-      </div>
+          placeholder="search title"
+          width="80%"
+        />
+        <Button
+          appearance="primary"
+          intent="danger"
+          onClick={(event) => {
+            clearCardsAction();
+          }}
+          text="Clear All"
+        />
+        <Button
+          appearance="primary"
+          intent="danger"
+          onClick={(event) => {
+            resetLayoutAction();
+          }}
+          text="Reset Layout"
+        />
+      </FlexRow>
       <IXDrop
-        className={"table-container"}
-        droppableId={DragSource.CARD_TABLE}
-        isDropDisabled={true}
         cardType={DndTypes.CLOCK}
+        className="table-container"
+        droppableId={DragSource.CARD_TABLE}
+        isDropDisabled
       >
-        <table className={"contents-tab-table"}>
+        <table className="contents-tab-table">
           <tbody>
             <tr>
               {["title", "added", "sourceId", "author", "interaction"].map(
-                (s, i) => {
+                (s, index) => {
                   return (
                     <TableHeader
-                      key={i}
+                      activeFilter={filterKey}
                       className={contentTabHeader}
                       headerTitle={s}
+                      key={index}
                       setFilter={setFilterKey}
-                      activeFilter={filterKey}
                       setFilterDirection={setFilterDirection}
                     ></TableHeader>
                   );
@@ -126,8 +135,8 @@ const ContentsTab = (): JSX.Element => {
         </table>
         <Scrollbars
           autoHeight
-          autoHeightMin={100}
           autoHeightMax={319}
+          autoHeightMin={100}
           onScrollFrame={(v) => console.log(v)}
         >
           <table style={{ padding: "2em" }}>
@@ -137,22 +146,26 @@ const ContentsTab = (): JSX.Element => {
                   card;
                 return (
                   <XDrag
-                    dndType={DndTypes.CARD_ROW}
-                    draggableId={sourceId}
-                    index={index}
-                    key={index.toString()}
-                    isDragDisabled={isActive}
                     className={
                       isActive ? "content-row-active" : "content-row-inactive"
                     }
+                    dndType={DndTypes.CARD_ROW}
+                    draggableId={sourceId}
+                    index={index}
+                    isDragDisabled={isActive}
+                    key={index.toString()}
                   >
                     <>
                       <td>
                         <TitleWithIcon card={card} />
                       </td>
+
                       <td>{formatDate(added)}</td>
+
                       <td>{src}</td>
+
                       <td>{author}</td>
+
                       <td>{interaction}</td>
                     </>
                   </XDrag>
@@ -166,8 +179,6 @@ const ContentsTab = (): JSX.Element => {
   );
 };
 
-
-
 /**
  * Fetches a favicon for a card and displays the cards title
  */
@@ -180,6 +191,7 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
         }
         src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`}
       ></img>
+
       <div
         style={{
           marginTop: "auto",

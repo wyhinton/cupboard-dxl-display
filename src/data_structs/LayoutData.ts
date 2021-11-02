@@ -1,26 +1,27 @@
-import CardData from "./CardData";
 import { Layout, Layouts } from "react-grid-layout";
-import type RawLayoutRow from "../interfaces/RawLayoutRow";
-import type { CardSwapEvent, CardAddEvent } from "../interfaces/CardEvents";
+
+import type { CardSwapEvent } from "../interfaces/CardEvents";
 import type { GridPosition } from "../interfaces/GridPosition";
+import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import extendedLayoutTest from "../static/extendedLayoutTest";
+import CardData from "./CardData";
 
-export interface CardOptions{
-  id: string, 
-  scale: number,
-  backgroundColor: string,
-  objectPosition: string,
+export interface CardOptions {
+  id: string;
+  scale: number;
+  backgroundColor: string;
+  objectPosition: string;
 }
 
-export interface GridSettings{
-  defaultBackgroundColor: string
+export interface GridSettings {
+  defaultBackgroundColor: string;
 }
-export interface LayoutSettings{
-  cardSettings: CardOptions[],
-  gridSettings: GridSettings,
+export interface LayoutSettings {
+  cardSettings: CardOptions[];
+  gridSettings: GridSettings;
 }
 
-export interface ExtendedLayout{
+export interface ExtendedLayout {
   layout: Layouts;
   layoutSettings: LayoutSettings;
 }
@@ -31,6 +32,7 @@ export default class LayoutData {
   readonly author: string;
   readonly added: Date;
   readonly id: string;
+  readonly sourceLayout: ExtendedLayout;
   layout: Layouts;
   extendedLayout!: ExtendedLayout;
   constructor(row: RawLayoutRow) {
@@ -38,9 +40,10 @@ export default class LayoutData {
     this.title = row.title;
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
-    this.extendedLayout = testGetLayout(row)
+    this.sourceLayout = testGetLayout(row);
+    this.extendedLayout = testGetLayout(row);
     // this.layout = JSON.parse(row.layout);
-    this.layout = this.extendedLayout.layout
+    this.layout = this.extendedLayout.layout;
   }
   swapCard(swapInfo: CardSwapEvent): void {
     for (const [k, v] of Object.entries(this.layout)) {
@@ -64,7 +67,7 @@ export default class LayoutData {
     console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
-        this.layout[k] = []
+        this.layout[k] = [];
       }
     }
   }
@@ -82,6 +85,10 @@ export default class LayoutData {
       this.layout[k].push(newItem);
     }
   }
+  resetLayout(): void {
+    this.extendedLayout = { ...this.sourceLayout };
+    this.layout = { ...this.sourceLayout.layout };
+  }
   failCard(toFail: CardData) {
     console.log("FAILING CARD AT LAYOUT DATA");
     // console.log()
@@ -96,12 +103,7 @@ export default class LayoutData {
   }
 }
 //TODO: TEMPORRARY!!!!!
-function testGetLayout(row: RawLayoutRow): ExtendedLayout{
-  let test = JSON.parse(row.layout)
-  if (test.layout){
-    return test
-  } else {
-    return extendedLayoutTest
-  }
+function testGetLayout(row: RawLayoutRow): ExtendedLayout {
+  const test = JSON.parse(row.layout);
+  return test.layout ? test : extendedLayoutTest;
 }
-

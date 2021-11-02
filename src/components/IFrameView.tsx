@@ -1,9 +1,11 @@
-import CardData from "../data_structs/CardData";
-import classNames from "classnames";
-import Loader from "react-loader-spinner";
-import React, { FC, PropsWithChildren, PureComponent, useState } from "react";
-import ReactPlayer from "react-player";
 import "../css/iframeView.css";
+
+import classNames from "classnames";
+import React, { FC, PropsWithChildren, useState } from "react";
+import Loader from "react-loader-spinner";
+import ReactPlayer from "react-player";
+
+import CardData from "../data_structs/CardData";
 
 interface IFrameViewProperties {
   card: CardData;
@@ -30,7 +32,7 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
     "iframe-view-overlay-loading": !isLoaded,
   });
 
-  const iFrameContainerClass = classNames("iframe-container", {
+  const indexFrameContainerClass = classNames("iframe-container", {
     "iframe-container-hidden": !valid,
   });
   //TODO: Fix or remove card error handling
@@ -63,7 +65,7 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
       onDoubleClick={() => {
         setActive(!active);
       }}
-      className={iFrameContainerClass}
+      className={indexFrameContainerClass}
     >
       <div className={iframeOverlayClass}>
         <Loader type="Grid" color="white" height={80} width={80} />

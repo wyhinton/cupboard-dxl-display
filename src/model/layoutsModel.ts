@@ -65,9 +65,9 @@ const layoutsModel: LayoutsModel = {
           }
           actions.setExternalLayouts(layouts);
           actions.setBufferLayout(
-            layouts.find(
+            layouts.filter(
               (layout) => layout.title === appConfig.defaultLayoutName
-            ).layout
+            )[0].layout
           );
         });
     }
@@ -96,7 +96,7 @@ const layoutsModel: LayoutsModel = {
     console.log("setting external layouts");
     state.externalLayouts = newLayoutArray;
   }),
-  //mutators
+  //edit layout
   swapCardContent: thunk((actions, swapInfo, { getState }) => {
     const { activeLayout } = getState();
     if (activeLayout) {
@@ -139,10 +139,11 @@ const layoutsModel: LayoutsModel = {
   resetLayout: thunk((actions, _, { getState }) => {
     const { activeLayout } = getState();
     if (activeLayout) {
-      const buf = getState().bufferLayout;
-      activeLayout.layout = buf;
-      activeLayout.clearCards();
-      actions.setActiveLayout(activeLayout);
+      const buf = getState().activeLayout;
+      buf?.resetLayout();
+      if (buf) {
+        actions.setActiveLayout(buf);
+      }
     }
   }),
   registerCardLoadFailure: thunk(
