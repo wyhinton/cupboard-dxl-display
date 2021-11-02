@@ -40,29 +40,21 @@ const EditorPanel = ():JSX.Element => {
         defaultPosition={{ x: 100, y: 100 }}
       >
         <div className={editorClass}>
-          <div className={"header-container"}>
-            <PanelHeader visible={viewModeState === AppMode.EDIT}>
-              <WindowButton
+            <PanelHeader>
+              <BarButton
                 icon={<PlusIcon />}
-                color={"yellow"}
                 onMouseUp={() => {
                   setMinimized(false);
                 }}
               />
-              <WindowButton
+              <BarButton
                 icon={<MinusIcon />}
-                color={"yellow"}
                 onMouseUp={() => {
                   setMinimized(true);
                 }}
               />
             </PanelHeader>
-          </div>
-          <div className={"body-container"}>
-            <div className={editorBodyClass}>
               <Editor />
-            </div>
-          </div>
         </div>
       </Draggable>
     </>,
@@ -73,22 +65,19 @@ const EditorPanel = ():JSX.Element => {
 export default EditorPanel;
 
 interface PanelHeaderProperties {
-  visible: boolean;
   children: JSX.Element | JSX.Element[];
 }
-const PanelHeader = ({ visible, children }: PanelHeaderProperties) => {
+const PanelHeader = ({children }: PanelHeaderProperties) => {
   return <div className={"editor-panel-handle panel-header"}>{children}</div>;
 };
 
-const WindowButton = ({
+const BarButton = ({
   icon,
-  color,
   onMouseUp,
 }: {
   icon: JSX.Element;
-  color: string;
   onMouseUp: React.MouseEventHandler<HTMLDivElement>;
-}) => {
+}): JSX.Element => {
   return (
     <div className={"window-button"} onMouseUp={onMouseUp}>
       {icon}

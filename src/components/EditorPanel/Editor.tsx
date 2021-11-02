@@ -10,7 +10,6 @@ import WidgetsTab from "./EditorTabs/WidgetsTab/WidgetsTab";
 
 const Editor = (): JSX.Element => {
   return (
-    <div className="editor-form-container">
       <Tabs>
         <TabList>
           <Tab>Content</Tab>
@@ -27,22 +26,6 @@ const Editor = (): JSX.Element => {
           <LayoutTab />
         </TabPanel>
       </Tabs>
-    </div>
-  );
-};
-
-interface FormSectionProperties {
-  title: string;
-  children: JSX.Element | JSX.Element[];
-}
-const FormSection = ({ title, children }: FormSectionProperties) => {
-  return (
-    <div className={"form-section-container"}>
-      <div className={"form-section-header"}>
-        <Heading size={500}>{title}</Heading>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>{children}</div>
-    </div>
   );
 };
 
