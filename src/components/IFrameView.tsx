@@ -1,14 +1,9 @@
-import React, { useState, FC, PropsWithChildren, PureComponent } from "react";
-// import { Spinner, Pane } from "evergreen-ui";
+import CardData from "../data_structs/CardData";
 import classNames from "classnames";
 import Loader from "react-loader-spinner";
-import "../css/iframeView.css";
-import IFrameValidator from "../IFrameValidator";
-import { useStoreState, useStoreActions } from "../hooks";
-import CardData from "../data_structs/CardData";
+import React, { FC, PropsWithChildren, PureComponent, useState } from "react";
 import ReactPlayer from "react-player";
-import QRCode from "react-qr-code";
-import CardLayout from "./CardLayout/CardLayout";
+import "../css/iframeView.css";
 
 interface IFrameViewProperties {
   card: CardData;
@@ -74,35 +69,38 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
         <Loader type="Grid" color="white" height={80} width={80} />
       </div>
       {/* {renderContent(card, (e)=>{       setIsLoaded(true);} )} */}
-      { 
-        card.contentType === "video"?(
-          <ResponsivePlayer
+      {card.contentType === "video" ? (
+        <ResponsivePlayer
           src={card.src}
           onReady={(event) => {
             setIsLoaded(true);
           }}
         />
-        ):card.contentType === "image"?(
-          <img
-          style = {{width: "100%", height: "100%", objectFit: "cover", objectPosition: "center"}}
-          src = {card.src}
+      ) : card.contentType === "image" ? (
+        <img
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+          }}
+          src={card.src}
           onLoad={(event) => {
             setIsLoaded(true);
-          }}></img>
-        ):(       
-           <iframe
+          }}
+        ></img>
+      ) : (
+        <iframe
           onLoad={(event) => {
             setIsLoaded(true);
           }}
           src={src}
           style={active ? iframeActive : iframeStyle}
-        ></iframe>)
-  }
-
+        ></iframe>
+      )}
     </div>
   );
 };
-
 
 export default React.memo(IFrameView);
 function propertiesAreEqual(

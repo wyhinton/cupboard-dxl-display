@@ -1,19 +1,19 @@
 import {
-  action,
-  thunk,
-  Thunk,
   Action,
-  ActionOn,
-  thunkOn,
-  ThunkOn,
+  action,
   debug,
-  actionOn,
+  Thunk,
+  thunk,
+  ThunkOn,
+  thunkOn,
 } from "easy-peasy";
-import CardData from "../data_structs/CardData";
-import type RawCardRow from "../interfaces/RawCardRow";
+// import type {Action, Thunk, ThunkOn} from "easy-peasy/types"
 import { Layouts } from "react-grid-layout";
-import defaultGridLayout from "../static/defaultLayouts";
+
+import CardData from "../data_structs/CardData";
 import { AppMode, SheetNames } from "../enums";
+import type RawCardRow from "../interfaces/RawCardRow";
+import defaultGridLayout from "../static/defaultLayouts";
 import { StoreModel } from "./index";
 /**
  * Core app model
@@ -137,12 +137,12 @@ const appModel: AppDataModel = {
       //if a card source is in the active layout, then it must be active
       // const sources = layout.payload.sources();
       // console.log(sources);
-      const activeSources = layout.payload
-        .sources()
-        .filter((s) => s !== "clock");
+      const activeSources = new Set(
+        layout.payload.sources().filter((s) => s !== "clock")
+      );
 
       const availableCardsUpdated = getState().availableCards.map((card) => {
-        if (activeSources.includes(card.sourceId)) {
+        if (activeSources.has(card.sourceId)) {
           card.setActive(true);
         } else {
           card.setActive(false);
@@ -150,7 +150,7 @@ const appModel: AppDataModel = {
         return card;
       });
       const activeCards = getState().availableCards.filter((card) => {
-        return activeSources.includes(card.sourceId);
+        return activeSources.has(card.sourceId);
       });
       // console.log(availableCardsUpdated);
       actions.setAvailableCards(availableCardsUpdated);
@@ -164,7 +164,7 @@ const appModel: AppDataModel = {
       console.log(failedCard);
       const { activeCards } = getState();
       const failedId = failedCard.sourceId;
-      let newCards = activeCards.map((c) => {
+      const newCards = activeCards.map((c) => {
         if (c.sourceId === failedId) {
           console.log("found failed");
           c.fail();

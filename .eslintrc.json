@@ -11,15 +11,27 @@
     "import",
     "filenames",
     "unicorn",
-    "only-warn"
+    "only-warn",
+    // "github",
+    "etc",
+    "simple-import-sort"
   ],
   "extends": [
+    "plugin:etc/recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:sonarjs/recommended",
-    "plugin:unicorn/recommended"
+    "plugin:unicorn/recommended",
+    // "plugin:github/recommended",
+    "plugin:boundaries/recommended"
   ],
   "rules": {
+    "etc/no-commented-out-code": "warn",
+    "etc/no-misused-generics": "warn",
+    "etc/prefer-less-than": "warn",
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
+    "filenames/match-regex": "off",
     "no-warning-comments": [
       "warn",
       {

@@ -1,13 +1,14 @@
+import { Action, action, Thunk, thunk, ThunkOn, thunkOn } from "easy-peasy";
+import { Layouts } from "react-grid-layout";
+
 import CardData from "../data_structs/CardData";
-import defaultLayouts from "../static/defaultLayouts";
 import LayoutData from "../data_structs/LayoutData";
-import RawLayoutRow from "../interfaces/RawLayoutRow";
 import { AppMode, SheetNames } from "../enums";
 import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
-import { Layouts } from "react-grid-layout";
-import { StoreModel } from "./index";
-import { action, thunk, Thunk, Action, thunkOn, ThunkOn } from "easy-peasy";
+import RawLayoutRow from "../interfaces/RawLayoutRow";
 import appConfig from "../static/appConfig";
+import defaultLayouts from "../static/defaultLayouts";
+import { StoreModel } from "./index";
 
 export interface LayoutsModel {
   //state
@@ -34,7 +35,7 @@ export interface LayoutsModel {
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   registerCardLoadFailure: Thunk<LayoutsModel, CardData, never, StoreModel>;
-  resetLayout: Thunk<LayoutsModel, never, StoreModel>
+  resetLayout: Thunk<LayoutsModel, never, StoreModel>;
 }
 
 const layoutsModel: LayoutsModel = {
@@ -56,17 +57,17 @@ const layoutsModel: LayoutsModel = {
         .then((rows) => {
           const rawLayoutRows = rows;
           const layouts = rawLayoutRows.map((l) => new LayoutData(l));
-          const defaultLayout = layouts.filter(
+          const defaultLayout = layouts.find(
             (layout) => layout.title === appConfig.defaultLayoutName
-          )[0];
+          );
           if (defaultLayout) {
             actions.setActiveLayout(defaultLayout);
           }
           actions.setExternalLayouts(layouts);
           actions.setBufferLayout(
-            layouts.filter(
+            layouts.find(
               (layout) => layout.title === appConfig.defaultLayoutName
-            )[0].layout
+            ).layout
           );
         });
     }
@@ -96,39 +97,33 @@ const layoutsModel: LayoutsModel = {
     state.externalLayouts = newLayoutArray;
   }),
   //mutators
-  swapCardContent: thunk(
-    (actions, swapInfo, { getState}) => {
-      const { activeLayout } = getState();
-      if (activeLayout) {
-        const buf = getState().bufferLayout;
-        activeLayout.layout = buf;
-        activeLayout.swapCard(swapInfo);
-        actions.setActiveLayout(activeLayout);
-      }
+  swapCardContent: thunk((actions, swapInfo, { getState }) => {
+    const { activeLayout } = getState();
+    if (activeLayout) {
+      const buf = getState().bufferLayout;
+      activeLayout.layout = buf;
+      activeLayout.swapCard(swapInfo);
+      actions.setActiveLayout(activeLayout);
     }
-  ),
-  deleteCard: thunk(
-    (actions, cardToDelete, { getState}) => {
-      const { activeLayout } = getState();
-      if (activeLayout) {
-        const buf = getState().bufferLayout;
-        activeLayout.layout = buf;
-        activeLayout.removeCard(cardToDelete);
-        actions.setActiveLayout(activeLayout);
-      }
+  }),
+  deleteCard: thunk((actions, cardToDelete, { getState }) => {
+    const { activeLayout } = getState();
+    if (activeLayout) {
+      const buf = getState().bufferLayout;
+      activeLayout.layout = buf;
+      activeLayout.removeCard(cardToDelete);
+      actions.setActiveLayout(activeLayout);
     }
-  ),
-  clearCards: thunk(
-    (actions, cardToDelete, { getState}) => {
-      const { activeLayout } = getState();
-      if (activeLayout) {
-        const buf = getState().bufferLayout;
-        activeLayout.layout = buf;
-        activeLayout.clearCards();
-        actions.setActiveLayout(activeLayout);
-      }
+  }),
+  clearCards: thunk((actions, cardToDelete, { getState }) => {
+    const { activeLayout } = getState();
+    if (activeLayout) {
+      const buf = getState().bufferLayout;
+      activeLayout.layout = buf;
+      activeLayout.clearCards();
+      actions.setActiveLayout(activeLayout);
     }
-  ),
+  }),
   addCard: thunk((actions, cardAddEvent, { getState, getStoreState }) => {
     const { availableCards } = getStoreState().appModel;
     const { sourceId, targetPosition } = cardAddEvent;
@@ -138,6 +133,15 @@ const layoutsModel: LayoutsModel = {
       const buf = getState().bufferLayout;
       activeLayout.setGridLayout(buf);
       activeLayout?.addCard(cardToAdd, targetPosition);
+      actions.setActiveLayout(activeLayout);
+    }
+  }),
+  resetLayout: thunk((actions, _, { getState }) => {
+    const { activeLayout } = getState();
+    if (activeLayout) {
+      const buf = getState().bufferLayout;
+      activeLayout.layout = buf;
+      activeLayout.clearCards();
       actions.setActiveLayout(activeLayout);
     }
   }),

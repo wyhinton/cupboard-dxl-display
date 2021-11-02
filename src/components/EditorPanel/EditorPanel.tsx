@@ -1,21 +1,18 @@
-import classNames from 'classnames';
-import Draggable from 'react-draggable';
-import Editor from './Editor';
-import React, { useState } from 'react';
-import ReactDom from 'react-dom';
-import { AppMode } from '../../enums';
-import { useStoreState } from '../../hooks';
-import '../../css/editorPanel.css';
-import {
-  PlusIcon,
-  MinusIcon,
-} from "evergreen-ui";
+import classNames from "classnames";
+import Draggable from "react-draggable";
+import Editor from "./Editor";
+import React, { useState } from "react";
+import ReactDom from "react-dom";
+import { AppMode } from "../../enums";
+import { useStoreState } from "../../hooks";
+import "../../css/editorPanel.css";
+import { PlusIcon, MinusIcon } from "evergreen-ui";
 
 /**Draggable panel which contains the editor body, as well as a header bar with a min/max button for resizing the panel. Renders to "editor-panel-container" div in index.html*/
 
-const EditorPanel = ():JSX.Element => {
+const EditorPanel = (): JSX.Element => {
   const viewModeState = useStoreState((state) => state.appModel.appMode);
-  
+
   const [minimized, setMinimized] = useState(false);
 
   const editorPanelClass = classNames("editor-panel", {
@@ -27,7 +24,6 @@ const EditorPanel = ():JSX.Element => {
     "editor-visible": viewModeState === AppMode.EDIT,
   });
 
-
   return ReactDom.createPortal(
     <>
       <Draggable
@@ -36,21 +32,21 @@ const EditorPanel = ():JSX.Element => {
         defaultPosition={{ x: 100, y: 100 }}
       >
         <div className={editorClass}>
-            <PanelHeader>
-              <BarButton
-                icon={<PlusIcon />}
-                onMouseUp={() => {
-                  setMinimized(false);
-                }}
-              />
-              <BarButton
-                icon={<MinusIcon />}
-                onMouseUp={() => {
-                  setMinimized(true);
-                }}
-              />
-            </PanelHeader>
-              <Editor />
+          <PanelHeader>
+            <BarButton
+              icon={<PlusIcon />}
+              onMouseUp={() => {
+                setMinimized(false);
+              }}
+            />
+            <BarButton
+              icon={<MinusIcon />}
+              onMouseUp={() => {
+                setMinimized(true);
+              }}
+            />
+          </PanelHeader>
+          <Editor />
         </div>
       </Draggable>
     </>,
@@ -63,7 +59,7 @@ export default EditorPanel;
 interface PanelHeaderProperties {
   children: JSX.Element | JSX.Element[];
 }
-const PanelHeader = ({children }: PanelHeaderProperties): JSX.Element => {
+const PanelHeader = ({ children }: PanelHeaderProperties): JSX.Element => {
   return <div className={"editor-panel-handle panel-header"}>{children}</div>;
 };
 
