@@ -28,8 +28,8 @@ const appConfig: AppConfig = {
   formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   // gridRows: 3,
   // gridCols: 4,
-  gridRows: 3*2,
-  gridCols: 4*2,
+  gridRows: 6,
+  gridCols: 4,
   showModeSwitchButton: false,
 };
 
