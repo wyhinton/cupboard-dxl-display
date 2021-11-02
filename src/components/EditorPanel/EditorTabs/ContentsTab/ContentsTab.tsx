@@ -91,20 +91,21 @@ const ContentsTab = (): JSX.Element => {
           width="80%"
         />
         <Button
-          appearance="primary"
-          intent="danger"
-          onClick={(event) => {
-            clearCardsAction();
-          }}
-          text="Clear All"
-        />
-        <Button
-          appearance="primary"
+          appearance="default"
           intent="danger"
           onClick={(event) => {
             resetLayoutAction();
           }}
           text="Reset Layout"
+        />
+        <Button
+          appearance="minimal"
+          intent="danger"
+          onClick={(event) => {
+            clearCardsAction();
+          }}
+          // width={"10%"}
+          text="Clear All"
         />
       </FlexRow>
       <IXDrop
@@ -159,13 +160,9 @@ const ContentsTab = (): JSX.Element => {
                       <td>
                         <TitleWithIcon card={card} />
                       </td>
-
                       <td>{formatDate(added)}</td>
-
                       <td>{src}</td>
-
                       <td>{author}</td>
-
                       <td>{interaction}</td>
                     </>
                   </XDrag>
@@ -191,7 +188,6 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
         }
         src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`}
       ></img>
-
       <div
         style={{
           marginTop: "auto",

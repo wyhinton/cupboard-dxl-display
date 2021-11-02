@@ -1,5 +1,9 @@
+import {
+  Button as EverGreenButton,
+  ButtonAppearance,
+  IntentTypes,
+} from "evergreen-ui";
 import React, { useState } from "react";
-import { BoxComponent, Button as EverGreenButton, ButtonAppearance, ButtonOwnProps, IntentTypes } from "evergreen-ui";
 
 /**
  * Wraps an Evergreen UI Button, providing it with an onClick property.
@@ -17,7 +21,7 @@ interface ButtonProperties {
   containerClass?: string;
   style?: React.CSSProperties;
   fontSize?: string;
-  intent?: IntentTypes,
+  intent?: IntentTypes;
 }
 const Button = ({
   onClick,
@@ -33,18 +37,18 @@ const Button = ({
   intent,
 }: ButtonProperties): JSX.Element => {
   return (
-    <div onMouseUp={onClick} className={containerClass}>
+    <div className={containerClass} onMouseUp={onClick}>
       <EverGreenButton
-        cursor="pointer"
+        appearance={appearance ?? "default"}
         //use evergreen's default button with if no width is provided
-        width={width ?? undefined}
+        className={className}
+        cursor="pointer"
+        fontSize={fontSize}
         height={height ?? undefined}
         iconBefore={iconBefore ?? undefined}
-        className={className}
-        appearance={appearance ?? "default"}
+        intent={intent ?? "none"}
         style={style}
-        fontSize = {fontSize}
-        intent = {intent??"none"}
+        width={width ?? undefined}
       >
         {text}
       </EverGreenButton>

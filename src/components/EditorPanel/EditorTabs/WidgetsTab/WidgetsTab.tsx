@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import IXDrop from "../../../IXDrop";
-import XDrag from "../../../XDrag";
-import { DndTypes, DragSource } from "../../../../enums";
 import "../../../../css/table.css";
+
+import React, { useEffect, useState } from "react";
+
+import { DndTypes, DragSource } from "../../../../enums";
+import IXDrop from "../../../IXDrop";
 import Clock from "../../../Widgets/Clock";
+import XDrag from "../../../XDrag";
 /**
  * Table for displaying the available card layouts
  * @returns
@@ -13,14 +15,12 @@ const WidgetsTab = (): JSX.Element => {
   return (
     <div>
       <IXDrop
-        className={"table-container"}
+        cardType={DndTypes.CLOCK}
+        className="table-container"
         droppableId={DragSource.LAYOUT_TABLE}
         isDropDisabled={false}
-        cardType={DndTypes.CLOCK}
-      > 
-      <Clock/>
-      
-      
+      >
+        <Clock />
       </IXDrop>
     </div>
   );
