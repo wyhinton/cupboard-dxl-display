@@ -1,31 +1,27 @@
-import React, { useState, FC } from "react";
-import Draggable from "react-draggable";
-import ReactDom from "react-dom";
-import Editor from "./Editor";
+import classNames from 'classnames';
+import Draggable from 'react-draggable';
+import Editor from './Editor';
+import React, { useState } from 'react';
+import ReactDom from 'react-dom';
+import { AppMode } from '../../enums';
+import { useStoreState } from '../../hooks';
+import '../../css/editorPanel.css';
 import {
   PlusIcon,
   MinusIcon,
 } from "evergreen-ui";
-import { useStoreState, useStoreActions } from "../../hooks";
-import "../../css/editorPanel.css";
-import classNames from "classnames";
-import { AppMode } from "../../enums";
 
-// https://github.com/goodoldneon/react-drag-and-dock#api
-
+/**Draggable panel which contains the editor body, as well as a header bar with a min/max button for resizing the panel. Renders to "editor-panel-container" div in index.html*/
 
 const EditorPanel = ():JSX.Element => {
-  const [minimized, setMinimized] = useState(false);
   const viewModeState = useStoreState((state) => state.appModel.appMode);
+  
+  const [minimized, setMinimized] = useState(false);
 
   const editorPanelClass = classNames("editor-panel", {
     "editor-panel-full": !minimized,
     hidden: viewModeState === AppMode.DISPLAY,
     "editor-panel-minimized": minimized,
-  });
-  const editorBodyClass = classNames("editor-body", {
-    "editor-body-full": !minimized,
-    "editor-body-minimized": minimized,
   });
   const editorClass = classNames("editor", {
     "editor-visible": viewModeState === AppMode.EDIT,
@@ -67,7 +63,7 @@ export default EditorPanel;
 interface PanelHeaderProperties {
   children: JSX.Element | JSX.Element[];
 }
-const PanelHeader = ({children }: PanelHeaderProperties) => {
+const PanelHeader = ({children }: PanelHeaderProperties): JSX.Element => {
   return <div className={"editor-panel-handle panel-header"}>{children}</div>;
 };
 

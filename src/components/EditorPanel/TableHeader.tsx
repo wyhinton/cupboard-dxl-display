@@ -1,43 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toTitleCase } from "../../utils";
 /**
- * Wraps an Evergreen UI Button.
- * @component
+ * <th> component with a arrow indicating the filter direction
  */
 const TableHeader = ({
-  propName,
+  headerTitle,
   setFilter,
   setFilterDirection,
   className,
   activeFilter,
 }: {
-  propName: string;
-  setFilterDirection: (dir: boolean) => void;
-  setFilter: (str: string) => void;
+  headerTitle: string;
+  setFilterDirection: (direction: boolean) => void;
+  setFilter: (filter: string) => void;
   className?: string;
   activeFilter: string | undefined;
 }): JSX.Element => {
+
   const [sortDirection, setSortDirection] = useState(true);
-  const [sortVisibility, setSortVisibility] = useState(false);
-  const title = toTitleCase(propName);
-  useEffect(() => {
-    propName === activeFilter
-      ? setSortVisibility(true)
-      : setSortVisibility(false);
-  }, [activeFilter]);
+
+  const showSortArrow =  headerTitle === activeFilter
+
   return (
     <th
       className={className ?? "editor-panel-table-header"}
       onClick={() => {
-        setFilter(propName);
+        setFilter(headerTitle);
         setSortDirection(!sortDirection);
         setFilterDirection(sortDirection);
       }}
     >
-      {title}
-      {sortVisibility && sortDirection
+      {toTitleCase(headerTitle)}
+      {showSortArrow && sortDirection
         ? "▲"
-        : sortVisibility && !sortDirection
+        : showSortArrow && !sortDirection
         ? "▼"
         : ""}
     </th>
@@ -45,11 +41,4 @@ const TableHeader = ({
 };
 
 export default TableHeader;
-// ▲▲▲
-// ▼▼▼
 
-enum SortState {
-  UP = "UP",
-  DOWN = "DOWN",
-  OFF = "OFF",
-}

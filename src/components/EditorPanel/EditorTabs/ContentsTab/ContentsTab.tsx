@@ -106,7 +106,7 @@ const ContentsTab: FC = () => {
                     <TableHeader
                       key={i}
                       className={contentTabHeader}
-                      propName={s}
+                      headerTitle={s}
                       setFilter={setFilterKey}
                       activeFilter={filterKey}
                       setFilterDirection={setFilterDirection}
