@@ -11,7 +11,8 @@ import {
 import { Layouts } from "react-grid-layout";
 
 import CardData from "../data_structs/CardData";
-import { AppMode, SheetNames } from "../enums";
+import { AppMode } from "../enums";
+import type {SheetNames} from "../enums";
 import type RawCardRow from "../interfaces/RawCardRow";
 import defaultGridLayout from "../static/defaultLayouts";
 import { StoreModel } from "./index";
@@ -109,7 +110,7 @@ const appModel: AppDataModel = {
       console.log("TRIGGERD");
       // console.log("got on card sheet load success");
       console.log(target.payload);
-      target.payload.getSheetRows<RawCardRow>(SheetNames.CARDS).then((rows) => {
+      target.payload.getSheetRows<RawCardRow>("CARDS").then((rows) => {
         console.log(rows);
         const rawCardRowsArray = rows.map((row) => {
           return {

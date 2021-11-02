@@ -39,8 +39,8 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_SHEET_URL=https://docs.google.com/spreadsheets/d/e/2PACX-1vRalMG47cvXmCbEqeIJWn5qwd9bPhHUV16_VN7LuKsv53YQdn9e8XSAzNulXCtP_BIFBTUy0Z5e6KKE/pub?output=csv react-scripts start",
+    "build": "REACT_APP_SHEET_URL=https://docs.google.com/spreadsheets/d/e/2PACX-1vRalMG47cvXmCbEqeIJWn5qwd9bPhHUV16_VN7LuKsv53YQdn9e8XSAzNulXCtP_BIFBTUy0Z5e6KKE/pub?output=csv react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "doc": "jsdoc2md --files ./src/* --configure ./jsdoc.conf.json > ./README.md --template README_TEMPLATE.hbs",

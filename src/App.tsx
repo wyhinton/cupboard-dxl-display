@@ -12,6 +12,7 @@ import { GridPosition } from "./interfaces/GridPosition";
 import HowToUse from "./components/HowToUse";
 import { AppMode, DragSource } from "./enums";
 import Pulsar from "./components/Shared/Pulsar";
+import Screen from "./components/Shared/Screen";
 import ModeChangeButton from "./components/ModeChangeButton";
 import { useIdle } from "react-use";
 import appConfig from "./static/appConfig";
@@ -27,8 +28,8 @@ const App = (): JSX.Element => {
   const toggleAppModeThunk = useStoreActions(
     (actions) => actions.appModel.toggleAppMode
   );
-  const fetchCardDataGoogleSheetThunk = useStoreActions(
-    (actions) => actions.googleSheetsModel.fetchAppGoogleSheet
+  const fetchTopLevelSheetThunk = useStoreActions(
+    (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
   const swapCardDataAction = useStoreActions(
     (actions) => actions.layoutsModel.swapCardContent
@@ -52,20 +53,12 @@ const App = (): JSX.Element => {
     }
   },[isIdle])
 
-
-  //F4 TO TRANSITION MODE
-  const {enable, disable} = useKeyboardShortcut({
-    keyCode: 115,
-    action: ()=>{toggleAppModeThunk()},
-    disabled: false 
-  })
-  
   const [isDraggingLayout, setIsDraggingLayout] = useState(false);
 
   /**On app start make one-time fetch requests */
   useEffect(() => {
-    fetchCardDataGoogleSheetThunk();
-  }, [fetchCardDataGoogleSheetThunk]);
+    fetchTopLevelSheetThunk()
+  }, []);
 
   const containerStyle = {
     width: "100vw",
@@ -140,9 +133,6 @@ const App = (): JSX.Element => {
 
   return (
     <>
-      <div
-        tabIndex={0}
-      >
         <HowToUse />
         <Background />
         <ModeChangeButton/>
@@ -156,24 +146,15 @@ const App = (): JSX.Element => {
           onDragEnd={onDragEnd}
         >
           <EditorPanel />
-          <div style={containerStyle}>
-            {isDraggingLayout ? <LayoutOverlay /> : <></>}
+          <Screen>
             <DndContext>
               <CardGrid />
             </DndContext>
-          </div>
+          </Screen>
         </DragDropContext>
-      </div>
     </>
   );
 };
 
 export default App;
 
-const LayoutOverlay = ({ active }: { active?: boolean }): JSX.Element => {
-  return (
-    <div className={"layout-overlay-active"}>
-      <Pulsar></Pulsar>
-    </div>
-  );
-};
