@@ -18,5 +18,6 @@ jobs:
           branch: gh-pages # The branch the action should deploy to.
           folder: build # The folder the action should deploy.
         env:
+          CI: false
           REACT_APP_SHEET_URL: ${{secrets.REACT_APP_SHEET_URL}}
 
