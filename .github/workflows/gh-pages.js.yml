@@ -3,6 +3,9 @@ on: [push]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    CI: false
+    REACT_APP_SHEET_URL: ${{secrets.REACT_APP_SHEET_URL}}
+
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
