@@ -8,7 +8,8 @@ import GoogleSheetData from "../data_structs/GoogleSheetData";
 import Papa from "papaparse";
 import { SheetNames } from "../enums";
 import SheetId from "../interfaces/SheetId";
-import { RawTopSheetRow } from "../interfaces/RawTopSheetrow";
+import RawTopSheetRow from "../interfaces/PrincipleSheetRow";
+import PrincipleSheetRow from "../interfaces/PrincipleSheetRow";
 
 export interface GoogleSheetsModel {
   //state
@@ -55,20 +56,15 @@ const googleSheetsModel: GoogleSheetsModel = {
   fetchTopLevelSheet: thunk((actions)=>{
     getData("TOP_LEVEL", process.env.REACT_APP_SHEET_URL as string).then(r=>{
       console.log(r);
-      let sheetRow = r.rows[0] as RawTopSheetRow
+      let sheetRow = r.rows[0] as PrincipleSheetRow
       actions.setFormUrl(sheetRow.googleForm)
       actions.setLayoutsSheetUrl(urlToCsvUrl(sheetRow.layoutsSheet))
       actions.setCardSheetUrl(urlToCsvUrl(sheetRow.cardsSheet))
-      // actions.fetchSheet({name: "CARDS", url: urlToCsvUrl(sheetRow.cardsSheet)})
-      // actions.fetchSheet({name: "LAYOUTS", url: urlToCsvUrl(sheetRow.layoutsSheet)})
       actions.fetchSheet([{name: "LAYOUTS", url: urlToCsvUrl(sheetRow.layoutsSheet)}, {name: "CARDS", url: urlToCsvUrl(sheetRow.cardsSheet)}])
-      // actions.fetchAppGoogleSheet()
     })
     console.log("GOT HERE");
   }),
   fetchSheet: thunk(async (actions, sheets, {getState}) => {
-    // const getLayoutDataResponse = parseData( "LAYOUTS", layoutsGoogleSheetKey)
-  
       console.log(getState().cardSheetUrl, getState().layoutSheetUrl);
     // const getCardDataResponse = getData("CARDS", getState().cardSheetUrl as string)
     // const getLayoutDataResponse = getData( "LAYOUTS", getState().layoutSheetUrl as string)
