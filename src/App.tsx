@@ -11,7 +11,6 @@ import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import { GridPosition } from "./interfaces/GridPosition";
 import HowToUse from "./components/HowToUse";
 import { AppMode, DragSource } from "./enums";
-import Pulsar from "./components/Shared/Pulsar";
 import Screen from "./components/Shared/Screen";
 import ModeChangeButton from "./components/ModeChangeButton";
 import { useIdle } from "react-use";
@@ -19,7 +18,6 @@ import appConfig from "./static/appConfig";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
- * @component
  */
 
 const App = (): JSX.Element => {
@@ -53,17 +51,11 @@ const App = (): JSX.Element => {
     }
   },[isIdle])
 
-  const [isDraggingLayout, setIsDraggingLayout] = useState(false);
-
   /**On app start make one-time fetch requests */
   useEffect(() => {
     fetchTopLevelSheetThunk()
   }, []);
 
-  const containerStyle = {
-    width: "100vw",
-    height: "100vh",
-  };
 
   const cardIsEmpty = (cardId: string): boolean => {
     return cardId.startsWith("empty");
@@ -119,7 +111,6 @@ const App = (): JSX.Element => {
       case DragSource.LAYOUT_TABLE:
         console.log("dragged ");
         console.log("dragged from the layout table!");
-        setIsDraggingLayout(false);
         const newLayout = externalLayoutsState.filter((l) => l.id === draggableId)[0];
         console.log(draggableId);
         console.log(externalLayoutsState);
@@ -137,12 +128,6 @@ const App = (): JSX.Element => {
         <Background />
         <ModeChangeButton/>
         <DragDropContext
-          onBeforeDragStart={(e) => {
-            const { source } = e;
-            if (source.droppableId === DragSource.LAYOUT_TABLE) {
-              setIsDraggingLayout(true);
-            }
-          }}
           onDragEnd={onDragEnd}
         >
           <EditorPanel />
