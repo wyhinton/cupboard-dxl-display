@@ -5,7 +5,8 @@ import React, { useEffect, useState } from "react";
 import { DndTypes, DragSource } from "../../../../enums";
 import IXDrop from "../../../IXDrop";
 import Clock from "../../../Widgets/Clock";
-import XDrag from "../../../XDrag";
+import XDrag from "../../../DraggableRow";
+import DraggableDiv from "../../../DraggableDiv";
 /**
  * Table for displaying the available card layouts
  * @returns
@@ -20,7 +21,14 @@ const WidgetsTab = (): JSX.Element => {
         droppableId={DragSource.LAYOUT_TABLE}
         isDropDisabled={false}
       >
+        <DraggableDiv 
+        dndType = {DndTypes.WIDGET}
+        isDragDisabled = {false}
+        index = {0}
+          draggableId={"clock-widget"}
+        className={"draggable-widget"} isDragDisabled={false}>
         <Clock />
+        <DraggableDiv/>
       </IXDrop>
     </div>
   );

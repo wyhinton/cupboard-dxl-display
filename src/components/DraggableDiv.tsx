@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
 import { DndTypes } from "../enums";
 
-interface IXDrag extends Omit<DraggableProps, "children"> {
+interface DraggableDiv  extends Omit<DraggableProps, "children"> {
   dndType: DndTypes;
   className?: string;
   children: ReactNode;
@@ -10,21 +10,17 @@ interface IXDrag extends Omit<DraggableProps, "children"> {
 }
 
 /**
- * A draggable table row.
- * @param param0
- * @returns
+ * A draggable div for wrapping draggable widgets in the editor panel.
  */
-const XDrag: FC<IXDrag> = ({
+const DraggableRow = ({
   dndType,
   className,
   children,
   dragAll,
   ...properties
-}) => {
+}:DraggableDiv ) => {
   console.log(React.isValidElement(children));
-  // console.log(props);
   if (!React.isValidElement(children)) return <div />;
-  // const child = React.memo(children, []);
   return (
     <Draggable {...properties}>
       {(provided, snapshot) => {
@@ -32,25 +28,14 @@ const XDrag: FC<IXDrag> = ({
 
         return (
           <>
-            <tr
+            <div
               className={className}
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...dragHandleProperties}
-              // style = {{
-              //   // display: snapshot.isDragging ? "none" : "table-row",
-              // }}
             >
               {React.cloneElement(children, { provided })}
-            </tr>
-            <tr
-              style={{
-                display: snapshot.isDragging ? "table-row" : "none",
-                backgroundColor: snapshot.isDragging ? "green" : "none",
-              }}
-            >
-              {React.cloneElement(children, { provided })}
-            </tr>
+            </div>
           </>
         );
       }}
@@ -58,8 +43,8 @@ const XDrag: FC<IXDrag> = ({
   );
 };
 
-XDrag.defaultProps = {
+DraggableRow.defaultProps = {
   dragAll: true,
 };
 
-export default React.memo(XDrag);
+export default React.memo(DraggableRow);

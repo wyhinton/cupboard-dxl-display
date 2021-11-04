@@ -28,6 +28,7 @@ export enum DndTypes {
   IFRAME = "IFRAME",
   CARD_ROW = "CARD_ROW",
   LAYOUT = "LAYOUT",
+  WIDGET = "WIDGET",
 }
 
 export enum DragSource {

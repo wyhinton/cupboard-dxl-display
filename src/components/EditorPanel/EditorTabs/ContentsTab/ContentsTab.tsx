@@ -12,7 +12,7 @@ import { formatDate } from "../../../../utils";
 import IXDrop from "../../../IXDrop";
 import Button from "../../../Shared/Button";
 import FlexRow from "../../../Shared/FlexRow";
-import XDrag from "../../../XDrag";
+import XDrag from "../../../DraggableRow";
 import TableHeader from "../../TableHeader";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.

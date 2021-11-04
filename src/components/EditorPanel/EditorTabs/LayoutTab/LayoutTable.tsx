@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useStoreState, useStoreActions } from "../../../../hooks";
 import IXDrop from "../../../IXDrop";
-import XDrag from "../../../XDrag";
+import XDrag from "../../../DraggableRow";
 import { DndTypes, DragSource } from "../../../../enums";
 import { StatusIndicator } from "evergreen-ui";
 import { formatDate } from "../../../../utils";
