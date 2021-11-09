@@ -56,7 +56,7 @@ const GoogleFormPopup = ({
       backdropOpacity={0.5}
     >
       <div className={"google-form-popup-inner-container"}>
-      <Heading>
+      <Heading color = {isCopiedJSON?"green":""}>
             1. Press the Copy Button
         </Heading>
         <Heading>
@@ -130,11 +130,6 @@ const CopyField = ({
           intent={"success"}
           appearance={"primary"}
         />
-      {/* <div className={copyFieldClass}>
-        <Scrollbars autoHeightMin={0} autoHeightMax={200}>
-          {text}
-        </Scrollbars>
-      </div> */}
       {!isClipBoardCorrect ? (
         <InlineAlert intent="warning">
           Current clipboard content is out of sync with current layout, copy the

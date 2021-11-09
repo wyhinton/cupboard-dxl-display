@@ -1,15 +1,16 @@
-import Button from '../../Shared/Button';
-import React, { useRef } from 'react';
-import SettingsButton from './SettingsButton';
-import { ActionCreator, Actions } from 'easy-peasy';
-import { CardModel } from './ViewCard';
 import '../../../css/card/settingsMenu.css';
+
+import { ActionCreator, Actions } from 'easy-peasy';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  TextInput,
 } from "evergreen-ui";
+import React, { useRef } from 'react';
+
 import {useOnClickOutside} from "../../../hooks"
+import Button from '../../Shared/Button';
+import SettingsButton from './SettingsButton';
+import { CardModel } from './ViewCard';
 
 interface SettingsMenuProperties extends Pick<Actions<CardModel>, "setScale" | "setBackgroundColor" | "setShowMenu"> {
   isShown: boolean;
@@ -25,25 +26,24 @@ const SettingsMenu = ({
   
 }: SettingsMenuProperties): JSX.Element => {
   const onOutside = () =>{console.log("got click outisde");}
-  const menuRef = useRef(null)
-  const handleClickOutside = useOnClickOutside(menuRef, ()=>{setShowMenu(false)})
+  const menuReference = useRef(null)
+  const handleClickOutside = useOnClickOutside(menuReference, ()=>{setShowMenu(false)})
   const menuStyle = {
     display: isShown ? "flex" : "none",
   } as React.CSSProperties;
 
   return (
-    <div ref = {menuRef} className ={"menu-container"} style={menuStyle} {...handleClickOutside}>
-        <InputRow title = {"Background Color:"
-        }>
+    <div className ="menu-container" ref = {menuReference} style={menuStyle} {...handleClickOutside}>
+        <InputRow title = "Background Color:">
        <input
         className="nodrag"
-        type="color"
+        defaultValue="rbga(0,0,0,0)"
         onChange={(e)=>{setBackgroundColor(e.target.value)}}
-      />
+        type="color"
+       />
         </InputRow>
-
-        <InputRow title = {"Scale: "}>
-        <ScaleControls setScale={setScale} scale={scale} />
+        <InputRow title = "Scale: ">
+        <ScaleControls scale={scale} setScale={setScale} />
         </InputRow>
     </div>
   );
@@ -51,12 +51,10 @@ const SettingsMenu = ({
 
 const InputRow = ({title, children}:{title: string, children: JSX.Element | JSX.Element[]}): JSX.Element=>{
     return (
-        <>
-        <div className={"menu-input-row"}>
+        <div className="menu-input-row">
             {title}
             {children}
         </div>
-        </>
     )
 }
 
@@ -68,35 +66,30 @@ const ScaleControls = ({
   scale: number;
 }): JSX.Element => {
   return (
-    <div className={"scale-controls-grid"}>
+    <div className="scale-controls-grid">
       <Button
-        width={20}
+        containerClass="scale-controls-left"
         height = {20}
-        containerClass={"scale-controls-left"}
-        // className={"scale-controls-left"}
         iconBefore={<ChevronLeftIcon size={30} />}
+        // className={"scale-controls-left"}
         onClick={() => {
           setScale(-0.1);
         }}
+        width={20}
         // style={{ width: "fill-available" }}
       />
-      {/* <TextInput
-        // width = {20}
-        // className={"scale-controls-input"}
 
-        placeholder={scale.toString()}
-      /> */}
-      <input type="text" style ={{width: 30}}value = {scale.toString().slice(0, 3)}/>
+      <input onChange = {(e)=>{setScale(parseInt(e.target.value))}} style ={{width: 30}} defaultValue = {0.5} type="text" value = {scale.toString().slice(0, 3)}/>
       <Button
-        width={20}
+        containerClass="scale-controls-right"
         height = {20}
-        containerClass={"scale-controls-right"}
-        // className={"scale-controls-right"}
         iconBefore={<ChevronRightIcon size={30} />}
-        // style={{ width: "-webkit-fill-available" }}
+        // className={"scale-controls-right"}
         onClick={() => {
           setScale(0.1);
         }}
+        // style={{ width: "-webkit-fill-available" }}
+        width={20}
       />
     </div>
   );

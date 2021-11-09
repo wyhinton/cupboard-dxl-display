@@ -37,7 +37,7 @@ const Button = ({
   intent,
 }: ButtonProperties): JSX.Element => {
   return (
-    <div className={containerClass} onMouseUp={onClick}>
+    <div className={containerClass} onMouseUp={onClick} style={{width: width}}>
       <EverGreenButton
         appearance={appearance ?? "default"}
         //use evergreen's default button with if no width is provided

@@ -46,7 +46,6 @@ export const CardGrid = (): JSX.Element => {
 
   const activeCards = useStoreState((state) => state.appModel.activeCards);
   const activeWidgets = useStoreState((state)=>state.appModel.activeWidgets)
-  console.log("ACTIVE WIDGETS", activeWidgets);
   const [realLayout, setRealLayout] = useState(currentLayoutState?.extendedLayout.layout);
   //keep a local mutable reference to a layout in order to avoid making excess calls to store and causing re-renders on each new edit
   const localLayout = useRef<null | Layouts>(null);
@@ -69,7 +68,8 @@ export const CardGrid = (): JSX.Element => {
     rowHeight: size.y / appConfig.gridRows,
     margin: [20, 20] as [number, number],
     preventCollision: true,
-    compactType: undefined,
+    //MUST BE NULL, NOT UNDEFINED
+    compactType: null,
   };
 
   const renderWidget = (widgetData: WidgetData): JSX.Element | undefined =>{
@@ -110,7 +110,7 @@ export const CardGrid = (): JSX.Element => {
         <ResponsiveGridLayout
           {...sharedGridSettings}
           className="card-layout"
-          isBounded
+          // isBounded
           isDraggable={isEditMode}
           isResizable={isEditMode}
           layouts={realLayout}

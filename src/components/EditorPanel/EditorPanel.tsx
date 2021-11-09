@@ -28,11 +28,10 @@ const EditorPanel = (): JSX.Element => {
 
   return ReactDom.createPortal(
       <Draggable
-        bounds = {{left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight-50}}
+        bounds = {{left: 0, top: 0, right: window.innerWidth-50, bottom: window.innerHeight-50}}
         defaultClassName={editorPanelClass}
         defaultPosition={{ x: 100, y: 100 }}
         handle=".editor-panel-handle"
-        onDrag={(e)=>{console.log(e);}}
       >
         <div className={editorClass}>
           <PanelHeader>

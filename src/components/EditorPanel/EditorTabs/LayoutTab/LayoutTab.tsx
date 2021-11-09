@@ -1,18 +1,19 @@
-import React, { useState, useEffect, FC } from "react";
-import LayoutTable from "./LayoutTable";
-import formEmbedUrl from "../../../../static/formEmbedUrl";
 import {
-  DocumentIcon,
+  AddIcon,
 } from "evergreen-ui";
-import Button from "../../../Shared/Button";
-import GoogleFormPopup from "./GoogleFormPopup";
-import { useStoreState, useStoreActions } from "../../../../hooks";
-import Panel from "../../../Shared/Panel"; 
+import React, { FC,useEffect, useState } from "react";
 
-const LayoutTab: FC = () => {
+import { useStoreActions,useStoreState } from "../../../../hooks";
+import formEmbedUrl from "../../../../static/formEmbedUrl";
+import Button from "../../../Shared/Button";
+import Panel from "../../../Shared/Panel"; 
+import GoogleFormPopup from "./GoogleFormPopup";
+import LayoutTable from "./LayoutTable";
+
+const LayoutTab = (): JSX.Element => {
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
   const bufferState = useStoreState((state) => state.layoutsModel.bufferLayout);
-  const [isShown, setIsShown] = useState(false);
+  const [showNewLayoutPopup, setShowNewLayoutPopup] = useState(false);
   const fetchCardDataGoogleSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchAppGoogleSheet
   );
@@ -21,37 +22,38 @@ const LayoutTab: FC = () => {
     setLayoutString(JSON.stringify(bufferState));
   }, [layoutState, bufferState]);
 
+
+  const newLayoutPopup = (): JSX.Element =>{
+    return showNewLayoutPopup ? <GoogleFormPopup
+      onCloseComplete={() => {
+        //reload the layouts after closing the add layout dialog
+        fetchCardDataGoogleSheetThunk()
+        setShowNewLayoutPopup(false);
+      }}
+      visible={showNewLayoutPopup}
+                                /> : <></>;
+  }
   return (
-    <>
       <Panel>
-      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", padding:".5em" }}>
         <Button
-          iconBefore={<DocumentIcon />}
-          text={"Add New Layout"}
+          iconBefore={<AddIcon />}
           onClick={(e) => {
-            setIsShown(true);
+            setShowNewLayoutPopup(true);
           }}
-          width={400}
+          text="Add New Layout"
+          width="90%"
+          intent="success"
+          appearance="primary"
         />
       </div>
-      {isShown ? (
-        <GoogleFormPopup
-          onCloseComplete={() => {
-            //reload the layouts after closing the add layout dialog
-            fetchCardDataGoogleSheetThunk()
-            setIsShown(false);
-          }}
-          visible={isShown}
-        />
-      ) : (
-        <></>
-      )}
+      {
+        newLayoutPopup()
+      }
       <div>
         <LayoutTable />
       </div>
       </Panel>
-    </>
-
   );
 };
 

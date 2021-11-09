@@ -98,6 +98,10 @@ export default class LayoutData {
   addWidget(toAdd: WidgetData, pos: GridPosition): void {
     console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
     console.log(this.layout);
+    const lg = Object.entries(this.layout)[0][1];
+    if (lg.map(l=>l.i).includes(toAdd.id)){
+      console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
+    }
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
         x: pos.x,
