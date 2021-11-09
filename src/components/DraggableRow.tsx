@@ -37,9 +37,6 @@ const DraggableRow = ({
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...dragHandleProperties}
-              // style = {{
-              //   // display: snapshot.isDragging ? "none" : "table-row",
-              // }}
             >
               {React.cloneElement(children, { provided })}
             </tr>

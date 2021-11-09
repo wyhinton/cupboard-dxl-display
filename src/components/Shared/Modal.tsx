@@ -34,7 +34,7 @@ const MyBackdrop = ({ onClose, backdropOpacity }: BackdropProperties) => {
   return (
     <div
       onMouseUp={onClose}
-      style={{ opacity: backdropOpacity }}
+      style={{ opacity: .7, zIndex: 200}}
       className={"pop-up-background"}
     ></div>
   );

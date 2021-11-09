@@ -15,6 +15,8 @@ interface AppConfig {
   defaultLayoutName: string;
   //
   showModeSwitchButton: boolean; 
+  widgetIds: string[]
+  useStaticLayout: boolean;
 }
 
 const appConfig: AppConfig = {
@@ -29,9 +31,11 @@ const appConfig: AppConfig = {
   formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   // gridRows: 3,
   // gridCols: 4,
+  widgetIds: ["clock", "group label", "info"],
   gridRows: 6,
   gridCols: 4,
   showModeSwitchButton: false,
+  useStaticLayout: true, 
 };
 
 export default appConfig;

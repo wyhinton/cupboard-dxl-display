@@ -1,12 +1,14 @@
+import "../../css/editorPanel.css";
+
 import classNames from "classnames";
-import Draggable from "react-draggable";
-import Editor from "./Editor";
+import { MinusIcon,PlusIcon } from "evergreen-ui";
 import React, { useState } from "react";
 import ReactDom from "react-dom";
+import Draggable from "react-draggable";
+
 import { AppMode } from "../../enums";
 import { useStoreState } from "../../hooks";
-import "../../css/editorPanel.css";
-import { PlusIcon, MinusIcon } from "evergreen-ui";
+import Editor from "./Editor";
 
 /**Draggable panel which contains the editor body, as well as a header bar with a min/max button for resizing the panel. Renders to "editor-panel-container" div in index.html*/
 
@@ -25,11 +27,12 @@ const EditorPanel = (): JSX.Element => {
   });
 
   return ReactDom.createPortal(
-    <>
       <Draggable
-        handle=".editor-panel-handle"
+        bounds = {{left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight-50}}
         defaultClassName={editorPanelClass}
         defaultPosition={{ x: 100, y: 100 }}
+        handle=".editor-panel-handle"
+        onDrag={(e)=>{console.log(e);}}
       >
         <div className={editorClass}>
           <PanelHeader>
@@ -48,8 +51,7 @@ const EditorPanel = (): JSX.Element => {
           </PanelHeader>
           <Editor />
         </div>
-      </Draggable>
-    </>,
+      </Draggable>,
     document.querySelector("#editor-panel-container") as HTMLDivElement
   );
 };
@@ -60,7 +62,7 @@ interface PanelHeaderProperties {
   children: JSX.Element | JSX.Element[];
 }
 const PanelHeader = ({ children }: PanelHeaderProperties): JSX.Element => {
-  return <div className={"editor-panel-handle panel-header"}>{children}</div>;
+  return <div className="editor-panel-handle panel-header">{children}</div>;
 };
 
 const BarButton = ({
@@ -71,7 +73,7 @@ const BarButton = ({
   onMouseUp: React.MouseEventHandler<HTMLDivElement>;
 }): JSX.Element => {
   return (
-    <div className={"window-button"} onMouseUp={onMouseUp}>
+    <div className="window-button" onMouseUp={onMouseUp}>
       {icon}
     </div>
   );

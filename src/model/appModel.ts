@@ -14,8 +14,10 @@ import CardData from "../data_structs/CardData";
 import { AppMode } from "../enums";
 import type {SheetNames} from "../enums";
 import type RawCardRow from "../interfaces/RawCardRow";
-import defaultGridLayout from "../static/defaultLayouts";
+import defaultGridLayout from "../static/defaultStaticLayout";
 import { StoreModel } from "./index";
+import WidgetData, { WidgetType } from "../data_structs/WidgetData";
+import appConfig from "../static/appConfig";
 /**
  * Core app model
  * @param
@@ -23,8 +25,10 @@ import { StoreModel } from "./index";
 export interface AppDataModel {
   //state
   availableCards: CardData[];
+  availableWidgets: WidgetData[];
+  activeWidgets: WidgetData[];
   activeCards: CardData[];
-  currentLayout: Layouts;
+  // currentLayout: Layouts;
   appMode: AppMode;
 
   //listeners
@@ -36,17 +40,22 @@ export interface AppDataModel {
   toggleAppMode: Thunk<AppDataModel, never>;
   //simple setters
   setAppMode: Action<AppDataModel, AppMode>;
-  setCurrentLayout: Action<AppDataModel, Layouts>;
+  // setCurrentLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
+  setActiveWidgets: Action<AppDataModel, WidgetData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
   registerCardLoadFailure: Thunk<AppDataModel, CardData, never, StoreModel>;
 }
 
+const availableWidgets = appConfig.widgetIds.map(n=>new WidgetData(n as WidgetType))
+
 const appModel: AppDataModel = {
   //state
   availableCards: [],
+  availableWidgets: availableWidgets,
+  activeWidgets: [],
   activeCards: [],
-  currentLayout: defaultGridLayout,
+  // currentLayout: defaultGridLayout.layout,
   appMode: AppMode.DISPLAY,
   // localStorageLayouts: [],
 
@@ -83,17 +92,20 @@ const appModel: AppDataModel = {
     }
     console.log(getState().appMode);
   }),
-  setCurrentLayout: action((state, layoutArray) => {
-    state.currentLayout = layoutArray;
-  }),
+  // setCurrentLayout: action((state, layoutArray) => {
+  //   state.currentLayout = layoutArray;
+  // }),
   setAvailableCards: action((state, cardDataArray) => {
     console.log("setting available cards");
     state.availableCards = cardDataArray;
   }),
   setActiveCards: action((state, cardDataArray) => {
-    console.log("setting active cards");
     console.log(cardDataArray);
     state.activeCards = cardDataArray;
+  }),
+  setActiveWidgets: action((state, widgetDataArray) => {
+    console.log(widgetDataArray);
+    state.activeWidgets = widgetDataArray;
   }),
   setAppMode: action((state, viewModeEnum) => {
     console.log("setting view mode");
@@ -130,20 +142,21 @@ const appModel: AppDataModel = {
       });
     }
   ),
-
   onSetActiveLayout: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.setActiveLayout,
     async (actions, layout, { getState }) => {
-      // console.log("listened for setActiveLayout at app_model");
-      //if a card source is in the active layout, then it must be active
-      // const sources = layout.payload.sources();
-      // console.log(sources);
-      const activeSources = new Set(
-        layout.payload.sources().filter((s) => s !== "clock")
+      // console.log(layout.);
+      console.log("SETTING ACTIVE LAYOUT");
+      const activeSourceIds = new Set(
+        layout.payload.sources()
+        // layout.payload.sources().filter((s) => s !== "clock")
       );
+      const activeWidgetIds = new Set(layout.payload.widgets())
+      console.log("ACTIVE WIDGET IDS", activeWidgetIds);
+
 
       const availableCardsUpdated = getState().availableCards.map((card) => {
-        if (activeSources.has(card.sourceId)) {
+        if (activeSourceIds.has(card.sourceId)) {
           card.setActive(true);
         } else {
           card.setActive(false);
@@ -151,12 +164,14 @@ const appModel: AppDataModel = {
         return card;
       });
       const activeCards = getState().availableCards.filter((card) => {
-        return activeSources.has(card.sourceId);
+        return activeSourceIds.has(card.sourceId);
       });
-      // console.log(availableCardsUpdated);
+      const activeWidgets = getState().availableWidgets.filter((card) => {
+        return activeWidgetIds.has(card.id);
+      });
       actions.setAvailableCards(availableCardsUpdated);
       actions.setActiveCards(activeCards);
-      // console.log(activeCards);
+      actions.setActiveWidgets(activeWidgets)
     }
   ),
   registerCardLoadFailure: thunk(

@@ -35,6 +35,9 @@ const App = (): JSX.Element => {
   const cardAddAction = useStoreActions(
     (actions) => actions.layoutsModel.addCard
   );
+  const widgetAddAction = useStoreActions(
+    (actions) => actions.layoutsModel.addWidget
+  );
   const setActiveLayoutAction = useStoreActions(
     (actions) => actions.layoutsModel.setActiveLayout
   );
@@ -108,13 +111,20 @@ const App = (): JSX.Element => {
           }
         }
         break;
-      case DragSource.LAYOUT_TABLE:
-        console.log("dragged ");
-        console.log("dragged from the layout table!");
-        const newLayout = externalLayoutsState.filter((l) => l.id === draggableId)[0];
+      case DragSource.WIDGETS_TABLE:
+        
         console.log(draggableId);
-        console.log(externalLayoutsState);
-        console.log(newLayout);
+        console.log(destination.droppableId);
+        console.log("DRAGGING FROM WIDGETS TABLE");
+        const cardPos = stringToGridPos(destination.droppableId);
+        const addEvent = {
+          sourceId: draggableId,
+          targetPosition: cardPos,
+        } as CardAddEvent;
+        widgetAddAction(addEvent)
+        break;
+      case DragSource.LAYOUT_TABLE:
+        const newLayout = externalLayoutsState.filter((l) => l.id === draggableId)[0];
         setActiveLayoutAction(newLayout);
         break;
       default:
@@ -143,3 +153,6 @@ const App = (): JSX.Element => {
 
 export default App;
 
+// i = "Clock_Widget"
+
+// {"lg":[{"w":2,"h":1,"x":0,"y":0,"i":"clock","moved":false,"static":true},{"w":1,"h":1,"x":2,"y":1,"i":"https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id

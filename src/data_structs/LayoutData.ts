@@ -3,8 +3,10 @@ import { Layout, Layouts } from "react-grid-layout";
 import type { CardSwapEvent } from "../interfaces/CardEvents";
 import type { GridPosition } from "../interfaces/GridPosition";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
+import appConfig from "../static/appConfig";
 import extendedLayoutTest from "../static/extendedLayoutTest";
 import CardData from "./CardData";
+import WidgetData from "./WidgetData";
 
 export interface CardOptions {
   id: string;
@@ -35,6 +37,7 @@ export default class LayoutData {
   readonly sourceLayout: ExtendedLayout;
   layout: Layouts;
   extendedLayout!: ExtendedLayout;
+
   constructor(row: RawLayoutRow) {
     this.id = row.title + "_" + row.timestamp;
     this.title = row.title;
@@ -42,9 +45,9 @@ export default class LayoutData {
     this.added = new Date(row.timestamp.split(" ")[0]);
     this.sourceLayout = testGetLayout(row);
     this.extendedLayout = testGetLayout(row);
-    // this.layout = JSON.parse(row.layout);
     this.layout = this.extendedLayout.layout;
   }
+
   swapCard(swapInfo: CardSwapEvent): void {
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
@@ -55,6 +58,7 @@ export default class LayoutData {
       this.layout[k] = v;
     }
   }
+
   removeCard(toRemove: CardData): void {
     console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
@@ -63,6 +67,7 @@ export default class LayoutData {
       }
     }
   }
+
   clearCards(): void {
     console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
@@ -71,9 +76,14 @@ export default class LayoutData {
       }
     }
   }
+
   addCard(toAdd: CardData, pos: GridPosition): void {
     console.log("ADDING CARD AT LAYOUT DATA");
     console.log(this.layout);
+    const lg = Object.entries(this.layout)[0][1];
+    if (lg.map(l=>l.i).includes(toAdd.sourceId)){
+      console.log("ADDING SOMETHING THAT'S ALREADY PRESENT");
+    }
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
         x: pos.x,
@@ -81,6 +91,20 @@ export default class LayoutData {
         w: 1,
         h: 1,
         i: toAdd.sourceId,
+      };
+      this.layout[k].push(newItem);
+    }
+  }
+  addWidget(toAdd: WidgetData, pos: GridPosition): void {
+    console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
+    console.log(this.layout);
+    for (const [k, v] of Object.entries(this.layout)) {
+      const newItem: Layout = {
+        x: pos.x,
+        y: pos.y,
+        w: 1,
+        h: 1,
+        i: toAdd.id,
       };
       this.layout[k].push(newItem);
     }
@@ -100,6 +124,14 @@ export default class LayoutData {
   sources(): string[] {
     const lg = Object.entries(this.layout)[0][1];
     return lg.map((l: any) => l.i);
+  }
+  widgets(): string[]{
+    console.log("GETTING WIDGETS AT WIDGET LAYOUTDATA");
+    const lg = Object.entries(this.layout)[0][1];
+    console.log(lg);
+    const  justWidgets = lg.filter((l: any) => appConfig.widgetIds.includes(l.i));
+    console.log("just widgets", justWidgets);
+    return justWidgets.map((l: any) => l.i);
   }
 }
 //TODO: TEMPORRARY!!!!!

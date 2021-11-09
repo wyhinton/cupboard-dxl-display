@@ -1,3 +1,6 @@
+import { WidgetType } from "../data_structs/WidgetData";
+
+
 //describes the column names in a spreadsheet containing card data
 export default interface RawCardRow {
   src: string;
@@ -6,4 +9,5 @@ export default interface RawCardRow {
   sourceid: string;
   author: string;
   interaction: string;
+  widgetType?: WidgetType;
 }

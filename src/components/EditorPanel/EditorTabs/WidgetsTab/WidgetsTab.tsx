@@ -1,15 +1,13 @@
 import "../../../../css/table.css";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { DndTypes, DragSource } from "../../../../enums";
+import DraggableDiv from "../../../DraggableDiv";
 import IXDrop from "../../../IXDrop";
 import Clock from "../../../Widgets/Clock";
-import XDrag from "../../../DraggableRow";
-import DraggableDiv from "../../../DraggableDiv";
 /**
  * Table for displaying the available card layouts
- * @returns
  */
 
 const WidgetsTab = (): JSX.Element => {
@@ -18,17 +16,27 @@ const WidgetsTab = (): JSX.Element => {
       <IXDrop
         cardType={DndTypes.CLOCK}
         className="table-container"
-        droppableId={DragSource.LAYOUT_TABLE}
+        droppableId={DragSource.WIDGETS_TABLE}
         isDropDisabled={false}
       >
         <DraggableDiv 
+        className="draggable-widget"
         dndType = {DndTypes.WIDGET}
-        isDragDisabled = {false}
+        draggableId="clock"
         index = {0}
-          draggableId={"clock-widget"}
-        className={"draggable-widget"} isDragDisabled={false}>
-        <Clock />
-        <DraggableDiv/>
+        isDragDisabled = {false}
+        >
+          <Clock />
+        </DraggableDiv>
+        <DraggableDiv 
+        className="draggable-widget"
+        dndType = {DndTypes.WIDGET}
+        draggableId="info"
+        index = {1}
+        isDragDisabled = {false}
+        >
+          <button>HELLO</button>
+        </DraggableDiv>
       </IXDrop>
     </div>
   );

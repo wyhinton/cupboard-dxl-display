@@ -56,9 +56,12 @@ const GoogleFormPopup = ({
       backdropOpacity={0.5}
     >
       <div className={"google-form-popup-inner-container"}>
+      <Heading>
+            1. Press the Copy Button
+        </Heading>
         <Heading>
           {
-             isCopiedJSON?"2. Fill out the form, and paste the copied text into the Content field, then submit":"1. Press the Copy Button"
+             isCopiedJSON?"2. Fill out the form, and paste the copied text into the Content field, then submit":""
           }
         </Heading>
         <div
@@ -115,11 +118,23 @@ const CopyField = ({
   }, [text]);
   return (
     <div>
-      <div className={copyFieldClass}>
+            <Button
+          iconBefore={<ClipboardIcon />}
+          text={"Copy Layout To Clip Board"}
+          onClick={(e) => {
+            navigator.clipboard.writeText(text);
+            setIsCopied(true);
+            onCopy(e)
+          }}
+          width = {"100%"}
+          intent={"success"}
+          appearance={"primary"}
+        />
+      {/* <div className={copyFieldClass}>
         <Scrollbars autoHeightMin={0} autoHeightMax={200}>
           {text}
         </Scrollbars>
-      </div>
+      </div> */}
       {!isClipBoardCorrect ? (
         <InlineAlert intent="warning">
           Current clipboard content is out of sync with current layout, copy the
@@ -136,15 +151,7 @@ const CopyField = ({
           paddingTop: "1em",
         }}
       >
-        <Button
-          iconBefore={<ClipboardIcon />}
-          text={"Copy Layout To Clip Board"}
-          onClick={(e) => {
-            navigator.clipboard.writeText(text);
-            setIsCopied(true);
-            onCopy(e)
-          }}
-        />
+
         <Button
           iconBefore={<CrossIcon />}
           text={"Return"}

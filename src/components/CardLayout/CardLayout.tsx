@@ -1,25 +1,29 @@
-import appConfig from '../../static/appConfig';
-import CardData from '../../data_structs/CardData';
-import Clock from '../Widgets/Clock';
-import GuideGrid from './GuideGrid';
-import IFrameView from '../IFrameView';
-import IXDrop from '../IXDrop';
+import '../../css/cardLayout.css';
+import '../../css/libs/reactDraggable.css';
+
 import React, {
   useEffect,
   useMemo,
   useRef,
   useState
   } from 'react';
-import ViewCard from './ViewCard/ViewCard';
-import { AppMode, DndTypes } from '../../enums';
 import {
   Layouts,
   Responsive,
   WidthProvider
   } from 'react-grid-layout';
+
+import CardData from '../../data_structs/CardData';
+import WidgetData from '../../data_structs/WidgetData';
+import { AppMode, DndTypes } from '../../enums';
 import { useStoreActions, useStoreState } from '../../hooks';
-import '../../css/cardLayout.css';
-import '../../css/libs/reactDraggable.css';
+import appConfig from '../../static/appConfig';
+import HowToUse from '../HowToUse';
+import IFrameView from '../IFrameView';
+import IXDrop from '../IXDrop';
+import Clock from '../Widgets/Clock';
+import GuideGrid from './GuideGrid';
+import ViewCard from './ViewCard/ViewCard';
 
 export const CardGrid = (): JSX.Element => {
   const viewModeState = useStoreState((state) => state.appModel.appMode);
@@ -41,6 +45,8 @@ export const CardGrid = (): JSX.Element => {
   }, [viewModeState]);
 
   const activeCards = useStoreState((state) => state.appModel.activeCards);
+  const activeWidgets = useStoreState((state)=>state.appModel.activeWidgets)
+  console.log("ACTIVE WIDGETS", activeWidgets);
   const [realLayout, setRealLayout] = useState(currentLayoutState?.extendedLayout.layout);
   //keep a local mutable reference to a layout in order to avoid making excess calls to store and causing re-renders on each new edit
   const localLayout = useRef<null | Layouts>(null);
@@ -55,7 +61,7 @@ export const CardGrid = (): JSX.Element => {
     if (currentLayoutState?.layout) {
       localLayout.current = currentLayoutState?.layout;
     }
-  }, [activeCards, currentLayoutState]);
+  }, [activeCards, currentLayoutState, activeWidgets]);
 
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
@@ -63,8 +69,40 @@ export const CardGrid = (): JSX.Element => {
     rowHeight: size.y / appConfig.gridRows,
     margin: [20, 20] as [number, number],
     preventCollision: true,
-    compactType: null,
+    compactType: undefined,
   };
+
+  const renderWidget = (widgetData: WidgetData): JSX.Element | undefined =>{
+    let widget = undefined
+    switch (widgetData.id){
+      case "clock":
+        widget =  (<ViewCard
+        cardType={DndTypes.CLOCK}
+        onClick={() => {
+          console.log("clock clicked");
+        }}
+                   >
+        {(scale) => {
+            return <Clock />;
+        }}
+        </ViewCard>)
+      
+        break;
+      case "info":
+        widget = ( <ViewCard
+        cardType={DndTypes.CLOCK}
+                   >
+        {(scale) => {
+            return <HowToUse/>;
+          }}
+        </ViewCard>)
+      break;
+      }
+
+    return widget
+      
+   
+  }
 
   return (
     <div>
@@ -72,17 +110,17 @@ export const CardGrid = (): JSX.Element => {
         <ResponsiveGridLayout
           {...sharedGridSettings}
           className="card-layout"
+          isBounded
+          isDraggable={isEditMode}
+          isResizable={isEditMode}
           layouts={realLayout}
-          resizeHandles={["se"]}
-          preventCollision={true}
-          verticalCompact={true}
-          isBounded={true}
           onDragStart={(layout, oldItem, newItem, placeholder, e, element) => {
             const previousStyle = element.style;
             previousStyle.border = "2px solid cyan";
             element.style.border = "4px solid cyan";
           }}
           onLayoutChange={(l) => {
+            console.log("CHANGED THE LAYOUT");
             const newLayout: Layouts = {
               lg: l,
               md: l,
@@ -93,48 +131,51 @@ export const CardGrid = (): JSX.Element => {
             localLayout.current = newLayout;
             setBufferLayoutAction(localLayout.current);
           }}
-          isDraggable={isEditMode}
-          isResizable={isEditMode}
+          preventCollision
+          resizeHandles={["se"]}
+          verticalCompact
         >
-          {/* <div key={"clock"}>
-            <ViewCard
-              cardType={DndTypes.CLOCK}
-              onClick={() => {
-                console.log("clock clicked");
-              }}
-            >
-              {(scale) => {
-                return <Clock />;
-              }}
-            </ViewCard>
-          </div> */}
-
+          {
+            activeWidgets.map((widget: WidgetData, index: number)=>{
+              return (
+              <div
+              draggable
+              key={widget.id}
+              >
+              {
+                renderWidget(widget)
+              }
+              Im a Widget
+              </div>)
+            })
+          }
           {activeCards.map((card: CardData, index: number) => {
             return (
               <div
-                key={card.sourceId}
-                draggable={true}
                 className={cardContainerClass(card, viewModeState)}
+                draggable
+                key={card.sourceId}
               >
                 <IXDrop
-                  key={index}
-                  droppableId={card.sourceId}
                   cardType={DndTypes.IFRAME}
-                  className={"droppable-card"}
+                  className="droppable-card"
+                  droppableId={card.sourceId}
+                  key={index}
                 >
+                  
                   <ViewCard
+                    activeKey={activeKeyReference}
+                    cardId={index.toString()}
                     cardType={DndTypes.IFRAME}
                     data={card}
                     key={index.toString()}
-                    cardId={index.toString()}
                     onClick={() => {
                       activeKeyReference.current = index.toString();
                     }}
-                    activeKey={activeKeyReference}
                   >
                     {(scale) => {
                       return (
-                        <IFrameView card={card} src={card.src} scale={scale} />
+                        <IFrameView card={card} scale={scale} src={card.src} />
                       );
                     }}
                   </ViewCard>

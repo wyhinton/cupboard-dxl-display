@@ -1,5 +1,5 @@
 import CardData from "../data_structs/CardData";
-import defaultLayouts from "../static/defaultLayouts";
+import defaultStaticLayout from "../static/defaultStaticLayout";
 import LayoutData from "../data_structs/LayoutData";
 import RawLayoutRow from "../interfaces/RawLayoutRow";
 import { AppMode } from "../enums";
@@ -20,7 +20,6 @@ export interface LayoutsModel {
   //listeners
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
   onToggleViewMode: ThunkOn<LayoutsModel, never, StoreModel>;
-  //requests
 
   //simple setters
   setActiveLayout: Action<LayoutsModel, LayoutData>;
@@ -34,6 +33,7 @@ export interface LayoutsModel {
   deleteCard: Thunk<LayoutsModel, CardData, StoreModel>;
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
+  addWidget: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   registerCardLoadFailure: Thunk<LayoutsModel, CardData, never, StoreModel>;
   resetLayout: Thunk<LayoutsModel, never, StoreModel>
 }
@@ -43,8 +43,8 @@ const layoutsModel: LayoutsModel = {
   //state
   activeLayout: undefined,
   externalLayouts: [],
-  bufferLayout: defaultLayouts,
-  tempLayout: defaultLayouts,
+  bufferLayout: defaultStaticLayout.layout,
+  tempLayout: defaultStaticLayout.layout,
 
   //listeners
   /**On setAppGoogleSheetData, create an array of LayoutData objects from the provided rows */
@@ -58,18 +58,21 @@ const layoutsModel: LayoutsModel = {
         .then((rows) => {
           const rawLayoutRows = rows;
           const layouts = rawLayoutRows.map((l) => new LayoutData(l));
-          const defaultLayout = layouts.filter(
-            (layout) => layout.title === appConfig.defaultLayoutName
-          )[0];
-          if (defaultLayout) {
-            actions.setActiveLayout(defaultLayout);
+          let defaultLayout: LayoutData;
+          if (appConfig.useStaticLayout){
+             defaultLayout = defaultStaticLayout
+             actions.setActiveLayout(defaultLayout);
+             actions.setBufferLayout(defaultLayout.layout)
+          } else {
+            const defaultLayout = layouts.filter(
+              (layout) => layout.title === appConfig.defaultLayoutName
+            )[0];
+            if (defaultLayout) {
+              actions.setActiveLayout(defaultLayout);
+              actions.setBufferLayout(defaultLayout.layout)
+            }
           }
           actions.setExternalLayouts(layouts);
-          actions.setBufferLayout(
-            layouts.filter(
-              (layout) => layout.title === appConfig.defaultLayoutName
-            )[0].layout
-          );
         });
     }
   ),
@@ -140,6 +143,19 @@ const layoutsModel: LayoutsModel = {
       const buf = getState().bufferLayout;
       activeLayout.setGridLayout(buf);
       activeLayout?.addCard(cardToAdd, targetPosition);
+      actions.setActiveLayout(activeLayout);
+    }
+  }),
+  addWidget: thunk((actions, cardAddEvent, { getState, getStoreState }) => {
+    console.log("ADDING NEW WIDGET!!!");
+    const { availableWidgets } = getStoreState().appModel;
+    const { sourceId, targetPosition } = cardAddEvent;
+    const widgetToAdd = availableWidgets.find((c) => c.id == sourceId);
+    const { activeLayout } = getState();
+    if (activeLayout && widgetToAdd) {
+      const buf = getState().bufferLayout;
+      activeLayout.setGridLayout(buf);
+      activeLayout?.addWidget(widgetToAdd, targetPosition);
       actions.setActiveLayout(activeLayout);
     }
   }),

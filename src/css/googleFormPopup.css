@@ -3,16 +3,17 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  /* background-color: red; */
   width: fit-content;
   height: fit-content;
   z-index: 1999;
   width: 50%;
-  /* height: 80%; */
   height: fit-content;
   max-height:  80%;
   background-color: lightgrey;
   overflow: scroll;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: height .5s ease-out;
 }
 
 .google-form-popup iframe{
