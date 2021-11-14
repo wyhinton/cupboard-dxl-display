@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
 
 import { DndTypes } from "../enums";
@@ -21,8 +21,7 @@ const DraggableWidget = ({
   dragAll,
   draggableId,
   index, 
-  ...properties
-}:DraggableDiv ) => {
+}:DraggableDiv ): JSX.Element => {
   const currentLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
@@ -31,28 +30,33 @@ const DraggableWidget = ({
 
   useEffect(()=>{
     isInLayout = currentLayoutState?.layout.lg.map(l=>l.i).includes(draggableId)
+
   },[currentLayoutState])
-  console.log(React.isValidElement(children));
-  console.log(isInLayout);
-  if (!React.isValidElement(children) || isInLayout) return <div />;
+  const getItemStyle = () => ({
+    display:isInLayout?"none":"block"
+
+  });
+
+  if (!React.isValidElement(children)) return <div />;
   return (
+    <div style = {{display:isInLayout?"none":"block"}}>
     <Draggable draggableId= {draggableId} index = {index}>
       {(provided, snapshot) => {
-        const dragHandleProperties = dragAll ? provided.dragHandleProps : {};
-
+        console.log(isInLayout);
         return (
             <div
               className={className}
               ref={provided.innerRef}
-              // style = {{display:isInLayout?"none":""}}
+              style = {getItemStyle()}
               {...provided.draggableProps}
-              {...dragHandleProperties}
+              {...provided.dragHandleProps}
             >
               {React.cloneElement(children, { provided })}
             </div>
         );
       }}
     </Draggable>
+    </div>
   );
 };
 

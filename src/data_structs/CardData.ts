@@ -1,10 +1,10 @@
-import type RawCardRow from "../interfaces/RawCardRow";
 import { InteractionType } from "../enums";
 import IFrameValidator from "../IFrameValidator";
+import type RawCardRow from "../interfaces/RawCardRow";
 import { WidgetType } from "./WidgetData";
 
 
-type ContentType = "video"|"image"|"website"|"embed"|"widget"
+export type ContentType = "video"|"image"|"website"|"embed"|"widget"
 
 interface ContentCardData{
   src: string;
@@ -34,7 +34,7 @@ export default class CardData {
 
   constructor(row: RawCardRow) {
     // console.log(`GOT IMAGE CARD ROW: ${isImgLink(row.src)}`);
-    // this.id = 
+    this.id = row.src
     this.src = row.src;
     this.title = row.title;
     this.added = new Date(row.added);
@@ -88,7 +88,7 @@ function getContentType(url: string): ContentType{
 
 function isImgLink(url: string) {
   if (typeof url !== "string") return false;
-  var imageReg = /[\/.](gif|jpg|jpeg|tiff|png)$/i;
+  const imageReg = /[./](gif|jpg|jpeg|tiff|png)$/i;
   return (
     imageReg.test(url)
   );
@@ -96,7 +96,7 @@ function isImgLink(url: string) {
 
 function isVideo(url: string){
   if (typeof url !== "string") return false;
-  var videoReg = /[\/.](mp4|webm|mov)$/i;
+  const videoReg = /[./](mp4|webm|mov)$/i;
   return (
     videoReg.test(url)
     // url.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) != null

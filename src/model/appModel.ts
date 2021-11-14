@@ -64,7 +64,7 @@ const appModel: AppDataModel = {
   manageViewModeChange: thunk((actions, viewModeEnum) => {
     console.log(viewModeEnum);
     actions.setAppMode(viewModeEnum);
-    switch (viewModeEnum) {
+    switch (viewModeEnum) { 
       case AppMode.EDIT:
         break;
       case AppMode.DISPLAY:
@@ -151,7 +151,7 @@ const appModel: AppDataModel = {
         layout.payload.sources()
         // layout.payload.sources().filter((s) => s !== "clock")
       );
-      const activeWidgetIds = new Set(layout.payload.widgets())
+      const activeWidgetIds = new Set(layout.payload.extendedLayout.widgets.map(w=>w.id))
       console.log("ACTIVE WIDGET IDS", activeWidgetIds);
 
 
@@ -166,11 +166,14 @@ const appModel: AppDataModel = {
       const activeCards = getState().availableCards.filter((card) => {
         return activeSourceIds.has(card.sourceId);
       });
-      const activeWidgets = getState().availableWidgets.filter((card) => {
+      // console.log(object);
+      // availableWidgets = layout.payload.layout.
+      const activeWidgets = availableWidgets.filter((card) => {
         return activeWidgetIds.has(card.id);
       });
       actions.setAvailableCards(availableCardsUpdated);
       actions.setActiveCards(activeCards);
+      console.log(activeWidgets);
       actions.setActiveWidgets(activeWidgets)
     }
   ),

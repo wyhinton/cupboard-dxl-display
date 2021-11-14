@@ -46,7 +46,7 @@ export const CardGrid = (): JSX.Element => {
 
   const activeCards = useStoreState((state) => state.appModel.activeCards);
   const activeWidgets = useStoreState((state)=>state.appModel.activeWidgets)
-  const [realLayout, setRealLayout] = useState(currentLayoutState?.extendedLayout.layout);
+  const [realLayout, setRealLayout] = useState(currentLayoutState?.layout);
   //keep a local mutable reference to a layout in order to avoid making excess calls to store and causing re-renders on each new edit
   const localLayout = useRef<null | Layouts>(null);
 
@@ -135,7 +135,7 @@ export const CardGrid = (): JSX.Element => {
           resizeHandles={["se"]}
           verticalCompact
         >
-          {
+          {/* {
             activeWidgets.map((widget: WidgetData, index: number)=>{
               return (
               <div
@@ -148,18 +148,29 @@ export const CardGrid = (): JSX.Element => {
               Im a Widget
               </div>)
             })
-          }
-          {activeCards.map((card: CardData, index: number) => {
+          } */}
+          {[...activeCards, ...activeWidgets].map((card: CardData | WidgetData, index: number) => {
             return (
               <div
-                className={cardContainerClass(card, viewModeState)}
+                className = "card-container"
                 draggable
-                key={card.sourceId}
+                key={card.id}
               >
+                {/* {
+                  card.contentType === "widget"?<div
+                  draggable
+                  key={card.id}
+                  >
+                  {
+                    renderWidget(card)
+                  }
+                  Im a Widget
+                  </div>
+                } */}
                 <IXDrop
                   cardType={DndTypes.IFRAME}
                   className="droppable-card"
-                  droppableId={card.sourceId}
+                  droppableId={card.id}
                   key={index}
                 >
                   
@@ -173,11 +184,20 @@ export const CardGrid = (): JSX.Element => {
                       activeKeyReference.current = index.toString();
                     }}
                   >
-                    {(scale) => {
+                    
+                    {
+                    
+                    card.contentType !=="widget"?(scale) => {
+                      const contentCard = card as CardData
                       return (
-                        <IFrameView card={card} scale={scale} src={card.src} />
+                        <IFrameView card={contentCard} scale={scale}/>
+                      );
+                    }:(scale) => {
+                      return (
+                        renderWidget(card as WidgetData)
                       );
                     }}
+                    {}
                   </ViewCard>
                 </IXDrop>
               </div>

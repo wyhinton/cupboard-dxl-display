@@ -30,7 +30,7 @@ export interface LayoutsModel {
 
   //update
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;
-  deleteCard: Thunk<LayoutsModel, CardData, StoreModel>;
+  deleteCard: Thunk<LayoutsModel, string, StoreModel>;
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   addWidget: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
@@ -86,7 +86,7 @@ const layoutsModel: LayoutsModel = {
       if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
         console.log("IT WAS IN DISPLAY MODE");
         if (activeLayout?.layout) {
-          activeLayout.layout = buf;
+          activeLayout.extendedLayout.layout = buf;
           actions.setActiveLayout(activeLayout);
         }
       }

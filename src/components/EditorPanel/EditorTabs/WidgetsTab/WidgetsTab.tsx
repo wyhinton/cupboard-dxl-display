@@ -50,7 +50,6 @@ const WidgetsTab = (): JSX.Element => {
         draggableId="clock"
         index = {0}
         isDragDisabled = {false}
-        
         >
           <Clock />
         </DraggableDiv>

@@ -26,6 +26,7 @@ export interface LayoutSettings {
 export interface ExtendedLayout {
   layout: Layouts;
   layoutSettings: LayoutSettings;
+  widgets: WidgetData[]
 }
 
 //TODO: Google form columns and layoutData fields should have the same capitilization
@@ -36,16 +37,19 @@ export default class LayoutData {
   readonly id: string;
   readonly sourceLayout: ExtendedLayout;
   layout: Layouts;
-  extendedLayout!: ExtendedLayout;
+  layoutWidgets: WidgetData[];
 
   constructor(row: RawLayoutRow) {
+    const {widgets, layout, layoutSettings} = testGetLayout(row);
     this.id = row.title + "_" + row.timestamp;
     this.title = row.title;
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
     this.sourceLayout = testGetLayout(row);
-    this.extendedLayout = testGetLayout(row);
-    this.layout = this.extendedLayout.layout;
+    // this.extendedLayout = testGetLayout(row);
+    this.layout = layout
+    this.layoutWidgets = widgets
+
   }
 
   swapCard(swapInfo: CardSwapEvent): void {
@@ -59,11 +63,11 @@ export default class LayoutData {
     }
   }
 
-  removeCard(toRemove: CardData): void {
+  removeCard(toRemoveId: string): void {
     console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
-        this.layout[k] = v.filter((l) => l.i !== toRemove.sourceId);
+        this.layout[k] = v.filter((l) => l.i !== toRemoveId);
       }
     }
   }
@@ -102,6 +106,7 @@ export default class LayoutData {
     if (lg.map(l=>l.i).includes(toAdd.id)){
       console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
     }
+    this.layout.widgets.push(toAdd)
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
         x: pos.x,

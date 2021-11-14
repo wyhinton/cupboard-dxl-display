@@ -12,7 +12,8 @@ const layoutSettings: LayoutSettings  = {
 
 const extendedLayoutTest: ExtendedLayout = {
     layout: layout,
-    layoutSettings: layoutSettings
+    layoutSettings: layoutSettings,
+    widgets: [],
 }
 
 export default extendedLayoutTest

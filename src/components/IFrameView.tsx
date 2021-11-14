@@ -9,7 +9,6 @@ import CardData from "../data_structs/CardData";
 
 interface IFrameViewProperties {
   card: CardData;
-  src: string;
   scale: number;
 }
 /**
@@ -21,11 +20,10 @@ interface IFrameViewProperties {
  *  <IFrameView src = {my_url}/>
  * )
  */
-const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
+const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
   const [active, setActive] = useState(false);
   const [valid, setIsValid] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
-  const isYouTubeVideo = new RegExp("youtube").test(src);
 
   const iframeOverlayClass = classNames("iframe-view-overlay", {
     "iframe-view-overlay-hidden": isLoaded,
@@ -58,6 +56,8 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
     zIndex: 10,
   } as React.CSSProperties;
 
+  const {src, contentType} = card
+
   return (
     <div
       onDoubleClick={() => {
@@ -69,14 +69,14 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
         <Loader type="Grid" color="white" height={80} width={80} />
       </div>
       {/* {renderContent(card, (e)=>{       setIsLoaded(true);} )} */}
-      {card.contentType === "video" ? (
+      {contentType === "video" ? (
         <ResponsivePlayer
           src={card.src}
           onReady={(event) => {
             setIsLoaded(true);
           }}
         />
-      ) : card.contentType === "image" ? (
+      ) : contentType === "image" ? (
         <img
           style={{
             width: "100%",
@@ -84,7 +84,7 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
             objectFit: "cover",
             objectPosition: "center",
           }}
-          src={card.src}
+          src={src}
           onLoad={(event) => {
             setIsLoaded(true);
           }}
@@ -103,19 +103,20 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, src, scale }) => {
 };
 
 export default React.memo(IFrameView);
-function propertiesAreEqual(
-  previousProperties: Readonly<PropsWithChildren<IFrameViewProperties>>,
-  nextProperties: Readonly<PropsWithChildren<IFrameViewProperties>>
-): boolean {
-  if (previousProperties.src == nextProperties.src) {
-    console.log(previousProperties.src);
-    console.log(nextProperties.src);
-    return false;
-  }
-  console.log(previousProperties.src);
-  console.log(nextProperties.src);
-  return true;
-}
+
+// function propertiesAreEqual(
+//   previousProperties: Readonly<PropsWithChildren<IFrameViewProperties>>,
+//   nextProperties: Readonly<PropsWithChildren<IFrameViewProperties>>
+// ): boolean {
+//   if (previousProperties.src == nextProperties.src) {
+//     console.log(previousProperties.src);
+//     console.log(nextProperties.src);
+//     return false;
+//   }
+//   console.log(previousProperties.src);
+//   console.log(nextProperties.src);
+//   return true;
+// }
 
 const ResponsivePlayer = ({
   src,

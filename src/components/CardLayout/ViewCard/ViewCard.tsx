@@ -1,32 +1,5 @@
 import "../../../css/viewCard.css";
 
-import { AppMode, CardView, DndTypes, InteractionType } from "../../../enums";
-import { InlineAlert } from "evergreen-ui";
-
-import React, {
-  FC,
-  MouseEventHandler,
-  PropsWithChildren,
-  ReactNode,
-  RefObject,
-  useRef,
-  useState,
-} from "react";
-import {
-  useKeyboardShortcut,
-  useStoreActions,
-  useStoreState,
-  useToggle,
-  useOnClickOutside,
-} from "../../../hooks";
-
-import Button from "../../Shared/Button";
-import CardData from "../../../data_structs/CardData";
-import CardInfo from "./CardInfo";
-import DeleteButton from "./DeleteButton";
-import { Layouts } from "react-grid-layout";
-import SettingsButton from "./SettingsButton";
-import SettingsMenu from "./SettingsMenu";
 import classNames from "classnames";
 import {
   Action,
@@ -37,8 +10,35 @@ import {
   thunk,
   useLocalStore,
 } from "easy-peasy";
-import appConfig from "../../../static/appConfig";
+import { InlineAlert } from "evergreen-ui";
+import React, {
+  FC,
+  MouseEventHandler,
+  PropsWithChildren,
+  ReactNode,
+  RefObject,
+  useRef,
+  useState,
+} from "react";
+import { Layouts } from "react-grid-layout";
 import QRCode from "react-qr-code";
+
+import CardData from "../../../data_structs/CardData";
+import WidgetData from "../../../data_structs/WidgetData";
+import { AppMode, CardView, DndTypes, InteractionType } from "../../../enums";
+import {
+  useKeyboardShortcut,
+  useOnClickOutside,
+  useStoreActions,
+  useStoreState,
+  useToggle,
+} from "../../../hooks";
+import appConfig from "../../../static/appConfig";
+import Button from "../../Shared/Button";
+import CardInfo from "./CardInfo";
+import DeleteButton from "./DeleteButton";
+import SettingsButton from "./SettingsButton";
+import SettingsMenu from "./SettingsMenu";
 /**
  * Wraps each of the cards in the card layouts.
  * Click/Touch => Change the cards view mode
@@ -66,7 +66,7 @@ interface ViewCardProperties {
   cardId?: string;
   cardType: DndTypes;
   children?: (scale: number) => ReactNode;
-  data?: CardData;
+  data?: CardData | WidgetData;
   dataGrid?: Layouts;
   layoutRef?: React.MutableRefObject<Layouts | null>;
   onClick?: () => void;
@@ -80,7 +80,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   data,
   onClick,
 }: ViewCardProperties) => {
-  const cardContainerRef = useRef<HTMLDivElement>(null);
+  const cardContainerReference = useRef<HTMLDivElement>(null);
   const appModeState = useStoreState((state) => state.appModel.appMode);
   const [oldCardView, setCardView] = useState(CardView.GRID);
   const deleteCardAction = useStoreActions(
@@ -105,14 +105,14 @@ const ViewCard: FC<ViewCardProperties> = ({
       }),
       transform: computed([(state) => state.cardView], (cardView) => {
         if (cardView == CardView.PREVIEW) {
-          const boundingBox = cardContainerRef.current?.getBoundingClientRect();
-          setGpZindex(cardContainerRef, 1);
+          const boundingBox = cardContainerReference.current?.getBoundingClientRect();
+          setGpZindex(cardContainerReference, 1);
           if (boundingBox) {
             return calculateTransform(boundingBox);
           }
         }
         if (cardView === CardView.GRID) {
-          setGpZindex(cardContainerRef, 0);
+          setGpZindex(cardContainerReference, 0);
         }
         return `translate(${0}px, ${0}px)`;
       }),
@@ -135,10 +135,9 @@ const ViewCard: FC<ViewCardProperties> = ({
           "card-empty-hidden": !children && appModeState == AppMode.DISPLAY,
           "card-locked":
             state.cardType === DndTypes.CLOCK && appModeState === AppMode.EDIT,
-          "card-error": data?.failed,
+          // "card-error": data?.failed,
         });
-        console.log(test);
-        return test;
+        return test
       }),
       cardInfoClass: computed((state) => {
         return classNames("info", {
@@ -211,12 +210,11 @@ const ViewCard: FC<ViewCardProperties> = ({
           <DeleteButton
             onClick={() => {
               console.log("got delete button click");
-              deleteCardAction(data);
+              deleteCardAction(data.id);
             }}
           />
           <SettingsButton
             onClick={(e) => {
-              // toggleMenu();
               actions.toggleMenu();
             }}
           />
@@ -226,13 +224,19 @@ const ViewCard: FC<ViewCardProperties> = ({
   };
 
   const renderCardInfo = (): JSX.Element | undefined => {
-    if (oldCardView === CardView.PREVIEW && data) {
-      return <CardInfo data={data} className={state.cardInfoClass} />;
+    if (oldCardView === CardView.PREVIEW && data && data.contentType !== "widget") {
+      return <CardInfo className={state.cardInfoClass} data={data as CardData} />;
     }
   };
 
   const renderInternals = () => {
-    return [showDeleteButton(), renderCardInfo()];
+    if (data?.contentType !== "widget"){
+      return [showDeleteButton(), renderCardInfo()];
+    }
+    else {
+      return [showDeleteButton()];
+    }
+  
   };
 
   const renderReturnButton = (): JSX.Element | undefined => {
@@ -246,8 +250,8 @@ const ViewCard: FC<ViewCardProperties> = ({
       );
     }
   };
-  const containerRef = useRef(null);
-  useOnClickOutside(containerRef, () => {
+  const containerReference = useRef(null);
+  useOnClickOutside(containerReference, () => {
     if (state.cardView == CardView.PREVIEW) {
       actions.setCardView(CardView.GRID);
     }
@@ -256,19 +260,18 @@ const ViewCard: FC<ViewCardProperties> = ({
   const qrContainerStyle = {
     width: "fit-content",
     position: "absolute",
-    // top: 0,
     bottom: 0,
-    // left: 0,
     zIndex: 1,
     right: 0,
     transform: "translate(50%, 50%)",
   } as React.CSSProperties;
 
   const renderQrCode = (): JSX.Element | undefined => {
-    if (state.cardView === CardView.PREVIEW && data?.src) {
+    if (state.cardView === CardView.PREVIEW && data?.contentType !== "widget") {
+      const cd = data as CardData
       return (
         <div style={qrContainerStyle}>
-          <QRCode value={data?.src ?? ""} size={128} />
+          <QRCode size={128} value={cd?.src ?? ""} />
         </div>
       );
     }
@@ -278,21 +281,19 @@ const ViewCard: FC<ViewCardProperties> = ({
     //receives a drag objects
     <div
       className={state.cardClass}
+      ref={cardContainerReference}
       style={{
         willChange: "transform",
         height: "100%",
         transform: state.transform,
         backgroundColor: state.cardBackgroundColor,
       }}
-      ref={cardContainerRef}
     >
-      {data?.failed ? (
-        <FailureNotice errors={data.validator.errorMessages()} />
-      ) : children ? (
+
+      {children ? (
         <div className={cardModalBackdrop}>
           <div
             className={cardChildContainer}
-            ref={containerRef}
             onMouseUp={() => {
               actions.handleCardPress();
               // onCardPress();
@@ -300,6 +301,7 @@ const ViewCard: FC<ViewCardProperties> = ({
                 onClick();
               }
             }}
+            ref={containerReference}
           >
             {renderQrCode()}
             {renderInternals()}
@@ -334,11 +336,11 @@ const calculateTransform = (boundingBox: DOMRect): string => {
   let differenceX = centeredX - currentX;
   let differenceY = centeredY - currentY;
 
-  if (currentX > centeredX) {
+  if (centeredX < currentX) {
     differenceX = currentX - centeredX;
     differenceX *= -1;
   }
-  if (currentY > centeredY) {
+  if (centeredY < currentY) {
     differenceY = currentY - centeredY;
     differenceY *= -1;
   }
@@ -361,10 +363,10 @@ const setGpZindex = (
 
 const FailureNotice = ({ errors }: { errors: string[] }): JSX.Element => {
   return (
-    <div className={"failure-notice-container"}>
+    <div className="failure-notice-container">
       {errors.map((error, index) => (
-        <div key={index} className={"failure-message"}>
-          <InlineAlert key={index} intent="danger">
+        <div className="failure-message" key={index}>
+          <InlineAlert intent="danger" key={index}>
             {error}
           </InlineAlert>
         </div>
@@ -379,8 +381,8 @@ const ReturnButton = ({
   onClick: MouseEventHandler<HTMLDivElement>;
 }): JSX.Element => {
   return (
-    <div className={"return-button-container"}>
-      <Button text={"Return"} width={300} onClick={onClick} />
+    <div className="return-button-container">
+      <Button onClick={onClick} text="Return" width={300} />
     </div>
   );
 };
