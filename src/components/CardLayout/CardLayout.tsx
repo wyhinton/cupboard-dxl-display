@@ -56,6 +56,7 @@ export const CardGrid = (): JSX.Element => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
   useEffect(() => {
+    console.log(window.innerHeight/appConfig.gridRows);
     setRealLayout(currentLayoutState?.layout);
     if (currentLayoutState?.layout) {
       localLayout.current = currentLayoutState?.layout;
@@ -68,9 +69,9 @@ export const CardGrid = (): JSX.Element => {
     rowHeight: size.y / appConfig.gridRows,
     margin: [20, 20] as [number, number],
     preventCollision: true,
-    //MUST BE NULL, NOT UNDEFINED
     compactType: null,
   };
+  
 
   const renderWidget = (widgetData: WidgetData): JSX.Element | undefined =>{
     let widget = undefined

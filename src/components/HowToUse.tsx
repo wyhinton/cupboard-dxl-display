@@ -26,7 +26,7 @@ const HowToUse = (): JSX.Element => {
             />
             <Button
               fontSize = {"xx-large"}
-              height={"5vh"}
+              height={"4vh"}
               width={"35vw"}
               iconBefore={<HandUpIcon/>}
               onClick={toggleVisible}
