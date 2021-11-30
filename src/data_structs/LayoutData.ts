@@ -45,10 +45,18 @@ export default class LayoutData {
     this.title = row.title;
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
-    this.sourceLayout = testGetLayout(row);
+    // this.sourceLayout = testGetLayout(row);
+    this.sourceLayout  = JSON.parse(row.layout).sourceLayout
+    console.log(JSON.parse(row.layout));
+    if (JSON.parse(row.layout).layoutWidgets){
+      this.layoutWidgets = JSON.parse(row.layout).layoutWidgets
+    } else {
+      this.layoutWidgets = []
+    }
+    // this.layoutWidgets = []
     // this.extendedLayout = testGetLayout(row);
     this.layout = layout
-    this.layoutWidgets = widgets
+    // this.layoutWidgets = widgets
 
   }
 
@@ -100,13 +108,13 @@ export default class LayoutData {
     }
   }
   addWidget(toAdd: WidgetData, pos: GridPosition): void {
-    console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
-    console.log(this.layout);
+    // console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
+    // console.log(this.layout);
     const lg = Object.entries(this.layout)[0][1];
     if (lg.map(l=>l.i).includes(toAdd.id)){
       console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
     }
-    this.layout.widgets.push(toAdd)
+    this.layoutWidgets.push(toAdd)
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
         x: pos.x,
@@ -119,7 +127,7 @@ export default class LayoutData {
     }
   }
   resetLayout(): void {
-    this.extendedLayout = { ...this.sourceLayout };
+    // this.layout = { ...this.sourceLayout };
     this.layout = { ...this.sourceLayout.layout };
   }
   failCard(toFail: CardData) {
@@ -146,5 +154,7 @@ export default class LayoutData {
 //TODO: TEMPORRARY!!!!!
 function testGetLayout(row: RawLayoutRow): ExtendedLayout {
   const test = JSON.parse(row.layout);
+  // console.log(row);
+  // const test = JSON.parse(row.layout).layt=
   return test.layout ? test : extendedLayoutTest;
 }

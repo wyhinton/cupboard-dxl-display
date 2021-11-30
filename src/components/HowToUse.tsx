@@ -15,7 +15,7 @@ const HowToUse = (): JSX.Element => {
   const [visible, toggleVisible] = useToggle(false)
   
   const appModeState = useStoreState((state) => state.appModel.appMode);
-
+  
   return ReactDOM.createPortal(
       <>
         {appModeState === AppMode.DISPLAY ? (
@@ -84,41 +84,6 @@ const HowToPopup = ({
 };
 
 
-// const HowToPopup = ({
-//   active,
-//   onClose,
-// }: {
-//   active: boolean;
-//   onClose: () => void;
-// }): JSX.Element => {
-//   return ReactDom.createPortal(
-//     <Modal
-//       active={active}
-//       containerClassName={"how-to-use-popup"}
-//       onClose={onClose}
-//       backdropOpacity={0}
-//     >
-//       <Panel padding = "1em">
-//       <Heading>Connect Labtop</Heading>
-//       <hr></hr>
-//       <Text>
-//         Connect your labtop to use this screen as a display. 
-//       </Text>
-//       <img
-//         className={"how-to-image"}
-//         src={process.env.PUBLIC_URL + "/labtopdiagram.png"}
-//       />
-//       <Heading>Explore Content</Heading>
-//       <hr></hr>
-//       <Text>
-//         Click on a card to explore data related content.
-//       </Text>
-//       <img
-//         className={"how-to-image"}
-//         src={process.env.PUBLIC_URL + "/masonary.png"}
-//       />
-//       </Panel>
-//     </Modal>,
 //     document.querySelector("#how-to-use-popup") as HTMLElement
 //   );
 // };

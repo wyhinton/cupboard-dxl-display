@@ -1,14 +1,15 @@
-import CardData from "../data_structs/CardData";
-import defaultStaticLayout from "../static/defaultStaticLayout";
-import LayoutData from "../data_structs/LayoutData";
-import RawLayoutRow from "../interfaces/RawLayoutRow";
-import { AppMode } from "../enums";
-import type {SheetNames } from "../enums";
-import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
+import { Action, action, Thunk, thunk, ThunkOn,thunkOn } from "easy-peasy";
 import { Layouts } from "react-grid-layout";
-import { StoreModel } from "./index";
-import { action, thunk, Thunk, Action, thunkOn, ThunkOn } from "easy-peasy";
+
+import CardData from "../data_structs/CardData";
+import LayoutData from "../data_structs/LayoutData";
+import type {SheetNames } from "../enums";
+import { AppMode } from "../enums";
+import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
+import RawLayoutRow from "../interfaces/RawLayoutRow";
 import appConfig from "../static/appConfig";
+import defaultStaticLayout from "../static/defaultStaticLayout";
+import { StoreModel } from "./index";
 
 export interface LayoutsModel {
   //state
@@ -17,7 +18,7 @@ export interface LayoutsModel {
   bufferLayout: Layouts;
   tempLayout: Layouts;
 
-  //listeners
+  //listeners 
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
   onToggleViewMode: ThunkOn<LayoutsModel, never, StoreModel>;
 
@@ -68,6 +69,7 @@ const layoutsModel: LayoutsModel = {
               (layout) => layout.title === appConfig.defaultLayoutName
             )[0];
             if (defaultLayout) {
+              console.log(defaultLayout);
               actions.setActiveLayout(defaultLayout);
               actions.setBufferLayout(defaultLayout.layout)
             }
@@ -86,7 +88,7 @@ const layoutsModel: LayoutsModel = {
       if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
         console.log("IT WAS IN DISPLAY MODE");
         if (activeLayout?.layout) {
-          activeLayout.extendedLayout.layout = buf;
+          activeLayout.layout = buf;
           actions.setActiveLayout(activeLayout);
         }
       }

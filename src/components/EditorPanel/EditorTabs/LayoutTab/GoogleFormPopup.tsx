@@ -27,8 +27,8 @@ const GoogleFormPopup = ({
   onCloseComplete,
 }: GoogleFormPopupProperties): JSX.Element => {
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
-  console.log(layoutState?.extendedLayout);
-  console.log(layoutState?.extendedLayout.layoutSettings);
+  // console.log(layoutState?.extendedLayout);
+  // console.log(layoutState?.extendedLayout.layoutSettings);
   
   const [isShown, setIsShown] = useState(visible);
   const [isCopiedJSON, setIsCopiedJson] = useState(false)
@@ -41,7 +41,7 @@ const GoogleFormPopup = ({
   //   JSON.stringify(layoutState?.extendedLayout)
   // );
 
-  const layoutString = useStoreState((state) => JSON.stringify(state.layoutsModel.activeLayout?.extendedLayout));
+  const layoutString = useStoreState((state) => JSON.stringify(state.layoutsModel.activeLayout));
   console.log(layoutString);
   const copyFieldContainerClass = classNames("copy-field-container", {
     "copy-field-container-closed": isCopiedJSON,

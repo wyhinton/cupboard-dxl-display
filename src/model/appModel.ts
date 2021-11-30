@@ -11,13 +11,13 @@ import {
 import { Layouts } from "react-grid-layout";
 
 import CardData from "../data_structs/CardData";
-import { AppMode } from "../enums";
+import WidgetData, { WidgetType } from "../data_structs/WidgetData";
 import type {SheetNames} from "../enums";
+import { AppMode } from "../enums";
 import type RawCardRow from "../interfaces/RawCardRow";
+import appConfig from "../static/appConfig";
 import defaultGridLayout from "../static/defaultStaticLayout";
 import { StoreModel } from "./index";
-import WidgetData, { WidgetType } from "../data_structs/WidgetData";
-import appConfig from "../static/appConfig";
 /**
  * Core app model
  * @param
@@ -92,9 +92,6 @@ const appModel: AppDataModel = {
     }
     console.log(getState().appMode);
   }),
-  // setCurrentLayout: action((state, layoutArray) => {
-  //   state.currentLayout = layoutArray;
-  // }),
   setAvailableCards: action((state, cardDataArray) => {
     console.log("setting available cards");
     state.availableCards = cardDataArray;
@@ -149,9 +146,10 @@ const appModel: AppDataModel = {
       console.log("SETTING ACTIVE LAYOUT");
       const activeSourceIds = new Set(
         layout.payload.sources()
-        // layout.payload.sources().filter((s) => s !== "clock")
       );
-      const activeWidgetIds = new Set(layout.payload.extendedLayout.widgets.map(w=>w.id))
+      console.log(layout.payload);
+      console.log(layout.payload.layoutWidgets);
+      const activeWidgetIds = new Set(layout.payload.layoutWidgets.map(w=>w.id)??[])
       console.log("ACTIVE WIDGET IDS", activeWidgetIds);
 
 

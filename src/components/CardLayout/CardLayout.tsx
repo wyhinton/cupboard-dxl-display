@@ -74,6 +74,7 @@ export const CardGrid = (): JSX.Element => {
 
   const renderWidget = (widgetData: WidgetData): JSX.Element | undefined =>{
     let widget = undefined
+    
     switch (widgetData.id){
       case "clock":
         widget =  (<ViewCard
@@ -98,7 +99,7 @@ export const CardGrid = (): JSX.Element => {
         </ViewCard>)
       break;
       }
-
+    console.log(widget);
     return widget
       
    
@@ -222,3 +223,4 @@ const cardContainerClass = (card: CardData, appMode: AppMode): string => {
   }
 };
 
+//

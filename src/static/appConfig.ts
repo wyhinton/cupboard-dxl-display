@@ -25,9 +25,7 @@ const appConfig: AppConfig = {
     "https://docs.google.com/spreadsheets/d/1BR1AQ5Zmt_o_0dOm9AvDht0G3Q6RXQUhX71Vi4H7tTU/edit#gid=0",
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1.0,
-  defaultLayoutName: "New Image Layout",
-  // defaultLayoutName: "Image Layout",
-  // defaultLayoutName: "Data Charts",
+  defaultLayoutName: "NEWNOVIDEO",
   formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   // gridRows: 3,
   // gridCols: 4,
@@ -35,7 +33,7 @@ const appConfig: AppConfig = {
   gridRows: 6,
   gridCols: 4,
   showModeSwitchButton: false,
-  useStaticLayout: true, 
+  useStaticLayout: false, 
 };
 
 export default appConfig;
