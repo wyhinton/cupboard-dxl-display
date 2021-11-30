@@ -212,6 +212,7 @@ const ViewCard: FC<ViewCardProperties> = ({
               console.log("got delete button click");
               deleteCardAction(data.id);
             }}
+            action = {()=>{deleteCardAction(data.id)}}
           />
           <SettingsButton
             onClick={(e) => {
