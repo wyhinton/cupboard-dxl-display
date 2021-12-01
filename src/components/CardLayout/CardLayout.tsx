@@ -131,7 +131,8 @@ export const CardGrid = (): JSX.Element => {
               xxs: l,
             };
             localLayout.current = newLayout;
-            setBufferLayoutAction(localLayout.current);
+            setBufferLayoutAction(newLayout);
+            // setBufferLayoutAction(localLayout.current);
           }}
           preventCollision
           resizeHandles={["se"]}

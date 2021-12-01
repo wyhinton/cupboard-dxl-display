@@ -1,15 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-import { InfoSignIcon, Heading, Text, HandUpIcon } from "evergreen-ui";
-import ReactDom from "react-dom";
 import "../css/howToUse.css";
+
 import classNames from "classnames";
-import { useStoreState } from "../hooks";
-import Button from "./Shared/Button";
+import { HandUpIcon,Heading, InfoSignIcon, Text } from "evergreen-ui";
+import React, { useEffect,useRef, useState } from "react";
+import ReactDOM from "react-dom";
+
 import { AppMode } from "../enums";
+import { useStoreState } from "../hooks";
+import { useToggle } from "../hooks";
+import Button from "./Shared/Button";
 import Modal from "./Shared/Modal";
 import Panel from "./Shared/Panel";
-import { useToggle } from "../hooks";
-import ReactDOM from "react-dom";
 
 const HowToUse = (): JSX.Element => {
   const [visible, toggleVisible] = useToggle(false)
@@ -81,9 +82,5 @@ const HowToPopup = ({
       </Panel>
     </Modal>
   );
-};
+}; 
 
-
-//     document.querySelector("#how-to-use-popup") as HTMLElement
-//   );
-// };

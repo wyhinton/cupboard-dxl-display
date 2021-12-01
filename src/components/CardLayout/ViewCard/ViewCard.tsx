@@ -1,12 +1,10 @@
 import "../../../css/viewCard.css";
 
 import classNames from "classnames";
+import type {Action, Computed, Thunk} from "easy-peasy"
 import {
-  Action,
   action,
-  Computed,
   computed,
-  Thunk,
   thunk,
   useLocalStore,
 } from "easy-peasy";
@@ -25,7 +23,7 @@ import QRCode from "react-qr-code";
 
 import CardData from "../../../data_structs/CardData";
 import WidgetData from "../../../data_structs/WidgetData";
-import { AppMode, CardView, DndTypes, InteractionType } from "../../../enums";
+import { AppMode, CardView, DndTypes } from "../../../enums";
 import {
   useKeyboardShortcut,
   useOnClickOutside,

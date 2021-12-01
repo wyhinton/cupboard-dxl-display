@@ -74,7 +74,9 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
           src={card.src}
           onReady={(event) => {
             setIsLoaded(true);
+          
           }}
+          
         />
       ) : contentType === "image" ? (
         <img
@@ -133,7 +135,11 @@ const ResponsivePlayer = ({
         width="100%"
         height="100%"
         onReady={onReady}
+        controls = {true}
+        playing = {true}
+        muted = {true}
       />
+
     </div>
   );
 };
