@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/cupboard-dxl-display/static/css/main.94598560.chunk.css",
-    "main.js": "/cupboard-dxl-display/static/js/main.f24cd293.chunk.js",
-    "main.js.map": "/cupboard-dxl-display/static/js/main.f24cd293.chunk.js.map",
+    "main.js": "/cupboard-dxl-display/static/js/main.ffcb7661.chunk.js",
+    "main.js.map": "/cupboard-dxl-display/static/js/main.ffcb7661.chunk.js.map",
     "runtime-main.js": "/cupboard-dxl-display/static/js/runtime-main.d7a65756.js",
     "runtime-main.js.map": "/cupboard-dxl-display/static/js/runtime-main.d7a65756.js.map",
     "static/css/2.27175f2b.chunk.css": "/cupboard-dxl-display/static/css/2.27175f2b.chunk.css",
-    "static/js/2.1d5e20a4.chunk.js": "/cupboard-dxl-display/static/js/2.1d5e20a4.chunk.js",
-    "static/js/2.1d5e20a4.chunk.js.map": "/cupboard-dxl-display/static/js/2.1d5e20a4.chunk.js.map",
+    "static/js/2.4521c973.chunk.js": "/cupboard-dxl-display/static/js/2.4521c973.chunk.js",
+    "static/js/2.4521c973.chunk.js.map": "/cupboard-dxl-display/static/js/2.4521c973.chunk.js.map",
     "index.html": "/cupboard-dxl-display/index.html",
     "static/css/2.27175f2b.chunk.css.map": "/cupboard-dxl-display/static/css/2.27175f2b.chunk.css.map",
     "static/css/main.94598560.chunk.css.map": "/cupboard-dxl-display/static/css/main.94598560.chunk.css.map",
-    "static/js/2.1d5e20a4.chunk.js.LICENSE.txt": "/cupboard-dxl-display/static/js/2.1d5e20a4.chunk.js.LICENSE.txt",
+    "static/js/2.4521c973.chunk.js.LICENSE.txt": "/cupboard-dxl-display/static/js/2.4521c973.chunk.js.LICENSE.txt",
     "static/media/global.css": "/cupboard-dxl-display/static/media/Satoshi-Regular.fe762acc.ttf",
     "static/media/reactDraggable.css": "/cupboard-dxl-display/static/media/expand-icon.9d3ba9dd.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.d7a65756.js",
     "static/css/2.27175f2b.chunk.css",
-    "static/js/2.1d5e20a4.chunk.js",
+    "static/js/2.4521c973.chunk.js",
     "static/css/main.94598560.chunk.css",
-    "static/js/main.f24cd293.chunk.js"
+    "static/js/main.ffcb7661.chunk.js"
   ]
 }
