@@ -148,8 +148,12 @@ const ViewCard: FC<ViewCardProperties> = ({
         if (appModeState === AppMode.DISPLAY && cardId != undefined) {
           switch (getState().cardView) {
             case CardView.GRID:
-              actions.setCardView(CardView.PREVIEW);
-              console.log("SETTING CARD VIEW TO PREVIEW");
+              if (data?.contentType !== "widget") {
+                actions.setCardView(CardView.PREVIEW);
+                console.log("SETTING CARD VIEW TO PREVIEW");
+              }
+              // console.log(data);
+
               break;
             case CardView.PREVIEW:
               actions.setCardView(CardView.GRID);

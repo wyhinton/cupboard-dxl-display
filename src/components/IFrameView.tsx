@@ -56,7 +56,7 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
     zIndex: 10,
   } as React.CSSProperties;
 
-  const {src, contentType} = card
+  const { src, contentType } = card;
 
   return (
     <div
@@ -68,15 +68,12 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
       <div className={iframeOverlayClass}>
         <Loader type="Grid" color="white" height={80} width={80} />
       </div>
-      {/* {renderContent(card, (e)=>{       setIsLoaded(true);} )} */}
       {contentType === "video" ? (
         <ResponsivePlayer
           src={card.src}
           onReady={(event) => {
             setIsLoaded(true);
-          
           }}
-          
         />
       ) : contentType === "image" ? (
         <img
@@ -135,11 +132,10 @@ const ResponsivePlayer = ({
         width="100%"
         height="100%"
         onReady={onReady}
-        controls = {true}
-        playing = {true}
-        muted = {true}
+        controls={true}
+        playing={true}
+        muted={true}
       />
-
     </div>
   );
 };
