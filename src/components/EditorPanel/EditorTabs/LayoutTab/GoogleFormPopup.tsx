@@ -29,9 +29,9 @@ const GoogleFormPopup = ({
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
   // console.log(layoutState?.extendedLayout);
   // console.log(layoutState?.extendedLayout.layoutSettings);
-  
+
   const [isShown, setIsShown] = useState(visible);
-  const [isCopiedJSON, setIsCopiedJson] = useState(false)
+  const [isCopiedJSON, setIsCopiedJson] = useState(false);
   console.log("HELLO IM HERE");
   // const [layoutString, setLayoutString] = useState(
   //   JSON.stringify(layoutState?.layout)
@@ -41,12 +41,13 @@ const GoogleFormPopup = ({
   //   JSON.stringify(layoutState?.extendedLayout)
   // );
 
-  const layoutString = useStoreState((state) => JSON.stringify(state.layoutsModel.activeLayout));
+  const layoutString = useStoreState((state) =>
+    JSON.stringify(state.layoutsModel.activeLayout)
+  );
   console.log(layoutString);
   const copyFieldContainerClass = classNames("copy-field-container", {
     "copy-field-container-closed": isCopiedJSON,
   });
-
 
   return ReactDom.createPortal(
     <Modal
@@ -56,24 +57,25 @@ const GoogleFormPopup = ({
       backdropOpacity={0.5}
     >
       <div className={"google-form-popup-inner-container"}>
-      <Heading color = {isCopiedJSON?"green":""}>
-            1. Press the Copy Button
+        <Heading color={isCopiedJSON ? "green" : ""}>
+          1. Press the Copy Button
         </Heading>
         <Heading>
-          {
-             isCopiedJSON?"2. Fill out the form, and paste the copied text into the Content field, then submit":""
-          }
+          {isCopiedJSON
+            ? "2. Fill out the form, and paste the copied text into the Content field, then submit"
+            : ""}
         </Heading>
-        <div
-          className={copyFieldContainerClass}
-        >
-        <CopyField onCopy = {(e: React.MouseEvent<HTMLDivElement, MouseEvent>)=>{setIsCopiedJson(true)}} onCloseComplete={onCloseComplete} text={layoutString} />
+        <div className={copyFieldContainerClass}>
+          <CopyField
+            onCopy={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+              setIsCopiedJson(true);
+            }}
+            onCloseComplete={onCloseComplete}
+            text={layoutString}
+          />
         </div>
       </div>
-      {isCopiedJSON?
-      <GoogleFormIframe src = {formEmbedUrl}/>:<></>
-     }
-
+      {isCopiedJSON ? <GoogleFormIframe src={formEmbedUrl} /> : <></>}
     </Modal>,
     document.querySelector("#google-form-popup") as HTMLElement
   );
@@ -89,7 +91,7 @@ const CopyField = ({
   text: string;
   isCurrentClipBoardContent?: boolean;
   onCloseComplete: () => void;
-  onCopy: (e: React.MouseEvent<HTMLDivElement, MouseEvent>)=>void;
+  onCopy: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }): JSX.Element => {
   const [isClipBoardCorrect, setIsClipBoardCorrect] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -98,7 +100,6 @@ const CopyField = ({
     "copy-field-success": isCopied && isClipBoardCorrect,
     "copy-field-failure": !isCopied && !isClipBoardCorrect,
   });
-
 
   useEffect(() => {
     navigator.clipboard
@@ -118,18 +119,18 @@ const CopyField = ({
   }, [text]);
   return (
     <div>
-            <Button
-          iconBefore={<ClipboardIcon />}
-          text={"Copy Layout To Clip Board"}
-          onClick={(e) => {
-            navigator.clipboard.writeText(text);
-            setIsCopied(true);
-            onCopy(e)
-          }}
-          width = {"100%"}
-          intent={"success"}
-          appearance={"primary"}
-        />
+      <Button
+        iconBefore={<ClipboardIcon />}
+        text={"Copy Layout To Clip Board"}
+        onClick={(e) => {
+          navigator.clipboard.writeText(text);
+          setIsCopied(true);
+          onCopy(e);
+        }}
+        width={"100%"}
+        intent={"success"}
+        appearance={"primary"}
+      />
       {!isClipBoardCorrect ? (
         <InlineAlert intent="warning">
           Current clipboard content is out of sync with current layout, copy the
@@ -146,7 +147,6 @@ const CopyField = ({
           paddingTop: "1em",
         }}
       >
-
         <Button
           iconBefore={<CrossIcon />}
           text={"Return"}
@@ -157,17 +157,16 @@ const CopyField = ({
   );
 };
 
-
-const GoogleFormIframe = ({src}:{src: string}): JSX.Element =>{
-  return(
+const GoogleFormIframe = ({ src }: { src: string }): JSX.Element => {
+  return (
     <iframe
-    src={src}
-    className = {"google-form-iframe"}
-    width={"100%"}
-    frameBorder={0}
-    marginHeight={0}
-    marginWidth={0}
-    // style={{ height: "60em" }}
+      src={src}
+      className={"google-form-iframe"}
+      width={"100%"}
+      frameBorder={0}
+      marginHeight={0}
+      marginWidth={0}
+      // style={{ height: "60em" }}
     ></iframe>
-  )
-}
+  );
+};

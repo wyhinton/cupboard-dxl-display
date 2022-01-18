@@ -1,13 +1,8 @@
 import "../../../css/viewCard.css";
 
 import classNames from "classnames";
-import type {Action, Computed, Thunk} from "easy-peasy"
-import {
-  action,
-  computed,
-  thunk,
-  useLocalStore,
-} from "easy-peasy";
+import type { Action, Computed, Thunk } from "easy-peasy";
+import { action, computed, thunk, useLocalStore } from "easy-peasy";
 import { InlineAlert } from "evergreen-ui";
 import React, {
   FC,
@@ -91,9 +86,10 @@ const ViewCard: FC<ViewCardProperties> = ({
       setCardView: action((state, cardView) => {
         state.cardView = cardView;
       }),
-      scale: data?.contentType === "embed"
-        ? appConfig.defaultEmbedScale
-        : appConfig.defaultIframeScale,
+      scale:
+        data?.contentType === "embed"
+          ? appConfig.defaultEmbedScale
+          : appConfig.defaultIframeScale,
       setScale: action((state, scale) => {
         state.scale += scale;
       }),
@@ -103,7 +99,8 @@ const ViewCard: FC<ViewCardProperties> = ({
       }),
       transform: computed([(state) => state.cardView], (cardView) => {
         if (cardView == CardView.PREVIEW) {
-          const boundingBox = cardContainerReference.current?.getBoundingClientRect();
+          const boundingBox =
+            cardContainerReference.current?.getBoundingClientRect();
           setGpZindex(cardContainerReference, 1);
           if (boundingBox) {
             return calculateTransform(boundingBox);
@@ -135,7 +132,7 @@ const ViewCard: FC<ViewCardProperties> = ({
             state.cardType === DndTypes.CLOCK && appModeState === AppMode.EDIT,
           // "card-error": data?.failed,
         });
-        return test
+        return test;
       }),
       cardInfoClass: computed((state) => {
         return classNames("info", {
@@ -210,7 +207,9 @@ const ViewCard: FC<ViewCardProperties> = ({
               console.log("got delete button click");
               deleteCardAction(data.id);
             }}
-            action = {()=>{deleteCardAction(data.id)}}
+            action={() => {
+              deleteCardAction(data.id);
+            }}
           />
           <SettingsButton
             onClick={(e) => {
@@ -223,19 +222,23 @@ const ViewCard: FC<ViewCardProperties> = ({
   };
 
   const renderCardInfo = (): JSX.Element | undefined => {
-    if (oldCardView === CardView.PREVIEW && data && data.contentType !== "widget") {
-      return <CardInfo className={state.cardInfoClass} data={data as CardData} />;
+    if (
+      oldCardView === CardView.PREVIEW &&
+      data &&
+      data.contentType !== "widget"
+    ) {
+      return (
+        <CardInfo className={state.cardInfoClass} data={data as CardData} />
+      );
     }
   };
 
   const renderInternals = () => {
-    if (data?.contentType !== "widget"){
+    if (data?.contentType !== "widget") {
       return [showDeleteButton(), renderCardInfo()];
-    }
-    else {
+    } else {
       return [showDeleteButton()];
     }
-  
   };
 
   const renderReturnButton = (): JSX.Element | undefined => {
@@ -250,7 +253,9 @@ const ViewCard: FC<ViewCardProperties> = ({
     }
   };
   const containerReference = useRef(null);
-  useOnClickOutside(containerReference, () => {
+  useOnClickOutside(containerReference, (e) => {
+    e.preventDefault();
+    console.log("clicked outside");
     if (state.cardView == CardView.PREVIEW) {
       actions.setCardView(CardView.GRID);
     }
@@ -267,7 +272,7 @@ const ViewCard: FC<ViewCardProperties> = ({
 
   const renderQrCode = (): JSX.Element | undefined => {
     if (state.cardView === CardView.PREVIEW && data?.contentType !== "widget") {
-      const cd = data as CardData
+      const cd = data as CardData;
       return (
         <div style={qrContainerStyle}>
           <QRCode size={128} value={cd?.src ?? ""} />
@@ -288,7 +293,6 @@ const ViewCard: FC<ViewCardProperties> = ({
         backgroundColor: state.cardBackgroundColor,
       }}
     >
-
       {children ? (
         <div className={cardModalBackdrop}>
           <div
