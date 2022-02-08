@@ -5,6 +5,8 @@ import React, {
   MouseEventHandler,
   RefObject,
   useEffect,
+  useLayoutEffect,
+  useRef,
   useState,
 } from "react";
 import { AppMode } from "./enums";
@@ -57,6 +59,7 @@ interface useLayoutProps {
   swapCard: ThunkCreator<CardSwapEvent, any>;
   addWidget: ThunkCreator<CardAddEvent, any>;
   setActiveLayout: ActionCreator<LayoutData>;
+  setRandomLayout: ActionCreator<void>;
 }
 
 export const useLayout = (): useLayoutProps => {
@@ -84,6 +87,10 @@ export const useLayout = (): useLayoutProps => {
     (state) => state.layoutsModel.activeLayout
   );
 
+  const setRandomLayout = useStoreActions(
+    (actions) => actions.layoutsModel.setRandomLayout
+  );
+
   const setActiveLayout = useStoreActions(
     (actions) => actions.layoutsModel.setActiveLayout
   );
@@ -98,6 +105,7 @@ export const useLayout = (): useLayoutProps => {
     swapCard,
     addWidget,
     setActiveLayout,
+    setRandomLayout,
   };
 };
 export const useKeyboardShortcut = ({
@@ -171,4 +179,26 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
 export function useEffectOnce(effect: EffectCallback) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(effect, []);
+}
+
+export function useInterval(callback: () => void, delay: number | null) {
+  const savedCallback = useRef(callback);
+
+  // Remember the latest callback if it changes.
+  useLayoutEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    // Don't schedule if no delay is specified.
+    // Note: 0 is a valid value for delay.
+    if (!delay && delay !== 0) {
+      return;
+    }
+
+    const id = setInterval(() => savedCallback.current(), delay);
+
+    return () => clearInterval(id);
+  }, [delay]);
 }

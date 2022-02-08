@@ -18,6 +18,7 @@ interface AppConfig {
   showModeSwitchButton: boolean;
   widgetIds: string[];
   useStaticLayout: boolean;
+  rotationDuration: number;
 }
 
 const appConfig: AppConfig = {
@@ -35,6 +36,7 @@ const appConfig: AppConfig = {
   showModeSwitchButton: false,
   useStaticLayout: false,
   gridBottomPadding: 50,
+  rotationDuration: 10000,
 };
 
 export default appConfig;

@@ -3,7 +3,7 @@ import "./css/global.css";
 
 import { DndContext } from "@dnd-kit/core";
 import React, { useEffect } from "react";
-import { useIdle } from "react-use";
+import { useIdle, useInterval } from "react-use";
 
 import Background from "./components/Background";
 import CardGrid from "./components/CardLayout/CardLayout";
@@ -13,7 +13,7 @@ import HowToUse from "./components/HowToUse/HowToUse";
 import ModeChangeButton from "./components/ModeChangeButton";
 import Screen from "./components/Shared/Screen";
 import { AppMode } from "./enums";
-import { useApp, useEffectOnce, useStoreActions } from "./hooks";
+import { useApp, useEffectOnce, useLayout, useStoreActions } from "./hooks";
 import appConfig from "./static/appConfig";
 
 /**
@@ -26,6 +26,12 @@ const App = (): JSX.Element => {
   const fetchTopLevelSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
+
+  const { setRandomLayout } = useLayout();
+
+  // useInterval(() => {
+  //   setRandomLayout();
+  // }, appConfig.rotationDuration);
 
   const { appMode, toggleAppMode } = useApp();
 

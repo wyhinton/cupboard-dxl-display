@@ -1,20 +1,21 @@
 import "../../css/cardLayout.css";
 import "../../css/libs/reactDraggable.css";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Layouts, Responsive, WidthProvider } from "react-grid-layout";
 
 import CardData from "../../data_structs/CardData";
 import WidgetData from "../../data_structs/WidgetData";
 import { AppMode, DndTypes } from "../../enums";
-import { useApp, useLayout, useStoreActions, useStoreState } from "../../hooks";
+import { useApp, useLayout } from "../../hooks";
 import appConfig from "../../static/appConfig";
-import HowToUse from "../HowToUse/HowToUsePopUp";
 import IFrameView from "../IFrameView";
 import IXDrop from "../DragAndDrop/IXDrop";
 import Clock from "../Widgets/Clock";
 import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
+import { motion, useAnimation } from "framer-motion";
+
 // import defaultLayout
 
 export const CardGrid = (): JSX.Element => {
@@ -27,6 +28,19 @@ export const CardGrid = (): JSX.Element => {
     x: window.innerWidth,
     y: window.innerHeight,
   });
+
+  const controls = useAnimation();
+
+  const variants = {
+    normal: { opacity: 1 },
+    hidden: {
+      opacity: 0,
+    },
+  };
+  useEffect(() => {
+    console.log(activeLayout?.id);
+    controls.set("");
+  }, [activeLayout?.id]);
 
   const localLayout = useRef<null | Layouts>(null);
 
@@ -118,7 +132,13 @@ export const CardGrid = (): JSX.Element => {
           {[...activeCards, ...activeWidgets].map(
             (card: CardData | WidgetData, index: number) => {
               return (
-                <div className="card-container" draggable key={card.id}>
+                <motion.div
+                  className="card-container"
+                  draggable
+                  key={card.id}
+                  variants={variants}
+                  animate={controls}
+                >
                   <IXDrop
                     cardType={DndTypes.IFRAME}
                     className="droppable-card"
@@ -153,7 +173,7 @@ export const CardGrid = (): JSX.Element => {
                       {}
                     </ViewCard>
                   </IXDrop>
-                </div>
+                </motion.div>
               );
             }
           )}
