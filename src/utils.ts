@@ -57,10 +57,14 @@ function titleCapitilization(str: string) {
   return str;
 }
 
-export function randomIntFromInterval(min: number, max: number) { // min and max included 
-  return Math.floor(Math.random() * (max - min + 1) + min)
+export function randomIntFromInterval(min: number, max: number) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+export function randomNumber(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
 
 // function
 

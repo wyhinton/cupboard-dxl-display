@@ -40,11 +40,20 @@
       width: 100vw;
       display: flex;
       justify-content: center;
-      height: 5vh;
+      height: 5vmin;
       /* background-color: red; */
       z-index: 11;
       padding: 1em;
       pointer-events: none;
+      align-items: center;
+    }
+    #popup-container{
+      position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    transition: "background-color 0.5s ease",
     }
   </style>
   <div>
@@ -52,6 +61,7 @@
     <div id = "mode-change-button"></div>
     <div id ="background"></div>
     <div id ="modal-backdrop"></div>
+    <div id ="popup-container"></div>
     <div id="root"></div>
     <div style="z-index: 10" id="portal"></div>
     <div style="z-index: 100" id="how-to-use-popup"></div>

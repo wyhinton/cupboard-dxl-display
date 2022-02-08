@@ -7,52 +7,31 @@ import { Layouts, Responsive, WidthProvider } from "react-grid-layout";
 import CardData from "../../data_structs/CardData";
 import WidgetData from "../../data_structs/WidgetData";
 import { AppMode, DndTypes } from "../../enums";
-import { useStoreActions, useStoreState } from "../../hooks";
+import { useApp, useLayout, useStoreActions, useStoreState } from "../../hooks";
 import appConfig from "../../static/appConfig";
-import HowToUse from "../HowToUse";
+import HowToUse from "../HowToUse/HowToUsePopUp";
 import IFrameView from "../IFrameView";
 import IXDrop from "../IXDrop";
 import Clock from "../Widgets/Clock";
 import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
+// import defaultLayout
 
 export const CardGrid = (): JSX.Element => {
-  const viewModeState = useStoreState((state) => state.appModel.appMode);
-  const setBufferLayoutAction = useStoreActions(
-    (actions) => actions.layoutsModel.setBufferLayout
-  );
+  const { appMode } = useApp();
+  const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
+    useLayout();
 
-  const currentLayoutState = useStoreState(
-    (state) => state.layoutsModel.activeLayout
-  );
   //use the size of the window in order to set the height of the cards
   const [size, setSize] = useState({
     x: window.innerWidth,
     y: window.innerHeight,
   });
 
-  const isEditMode = useMemo(() => {
-    return viewModeState === AppMode.EDIT;
-  }, [viewModeState]);
-
-  const activeCards = useStoreState((state) => state.appModel.activeCards);
-  const activeWidgets = useStoreState((state) => state.appModel.activeWidgets);
-  const [realLayout, setRealLayout] = useState(currentLayoutState?.layout);
-  //keep a local mutable reference to a layout in order to avoid making excess calls to store and causing re-renders on each new edit
   const localLayout = useRef<null | Layouts>(null);
 
-  //each card has a unique key. Clicking a card sets the current active key. If a card's key is equal to the active key
-  //then it will be rendered into the modal popup
   const activeKeyReference = useRef("");
   const ResponsiveGridLayout = WidthProvider(Responsive);
-
-  useEffect(() => {
-    console.log(window.innerHeight / appConfig.gridRows);
-    setRealLayout(currentLayoutState?.layout);
-    if (currentLayoutState?.layout) {
-      localLayout.current = currentLayoutState?.layout;
-    }
-  }, [activeCards, currentLayoutState, activeWidgets]);
 
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
@@ -92,7 +71,8 @@ export const CardGrid = (): JSX.Element => {
         widget = (
           <ViewCard cardType={DndTypes.CLOCK}>
             {(scale) => {
-              return <HowToUse />;
+              // return <HowToUse />;
+              return <div></div>;
             }}
           </ViewCard>
         );
@@ -109,9 +89,10 @@ export const CardGrid = (): JSX.Element => {
           {...sharedGridSettings}
           className="card-layout"
           // isBounded
-          isDraggable={isEditMode}
-          isResizable={isEditMode}
-          layouts={realLayout}
+          isDraggable={appMode === AppMode.EDIT}
+          isResizable={appMode === AppMode.EDIT}
+          layouts={activeLayout ? activeLayout.layout : { lg: [] }}
+          // layouts={realLayout}
           onDragStart={(layout, oldItem, newItem, placeholder, e, element) => {
             const previousStyle = element.style;
             previousStyle.border = "2px solid cyan";
@@ -127,27 +108,13 @@ export const CardGrid = (): JSX.Element => {
               xxs: l,
             };
             localLayout.current = newLayout;
-            setBufferLayoutAction(newLayout);
-            // setBufferLayoutAction(localLayout.current);
+            setBufferLayout(newLayout);
+            // setBufferLayout(localLayout.current);
           }}
           preventCollision
           resizeHandles={["se"]}
           verticalCompact
         >
-          {/* {
-            activeWidgets.map((widget: WidgetData, index: number)=>{
-              return (
-              <div
-              draggable
-              key={widget.id}
-              >
-              {
-                renderWidget(widget)
-              }
-              Im a Widget
-              </div>)
-            })
-          } */}
           {[...activeCards, ...activeWidgets].map(
             (card: CardData | WidgetData, index: number) => {
               return (
@@ -159,20 +126,25 @@ export const CardGrid = (): JSX.Element => {
                     key={index}
                   >
                     <ViewCard
-                      activeKey={activeKeyReference}
+                      // activeKey={activeKeyReference}
                       cardId={index.toString()}
                       cardType={DndTypes.IFRAME}
                       data={card}
-                      key={index.toString()}
                       onClick={() => {
                         activeKeyReference.current = index.toString();
                       }}
                     >
                       {card.contentType !== "widget"
-                        ? (scale) => {
+                        ? (scale, cardView, onError, onLoad) => {
                             const contentCard = card as CardData;
                             return (
-                              <IFrameView card={contentCard} scale={scale} />
+                              <IFrameView
+                                card={contentCard}
+                                scale={scale}
+                                cardView={cardView}
+                                onError={onError}
+                                onLoad={onLoad}
+                              />
                             );
                           }
                         : (scale) => {

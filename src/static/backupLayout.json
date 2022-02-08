@@ -1,0 +1,473 @@
+{
+  "title": "NEWFILLEDLAYOUT",
+  "author": "Webb Hinton",
+  "added": "2021-11-30T05:00:00.000Z",
+  "id": "NEWFILLEDLAYOUT_11/30/2021 14:00:20",
+  "sourceLayout": {
+    "layout": {
+      "lg": [
+        {
+          "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+          "x": 2,
+          "y": 2,
+          "w": 1,
+          "h": 1,
+          "static": false
+        },
+        {
+          "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+          "x": 3,
+          "y": 0,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        },
+        {
+          "i": "https://www.lib.ncsu.edu/huntlibrary",
+          "x": 3,
+          "y": 1,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        }
+      ],
+      "md": [
+        {
+          "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+          "x": 2,
+          "y": 2,
+          "w": 1,
+          "h": 1,
+          "static": false
+        },
+        {
+          "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+          "x": 3,
+          "y": 0,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        },
+        {
+          "i": "https://www.lib.ncsu.edu/huntlibrary",
+          "x": 3,
+          "y": 1,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        }
+      ],
+      "sm": [
+        {
+          "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+          "x": 2,
+          "y": 2,
+          "w": 1,
+          "h": 1,
+          "static": false
+        },
+        {
+          "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+          "x": 3,
+          "y": 0,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        },
+        {
+          "i": "https://www.lib.ncsu.edu/huntlibrary",
+          "x": 3,
+          "y": 1,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        }
+      ],
+      "xs": [
+        {
+          "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+          "x": 2,
+          "y": 2,
+          "w": 1,
+          "h": 1,
+          "static": false
+        },
+        {
+          "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+          "x": 3,
+          "y": 0,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        },
+        {
+          "i": "https://www.lib.ncsu.edu/huntlibrary",
+          "x": 3,
+          "y": 1,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        }
+      ],
+      "xxs": [
+        {
+          "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+          "x": 2,
+          "y": 2,
+          "w": 1,
+          "h": 1,
+          "static": false
+        },
+        {
+          "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+          "x": 3,
+          "y": 0,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        },
+        {
+          "i": "https://www.lib.ncsu.edu/huntlibrary",
+          "x": 3,
+          "y": 1,
+          "w": 1,
+          "h": 1,
+          "minW": 1
+        }
+      ]
+    },
+    "layoutSettings": {
+      "cardSettings": [],
+      "gridSettings": { "defaultBackgroundColor": "red" }
+    },
+    "widgets": [
+      { "id": "clock", "contentType": "widget", "isActive": false },
+      { "id": "clock", "contentType": "widget", "isActive": false }
+    ]
+  },
+  "layout": {
+    "lg": [
+      {
+        "w": 1,
+        "h": 3,
+        "x": 0,
+        "y": 2,
+        "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 1,
+        "y": 2,
+        "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+        "minW": 1,
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 4,
+        "x": 3,
+        "y": 1,
+        "i": "https://plotly.com/python/",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 2,
+        "x": 2,
+        "y": 3,
+        "i": "https://raw.githubusercontent.com/wyhinton/dxl_content/master/images/VideoGames.jpeg",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 2,
+        "y": 0,
+        "i": "https://imvr.lib.ncsu.edu/play/58",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 2,
+        "h": 2,
+        "x": 0,
+        "y": 0,
+        "i": "clock",
+        "moved": false,
+        "static": false
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "https://matplotlib.org/stable/gallery/index.html"
+      }
+    ],
+    "md": [
+      {
+        "w": 1,
+        "h": 3,
+        "x": 0,
+        "y": 2,
+        "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 1,
+        "y": 2,
+        "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+        "minW": 1,
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 4,
+        "x": 3,
+        "y": 1,
+        "i": "https://plotly.com/python/",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 2,
+        "x": 2,
+        "y": 3,
+        "i": "https://raw.githubusercontent.com/wyhinton/dxl_content/master/images/VideoGames.jpeg",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 2,
+        "y": 0,
+        "i": "https://imvr.lib.ncsu.edu/play/58",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 2,
+        "h": 2,
+        "x": 0,
+        "y": 0,
+        "i": "clock",
+        "moved": false,
+        "static": false
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "https://matplotlib.org/stable/gallery/index.html"
+      }
+    ],
+    "sm": [
+      {
+        "w": 1,
+        "h": 3,
+        "x": 0,
+        "y": 2,
+        "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 1,
+        "y": 2,
+        "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+        "minW": 1,
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 4,
+        "x": 3,
+        "y": 1,
+        "i": "https://plotly.com/python/",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 2,
+        "x": 2,
+        "y": 3,
+        "i": "https://raw.githubusercontent.com/wyhinton/dxl_content/master/images/VideoGames.jpeg",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 2,
+        "y": 0,
+        "i": "https://imvr.lib.ncsu.edu/play/58",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 2,
+        "h": 2,
+        "x": 0,
+        "y": 0,
+        "i": "clock",
+        "moved": false,
+        "static": false
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "https://matplotlib.org/stable/gallery/index.html"
+      }
+    ],
+    "xs": [
+      {
+        "w": 1,
+        "h": 3,
+        "x": 0,
+        "y": 2,
+        "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 1,
+        "y": 2,
+        "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+        "minW": 1,
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 4,
+        "x": 3,
+        "y": 1,
+        "i": "https://plotly.com/python/",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 2,
+        "x": 2,
+        "y": 3,
+        "i": "https://raw.githubusercontent.com/wyhinton/dxl_content/master/images/VideoGames.jpeg",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 2,
+        "y": 0,
+        "i": "https://imvr.lib.ncsu.edu/play/58",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 2,
+        "h": 2,
+        "x": 0,
+        "y": 0,
+        "i": "clock",
+        "moved": false,
+        "static": false
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "https://matplotlib.org/stable/gallery/index.html"
+      }
+    ],
+    "xxs": [
+      {
+        "w": 1,
+        "h": 3,
+        "x": 0,
+        "y": 2,
+        "i": "https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 1,
+        "y": 2,
+        "i": "https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1",
+        "minW": 1,
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 4,
+        "x": 3,
+        "y": 1,
+        "i": "https://plotly.com/python/",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 2,
+        "x": 2,
+        "y": 3,
+        "i": "https://raw.githubusercontent.com/wyhinton/dxl_content/master/images/VideoGames.jpeg",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 3,
+        "x": 2,
+        "y": 0,
+        "i": "https://imvr.lib.ncsu.edu/play/58",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 2,
+        "h": 2,
+        "x": 0,
+        "y": 0,
+        "i": "clock",
+        "moved": false,
+        "static": false
+      },
+      {
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "i": "https://matplotlib.org/stable/gallery/index.html"
+      }
+    ]
+  },
+  "layoutWidgets": [
+    { "id": "clock", "contentType": "widget", "isActive": false }
+  ]
+}

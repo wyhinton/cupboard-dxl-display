@@ -1,15 +1,24 @@
 import "../css/iframeView.css";
 
 import classNames from "classnames";
-import React, { FC, PropsWithChildren, useState } from "react";
+import React, { FC, PropsWithChildren, SyntheticEvent, useState } from "react";
 import Loader from "react-loader-spinner";
 import ReactPlayer from "react-player";
+// import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 
 import CardData from "../data_structs/CardData";
+import { CardView } from "../enums";
 
 interface IFrameViewProperties {
   card: CardData;
   scale: number;
+  cardView: CardView;
+  onError: (
+    e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
+  ) => void;
+  onLoad: (
+    e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
+  ) => void;
 }
 /**
  * Minimal warpper for an <iframe>. Can be toggled between a full screen, active view, and a regular card view.
@@ -20,7 +29,13 @@ interface IFrameViewProperties {
  *  <IFrameView src = {my_url}/>
  * )
  */
-const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
+const IFrameView: FC<IFrameViewProperties> = ({
+  card,
+  scale,
+  cardView,
+  onError,
+  onLoad,
+}) => {
   const [active, setActive] = useState(false);
   const [valid, setIsValid] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -33,7 +48,6 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
   const indexFrameContainerClass = classNames("iframe-container", {
     "iframe-container-hidden": !valid,
   });
-  //TODO: Fix or remove card error handling
 
   const iframeStyle = {
     border: "none",
@@ -48,6 +62,7 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
     height: "100%",
     border: "5px blue",
   } as React.CSSProperties;
+
   const qrContainerStyle = {
     width: "100%",
     position: "absolute",
@@ -60,35 +75,45 @@ const IFrameView: FC<IFrameViewProperties> = ({ card, scale }) => {
 
   return (
     <div
+      className={indexFrameContainerClass}
       onDoubleClick={() => {
         setActive(!active);
       }}
-      className={indexFrameContainerClass}
     >
-      <div className={iframeOverlayClass}>
-        <Loader type="Grid" color="white" height={80} width={80} />
-      </div>
+      {/* <div className={iframeOverlayClass}>
+        <Loader color="white" height={80} type="Grid" width={80} />
+      </div> */}
       {contentType === "video" ? (
         <ResponsivePlayer
-          src={card.src}
           onReady={(event) => {
             setIsLoaded(true);
           }}
+          src={card.src}
         />
       ) : contentType === "image" ? (
         <img
+          onLoad={(event) => {
+            // setIsLoaded(true);
+            onLoad(event);
+          }}
+          onError={(e) => {
+            onError(e);
+          }}
+          // src={"blablahblah"}
+          src={src}
           style={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            objectPosition: "center",
+            objectPosition:
+              cardView === CardView.PREVIEW ? "contain" : "center",
+
+            // maxHeight: "90vh",
           }}
-          src={src}
-          onLoad={(event) => {
-            setIsLoaded(true);
-          }}
-        ></img>
+        />
       ) : (
+        //   </TransformComponent>
+        // </TransformWrapper>
         <iframe
           onLoad={(event) => {
             setIsLoaded(true);
@@ -128,13 +153,13 @@ const ResponsivePlayer = ({
     <div className="player-wrapper">
       <ReactPlayer
         className="react-player"
+        controls
+        height="100%"
+        muted
+        onReady={onReady}
+        playing
         url={src}
         width="100%"
-        height="100%"
-        onReady={onReady}
-        controls={true}
-        playing={true}
-        muted={true}
       />
     </div>
   );

@@ -33,9 +33,10 @@
 
 .how-to-use-button {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  pointer-events: all;
+  /* top: 50%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
   /* height: 3vh; */
 }
 .how-to-popup-container {
@@ -54,15 +55,6 @@
   box-shadow: var(--shadow);
 }
 
-#how-to-use-popup {
-  /* width: 35vw;
-  height: 80vh;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%; */
-  z-index: 100;
-}
 .how-to-use-popup {
   width: 35vw;
   height: 80vh;

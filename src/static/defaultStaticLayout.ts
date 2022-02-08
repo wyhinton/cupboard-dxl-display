@@ -38,7 +38,6 @@ const defaultGridLayoutArray: Layout[] = [
   },
 ];
 
-
 const defaultStaticLayout: ExtendedLayout = {
   layout: {
     lg: defaultGridLayoutArray,
@@ -50,8 +49,8 @@ const defaultStaticLayout: ExtendedLayout = {
   layoutSettings: {
     cardSettings: [],
     gridSettings: {
-      defaultBackgroundColor: "red"
-    }
+      defaultBackgroundColor: "red",
+    },
   },
   widgets: [],
 };
@@ -62,13 +61,12 @@ const fakeLayoutRow: RawLayoutRow = {
   timestamp: "1/1/2021",
   layout: JSON.stringify(defaultStaticLayout),
   interaction: "active",
-}
+};
 
-const defaultLayoutData = new LayoutData(fakeLayoutRow)
+const defaultLayoutData = new LayoutData(fakeLayoutRow);
 
 // console.log(JSON.stringify(defaultLayouts));
 export default defaultLayoutData;
-
 
 // const defaultLayoutData =" f"
 // export default defaultLayoutData;

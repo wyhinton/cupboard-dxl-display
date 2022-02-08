@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./App.global.css";
-import "./css/global.css"
-import { useStoreActions, useStoreState, useKeyboardShortcut} from "./hooks";
+import "./css/global.css";
+import {
+  useStoreActions,
+  useStoreState,
+  useKeyboardShortcut,
+  useApp,
+  useLayout,
+  useEffectOnce,
+} from "./hooks";
 import CardGrid from "./components/CardLayout/CardLayout";
 import Background from "./components/Background";
 import { DropResult, DragDropContext } from "react-beautiful-dnd";
@@ -9,7 +16,7 @@ import { DndContext } from "@dnd-kit/core";
 import EditorPanel from "./components/EditorPanel/EditorPanel";
 import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import { GridPosition } from "./interfaces/GridPosition";
-import HowToUse from "./components/HowToUse";
+import HowToUse from "./components/HowToUse/HowToUse";
 import { AppMode, DragSource } from "./enums";
 import Screen from "./components/Shared/Screen";
 import ModeChangeButton from "./components/ModeChangeButton";
@@ -23,42 +30,26 @@ import appConfig from "./static/appConfig";
 const App = (): JSX.Element => {
   const isIdle = useIdle(appConfig.idleTime, false);
 
-  const toggleAppModeThunk = useStoreActions(
-    (actions) => actions.appModel.toggleAppMode
-  );
   const fetchTopLevelSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
-  const swapCardDataAction = useStoreActions(
-    (actions) => actions.layoutsModel.swapCardContent
-  );
-  const cardAddAction = useStoreActions(
-    (actions) => actions.layoutsModel.addCard
-  );
-  const widgetAddAction = useStoreActions(
-    (actions) => actions.layoutsModel.addWidget
-  );
-  const setActiveLayoutAction = useStoreActions(
-    (actions) => actions.layoutsModel.setActiveLayout
-  );
+
   const externalLayoutsState = useStoreState(
     (state) => state.layoutsModel.externalLayouts
   );
-  const appModeState = useStoreState(
-    (state) => state.appModel.appMode
-  );
 
-  useEffect(()=>{
-    if (appModeState === AppMode.EDIT){
-      toggleAppModeThunk()
-    }
-  },[isIdle])
+  const { appMode, toggleAppMode } = useApp();
+  const { addCard, swapCard, addWidget, setActiveLayout } = useLayout();
 
-  /**On app start make one-time fetch requests */
   useEffect(() => {
-    fetchTopLevelSheetThunk()
-  }, []);
+    if (appMode === AppMode.EDIT) {
+      toggleAppMode();
+    }
+  }, [isIdle]);
 
+  useEffectOnce(() => {
+    fetchTopLevelSheetThunk();
+  });
 
   const cardIsEmpty = (cardId: string): boolean => {
     return cardId.startsWith("empty");
@@ -101,10 +92,10 @@ const App = (): JSX.Element => {
               sourceId: draggableId,
               targetPosition: cardPos,
             } as CardAddEvent;
-            cardAddAction(addEvent);
+            addCard(addEvent);
             console.log("dropped onto an empty card, adding card");
           } else {
-            swapCardDataAction({
+            swapCard({
               sourceId: draggableId,
               targetId: destination.droppableId,
             } as CardSwapEvent);
@@ -112,7 +103,6 @@ const App = (): JSX.Element => {
         }
         break;
       case DragSource.WIDGETS_TABLE:
-        
         console.log(draggableId);
         console.log(destination.droppableId);
         console.log("DRAGGING FROM WIDGETS TABLE");
@@ -121,11 +111,13 @@ const App = (): JSX.Element => {
           sourceId: draggableId,
           targetPosition: cardPos,
         } as CardAddEvent;
-        widgetAddAction(addEvent)
+        addWidget(addEvent);
         break;
       case DragSource.LAYOUT_TABLE:
-        const newLayout = externalLayoutsState.filter((l) => l.id === draggableId)[0];
-        setActiveLayoutAction(newLayout);
+        const newLayout = externalLayoutsState.filter(
+          (l) => l.id === draggableId
+        )[0];
+        setActiveLayout(newLayout);
         break;
       default:
         console.log("got unkown drag source");
@@ -134,25 +126,19 @@ const App = (): JSX.Element => {
 
   return (
     <>
-        <HowToUse />
-        <Background />
-        <ModeChangeButton/>
-        <DragDropContext
-          onDragEnd={onDragEnd}
-        >
-          <EditorPanel />
-          <Screen>
-            <DndContext>
-              <CardGrid />
-            </DndContext>
-          </Screen>
-        </DragDropContext>
+      <HowToUse />
+      <Background />
+      <ModeChangeButton />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <EditorPanel />
+        <Screen>
+          <DndContext>
+            <CardGrid />
+          </DndContext>
+        </Screen>
+      </DragDropContext>
     </>
   );
 };
 
 export default App;
-
-// i = "Clock_Widget"
-
-// {"lg":[{"w":2,"h":1,"x":0,"y":0,"i":"clock","moved":false,"static":true},{"w":1,"h":1,"x":2,"y":1,"i":"https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id
