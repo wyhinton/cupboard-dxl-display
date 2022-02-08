@@ -7,6 +7,7 @@ interface AppConfig {
   formLink: string;
   gridRows: number;
   gridCols: number;
+  gridBottomPadding: number;
   //scale for regular web pages
   defaultIframeScale: number;
   //scale of content which meant for embedding, i.e. includes "embed" in the url
@@ -33,6 +34,7 @@ const appConfig: AppConfig = {
   gridCols: 4,
   showModeSwitchButton: false,
   useStaticLayout: false,
+  gridBottomPadding: 50,
 };
 
 export default appConfig;

@@ -23,8 +23,8 @@ const HowToUse = (): JSX.Element => {
     backgroundColor: "blue",
   } as React.CSSProperties;
 
-  const [visible, toggleVisible] = useToggle(false)
-  
+  const [visible, toggleVisible] = useToggle(false);
+
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);
     return function cleanup() {
@@ -37,17 +37,18 @@ const HowToUse = (): JSX.Element => {
   }
 
   return (
-    <div style={containerStyle}>
-        <Button
-            fontSize = {"xx-large"}
-            height={"5vh"}
-            width={"35vw"}
-            iconBefore={<HandUpIcon/>}
-            onClick={toggleVisible}
-            appearance="primary"
-            text="Learn how to use this display"
-            className = {"how-to-use-button"}
-        />
+    <div style={containerStyle} id="how-to-use-button-container">
+      <Button
+        fontSize={"xx-large"}
+        height={"5vh"}
+        width={"35vw"}
+        iconBefore={<HandUpIcon />}
+        onClick={toggleVisible}
+        appearance="primary"
+        text="Learn how to use this display"
+        className={"how-to-use-button"}
+        containerClass={"custom-button-wrapper"}
+      />
     </div>
   );
 };

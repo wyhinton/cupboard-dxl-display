@@ -11,7 +11,7 @@ import { useApp, useLayout, useStoreActions, useStoreState } from "../../hooks";
 import appConfig from "../../static/appConfig";
 import HowToUse from "../HowToUse/HowToUsePopUp";
 import IFrameView from "../IFrameView";
-import IXDrop from "../IXDrop";
+import IXDrop from "../DragAndDrop/IXDrop";
 import Clock from "../Widgets/Clock";
 import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
@@ -42,7 +42,7 @@ export const CardGrid = (): JSX.Element => {
       xs: appConfig.gridCols,
       xxs: appConfig.gridCols,
     },
-    rowHeight: size.y / appConfig.gridRows,
+    rowHeight: (size.y - appConfig.gridBottomPadding) / appConfig.gridRows,
     margin: [20, 20] as [number, number],
     preventCollision: true,
     compactType: null,

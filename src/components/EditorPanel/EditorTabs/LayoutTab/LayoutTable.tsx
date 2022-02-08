@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useStoreState, useStoreActions } from "../../../../hooks";
-import IXDrop from "../../../IXDrop";
-import XDrag from "../../../DraggableRow";
+import IXDrop from "../../../DragAndDrop/IXDrop";
+import XDrag from "../../../DragAndDrop/DraggableRow";
 import { DndTypes, DragSource } from "../../../../enums";
 import { StatusIndicator } from "evergreen-ui";
 import { formatDate } from "../../../../utils";
@@ -19,7 +19,9 @@ const LayoutTable = (): JSX.Element => {
     (state) => state.layoutsModel.activeLayout
   );
 
-  const setActiveLayoutAction = useStoreActions((actions)=>actions.layoutsModel.setActiveLayout)
+  const setActiveLayoutAction = useStoreActions(
+    (actions) => actions.layoutsModel.setActiveLayout
+  );
   return (
     <div>
       <IXDrop
@@ -42,8 +44,8 @@ const LayoutTable = (): JSX.Element => {
             {externalLayoutsState.map((l, index) => {
               const { id, title, author, added } = l;
               return (
-                <tr key={index} onClick={(e)=>setActiveLayoutAction(l)}>
-                  <td key={index} >
+                <tr key={index} onClick={(e) => setActiveLayoutAction(l)}>
+                  <td key={index}>
                     {id === activeLayoutState?.id ? (
                       <StatusIndicator color="success" />
                     ) : (

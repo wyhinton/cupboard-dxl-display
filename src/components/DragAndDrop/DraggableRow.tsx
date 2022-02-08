@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from "react";
 import { Draggable, DraggableProps } from "react-beautiful-dnd";
-import { DndTypes } from "../enums";
+import { DndTypes } from "../../enums";
 
-interface DraggableRowProperties  extends Omit<DraggableProps, "children"> {
+interface DraggableRowProperties extends Omit<DraggableProps, "children"> {
   dndType: DndTypes;
   className?: string;
   children: ReactNode;
@@ -10,9 +10,7 @@ interface DraggableRowProperties  extends Omit<DraggableProps, "children"> {
 }
 
 /**
- * A draggable table row.
- * @param param0
- * @returns
+ * A draggable table row. Used for dragging card content or layouts into the grid.
  */
 const DraggableRow = ({
   dndType,
@@ -20,8 +18,8 @@ const DraggableRow = ({
   children,
   dragAll,
   ...properties
-}:DraggableRowProperties ) => {
-  // console.log(React.isValidElement(children));
+}: DraggableRowProperties) => {
+  // console.log(React.isValidElement(children));sss
   // console.log(props);
   if (!React.isValidElement(children)) return <div />;
   // const child = React.memo(children, []);

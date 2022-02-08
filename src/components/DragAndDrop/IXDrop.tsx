@@ -1,9 +1,9 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import { Droppable, DroppableProps } from "react-beautiful-dnd";
 import { AddIcon } from "evergreen-ui";
-import "../css/droppable.css";
-import Pulsar from "./Shared/Pulsar";
-import { DndTypes } from "../enums";
+import "../../css/droppable.css";
+import Pulsar from "../Shared/Pulsar";
+import { DndTypes } from "../../enums";
 interface IXDrop extends Omit<DroppableProps, "children"> {
   children: ReactNode;
   cardType: DndTypes;

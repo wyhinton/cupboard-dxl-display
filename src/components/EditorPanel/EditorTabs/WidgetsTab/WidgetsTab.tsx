@@ -3,8 +3,8 @@ import "../../../../css/table.css";
 import React, { useEffect } from "react";
 
 import { DndTypes, DragSource } from "../../../../enums";
-import DraggableDiv from "../../../DraggableWidget";
-import IXDrop from "../../../IXDrop";
+import DraggableDiv from "../../../DragAndDrop/DraggableWidget";
+import IXDrop from "../../../DragAndDrop/IXDrop";
 import Clock from "../../../Widgets/Clock";
 import { useStoreState } from "../../../../hooks";
 /**
@@ -15,8 +15,6 @@ const WidgetsTab = (): JSX.Element => {
   const currentLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
-  
-
 
   // console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
   // console.log(this.layout);
@@ -34,8 +32,7 @@ const WidgetsTab = (): JSX.Element => {
   //   };
   //   this.layout[k].push(newItem);
   // }
-  
-  
+
   return (
     <div>
       <IXDrop
@@ -44,21 +41,21 @@ const WidgetsTab = (): JSX.Element => {
         droppableId={DragSource.WIDGETS_TABLE}
         isDropDisabled={false}
       >
-        <DraggableDiv 
-        className="draggable-widget"
-        dndType = {DndTypes.WIDGET}
-        draggableId="clock"
-        index = {0}
-        isDragDisabled = {false}
+        <DraggableDiv
+          className="draggable-widget"
+          dndType={DndTypes.WIDGET}
+          draggableId="clock"
+          index={0}
+          isDragDisabled={false}
         >
           <Clock />
         </DraggableDiv>
-        <DraggableDiv 
-        className="draggable-widget"
-        dndType = {DndTypes.WIDGET}
-        draggableId="info"
-        index = {1}
-        isDragDisabled = {false}
+        <DraggableDiv
+          className="draggable-widget"
+          dndType={DndTypes.WIDGET}
+          draggableId="info"
+          index={1}
+          isDragDisabled={false}
         >
           <button>HELLO</button>
         </DraggableDiv>
