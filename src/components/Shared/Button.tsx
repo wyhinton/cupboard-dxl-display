@@ -3,11 +3,10 @@ import {
   ButtonAppearance,
   IntentTypes,
 } from "evergreen-ui";
-import React, { useState } from "react";
+import React from "react";
 
 /**
  * Wraps an Evergreen UI Button, providing it with an onClick property.
- * @component
  */
 
 interface ButtonProperties {
