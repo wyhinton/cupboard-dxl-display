@@ -29,11 +29,13 @@ const App = (): JSX.Element => {
 
   const { setRandomLayout, activeLayout } = useLayout();
 
-  useInterval(() => {
-    setRandomLayout();
-  }, appConfig.rotationDuration);
-
   const { appMode, toggleAppMode } = useApp();
+
+  useInterval(() => {
+    if (appMode === AppMode.DISPLAY) {
+      setRandomLayout();
+    }
+  }, appConfig.rotationDuration);
 
   useEffect(() => {
     if (appMode === AppMode.EDIT) {

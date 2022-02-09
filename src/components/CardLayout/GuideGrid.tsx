@@ -54,6 +54,7 @@ export const GuideGrid = ({
                   key={p}
                   cardId={p}
                   cardType={DndTypes.PLACEHOLDER}
+                  useAnimation={false}
                 ></ViewCard>
               </IXDrop>
             </div>

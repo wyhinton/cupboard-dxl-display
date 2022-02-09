@@ -63,6 +63,8 @@ interface ViewCardProperties {
   // activeKey?: React.MutableRefObject<string>;
   cardId?: string;
   cardType: DndTypes;
+  useAnimation: boolean;
+  //pass a set of information to all child components
   children?: (
     scale: number,
     cardView: CardView,
@@ -86,6 +88,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   cardId,
   data,
   onClick,
+  useAnimation,
 }: ViewCardProperties) => {
   const cardContainerReference = useRef<HTMLDivElement>(null);
   // const appMode = useStoreState((state) => state.appModel.appMode);
@@ -346,10 +349,11 @@ const ViewCard: FC<ViewCardProperties> = ({
     },
     normal: {
       opacity: 1,
-      // zIndex: -1,
-      // x: 200,
-      // y: 200,
-      // transform: state.transform,
+    },
+    none: {
+      opacity: 1,
+      // x: 9,
+      y: 0,
     },
     error: {
       // border: "1px solid red",
@@ -368,79 +372,109 @@ const ViewCard: FC<ViewCardProperties> = ({
       // backgroundColor: "green",
       // transition:
     },
+    in: {
+      opacity: 1,
+      transition: {
+        delay: randomNumber(0.4, 0.5),
+        duration: 0.5,
+      },
+      // backgroundColor: "green",
+      // transition:
+    },
+    out: {
+      y: randomNumber(-50, 50),
+      opacity: 0,
+      transition: {
+        delay: randomNumber(0.4, 1.5),
+        duration: 0.5,
+      },
+      // backgroundColor: "green",
+      // transition:
+    },
   };
 
+  const [animationVariant, setAnimationVariant] = useState("none");
+  // const [animate, setAnimate] = useState("in");
   useEffect(() => {
     console.log(children);
-    setTimeout(() => {
-      if (children) {
+    if (children) {
+      if (useAnimation) {
+        setAnimationVariant("out");
+        setTimeout(() => {
+          setAnimationVariant("in");
+          setActiveChildren(
+            children(state.scale, state.cardView, onError, onLoad)
+          );
+        }, 1000);
+      } else {
+        setAnimationVariant("none");
         setActiveChildren(
           children(state.scale, state.cardView, onError, onLoad)
         );
       }
-    }, 1000);
+    }
   }, [children]);
-  // var
+
   return (
     //receives a drag objects
     <>
-      <AnimatePresence>
-        <motion.div
-          exit={{ opacity: 0, x: -300 }}
-          ref={cardContainerReference}
-          layoutId="viewcard"
-          className={state.cardClass}
-          style={{
-            transformOrigin: "center",
-            willChange: "transform",
-            height: "100%",
-            // transform: state.transform,
-            backgroundColor: state.cardBackgroundColor,
-            // opacity: 1,
-            opacity: 0,
-            // opacity: 1,
-          }}
-          variants={variants}
-          // initial={true}
-          // intial={"loaded"}
-          animate={
-            isError && state.cardView === CardView.GRID
-              ? "error"
-              : isLoaded && state.cardView === CardView.GRID
-              ? "loaded"
-              : state.cardView === CardView.PREVIEW
-              ? "preview"
-              : appMode == AppMode.DISPLAY
-              ? "active"
-              : "normal"
-          }
-        >
-          {children && (
-            <div className={cardModalBackdrop}>
-              <div
-                className={cardChildContainer}
-                onMouseUp={() => {
-                  actions.handleCardPress();
-                  if (onClick) {
-                    onClick();
-                  }
-                }}
-                ref={containerReference}
-              >
-                {/* {renderQrCode()} */}
-                {renderInternals()}
-                {activeChildren}
-                {/* {children(state.scale, state.cardView, onError, onLoad)} */}
-                <SettingsMenu
-                  {...settingsMenuProperties}
-                  isShown={state.showMenu}
-                />
-              </div>
-              {renderReturnButton()}
+      <motion.div
+        exit={{ opacity: 0, x: -300 }}
+        ref={cardContainerReference}
+        layoutId="viewcard"
+        className={state.cardClass}
+        style={{
+          transformOrigin: "center",
+          willChange: "transform",
+          height: "100%",
+          // transform: state.transform,
+          backgroundColor: state.cardBackgroundColor,
+          // opacity: 1,
+          opacity: 1,
+          // opacity: 1,
+        }}
+        // initial={a}
+        variants={variants}
+        // initial={true}
+        // intial={"loaded"}
+        animate={animationVariant}
+        // animate={
+        //   isError && state.cardView === CardView.GRID
+        //     ? "error"
+        //     : isLoaded && state.cardView === CardView.GRID
+        //     ? "loaded"
+        //     : state.cardView === CardView.PREVIEW
+        //     ? "preview"
+        //     : appMode == AppMode.DISPLAY
+        //     ? "active"
+        //     : "normal"
+        // }
+      >
+        {children && (
+          <div className={cardModalBackdrop}>
+            <div
+              className={cardChildContainer}
+              onMouseUp={() => {
+                actions.handleCardPress();
+                if (onClick) {
+                  onClick();
+                }
+              }}
+              ref={containerReference}
+            >
+              {/* {renderQrCode()} */}
+              {renderInternals()}
+              {activeChildren}
+              {/* {children(state.scale, state.cardView, onError, onLoad)} */}
+              <SettingsMenu
+                {...settingsMenuProperties}
+                isShown={state.showMenu}
+              />
             </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+            {renderReturnButton()}
+          </div>
+        )}
+      </motion.div>
     </>
   );
 };

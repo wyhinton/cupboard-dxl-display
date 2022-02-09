@@ -28,6 +28,7 @@ export interface AppDataModel {
   availableWidgets: WidgetData[];
   activeWidgets: WidgetData[];
   activeCards: CardData[];
+  rotationSpeed: number;
   // currentLayout: Layouts;
   appMode: AppMode;
 
@@ -57,6 +58,7 @@ const appModel: AppDataModel = {
   availableWidgets: availableWidgets,
   activeWidgets: [],
   activeCards: [],
+  rotationSpeed: appConfig.rotationDuration,
   // currentLayout: defaultGridLayout.layout,
   appMode: AppMode.DISPLAY,
   // localStorageLayouts: [],

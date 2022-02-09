@@ -82,7 +82,11 @@ export const CardGrid = (): JSX.Element => {
     switch (widgetData.id) {
       case "clock":
         widget = (
-          <ViewCard cardType={DndTypes.CLOCK} onClick={() => {}}>
+          <ViewCard
+            useAnimation={false}
+            cardType={DndTypes.CLOCK}
+            onClick={() => {}}
+          >
             {(scale) => {
               return <Clock />;
             }}
@@ -92,7 +96,7 @@ export const CardGrid = (): JSX.Element => {
         break;
       case "info":
         widget = (
-          <ViewCard cardType={DndTypes.CLOCK}>
+          <ViewCard useAnimation={false} cardType={DndTypes.CLOCK}>
             {(scale) => {
               // return <HowToUse />;
               return <div></div>;
@@ -139,16 +143,13 @@ export const CardGrid = (): JSX.Element => {
         >
           {[...activeCards, ...activeWidgets].map(
             (card: CardData | WidgetData, index: number) => {
-              useEffect(() => {
-                console.log(card.id);
-              }, [card.id]);
               return (
                 // <AnimatePresence>
-                <motion.div
+                <div
                   className="card-container"
                   draggable
                   key={card.id}
-                  initial={"hidden"}
+                  // initial={"hidden"}
                   // style={{ opacity: 1 }}
                   // exit={{ opacity: 1 }}
                   // layoutId={card.id}
@@ -173,6 +174,7 @@ export const CardGrid = (): JSX.Element => {
                       onClick={() => {
                         activeKeyReference.current = index.toString();
                       }}
+                      useAnimation={card.contentType !== "widget"}
                     >
                       {card.contentType !== "widget"
                         ? (scale, cardView, onError, onLoad) => {
@@ -193,7 +195,7 @@ export const CardGrid = (): JSX.Element => {
                       {}
                     </ViewCard>
                   </IXDrop>
-                </motion.div>
+                </div>
                 // </AnimatePresence>
               );
             }
