@@ -62,7 +62,7 @@ const layoutsModel: LayoutsModel = {
     // const z =
     const val = JSON.stringify(bufferLayout);
 
-    console.log(val);
+    // console.log(val);
     return val;
     // return JSON.stringify(activeLayout);
   }),

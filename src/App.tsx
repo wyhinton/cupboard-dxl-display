@@ -33,7 +33,7 @@ const App = (): JSX.Element => {
 
   useInterval(() => {
     if (appMode === AppMode.DISPLAY && rotateLayouts) {
-      setRandomLayout();
+      // setRandomLayout();
     }
   }, appConfig.rotationDuration);
 
