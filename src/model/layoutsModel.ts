@@ -1,4 +1,13 @@
-import { Action, action, Thunk, thunk, ThunkOn, thunkOn } from "easy-peasy";
+import {
+  Action,
+  action,
+  computed,
+  Computed,
+  Thunk,
+  thunk,
+  ThunkOn,
+  thunkOn,
+} from "easy-peasy";
 import { Layouts } from "react-grid-layout";
 
 import CardData from "../data_structs/CardData";
@@ -29,6 +38,8 @@ export interface LayoutsModel {
   setTempLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
 
+  layoutsString: Computed<LayoutsModel, string>;
+
   //update
   setRandomLayout: Thunk<LayoutsModel, never, StoreModel>;
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;
@@ -47,6 +58,20 @@ const layoutsModel: LayoutsModel = {
   externalLayouts: [],
   bufferLayout: defaultStaticLayout.layout,
   tempLayout: defaultStaticLayout.layout,
+  layoutsString: computed([(state) => state.bufferLayout], (bufferLayout) => {
+    // const z =
+    const val = JSON.stringify(bufferLayout);
+
+    console.log(val);
+    return val;
+    // return JSON.stringify(activeLayout);
+  }),
+  // layoutsString: computed([(state) => state.activeLayout], (activeLayout) => {
+  //   const val = JSON.stringify(activeLayout);
+  //   console.log(val);
+  //   return val;
+  //   // return JSON.stringify(activeLayout);
+  // }),
 
   //listeners
   /**On setAppGoogleSheetData, create an array of LayoutData objects from the provided rows */
@@ -61,6 +86,7 @@ const layoutsModel: LayoutsModel = {
         let defaultLayout: LayoutData;
         if (appConfig.useStaticLayout) {
           defaultLayout = defaultStaticLayout;
+          // console.log(activeLayout);
           actions.setActiveLayout(defaultLayout);
           actions.setBufferLayout(defaultLayout.layout);
         } else {
@@ -95,6 +121,7 @@ const layoutsModel: LayoutsModel = {
   ),
   //simple setters
   setActiveLayout: action((state, newActiveLayout) => {
+    console.log(newActiveLayout);
     state.activeLayout = newActiveLayout;
   }),
   setRandomLayout: thunk((actions, _, { getState }) => {

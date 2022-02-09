@@ -34,18 +34,33 @@ export function useToggle(initialValue: boolean): [boolean, () => void] {
 
 interface UseAppProps {
   appMode: AppMode;
+  rotationSpeed: number;
+  setRotationSpeed: ActionCreator<number>;
   toggleAppMode: ThunkCreator<void, any>;
+  setRotateLayouts: ActionCreator<boolean>;
+  rotateLayouts: boolean;
 }
 export const useApp = (): UseAppProps => {
   const toggleAppMode = useStoreActions(
     (actions) => actions.appModel.toggleAppMode
   );
-
+  const rotationSpeed = useStoreState((state) => state.appModel.rotationSpeed);
+  const rotateLayouts = useStoreState((state) => state.appModel.rotateLayouts);
+  const setRotationSpeed = useStoreActions(
+    (actions) => actions.appModel.setRotationSpeed
+  );
+  const setRotateLayouts = useStoreActions(
+    (actions) => actions.appModel.setRotateLayouts
+  );
   const appMode = useStoreState((state) => state.appModel.appMode);
 
   return {
     appMode,
+    rotationSpeed,
+    setRotationSpeed,
     toggleAppMode,
+    rotateLayouts,
+    setRotateLayouts,
   };
 };
 

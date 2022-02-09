@@ -27,7 +27,7 @@ const appConfig: AppConfig = {
     "https://docs.google.com/spreadsheets/d/1BR1AQ5Zmt_o_0dOm9AvDht0G3Q6RXQUhX71Vi4H7tTU/edit#gid=0",
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1.0,
-  defaultLayoutName: "NewStaticLayout2",
+  defaultLayoutName: "Poster2",
   formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   widgetIds: ["clock", "group label", "info"],
   gridRows: 6,
@@ -36,7 +36,8 @@ const appConfig: AppConfig = {
   showModeSwitchButton: false,
   useStaticLayout: false,
   gridBottomPadding: 50,
-  rotationDuration: 10000,
+  // rotationDuration: 10000,
+  rotationDuration: 100000,
 };
 
 export default appConfig;

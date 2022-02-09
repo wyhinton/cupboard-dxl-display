@@ -29,6 +29,7 @@ export interface AppDataModel {
   activeWidgets: WidgetData[];
   activeCards: CardData[];
   rotationSpeed: number;
+  rotateLayouts: boolean;
   // currentLayout: Layouts;
   appMode: AppMode;
 
@@ -40,6 +41,8 @@ export interface AppDataModel {
   manageViewModeChange: Thunk<AppDataModel, AppMode>;
   toggleAppMode: Thunk<AppDataModel, never>;
   //simple setters
+  setRotationSpeed: Action<AppDataModel, number>;
+  setRotateLayouts: Action<AppDataModel, boolean>;
   setAppMode: Action<AppDataModel, AppMode>;
   // setCurrentLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
@@ -58,6 +61,7 @@ const appModel: AppDataModel = {
   availableWidgets: availableWidgets,
   activeWidgets: [],
   activeCards: [],
+  rotateLayouts: true,
   rotationSpeed: appConfig.rotationDuration,
   // currentLayout: defaultGridLayout.layout,
   appMode: AppMode.DISPLAY,
@@ -111,6 +115,14 @@ const appModel: AppDataModel = {
   setAppMode: action((state, viewModeEnum) => {
     // console.log("setting view mode");
     state.appMode = viewModeEnum;
+  }),
+  setRotationSpeed: action((state, speed) => {
+    // console.log("setting view mode");
+    state.rotationSpeed = speed;
+  }),
+  setRotateLayouts: action((state, should) => {
+    // console.log("setting view mode");
+    state.rotateLayouts = should;
   }),
 
   //listeners

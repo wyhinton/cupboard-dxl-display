@@ -6,26 +6,31 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import LayoutTab from "./EditorTabs/LayoutTab/LayoutTab";
 import WidgetsTab from "./EditorTabs/WidgetsTab/WidgetsTab";
+import AppTab from "./EditorTabs/AppTab/AppTab";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
 const Editor = (): JSX.Element => {
   return (
-      <Tabs>
-        <TabList>
-          <Tab>Content</Tab>
-          <Tab>Widgets</Tab>
-          <Tab>Layouts</Tab>
-        </TabList>
-        <TabPanel>
-          <ContentTab />
-        </TabPanel>
-        <TabPanel>
-          <WidgetsTab />
-        </TabPanel>
-        <TabPanel>
-          <LayoutTab />
-        </TabPanel>
-      </Tabs>
+    <Tabs>
+      <TabList>
+        <Tab>Content</Tab>
+        {/* <Tab>Widgets</Tab> */}
+        <Tab>Layouts</Tab>
+        <Tab>App Settings</Tab>
+      </TabList>
+      <TabPanel>
+        <ContentTab />
+      </TabPanel>
+      {/* <TabPanel>
+        <WidgetsTab />
+      </TabPanel> */}
+      <TabPanel>
+        <LayoutTab />
+      </TabPanel>
+      <TabPanel>
+        <AppTab />
+      </TabPanel>
+    </Tabs>
   );
 };
 

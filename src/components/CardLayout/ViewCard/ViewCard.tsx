@@ -148,8 +148,16 @@ const ViewCard: FC<ViewCardProperties> = ({
       }),
       handleCardPress: thunk((actions, _, { getState }) => {
         // console.log("HANDLED PRESS");
-        console.log(getState().cardClass);
+        // console.log(getState().cardClass);
         // console.log(appMode);
+        const rootel = document.getElementById("root") as HTMLDivElement;
+        if ((rootel.style.pointerEvents = "all")) {
+          rootel.style.pointerEvents = "none";
+        }
+
+        setTimeout(() => {
+          rootel.style.pointerEvents = "all";
+        }, 1000);
         if (appMode === AppMode.DISPLAY && cardId != undefined) {
           switch (getState().cardView) {
             case CardView.GRID:
@@ -309,6 +317,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   const onLoad = (
     event: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
   ) => {
+    setAnimationVariant("loaded");
     setIsLoaded(true);
     // console.log("Got Error");
   };
@@ -333,6 +342,17 @@ const ViewCard: FC<ViewCardProperties> = ({
     // setVx(calculateTransform2(rect));
   }, [state.cardView]);
 
+  useEffect(() => {
+    console.log(state.cardView);
+    if (state.cardView === CardView.PREVIEW) {
+      setAnimationVariant("preview");
+    }
+    if (state.cardView === CardView.GRID) {
+      setAnimationVariant("none");
+    }
+    // if (state.)
+  }, [state.cardView]);
+
   const variants = {
     active: {
       opacity: 1,
@@ -343,8 +363,13 @@ const ViewCard: FC<ViewCardProperties> = ({
     },
     preview: {
       opacity: 1,
-      x: jj ? jj[0] : 0,
-      y: jj ? jj[1] : 0,
+      // x: jj ? jj[0] : 0,
+      // y: jj ? jj[1] : 0,
+      // scale: 1.5,
+      transition: {
+        duration: 0.2,
+        // ease: "linear",
+      },
       // zIndex: 1000,
     },
     normal: {
@@ -352,7 +377,7 @@ const ViewCard: FC<ViewCardProperties> = ({
     },
     none: {
       opacity: 1,
-      // x: 9,
+      x: 0,
       y: 0,
     },
     error: {
@@ -369,21 +394,28 @@ const ViewCard: FC<ViewCardProperties> = ({
         delay: randomNumber(0.4, 0.5),
         duration: 0.5,
       },
+      x: 0,
+      y: 0,
       // backgroundColor: "green",
       // transition:
     },
     in: {
-      opacity: 1,
+      // opacity: 1,
+      opacity: [0, 1],
       transition: {
-        delay: randomNumber(0.4, 0.5),
+        // delay: randomNumber(0.4, 0.5),
         duration: 0.5,
       },
+      // x: 0,
+      // y: 0,
       // backgroundColor: "green",
       // transition:
     },
     out: {
       y: randomNumber(-50, 50),
-      opacity: 0,
+      // x: 0,
+      opacity: [1, 0],
+      // opacity: 0,
       transition: {
         delay: randomNumber(0.4, 1.5),
         duration: 0.5,
@@ -396,7 +428,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   const [animationVariant, setAnimationVariant] = useState("none");
   // const [animate, setAnimate] = useState("in");
   useEffect(() => {
-    console.log(children);
+    // console.log(children);
     if (children) {
       if (useAnimation) {
         setAnimationVariant("out");
@@ -405,7 +437,7 @@ const ViewCard: FC<ViewCardProperties> = ({
           setActiveChildren(
             children(state.scale, state.cardView, onError, onLoad)
           );
-        }, 1000);
+        }, 500);
       } else {
         setAnimationVariant("none");
         setActiveChildren(
@@ -414,6 +446,7 @@ const ViewCard: FC<ViewCardProperties> = ({
       }
     }
   }, [children]);
+  // }, [children, state.cardView]);
 
   return (
     //receives a drag objects
@@ -429,13 +462,13 @@ const ViewCard: FC<ViewCardProperties> = ({
           height: "100%",
           // transform: state.transform,
           backgroundColor: state.cardBackgroundColor,
+          // opacity: 0,
           // opacity: 1,
-          opacity: 1,
           // opacity: 1,
         }}
-        // initial={a}
+        initial={appMode === AppMode.EDIT ? false : true}
         variants={variants}
-        // initial={true}
+        // initial={false}
         // intial={"loaded"}
         animate={animationVariant}
         // animate={
@@ -511,8 +544,10 @@ const calculateTransform2 = (boundingBox: DOMRect): [number, number] => {
   const windowHeight = window.innerHeight;
   const vw = window.innerWidth / 100;
   const vh = window.innerWidth / 100;
-  const futureWidth = vw * 60;
-  const futureHeight = vh * 40;
+  // const futureWidth = vw * 60;
+  // const futureHeight = vh * 40;
+  const futureWidth = boundingBox.width * 1.5;
+  const futureHeight = boundingBox.height * 1.5;
 
   const centeredX = windowWidth / 2 - futureWidth / 2;
   const centeredY = windowHeight / 2 - futureHeight / 2;
@@ -540,7 +575,7 @@ const setGpZindex = (
 ): void => {
   if (refdiv) {
     const cardGrandParent = refdiv.current?.parentElement?.parentElement;
-    console.log(cardGrandParent);
+    // console.log(cardGrandParent);
     if (cardGrandParent) {
       cardGrandParent.style.zIndex = index.toString();
     }

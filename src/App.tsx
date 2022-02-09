@@ -29,10 +29,10 @@ const App = (): JSX.Element => {
 
   const { setRandomLayout, activeLayout } = useLayout();
 
-  const { appMode, toggleAppMode } = useApp();
+  const { appMode, toggleAppMode, rotateLayouts } = useApp();
 
   useInterval(() => {
-    if (appMode === AppMode.DISPLAY) {
+    if (appMode === AppMode.DISPLAY && rotateLayouts) {
       setRandomLayout();
     }
   }, appConfig.rotationDuration);

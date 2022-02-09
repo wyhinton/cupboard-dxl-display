@@ -1,7 +1,13 @@
 import "../css/iframeView.css";
 
 import classNames from "classnames";
-import React, { FC, PropsWithChildren, SyntheticEvent, useState } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from "react";
 import Loader from "react-loader-spinner";
 import ReactPlayer from "react-player";
 // import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
@@ -49,6 +55,9 @@ const IFrameView: FC<IFrameViewProperties> = ({
     "iframe-container-hidden": !valid,
   });
 
+  useEffect(() => {
+    console.log(cardView);
+  }, [cardView]);
   const iframeStyle = {
     border: "none",
     transform: `scale(${scale})`,
@@ -104,7 +113,8 @@ const IFrameView: FC<IFrameViewProperties> = ({
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            objectFit: cardView === CardView.PREVIEW ? "contain" : "cover",
+            // objectFit: "cover",
             objectPosition:
               cardView === CardView.PREVIEW ? "contain" : "center",
 

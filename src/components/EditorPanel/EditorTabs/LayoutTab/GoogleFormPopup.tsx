@@ -4,7 +4,7 @@ import "../../../../css/googleFormPopup.css";
 import { Pane, Dialog } from "evergreen-ui";
 import Modal from "../../../Shared/Modal";
 import formEmbedUrl from "../../../../static/formEmbedUrl";
-import { useStoreState } from "../../../../hooks";
+import { useLayout, useStoreState } from "../../../../hooks";
 import classNames from "classnames";
 import Button from "../../../Shared/Button";
 import { ClipboardIcon, InlineAlert, CrossIcon, Heading } from "evergreen-ui";
@@ -27,12 +27,16 @@ const GoogleFormPopup = ({
   onCloseComplete,
 }: GoogleFormPopupProperties): JSX.Element => {
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
+  const ls = useStoreState((state) => state.layoutsModel.layoutsString);
   // console.log(layoutState?.extendedLayout);
   // console.log(layoutState?.extendedLayout.layoutSettings);
 
   const [isShown, setIsShown] = useState(visible);
   const [isCopiedJSON, setIsCopiedJson] = useState(false);
   console.log("HELLO IM HERE");
+  useEffect(() => {
+    console.log(ls);
+  }, [ls]);
   // const [layoutString, setLayoutString] = useState(
   //   JSON.stringify(layoutState?.layout)
   // );
@@ -40,10 +44,29 @@ const GoogleFormPopup = ({
   // const [layoutString, setLayoutString] = useState(
   //   JSON.stringify(layoutState?.extendedLayout)
   // );
-
+  const { activeLayout } = useLayout();
   const layoutString = useStoreState((state) =>
     JSON.stringify(state.layoutsModel.activeLayout)
   );
+  const bufferLayout = useStoreState((state) =>
+    JSON.stringify(state.layoutsModel.bufferLayout)
+  );
+  useEffect(() => {
+    // console.log(state.layoutsModel.activeLayout);
+    // activeLayout?.layout;
+    // bufferLayout;
+    console.log(bufferLayout);
+  }, [bufferLayout]);
+  useEffect(() => {
+    // console.log(state.layoutsModel.activeLayout);
+    // activeLayout?.layout;
+    // bufferLayout;
+    console.log(layoutString);
+  }, [layoutString]);
+  // useEffect(() => {
+  //   // console.log(state.layoutsModel.activeLayout);
+  //   activeLayout?.layout;
+  // }, [activeLayout?.layout]);
   console.log(layoutString);
   const copyFieldContainerClass = classNames("copy-field-container", {
     "copy-field-container-closed": isCopiedJSON,

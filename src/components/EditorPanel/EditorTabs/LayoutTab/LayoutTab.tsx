@@ -1,12 +1,10 @@
-import {
-  AddIcon,
-} from "evergreen-ui";
-import React, { FC,useEffect, useState } from "react";
+import { AddIcon } from "evergreen-ui";
+import React, { FC, useEffect, useState } from "react";
 
-import { useStoreActions,useStoreState } from "../../../../hooks";
+import { useStoreActions, useStoreState } from "../../../../hooks";
 import formEmbedUrl from "../../../../static/formEmbedUrl";
 import Button from "../../../Shared/Button";
-import Panel from "../../../Shared/Panel"; 
+import Panel from "../../../Shared/Panel";
 import GoogleFormPopup from "./GoogleFormPopup";
 import LayoutTable from "./LayoutTable";
 
@@ -17,25 +15,39 @@ const LayoutTab = (): JSX.Element => {
   const fetchCardDataGoogleSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchAppGoogleSheet
   );
+  const fetchTopLevelSheetThunk = useStoreActions(
+    (actions) => actions.googleSheetsModel.fetchTopLevelSheet
+  );
   const [layoutString, setLayoutString] = useState(JSON.stringify(layoutState));
   useEffect(() => {
     setLayoutString(JSON.stringify(bufferState));
   }, [layoutState, bufferState]);
 
-
-  const newLayoutPopup = (): JSX.Element =>{
-    return showNewLayoutPopup ? <GoogleFormPopup
-      onCloseComplete={() => {
-        //reload the layouts after closing the add layout dialog
-        fetchCardDataGoogleSheetThunk()
-        setShowNewLayoutPopup(false);
-      }}
-      visible={showNewLayoutPopup}
-                                /> : <></>;
-  }
+  const newLayoutPopup = (): JSX.Element => {
+    return showNewLayoutPopup ? (
+      <GoogleFormPopup
+        onCloseComplete={() => {
+          //reload the layouts after closing the add layout dialog
+          fetchTopLevelSheetThunk();
+          // fetchCardDataGoogleSheetThunk()
+          setShowNewLayoutPopup(false);
+        }}
+        visible={showNewLayoutPopup}
+      />
+    ) : (
+      <></>
+    );
+  };
   return (
-      <Panel>
-      <div style={{ display: "flex", justifyContent: "center", width: "100%", padding:".5em" }}>
+    <Panel>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          padding: ".5em",
+        }}
+      >
         <Button
           iconBefore={<AddIcon />}
           onClick={(e) => {
@@ -47,13 +59,11 @@ const LayoutTab = (): JSX.Element => {
           appearance="primary"
         />
       </div>
-      {
-        newLayoutPopup()
-      }
+      {newLayoutPopup()}
       <div>
         <LayoutTable />
       </div>
-      </Panel>
+    </Panel>
   );
 };
 
