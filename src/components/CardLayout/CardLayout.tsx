@@ -14,7 +14,8 @@ import IXDrop from "../DragAndDrop/IXDrop";
 import Clock from "../Widgets/Clock";
 import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
-import { motion, useAnimation } from "framer-motion";
+import { AnimatePresence, motion, useAnimation, Variants } from "framer-motion";
+import { randomNumber } from "../../utils";
 
 // import defaultLayout
 
@@ -23,6 +24,10 @@ export const CardGrid = (): JSX.Element => {
   const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
     useLayout();
 
+  //rerender whenever the layout changes
+  useEffect(() => {
+    console.log(activeLayout?.id);
+  }, [activeLayout?.id]);
   //use the size of the window in order to set the height of the cards
   const [size, setSize] = useState({
     x: window.innerWidth,
@@ -32,15 +37,24 @@ export const CardGrid = (): JSX.Element => {
   const controls = useAnimation();
 
   const variants = {
-    normal: { opacity: 1 },
+    show: {
+      opacity: [1, 0, 1],
+      transition: {
+        duration: 0.5,
+        // repeat: 1,
+        // repeatType: "mirror",
+      },
+    },
     hidden: {
       opacity: 0,
+      // opacity: [1, 0, 1],
+      transition: {
+        duration: 0.5,
+        // repeat: 1,
+        // repeatType: "mirror",
+      },
     },
-  };
-  useEffect(() => {
-    console.log(activeLayout?.id);
-    controls.set("");
-  }, [activeLayout?.id]);
+  } as Variants;
 
   const localLayout = useRef<null | Layouts>(null);
 
@@ -68,12 +82,7 @@ export const CardGrid = (): JSX.Element => {
     switch (widgetData.id) {
       case "clock":
         widget = (
-          <ViewCard
-            cardType={DndTypes.CLOCK}
-            onClick={() => {
-              console.log("clock clicked");
-            }}
-          >
+          <ViewCard cardType={DndTypes.CLOCK} onClick={() => {}}>
             {(scale) => {
               return <Clock />;
             }}
@@ -113,7 +122,6 @@ export const CardGrid = (): JSX.Element => {
             element.style.border = "4px solid cyan";
           }}
           onLayoutChange={(l) => {
-            console.log("CHANGED THE LAYOUT");
             const newLayout: Layouts = {
               lg: l,
               md: l,
@@ -131,13 +139,53 @@ export const CardGrid = (): JSX.Element => {
         >
           {[...activeCards, ...activeWidgets].map(
             (card: CardData | WidgetData, index: number) => {
+              // const variants = {
+              //   show: {
+              //     opacity: [1, 0, 1],
+              //     transition: {
+              //       duration: 0.5,
+              //       delay: randomNumber(0.0, 1),
+              //       // repeat: 1,
+              //       // repeatType: "mirror",
+              //     },
+              //   },
+              //   [card.id]: {
+              //     opacity: [1],
+              //     transition: {
+              //       duration: 0.5,
+              //       // repeat: 1,
+              //       // repeatType: "mirror",
+              //     },
+              //   },
+              //   hidden: {
+              //     opacity: [0, 1],
+              //     // opacity: [1, 0, 1],
+              //     // transition: {
+              //     //   duration: 0.5,
+              //     //   // repeat: 1,
+              //     //   // repeatType: "mirror",
+              //     // },
+              //   },
+              // } as Variants;
+
               return (
+                // <AnimatePresence>
                 <motion.div
                   className="card-container"
                   draggable
                   key={card.id}
-                  variants={variants}
-                  animate={controls}
+                  // variants={variants}
+                  // animate="show"
+                  initial={"hidden"}
+                  // style={{ opacity: 1 }}
+                  // exit={{ opacity: 1 }}
+                  // layoutId={card.id}
+                  // animate={{ opacity: 1 }}
+                  // style={{ opacity: 0 }}
+                  // initial
+                  // initial="hidden"
+                  // opacity={0}
+                  // animate={controls}
                 >
                   <IXDrop
                     cardType={DndTypes.IFRAME}
@@ -174,6 +222,7 @@ export const CardGrid = (): JSX.Element => {
                     </ViewCard>
                   </IXDrop>
                 </motion.div>
+                // </AnimatePresence>
               );
             }
           )}

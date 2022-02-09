@@ -24,13 +24,13 @@ export interface LayoutsModel {
 
   //simple setters
   setActiveLayout: Action<LayoutsModel, LayoutData>;
-  setRandomLayout: Action<LayoutsModel>;
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;
   setTempLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
 
   //update
+  setRandomLayout: Thunk<LayoutsModel, never, StoreModel>;
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;
   deleteCard: Thunk<LayoutsModel, string, StoreModel>;
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
@@ -57,7 +57,7 @@ const layoutsModel: LayoutsModel = {
       //TODO: ERROR HANDLING FOR LAYOUTS
       target.payload.getSheetRows<RawLayoutRow>("LAYOUTS").then((rows) => {
         const rawLayoutRows = rows;
-        const layouts = rawLayoutRows.map((l) => new LayoutData(l));
+        const layouts = rawLayoutRows.map((l, i) => new LayoutData(l));
         let defaultLayout: LayoutData;
         if (appConfig.useStaticLayout) {
           defaultLayout = defaultStaticLayout;
@@ -97,14 +97,26 @@ const layoutsModel: LayoutsModel = {
   setActiveLayout: action((state, newActiveLayout) => {
     state.activeLayout = newActiveLayout;
   }),
-  setRandomLayout: action((state) => {
-    const possibleLayouts = state.externalLayouts.filter(
-      (l) => l.id !== state.activeLayout?.id
-    );
-    const selectedRandom =
-      possibleLayouts[Math.floor(Math.random() * possibleLayouts.length)];
-    console.log(selectedRandom);
-    state.activeLayout = selectedRandom;
+  setRandomLayout: thunk((actions, _, { getState }) => {
+    const { externalLayouts, activeLayout } = getState();
+
+    // const possibleLayouts = externalLayouts.filter(
+    //   (l) => l.id !== activeLayout?.id
+    // );
+    if (activeLayout) {
+      const curIndex = externalLayouts
+        .map((l) => l.id)
+        .indexOf(activeLayout?.id);
+      console.log(curIndex);
+      const nextIndex = (curIndex + 1) % externalLayouts.length;
+      console.log(
+        `SETTING LAYOUT INDEX TO ${nextIndex} - ${externalLayouts[nextIndex].id} `
+      );
+      const selectedRandom = externalLayouts[nextIndex];
+      // console.log(selectedRandom);
+      actions.setActiveLayout(selectedRandom);
+    }
+    // state.activeLayout = selectedRandom;
   }),
   setExternalLayouts: action((state, newLayoutArray) => {
     console.log("setting external layouts");

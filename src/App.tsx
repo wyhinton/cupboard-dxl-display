@@ -27,11 +27,11 @@ const App = (): JSX.Element => {
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
 
-  const { setRandomLayout } = useLayout();
+  const { setRandomLayout, activeLayout } = useLayout();
 
-  // useInterval(() => {
-  //   setRandomLayout();
-  // }, appConfig.rotationDuration);
+  useInterval(() => {
+    setRandomLayout();
+  }, appConfig.rotationDuration);
 
   const { appMode, toggleAppMode } = useApp();
 

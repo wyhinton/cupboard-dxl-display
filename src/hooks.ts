@@ -59,7 +59,7 @@ interface useLayoutProps {
   swapCard: ThunkCreator<CardSwapEvent, any>;
   addWidget: ThunkCreator<CardAddEvent, any>;
   setActiveLayout: ActionCreator<LayoutData>;
-  setRandomLayout: ActionCreator<void>;
+  setRandomLayout: ThunkCreator<void, any>;
 }
 
 export const useLayout = (): useLayoutProps => {
