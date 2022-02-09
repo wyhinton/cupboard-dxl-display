@@ -3,11 +3,10 @@ import {
   ButtonAppearance,
   IntentTypes,
 } from "evergreen-ui";
-import React, { useState } from "react";
+import React from "react";
 
 /**
  * Wraps an Evergreen UI Button, providing it with an onClick property.
- * @component
  */
 
 interface ButtonProperties {
@@ -37,7 +36,11 @@ const Button = ({
   intent,
 }: ButtonProperties): JSX.Element => {
   return (
-    <div className={containerClass} onMouseUp={onClick} style={{width: width}}>
+    <div
+      className={containerClass}
+      onMouseUp={onClick}
+      style={{ width: width, height: "100%" }}
+    >
       <EverGreenButton
         appearance={appearance ?? "default"}
         //use evergreen's default button with if no width is provided

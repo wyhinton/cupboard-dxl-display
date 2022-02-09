@@ -361,7 +361,10 @@ const ViewCard: FC<ViewCardProperties> = ({
       // border: "1px solid red",
       outline: [`0px solid green`, `4px solid green`, `0px solid green`],
       opacity: [0, 1, 1],
-      // transition: {},
+      transition: {
+        delay: randomNumber(0.4, 0.5),
+        duration: 0.5,
+      },
       // backgroundColor: "green",
       // transition:
     },
@@ -393,10 +396,13 @@ const ViewCard: FC<ViewCardProperties> = ({
             height: "100%",
             // transform: state.transform,
             backgroundColor: state.cardBackgroundColor,
+            // opacity: 1,
             opacity: 0,
+            // opacity: 1,
           }}
           variants={variants}
-          initial={true}
+          // initial={true}
+          // intial={"loaded"}
           animate={
             isError && state.cardView === CardView.GRID
               ? "error"

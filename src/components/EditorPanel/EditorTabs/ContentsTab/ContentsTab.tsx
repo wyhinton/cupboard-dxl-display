@@ -9,10 +9,10 @@ import CardData from "../../../../data_structs/CardData";
 import { DndTypes, DragSource } from "../../../../enums";
 import { useStoreActions, useStoreState } from "../../../../hooks";
 import { formatDate } from "../../../../utils";
-import IXDrop from "../../../IXDrop";
+import IXDrop from "../../../DragAndDrop/IXDrop";
 import Button from "../../../Shared/Button";
 import FlexRow from "../../../Shared/FlexRow";
-import XDrag from "../../../DraggableRow";
+import XDrag from "../../../DragAndDrop/DraggableRow";
 import TableHeader from "../../TableHeader";
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.

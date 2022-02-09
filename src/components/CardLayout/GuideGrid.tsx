@@ -1,63 +1,69 @@
-import IXDrop from '../IXDrop';
-import React, { useState } from 'react';
-import ViewCard from './ViewCard/ViewCard';
-import { DndTypes } from '../../enums';
-import { Layout, Layouts, Responsive, WidthProvider } from 'react-grid-layout';
-import '../../css/cardLayout.css';
-import appConfig from '../../static/appConfig';
-import { GridPosition } from '../../interfaces/GridPosition';
+import IXDrop from "../DragAndDrop/IXDrop";
+import React, { useState } from "react";
+import ViewCard from "./ViewCard/ViewCard";
+import { DndTypes } from "../../enums";
+import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
+import "../../css/cardLayout.css";
+import appConfig from "../../static/appConfig";
+import { GridPosition } from "../../interfaces/GridPosition";
 
-type GuideGridSettings = Partial<ReactGridLayout.ResponsiveProps>
+type GuideGridSettings = Partial<ReactGridLayout.ResponsiveProps>;
 
-export const GuideGrid = ({gridSettings}:{ gridSettings: GuideGridSettings}): JSX.Element => {
+export const GuideGrid = ({
+  gridSettings,
+}: {
+  gridSettings: GuideGridSettings;
+}): JSX.Element => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
-  const guideCards = generateFilledLayout(appConfig.gridRows, appConfig.gridCols)
-  const justCardNames = guideCards.lg.map(c=>c.i)
+  const guideCards = generateFilledLayout(
+    appConfig.gridRows,
+    appConfig.gridCols
+  );
+  const justCardNames = guideCards.lg.map((c) => c.i);
 
   return (
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 0,
-        }}
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 0,
+      }}
+    >
+      <ResponsiveGridLayout
+        {...gridSettings}
+        className="card-layout"
+        layouts={guideCards}
+        resizeHandles={[]}
+        preventCollision={true}
+        isDraggable={false}
+        isResizable={false}
       >
-          <ResponsiveGridLayout
-            {...gridSettings}
-            className="card-layout"
-            layouts={guideCards}
-            resizeHandles={[]}
-            preventCollision={true}
-            isDraggable={false}
-            isResizable={false}
-          >
-            {justCardNames.map((p, index) => {
-              return (
-                <div key={p}>
-                  <IXDrop
-                    key={index}
-                    droppableId={p}
-                    cardType={DndTypes.PLACEHOLDER}
-                    className = {"droppable-guide"}
-                  >
-                    <ViewCard
-                      key={p}
-                      cardId={p}
-                      cardType={DndTypes.PLACEHOLDER}
-                    ></ViewCard>
-                  </IXDrop>
-                </div>
-              );
-            })}
-          </ResponsiveGridLayout>
-      </div>
+        {justCardNames.map((p, index) => {
+          return (
+            <div key={p}>
+              <IXDrop
+                key={index}
+                droppableId={p}
+                cardType={DndTypes.PLACEHOLDER}
+                className={"droppable-guide"}
+              >
+                <ViewCard
+                  key={p}
+                  cardId={p}
+                  cardType={DndTypes.PLACEHOLDER}
+                ></ViewCard>
+              </IXDrop>
+            </div>
+          );
+        })}
+      </ResponsiveGridLayout>
+    </div>
   );
 };
 export default React.memo(GuideGrid);
-
 
 function generateFilledLayout(rows: number, cols: number): Layouts {
   const allGridSpots: GridPosition[] = [];

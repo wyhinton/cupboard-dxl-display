@@ -1,20 +1,22 @@
 import "../../css/cardLayout.css";
 import "../../css/libs/reactDraggable.css";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Layouts, Responsive, WidthProvider } from "react-grid-layout";
 
 import CardData from "../../data_structs/CardData";
 import WidgetData from "../../data_structs/WidgetData";
 import { AppMode, DndTypes } from "../../enums";
-import { useApp, useLayout, useStoreActions, useStoreState } from "../../hooks";
+import { useApp, useLayout } from "../../hooks";
 import appConfig from "../../static/appConfig";
-import HowToUse from "../HowToUse/HowToUsePopUp";
 import IFrameView from "../IFrameView";
-import IXDrop from "../IXDrop";
+import IXDrop from "../DragAndDrop/IXDrop";
 import Clock from "../Widgets/Clock";
 import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
+import { AnimatePresence, motion, useAnimation, Variants } from "framer-motion";
+import { randomNumber } from "../../utils";
+
 // import defaultLayout
 
 export const CardGrid = (): JSX.Element => {
@@ -22,11 +24,37 @@ export const CardGrid = (): JSX.Element => {
   const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
     useLayout();
 
+  //rerender whenever the layout changes
+  useEffect(() => {
+    console.log(activeLayout?.id);
+  }, [activeLayout?.id]);
   //use the size of the window in order to set the height of the cards
   const [size, setSize] = useState({
     x: window.innerWidth,
     y: window.innerHeight,
   });
+
+  const controls = useAnimation();
+
+  const variants = {
+    show: {
+      opacity: [1, 0, 1],
+      transition: {
+        duration: 0.5,
+        // repeat: 1,
+        // repeatType: "mirror",
+      },
+    },
+    hidden: {
+      opacity: 0,
+      // opacity: [1, 0, 1],
+      transition: {
+        duration: 0.5,
+        // repeat: 1,
+        // repeatType: "mirror",
+      },
+    },
+  } as Variants;
 
   const localLayout = useRef<null | Layouts>(null);
 
@@ -42,7 +70,7 @@ export const CardGrid = (): JSX.Element => {
       xs: appConfig.gridCols,
       xxs: appConfig.gridCols,
     },
-    rowHeight: size.y / appConfig.gridRows,
+    rowHeight: (size.y - appConfig.gridBottomPadding) / appConfig.gridRows,
     margin: [20, 20] as [number, number],
     preventCollision: true,
     compactType: null,
@@ -54,12 +82,7 @@ export const CardGrid = (): JSX.Element => {
     switch (widgetData.id) {
       case "clock":
         widget = (
-          <ViewCard
-            cardType={DndTypes.CLOCK}
-            onClick={() => {
-              console.log("clock clicked");
-            }}
-          >
+          <ViewCard cardType={DndTypes.CLOCK} onClick={() => {}}>
             {(scale) => {
               return <Clock />;
             }}
@@ -99,7 +122,6 @@ export const CardGrid = (): JSX.Element => {
             element.style.border = "4px solid cyan";
           }}
           onLayoutChange={(l) => {
-            console.log("CHANGED THE LAYOUT");
             const newLayout: Layouts = {
               lg: l,
               md: l,
@@ -117,8 +139,26 @@ export const CardGrid = (): JSX.Element => {
         >
           {[...activeCards, ...activeWidgets].map(
             (card: CardData | WidgetData, index: number) => {
+              useEffect(() => {
+                console.log(card.id);
+              }, [card.id]);
               return (
-                <div className="card-container" draggable key={card.id}>
+                // <AnimatePresence>
+                <motion.div
+                  className="card-container"
+                  draggable
+                  key={card.id}
+                  initial={"hidden"}
+                  // style={{ opacity: 1 }}
+                  // exit={{ opacity: 1 }}
+                  // layoutId={card.id}
+                  // animate={{ opacity: 1 }}
+                  // style={{ opacity: 0 }}
+                  // initial
+                  // initial="hidden"
+                  // opacity={0}
+                  // animate={controls}
+                >
                   <IXDrop
                     cardType={DndTypes.IFRAME}
                     className="droppable-card"
@@ -153,7 +193,8 @@ export const CardGrid = (): JSX.Element => {
                       {}
                     </ViewCard>
                   </IXDrop>
-                </div>
+                </motion.div>
+                // </AnimatePresence>
               );
             }
           )}

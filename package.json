@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "license": "MIT",
-  "homepage": "https://wyhinton.github.io/cuboard",
+  "homepage": "https://ncsu-libraries.github.io/cupboard-dxl-display/",
   "dependencies": {
     "@dnd-kit/core": "^4.0.0",
     "@react-three/drei": "^7.14.2",
