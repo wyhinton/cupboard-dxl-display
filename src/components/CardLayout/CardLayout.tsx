@@ -139,43 +139,15 @@ export const CardGrid = (): JSX.Element => {
         >
           {[...activeCards, ...activeWidgets].map(
             (card: CardData | WidgetData, index: number) => {
-              // const variants = {
-              //   show: {
-              //     opacity: [1, 0, 1],
-              //     transition: {
-              //       duration: 0.5,
-              //       delay: randomNumber(0.0, 1),
-              //       // repeat: 1,
-              //       // repeatType: "mirror",
-              //     },
-              //   },
-              //   [card.id]: {
-              //     opacity: [1],
-              //     transition: {
-              //       duration: 0.5,
-              //       // repeat: 1,
-              //       // repeatType: "mirror",
-              //     },
-              //   },
-              //   hidden: {
-              //     opacity: [0, 1],
-              //     // opacity: [1, 0, 1],
-              //     // transition: {
-              //     //   duration: 0.5,
-              //     //   // repeat: 1,
-              //     //   // repeatType: "mirror",
-              //     // },
-              //   },
-              // } as Variants;
-
+              useEffect(() => {
+                console.log(card.id);
+              }, [card.id]);
               return (
                 // <AnimatePresence>
                 <motion.div
                   className="card-container"
                   draggable
                   key={card.id}
-                  // variants={variants}
-                  // animate="show"
                   initial={"hidden"}
                   // style={{ opacity: 1 }}
                   // exit={{ opacity: 1 }}
