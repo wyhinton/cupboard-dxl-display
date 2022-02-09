@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/cuboard/static/css/main.cd56efb8.chunk.css",
-    "main.js": "/cuboard/static/js/main.42df24de.chunk.js",
-    "main.js.map": "/cuboard/static/js/main.42df24de.chunk.js.map",
+    "main.js": "/cuboard/static/js/main.e07dd664.chunk.js",
+    "main.js.map": "/cuboard/static/js/main.e07dd664.chunk.js.map",
     "runtime-main.js": "/cuboard/static/js/runtime-main.c4880436.js",
     "runtime-main.js.map": "/cuboard/static/js/runtime-main.c4880436.js.map",
     "static/css/2.27175f2b.chunk.css": "/cuboard/static/css/2.27175f2b.chunk.css",
-    "static/js/2.6a173cc3.chunk.js": "/cuboard/static/js/2.6a173cc3.chunk.js",
-    "static/js/2.6a173cc3.chunk.js.map": "/cuboard/static/js/2.6a173cc3.chunk.js.map",
+    "static/js/2.3435b052.chunk.js": "/cuboard/static/js/2.3435b052.chunk.js",
+    "static/js/2.3435b052.chunk.js.map": "/cuboard/static/js/2.3435b052.chunk.js.map",
     "index.html": "/cuboard/index.html",
     "static/css/2.27175f2b.chunk.css.map": "/cuboard/static/css/2.27175f2b.chunk.css.map",
     "static/css/main.cd56efb8.chunk.css.map": "/cuboard/static/css/main.cd56efb8.chunk.css.map",
-    "static/js/2.6a173cc3.chunk.js.LICENSE.txt": "/cuboard/static/js/2.6a173cc3.chunk.js.LICENSE.txt",
+    "static/js/2.3435b052.chunk.js.LICENSE.txt": "/cuboard/static/js/2.3435b052.chunk.js.LICENSE.txt",
     "static/media/global.css": "/cuboard/static/media/Satoshi-Regular.fe762acc.ttf",
     "static/media/reactDraggable.css": "/cuboard/static/media/expand-icon.9d3ba9dd.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.c4880436.js",
     "static/css/2.27175f2b.chunk.css",
-    "static/js/2.6a173cc3.chunk.js",
+    "static/js/2.3435b052.chunk.js",
     "static/css/main.cd56efb8.chunk.css",
-    "static/js/main.42df24de.chunk.js"
+    "static/js/main.e07dd664.chunk.js"
   ]
 }
