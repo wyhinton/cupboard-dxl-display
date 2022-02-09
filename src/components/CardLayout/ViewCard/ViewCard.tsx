@@ -94,6 +94,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   const [oldCardView, setCardView] = useState(CardView.GRID);
   const [isError, setIsError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [activeChildren, setActiveChildren] = useState<ReactNode>();
 
   const [state, actions] = useLocalStore<CardModel>(
     () => ({
@@ -365,6 +366,17 @@ const ViewCard: FC<ViewCardProperties> = ({
       // transition:
     },
   };
+
+  useEffect(() => {
+    console.log(children);
+    setTimeout(() => {
+      if (children) {
+        setActiveChildren(
+          children(state.scale, state.cardView, onError, onLoad)
+        );
+      }
+    }, 1000);
+  }, [children]);
   // var
   return (
     //receives a drag objects
@@ -411,7 +423,8 @@ const ViewCard: FC<ViewCardProperties> = ({
               >
                 {/* {renderQrCode()} */}
                 {renderInternals()}
-                {children(state.scale, state.cardView, onError, onLoad)}
+                {activeChildren}
+                {/* {children(state.scale, state.cardView, onError, onLoad)} */}
                 <SettingsMenu
                   {...settingsMenuProperties}
                   isShown={state.showMenu}
