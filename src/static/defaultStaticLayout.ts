@@ -66,7 +66,9 @@ const fakeLayoutRow: RawLayoutRow = {
 const defaultLayoutData = new LayoutData(fakeLayoutRow);
 
 // console.log(JSON.stringify(defaultLayouts));
-export default defaultLayoutData;
+// export default defaultLayoutData;
+
+export default null;
 
 // const defaultLayoutData =" f"
 // export default defaultLayoutData;

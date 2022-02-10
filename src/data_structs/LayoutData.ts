@@ -45,13 +45,18 @@ export default class LayoutData {
     this.title = row.title;
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
+    console.log(row.layout);
     const s = {};
     // Object.assign(s, layout);
     // this.sourceLayout = testGetLayout(row);
     // this.sourceLayout = s;
     // this.sourceLayout = JSON.parse(row.layout).s;
-    this.sourceLayout = JSON.parse(row.layout).sourceLayout;
+    this.sourceLayout = JSON.parse(row.layout).layout;
+    // console.log(JSON.parse(row.layout).layout);
+    // console.log(JSON.parse(row.layout));
+    console.log(row);
     console.log(JSON.parse(row.layout));
+
     if (JSON.parse(row.layout).layoutWidgets) {
       this.layoutWidgets = JSON.parse(row.layout).layoutWidgets;
     } else {
@@ -132,8 +137,9 @@ export default class LayoutData {
   resetLayout(): void {
     // this.layout = { ...this.sourceLayout };
     console.log("RESETING LAYOUT");
-    console.log(this.sourceLayout.layout);
-    this.layout = { ...this.sourceLayout.layout };
+    // console.log(this.sourceLayout.layout);
+    this.layout = JSON.parse(JSON.stringify(this.sourceLayout));
+    // this.layout = { ...this.sourceLayout.layout };
   }
   failCard(toFail: CardData) {
     console.log("FAILING CARD AT LAYOUT DATA");

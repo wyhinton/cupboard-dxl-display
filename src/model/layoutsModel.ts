@@ -19,13 +19,13 @@ import RawLayoutRow from "../interfaces/RawLayoutRow";
 import appConfig from "../static/appConfig";
 import defaultStaticLayout from "../static/defaultStaticLayout";
 import { StoreModel } from "./index";
-
+import backupData from "../static/backupLayout.json";
 export interface LayoutsModel {
   //state
   activeLayout: LayoutData | undefined;
   externalLayouts: LayoutData[];
   bufferLayout: Layouts;
-  tempLayout: Layouts;
+  // tempLayout: Layouts;
 
   //listeners
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
@@ -35,7 +35,7 @@ export interface LayoutsModel {
   setActiveLayout: Action<LayoutsModel, LayoutData>;
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;
-  setTempLayout: Action<LayoutsModel, Layouts>;
+  // setTempLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
 
   layoutsString: Computed<LayoutsModel, string>;
@@ -56,8 +56,9 @@ const layoutsModel: LayoutsModel = {
   //state
   activeLayout: undefined,
   externalLayouts: [],
-  bufferLayout: defaultStaticLayout.layout,
-  tempLayout: defaultStaticLayout.layout,
+  bufferLayout: backupData as unknown as Layouts,
+  // bufferLayout: defaultStaticLayout.layout,
+  // tempLayout: defaultStaticLayout.layout,
   layoutsString: computed([(state) => state.bufferLayout], (bufferLayout) => {
     // const z =
     const val = JSON.stringify(bufferLayout);
@@ -85,10 +86,10 @@ const layoutsModel: LayoutsModel = {
         const layouts = rawLayoutRows.map((l, i) => new LayoutData(l));
         let defaultLayout: LayoutData;
         if (appConfig.useStaticLayout) {
-          defaultLayout = defaultStaticLayout;
+          // defaultLayout = defaultStaticLayout;
           // console.log(activeLayout);
-          actions.setActiveLayout(defaultLayout);
-          actions.setBufferLayout(defaultLayout.layout);
+          // actions.setActiveLayout(defaultLayout);
+          // actions.setBufferLayout(defaultLayout.layout);
         } else {
           const defaultLayout = layouts.filter(
             (layout) => layout.title === appConfig.defaultLayoutName
@@ -223,9 +224,9 @@ const layoutsModel: LayoutsModel = {
   setBufferLayout: action((state, layouts) => {
     state.bufferLayout = layouts;
   }),
-  setTempLayout: action((state, layouts) => {
-    state.tempLayout = layouts;
-  }),
+  // setTempLayout: action((state, layouts) => {
+  //   state.tempLayout = layouts;
+  // }),
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;
     if (old) {

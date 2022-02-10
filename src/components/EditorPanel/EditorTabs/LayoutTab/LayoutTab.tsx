@@ -43,9 +43,10 @@ const LayoutTab = (): JSX.Element => {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          // justifyContent: "center",
           width: "100%",
           padding: ".5em",
+          justifyContent: "flex-start",
         }}
       >
         <Button
@@ -54,7 +55,7 @@ const LayoutTab = (): JSX.Element => {
             setShowNewLayoutPopup(true);
           }}
           text="Add New Layout"
-          width="90%"
+          width="55%"
           intent="success"
           appearance="primary"
         />

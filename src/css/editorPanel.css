@@ -87,7 +87,6 @@
 
 /* ///////////////////////////////////////// */
 
-
 .editor-hidden {
   display: none;
 }
@@ -113,6 +112,9 @@
 .react-tabs {
   display: flex;
   flex-direction: column;
+}
+.react-tabs__tab {
+  border: 1px solid white !important;
 }
 
 .react-tabs__tab-panel {

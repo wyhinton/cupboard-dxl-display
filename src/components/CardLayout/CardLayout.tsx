@@ -56,8 +56,6 @@ export const CardGrid = (): JSX.Element => {
     },
   } as Variants;
 
-  const localLayout = useRef<null | Layouts>(null);
-
   const activeKeyReference = useRef("");
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -126,6 +124,8 @@ export const CardGrid = (): JSX.Element => {
             element.style.border = "4px solid cyan";
           }}
           onLayoutChange={(l) => {
+            console.log(activeLayout?.layout.lg);
+            console.log("changed layout");
             const newLayout: Layouts = {
               lg: l,
               md: l,
@@ -133,9 +133,7 @@ export const CardGrid = (): JSX.Element => {
               xs: l,
               xxs: l,
             };
-            localLayout.current = newLayout;
             setBufferLayout(newLayout);
-            // setBufferLayout(localLayout.current);
           }}
           preventCollision
           resizeHandles={["se"]}
