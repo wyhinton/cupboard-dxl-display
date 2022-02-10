@@ -75,6 +75,8 @@ interface useLayoutProps {
   addWidget: ThunkCreator<CardAddEvent, any>;
   setActiveLayout: ActionCreator<LayoutData>;
   setRandomLayout: ThunkCreator<void, any>;
+  clearCards: ThunkCreator<void, any>;
+  resetLayout: ThunkCreator<void, any>;
 }
 
 export const useLayout = (): useLayoutProps => {
@@ -109,6 +111,13 @@ export const useLayout = (): useLayoutProps => {
   const setActiveLayout = useStoreActions(
     (actions) => actions.layoutsModel.setActiveLayout
   );
+  const clearCards = useStoreActions(
+    (actions) => actions.layoutsModel.clearCards
+  );
+
+  const resetLayout = useStoreActions(
+    (actions) => actions.layoutsModel.resetLayout
+  );
 
   return {
     activeCards,
@@ -121,6 +130,8 @@ export const useLayout = (): useLayoutProps => {
     addWidget,
     setActiveLayout,
     setRandomLayout,
+    clearCards,
+    resetLayout,
   };
 };
 export const useKeyboardShortcut = ({
