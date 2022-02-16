@@ -55,6 +55,8 @@ const App = (): JSX.Element => {
     fetchTopLevelSheetThunk();
   });
 
+  console.log(activeWidgets);
+
   // const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
   useLayout();
 
@@ -72,6 +74,7 @@ const App = (): JSX.Element => {
               <CardLayout
                 appMode={appMode}
                 cards={[...activeCards]}
+                widgets={[...activeWidgets]}
                 height={height}
                 isDraggable={appMode === AppMode.EDIT}
                 isResizable={appMode === AppMode.EDIT}
@@ -89,10 +92,8 @@ const App = (): JSX.Element => {
                   if (l.length > 3) {
                     activeLayout.layout = newLayout;
                   }
-
                   setBufferLayout(newLayout);
                 }}
-                widgets={[...activeWidgets]}
                 width={width}
               />
             )}

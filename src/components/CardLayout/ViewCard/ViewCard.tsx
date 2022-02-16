@@ -4,6 +4,7 @@ import classNames from "classnames";
 import type { Action, Computed, Thunk } from "easy-peasy";
 import { action, computed, thunk, useLocalStore } from "easy-peasy";
 import { InlineAlert } from "evergreen-ui";
+import { motion } from "framer-motion";
 import React, {
   FC,
   MouseEventHandler,
@@ -27,16 +28,14 @@ import {
   useKeyboardShortcut,
   useLayout,
   useOnClickOutside,
-  useStoreActions,
 } from "../../../hooks";
 import appConfig from "../../../static/appConfig";
+import { randomNumber } from "../../../utils";
 import Button from "../../Shared/Button";
 import CardInfo from "./CardInfo";
 import DeleteButton from "./DeleteButton";
 import SettingsButton from "./SettingsButton";
 import SettingsMenu from "./SettingsMenu";
-import { AnimatePresence, motion } from "framer-motion";
-import { randomNumber } from "../../../utils";
 /**
  * Wraps each of the cards in the card layouts.
  * Click/Touch => Change the cards view mode
@@ -520,33 +519,7 @@ const ViewCard: FC<ViewCardProperties> = ({
   );
 };
 // class App extends React.Component<{ message: string }, { count: number }> {
-const calculateTransform = (boundingBox: DOMRect): string => {
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  const vw = window.innerWidth / 100;
-  const vh = window.innerWidth / 100;
-  const futureWidth = vw * 60;
-  const futureHeight = vh * 40;
 
-  const centeredX = windowWidth / 2 - futureWidth / 2;
-  const centeredY = windowHeight / 2 - futureHeight / 2;
-
-  const currentX = boundingBox.x;
-  const currentY = boundingBox.y;
-  let differenceX = centeredX - currentX;
-  let differenceY = centeredY - currentY;
-
-  if (centeredX < currentX) {
-    differenceX = currentX - centeredX;
-    differenceX *= -1;
-  }
-  if (centeredY < currentY) {
-    differenceY = currentY - centeredY;
-    differenceY *= -1;
-  }
-
-  return `translate(${differenceX}px, ${differenceY}px)`;
-};
 const calculateTransform2 = (boundingBox: DOMRect): [number, number] => {
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;

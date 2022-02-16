@@ -1,7 +1,7 @@
 import "../../css/editorPanel.css";
 
 import classNames from "classnames";
-import { MinusIcon,PlusIcon } from "evergreen-ui";
+import { MinusIcon, PlusIcon } from "evergreen-ui";
 import React, { useState } from "react";
 import ReactDom from "react-dom";
 import Draggable from "react-draggable";
@@ -27,35 +27,40 @@ const EditorPanel = (): JSX.Element => {
   });
 
   return ReactDom.createPortal(
-      <Draggable
-        bounds = {{left: 0, top: 0, right: window.innerWidth-50, bottom: window.innerHeight-50}}
-        defaultClassName={editorPanelClass}
-        defaultPosition={{ x: 100, y: 100 }}
-        handle=".editor-panel-handle"
-      >
-        <div className={editorClass}>
-          <PanelHeader>
-            <BarButton
-              icon={<PlusIcon />}
-              onMouseUp={() => {
-                setMinimized(false);
-              }}
-            />
-            <BarButton
-              icon={<MinusIcon />}
-              onMouseUp={() => {
-                setMinimized(true);
-              }}
-            />
-          </PanelHeader>
-          <Editor />
-        </div>
-      </Draggable>,
+    <Draggable
+      bounds={{
+        left: 0,
+        top: 0,
+        right: window.innerWidth - 50,
+        bottom: window.innerHeight - 50,
+      }}
+      defaultClassName={editorPanelClass}
+      defaultPosition={{ x: 100, y: 100 }}
+      handle=".editor-panel-handle"
+    >
+      <div className={editorClass}>
+        <PanelHeader>
+          <BarButton
+            icon={<PlusIcon />}
+            onMouseUp={() => {
+              setMinimized(false);
+            }}
+          />
+          <BarButton
+            icon={<MinusIcon />}
+            onMouseUp={() => {
+              setMinimized(true);
+            }}
+          />
+        </PanelHeader>
+        <Editor />
+      </div>
+    </Draggable>,
     document.querySelector("#editor-panel-container") as HTMLDivElement
   );
 };
 
-export default EditorPanel;
+export default React.memo(EditorPanel);
 
 interface PanelHeaderProperties {
   children: JSX.Element | JSX.Element[];

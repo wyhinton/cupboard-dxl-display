@@ -156,15 +156,10 @@ const appModel: AppDataModel = {
   onSetActiveLayout: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.setActiveLayout,
     async (actions, layout, { getState }) => {
-      // console.log(layout.);
-      // console.log("SETTING ACTIVE LAYOUT");
       const activeSourceIds = new Set(layout.payload.sources());
-      // console.log(layout.payload);
-      // console.log(layout.payload.layoutWidgets);
       const activeWidgetIds = new Set(
         layout.payload.layoutWidgets.map((w) => w.id) ?? []
       );
-      // console.log("ACTIVE WIDGET IDS", activeWidgetIds);
 
       const availableCardsUpdated = getState().availableCards.map((card) => {
         if (activeSourceIds.has(card.sourceId)) {
@@ -174,15 +169,26 @@ const appModel: AppDataModel = {
         }
         return card;
       });
+
+      const availableWidgetsUpdated = getState().availableWidgets.map(
+        (widget) => {
+          if (activeSourceIds.has(widget.id)) {
+            widget.setActive(true);
+          } else {
+            widget.setActive(false);
+          }
+          return widget;
+        }
+      );
+
       const activeCards = getState().availableCards.filter((card) => {
         return activeSourceIds.has(card.sourceId);
       });
-      // console.log(object);
-      // availableWidgets = layout.payload.layout.
       const activeWidgets = availableWidgets.filter((card) => {
         return activeWidgetIds.has(card.id);
       });
       actions.setAvailableCards(availableCardsUpdated);
+      actions.setActiveWidgets(availableWidgetsUpdated);
       actions.setActiveCards(activeCards);
       console.log(activeWidgets);
       actions.setActiveWidgets(activeWidgets);

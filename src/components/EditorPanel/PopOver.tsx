@@ -19,11 +19,12 @@ const PopOver = ({
   width?: number;
   height?: number;
 }): JSX.Element => {
-  console.log(x, y);
+  // console.log(x, y);
   const windowSize = useWindowSize();
   const scale = 0.4;
   return createPortal(
-    <AnimatePresence>
+    // <AnimatePresence>
+    <>
       {visible && (
         <motion.div
           animate={{
@@ -52,9 +53,10 @@ const PopOver = ({
           {children}
         </motion.div>
       )}
-    </AnimatePresence>,
+    </>,
+    // </AnimatePresence>,
     document.querySelector("#popup-container") as HTMLDivElement
   );
 };
 
-export default PopOver;
+export default React.memo(PopOver);

@@ -7,6 +7,7 @@ import appConfig from "../static/appConfig";
 import extendedLayoutTest from "../static/extendedLayoutTest";
 import CardData from "./CardData";
 import WidgetData from "./WidgetData";
+import imageThumbnail from "image-thumbnail";
 
 export interface CardOptions {
   id: string;
@@ -29,7 +30,6 @@ export interface ExtendedLayout {
   widgets: WidgetData[];
 }
 
-//TODO: Google form columns and layoutData fields should have the same capitilization
 export default class LayoutData {
   readonly title: string;
   readonly author: string;
@@ -40,32 +40,18 @@ export default class LayoutData {
   layoutWidgets: WidgetData[];
 
   constructor(row: RawLayoutRow) {
-    const { widgets, layout, layoutSettings } = testGetLayout(row);
+    const { layout } = testGetLayout(row);
     this.id = row.title + "_" + row.timestamp;
     this.title = row.title;
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
-    console.log(row.layout);
-    const s = {};
-    // Object.assign(s, layout);
-    // this.sourceLayout = testGetLayout(row);
-    // this.sourceLayout = s;
-    // this.sourceLayout = JSON.parse(row.layout).s;
     this.sourceLayout = JSON.parse(row.layout).layout;
-    // console.log(JSON.parse(row.layout).layout);
-    // console.log(JSON.parse(row.layout));
-    console.log(row);
     console.log(JSON.parse(row.layout));
 
-    if (JSON.parse(row.layout).layoutWidgets) {
-      this.layoutWidgets = JSON.parse(row.layout).layoutWidgets;
-    } else {
-      this.layoutWidgets = [];
-    }
-    // this.layoutWidgets = []
-    // this.extendedLayout = testGetLayout(row);
+    this.layoutWidgets = JSON.parse(row.layout).layoutWidgets
+      ? JSON.parse(row.layout).layoutWidgets
+      : [];
     this.layout = layout;
-    // this.layoutWidgets = widgets
   }
 
   swapCard(swapInfo: CardSwapEvent): void {
@@ -135,15 +121,7 @@ export default class LayoutData {
     }
   }
   resetLayout(): void {
-    // this.layout = { ...this.sourceLayout };
-    console.log("RESETING LAYOUT");
-    // console.log(this.sourceLayout.layout);
     this.layout = JSON.parse(JSON.stringify(this.sourceLayout));
-    // this.layout = { ...this.sourceLayout.layout };
-  }
-  failCard(toFail: CardData) {
-    console.log("FAILING CARD AT LAYOUT DATA");
-    // console.log()
   }
   setGridLayout(newGridLayout: Layouts): void {
     console.log(newGridLayout);
@@ -168,10 +146,7 @@ export default class LayoutData {
     return justWidgets.map((l: any) => l.i);
   }
 }
-//TODO: TEMPORRARY!!!!!
 function testGetLayout(row: RawLayoutRow): ExtendedLayout {
   const test = JSON.parse(row.layout);
-  // console.log(row);
-  // const test = JSON.parse(row.layout).layt=
   return test.layout ? test : extendedLayoutTest;
 }

@@ -48,7 +48,6 @@ export interface LayoutsModel {
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   addWidget: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
-  registerCardLoadFailure: Thunk<LayoutsModel, CardData, never, StoreModel>;
   resetLayout: Thunk<LayoutsModel, never, StoreModel>;
   addLayoutError: Action<LayoutsModel, AppError>;
 }
@@ -128,54 +127,9 @@ const layoutsModel: LayoutsModel = {
         activeLayout.layout = buf;
         activeLayout.setGridLayout(buf);
         actions.setActiveLayout(activeLayout);
-
-        // const buf = bufferLayout;
-        // activeLayout.setGridLayout(buf);
-        // // activeLayout.layout = buf;
-        // actions.setActiveLayout(activeLayout);
-        // console.log(buf);
-        // console.log(activeLayout.layout);
-        // actions.setActiveLayout(activeLayout);
       }
-
-      // const { activeLayout } = getState();
-      // const buf = getState().bufferLayout;
-      // if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
-      //   console.log("IT WAS IN DISPLAY MODE");
-      //   if (activeLayout?.layout) {
-      //     console.log(buf.lg[0]);
-      //     activeLayout.layout = JSON.parse(JSON.stringify(buf));
-      //     actions.setActiveLayout(activeLayout);
-      //   }
-      // } else {
-      //   actions.setBufferLayout(
-      //     JSON.parse(JSON.stringify(activeLayout?.layout))
-      //   );
-      // }
     }
   ),
-  // onToggleViewMode: thunkOn(
-  //   // targetResolver:toggleAppMode
-  //   (actions, storeActions) => storeActions.appModel.toggleAppMode,
-  //   // handler:
-  //   (actions, target, { getState, getStoreState }) => {
-  //     const { activeLayout } = getState();
-  //     const buf = getState().bufferLayout;
-  //     console.log(buf);
-  //     if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
-  //       console.log("IT WAS IN DISPLAY MODE");
-  //       if (activeLayout?.layout) {
-  //         console.log(buf.lg[0]);
-  //         activeLayout.layout = JSON.parse(JSON.stringify(buf));
-  //         actions.setActiveLayout(activeLayout);
-  //       }
-  //     } else {
-  //       actions.setBufferLayout(
-  //         JSON.parse(JSON.stringify(activeLayout?.layout))
-  //       );
-  //     }
-  //   }
-  // ),
   //simple setters
   setActiveLayout: action((state, newActiveLayout) => {
     console.log(newActiveLayout);
@@ -260,14 +214,7 @@ const layoutsModel: LayoutsModel = {
       actions.setActiveLayout(activeLayout);
     }
   }),
-  registerCardLoadFailure: thunk(
-    (actions, failedCard, { getState, getStoreState }) => {
-      const { activeLayout } = getState();
-      if (activeLayout) {
-        activeLayout.failCard(failedCard);
-      }
-    }
-  ),
+
   resetLayout: thunk((actions, _, { getState }) => {
     const { activeLayout } = getState();
     if (activeLayout) {

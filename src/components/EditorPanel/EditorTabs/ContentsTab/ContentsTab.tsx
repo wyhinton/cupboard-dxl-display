@@ -2,7 +2,7 @@ import "../../../../css/table.css";
 
 import { SearchInput } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 
 import CardData from "../../../../data_structs/CardData";
@@ -24,6 +24,8 @@ import ReactTooltip from "react-tooltip";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import PopOver from "../../PopOver";
+import { Column, Table, SortDirection, AutoSizer } from "react-virtualized";
+import imageThumbnail from "image-thumbnail";
 
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
@@ -167,10 +169,8 @@ const ContentsTab = (): JSX.Element => {
                       <td>
                         <TitleWithIcon card={card} />
                       </td>
-                      {/* <td><div>{src}</div></td> */}
                       <td>{author}</td>
                       <td>{formatDate(added)}</td>
-                      {/* <td>{interaction}</td> */}
                     </>
                   </XDrag>
                 );
@@ -188,9 +188,29 @@ const ContentsTab = (): JSX.Element => {
  */
 const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   const { src, id } = card;
-  // const hoverRef = useRef(null);
   const [position, setPosition] = useState([0, 0]);
   const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    console.log(position);
+  }, [position]);
+
+  // const tb = useMemo(() => {
+  //   if (card.contentType === "image") {
+  //     imageThumbnail(card.src)
+  //       .then((thumbnail: any) => {
+  //         console.log(thumbnail);
+  //       })
+  //       .catch((err: any) => console.error(err));
+  //   }
+  // }, []);
+
+  // const tb = useMemo(() => {
+  //   if (card.contentType === "image") {
+  //     return generate(card.src, { x: 50, y: 50 }, 50);
+  //   }
+  // }, []);
+  // console.log(tb);
 
   return (
     <div style={{ display: "flex" }}>
@@ -228,7 +248,7 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
         // title={`Image Preview ${card.title}`}
       >
         <ReactImageFallback
-          style={{ width: "100%" }}
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
           fallbackImage={`${process.env.PUBLIC_URL}/question_mark.svg`}
           // onError={(e)=>}
           src={
@@ -253,6 +273,38 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
 };
 
 export default ContentsTab;
+
+// function ThumbnailGenerator() {
+
+function generate(
+  imgSrc: string,
+  thumbDims: { x: number; y: number },
+  compression: number
+): Promise<string> {
+  const resizeCanvas = document.createElement("canvas") as HTMLCanvasElement;
+
+  [resizeCanvas.width, resizeCanvas.height] = [thumbDims.x, thumbDims.y];
+  const ctx = resizeCanvas.getContext("2d") as CanvasRenderingContext2D;
+
+  const tmp = new Image();
+  // tmp.setAttribute()
+  tmp.setAttribute("crossorigin", "anonymous");
+  const ret = new Promise((resolve) => {
+    tmp.onload = () => {
+      ctx.drawImage(tmp, 0, 0, thumbDims.x, thumbDims.y);
+      resolve(resizeCanvas.toDataURL("image/jpeg", compression || 0.5));
+    };
+  });
+  tmp.src = imgSrc;
+  return ret as Promise<string>;
+}
+
+// function generateBatch(imgSrcs: string[], thumbDims: {x: number, y: number}[], compression: number) {
+//   return Promise.all(imgSrcs.map(img =>generate(img, thumbDims, compression)));
+// }
+
+// return this;
+// }
 
 // const Popover = (): JSX.Element =>{
 

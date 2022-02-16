@@ -2,11 +2,11 @@ import { InteractionType } from "../enums";
 import IFrameValidator from "../IFrameValidator";
 import type RawCardRow from "../interfaces/RawCardRow";
 import { WidgetType } from "./WidgetData";
+import imageThumbnail from "image-thumbnail";
 
+export type ContentType = "video" | "image" | "website" | "embed" | "widget";
 
-export type ContentType = "video"|"image"|"website"|"embed"|"widget"
-
-interface ContentCardData{
+interface ContentCardData {
   src: string;
   title: string;
   added: Date;
@@ -14,7 +14,7 @@ interface ContentCardData{
   author: string;
 }
 
-interface WidgetCardData{
+interface WidgetCardData {
   widgetType: WidgetType;
 }
 /**Contains all the information needed to create a display card */
@@ -34,7 +34,7 @@ export default class CardData {
 
   constructor(row: RawCardRow) {
     // console.log(`GOT IMAGE CARD ROW: ${isImgLink(row.src)}`);
-    this.id = row.src
+    this.id = row.src;
     this.src = row.src;
     this.title = row.title;
     this.added = new Date(row.added);
@@ -42,12 +42,12 @@ export default class CardData {
     this.author = row.author;
     this.interaction =
       InteractionType[row.interaction as keyof typeof InteractionType];
-    this.contentType = getContentType(this.src)
-    if (this.contentType === "widget" && row.widgetType){
+    this.contentType = getContentType(this.src);
+    if (this.contentType === "widget" && row.widgetType) {
       this.metaData = {
-        widgetType: row.widgetType
-      }
-      this.id = row.widgetType
+        widgetType: row.widgetType,
+      };
+      this.id = row.widgetType;
     } else {
       this.metaData = {
         src: row.src,
@@ -55,8 +55,8 @@ export default class CardData {
         added: new Date(row.added),
         sourceId: row.src,
         author: row.author,
-      }
-      this.id = row.src
+      };
+      this.id = row.src;
     }
 
     this.isActive = false;
@@ -74,41 +74,46 @@ export default class CardData {
     this.failed = true;
     // this.error =
   }
+  // generateThumbnail(): void {
+  //   imageThumbnail('resources/images/dog.jpg')
+  //   .then(thumbnail => { console.log(thumbnail) })
+  //   .catch(err => console.error(err));
+  //   // try {
+  //   //   const thumbnail = await imageThumbnail();
+  //   //   console.log(thumbnail);
+  //   // } catch (err) {
+  //   //   console.error(err);
+  //   // }
+  // }
 }
- 
 
-function getContentType(url: string): ContentType{
-  if (isImgLink(url) ) return "image"
-  if (isVideo(url) ) return "video"
-  if (isEmbed(url) ) return "embed" 
-  if (isWebsite(url)) return "website"
-  return "widget"
-
+function getContentType(url: string): ContentType {
+  if (isImgLink(url)) return "image";
+  if (isVideo(url)) return "video";
+  if (isEmbed(url)) return "embed";
+  if (isWebsite(url)) return "website";
+  return "widget";
 }
 
 function isImgLink(url: string) {
   if (typeof url !== "string") return false;
   const imageReg = /[./](gif|jpg|jpeg|tiff|png)$/i;
-  return (
-    imageReg.test(url)
-  );
+  return imageReg.test(url);
 }
 
-function isVideo(url: string){
+function isVideo(url: string) {
   if (typeof url !== "string") return false;
   const videoReg = /[./](mp4|webm|mov)$/i;
-  return (
-    videoReg.test(url)
-    // url.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) != null
-  );
+  return videoReg.test(url);
+  // url.match(/^http[^\?]*.(jpg|jpeg|gif|png|tiff|bmp)(\?(.*))?$/gim) != null
 }
 
-function isEmbed(url: string){
+function isEmbed(url: string) {
   if (typeof url !== "string") return false;
-  return url.includes("embed")
+  return url.includes("embed");
 }
 
-function isWebsite(url: string){
+function isWebsite(url: string) {
   if (typeof url !== "string") return false;
-  return url.includes("https")
+  return url.includes("https");
 }

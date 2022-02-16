@@ -31,7 +31,7 @@ const AppErrorTable = (): JSX.Element => {
         <Scrollbars
           autoHide={false}
           id="app-error-scroll-container"
-          style={{ width: "100%", height: height - 30 }}
+          style={{ width: "100%", height: height - 20 }}
         >
           <table>
             <tbody>
@@ -40,7 +40,10 @@ const AppErrorTable = (): JSX.Element => {
                   const { errorType, link, source } = error;
 
                   return (
-                    <tr key={index}>
+                    <tr
+                      key={index}
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
                       <td key={index} style={{ color: "#D14343" }}>
                         {`⚠ ${errorType}`}
                       </td>

@@ -27,6 +27,7 @@ export const CardLayout = ({
   widgets,
   isDraggable,
   isResizable,
+  useControls,
 }: {
   layout: LayoutData;
   appMode: AppMode;
@@ -38,6 +39,7 @@ export const CardLayout = ({
   widgets: WidgetData[];
   isDraggable?: boolean;
   isResizable?: boolean;
+  useControls?: boolean;
 }): JSX.Element => {
   const activeLayout = layout;
 
@@ -45,20 +47,7 @@ export const CardLayout = ({
     console.log(activeLayout?.id);
   }, [activeLayout?.id]);
 
-  const variants = {
-    show: {
-      opacity: [1, 0, 1],
-      transition: {
-        duration: 0.5,
-      },
-    },
-    hidden: {
-      opacity: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  } as Variants;
+  console.log(activeLayout);
 
   const ResponsiveGridLayout = WidthProvider(Responsive);
 
