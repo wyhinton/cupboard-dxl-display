@@ -85,8 +85,6 @@ const LayoutTitle = ({ layout }: { layout: LayoutData }): JSX.Element => {
 
   const layoutCardIds = layout.sources();
   const layoutWidgetsIds = layout.widgets();
-  console.log(layoutCardIds);
-  // const activeCards =
 
   const cards = useStoreState((state) =>
     state.appModel.availableCards.filter((c) => layoutCardIds.includes(c.src))

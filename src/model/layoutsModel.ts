@@ -127,6 +127,7 @@ const layoutsModel: LayoutsModel = {
       if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
         console.log("IT WAS IN DISPLAY MODE");
         if (activeLayout?.layout) {
+          console.log(buf.lg[0]);
           activeLayout.layout = buf;
           actions.setActiveLayout(activeLayout);
         }
@@ -137,6 +138,7 @@ const layoutsModel: LayoutsModel = {
   setActiveLayout: action((state, newActiveLayout) => {
     console.log(newActiveLayout);
     state.activeLayout = newActiveLayout;
+    state.bufferLayout = newActiveLayout.layout;
   }),
   setRandomLayout: thunk((actions, _, { getState }) => {
     const { externalLayouts, activeLayout } = getState();
