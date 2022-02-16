@@ -55,37 +55,34 @@ const googleSheetsModel: GoogleSheetsModel = {
   //requests
   fetchTopLevelSheet: thunk((actions) => {
     try {
-      getSheetData("TOP_LEVEL", "ZZZZ" as string)
-        .then(
-          // getSheetData("TOP_LEVEL", process.env.REACT_APP_SHEET_URL as string).then(
-          (r) => {
-            const sheetRow = r.rows[0] as PrincipleSheetRow;
-            actions.setFormUrl(sheetRow.googleForm);
-            actions.setLayoutsSheetUrl(
-              googleSheetUrlToCSVUrl(sheetRow.layoutsSheet)
-            );
-            actions.setCardSheetUrl(
-              googleSheetUrlToCSVUrl(sheetRow.cardsSheet)
-            );
-            // actions.fetchSheet([
-            //   {
-            //     name: "LAYOUTS",
-            //     url: "FFFFF",
-            //   },
-            //   { name: "CARDS", url: "FFFF" },
-            // ]);
-            actions.fetchSheet([
-              {
-                name: "LAYOUTS",
-                url: googleSheetUrlToCSVUrl(sheetRow.layoutsSheet),
-              },
-              {
-                name: "CARDS",
-                url: googleSheetUrlToCSVUrl(sheetRow.cardsSheet),
-              },
-            ]);
-          }
-        )
+      // getSheetData("TOP_LEVEL", "ZZZZ" as string)
+      //   .then(
+      getSheetData("TOP_LEVEL", process.env.REACT_APP_SHEET_URL as string)
+        .then((r) => {
+          const sheetRow = r.rows[0] as PrincipleSheetRow;
+          actions.setFormUrl(sheetRow.googleForm);
+          actions.setLayoutsSheetUrl(
+            googleSheetUrlToCSVUrl(sheetRow.layoutsSheet)
+          );
+          actions.setCardSheetUrl(googleSheetUrlToCSVUrl(sheetRow.cardsSheet));
+          // actions.fetchSheet([
+          //   {
+          //     name: "LAYOUTS",
+          //     url: "FFFFF",
+          //   },
+          //   { name: "CARDS", url: "FFFF" },
+          // ]);
+          actions.fetchSheet([
+            {
+              name: "LAYOUTS",
+              url: googleSheetUrlToCSVUrl(sheetRow.layoutsSheet),
+            },
+            {
+              name: "CARDS",
+              url: googleSheetUrlToCSVUrl(sheetRow.cardsSheet),
+            },
+          ]);
+        })
         .catch((error) => {
           console.log("DOING CATCH");
           // actions.setFormUrl(`${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`);
@@ -248,7 +245,6 @@ function getSheetData(
 ): Promise<LoadSheetResult> {
   let data;
   return new Promise<LoadSheetResult>((resolve, reject) => {
-    console.log(sheetUrl);
     try {
       Papa.parse(sheetUrl, {
         download: true,
