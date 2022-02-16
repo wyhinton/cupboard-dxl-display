@@ -92,8 +92,6 @@ const layoutsModel: LayoutsModel = {
         });
         let defaultLayout: LayoutData;
         if (appConfig.useStaticLayout) {
-          // defaultLayout = defaultStaticLayout;
-          // console.log(activeLayout);
           // actions.setActiveLayout(defaultLayout);
           // actions.setBufferLayout(defaultLayout.layout);
         } else {
@@ -116,16 +114,6 @@ const layoutsModel: LayoutsModel = {
     );
     const newError = JSON.stringify(error);
     if (!errorsString.includes(newError)) {
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
-      state.layoutErrors.push(error);
       state.layoutErrors.push(error);
     }
   }),

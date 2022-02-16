@@ -1,6 +1,8 @@
 export type AppErrorType =
   | "failed to load content"
-  | "failed to read layout row";
+  | "failed to read layout row"
+  | "failed to fetch master google sheet"
+  | "failed to fetch layout or card sheet";
 
 export default interface AppError {
   errorType: AppErrorType;

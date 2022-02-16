@@ -1,15 +1,19 @@
-import { action, Action, thunk, Thunk } from "easy-peasy";
-import type GoogleSheet from "../interfaces/GoogleSheet";
+import type { Action, Thunk } from "easy-peasy";
+import { action, thunk } from "easy-peasy";
+import Papa from "papaparse";
+
+import GoogleSheetData from "../data_structs/GoogleSheetData";
+import { SheetNames } from "../enums";
+import AppError from "../interfaces/AppError";
+import PrincipleSheetRow from "../interfaces/PrincipleSheetRow";
 import type RawCardRow from "../interfaces/RawCardRow";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import cardDataSheetKey from "../static/cardDataSheetKey";
-import layoutsGoogleSheetKey from "../static/layoutsGoogleSheetKey";
-import GoogleSheetData from "../data_structs/GoogleSheetData";
-import Papa from "papaparse";
-import { SheetNames } from "../enums";
-import SheetId from "../interfaces/SheetId";
-import RawTopSheetRow from "../interfaces/PrincipleSheetRow";
-import PrincipleSheetRow from "../interfaces/PrincipleSheetRow";
+
+/**
+ * Responsible for making requests to google sheets. Other models must listen this model to intercept the sheet payload.
+ * Also stores the fetch data purely for debugging purposes.
+ */
 
 export interface GoogleSheetsModel {
   //state
@@ -19,6 +23,7 @@ export interface GoogleSheetsModel {
   formUrl: string | undefined;
   layoutSheetUrl: string | undefined;
   cardSheetUrl: string | undefined;
+  googleSheetsErrors: AppError[];
   //requests
   fetchTopLevelSheet: Thunk<GoogleSheetsModel>;
   fetchAppGoogleSheet: Thunk<GoogleSheetsModel>;
@@ -30,11 +35,8 @@ export interface GoogleSheetsModel {
   setAppGoogleSheetData: Action<GoogleSheetsModel, GoogleSheetData>;
   setCardDataGoogleSheet: Action<GoogleSheetsModel, RawCardRow[]>;
   setLayoutDataGoogleSheet: Action<GoogleSheetsModel, RawLayoutRow[]>;
+  addGoogleSheetError: Action<GoogleSheetsModel, AppError>;
 }
-/**
- * Responsible for making requestst to google sheets. Other models must listen this model to intercept the sheet payload.
- * Also stores the fetch data purely for debugging purposes.
- */
 
 interface LoadSheetResult {
   rows: unknown[];
@@ -49,29 +51,95 @@ const googleSheetsModel: GoogleSheetsModel = {
   formUrl: undefined,
   layoutSheetUrl: undefined,
   cardSheetUrl: undefined,
+  googleSheetsErrors: [],
   //requests
   fetchTopLevelSheet: thunk((actions) => {
-    getData("TOP_LEVEL", process.env.REACT_APP_SHEET_URL as string).then(
-      (r) => {
-        console.log(r);
-        let sheetRow = r.rows[0] as PrincipleSheetRow;
-        actions.setFormUrl(sheetRow.googleForm);
-        actions.setLayoutsSheetUrl(urlToCsvUrl(sheetRow.layoutsSheet));
-        actions.setCardSheetUrl(urlToCsvUrl(sheetRow.cardsSheet));
-        actions.fetchSheet([
-          { name: "LAYOUTS", url: urlToCsvUrl(sheetRow.layoutsSheet) },
-          { name: "CARDS", url: urlToCsvUrl(sheetRow.cardsSheet) },
-        ]);
-      }
-    );
-    console.log("GOT HERE");
+    try {
+      getSheetData("TOP_LEVEL", "ZZZZ" as string)
+        .then(
+          // getSheetData("TOP_LEVEL", process.env.REACT_APP_SHEET_URL as string).then(
+          (r) => {
+            const sheetRow = r.rows[0] as PrincipleSheetRow;
+            actions.setFormUrl(sheetRow.googleForm);
+            actions.setLayoutsSheetUrl(
+              googleSheetUrlToCSVUrl(sheetRow.layoutsSheet)
+            );
+            actions.setCardSheetUrl(
+              googleSheetUrlToCSVUrl(sheetRow.cardsSheet)
+            );
+            // actions.fetchSheet([
+            //   {
+            //     name: "LAYOUTS",
+            //     url: "FFFFF",
+            //   },
+            //   { name: "CARDS", url: "FFFF" },
+            // ]);
+            actions.fetchSheet([
+              {
+                name: "LAYOUTS",
+                url: googleSheetUrlToCSVUrl(sheetRow.layoutsSheet),
+              },
+              {
+                name: "CARDS",
+                url: googleSheetUrlToCSVUrl(sheetRow.cardsSheet),
+              },
+            ]);
+          }
+        )
+        .catch((error) => {
+          console.log("DOING CATCH");
+          // actions.setFormUrl(`${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`);
+          actions.setLayoutsSheetUrl(
+            googleSheetUrlToCSVUrl(
+              `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`
+            )
+          );
+          actions.setCardSheetUrl(
+            googleSheetUrlToCSVUrl(`${process.env.PUBLIC_URL}/CARDS_BACKUP.csv`)
+          );
+          actions.fetchSheet([
+            {
+              name: "LAYOUTS",
+              url: googleSheetUrlToCSVUrl(
+                `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`
+              ),
+            },
+            {
+              name: "CARDS",
+              url: googleSheetUrlToCSVUrl(
+                `${process.env.PUBLIC_URL}/CARDS_BACKUP.csv`
+              ),
+            },
+          ]);
+        });
+    } catch (error) {
+      console.log("DOING BACKUP");
+      actions.addGoogleSheetError({
+        errorType: "failed to fetch master google sheet",
+        description:
+          "failed to get the mater google sheet, reverting to local svg",
+        source: process.env.REACT_APP_SHEET_URL ?? "NA",
+        link: process.env.REACT_APP_SHEET_URL ?? "NA",
+      });
+      // actions.fetchSheet([
+      //   {
+      //     name: "LAYOUTS",
+      //     url: googleSheetUrlToCSVUrl(
+      //       `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`
+      //     ),
+      //   },
+      //   {
+      //     name: "CARDS",
+      //     url: googleSheetUrlToCSVUrl(
+      //       `${process.env.PUBLIC_URL}/CARDS_BACKUP.csv`
+      //     ),
+      //   },
+      // ]);
+    }
   }),
   fetchSheet: thunk(async (actions, sheets, { getState }) => {
     console.log(getState().cardSheetUrl, getState().layoutSheetUrl);
-    // const getCardDataResponse = getData("CARDS", getState().cardSheetUrl as string)
-    // const getLayoutDataResponse = getData( "LAYOUTS", getState().layoutSheetUrl as string)
-    const sheetResponses = sheets.map((s) => getData(s.name, s.url));
-    // Promise.allSettled([getCardDataResponse, getLayoutDataResponse]).then(results=>{
+    const sheetResponses = sheets.map((s) => getSheetData(s.name, s.url));
     Promise.allSettled(sheetResponses).then((results) => {
       const sheetData = new GoogleSheetData("DSC App", cardDataSheetKey.key);
       const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
@@ -97,15 +165,11 @@ const googleSheetsModel: GoogleSheetsModel = {
   }),
 
   fetchAppGoogleSheet: thunk(async (actions, _, { getState }) => {
-    // const getCardDataResponse = parseData("CARDS", cardDataSheetKey)
-    // const getLayoutDataResponse = parseData( "LAYOUTS", layoutsGoogleSheetKey)
-
-    console.log(getState().cardSheetUrl, getState().layoutSheetUrl);
-    const getCardDataResponse = getData(
+    const getCardDataResponse = getSheetData(
       "CARDS",
       getState().cardSheetUrl as string
     );
-    const getLayoutDataResponse = getData(
+    const getLayoutDataResponse = getSheetData(
       "LAYOUTS",
       getState().layoutSheetUrl as string
     );
@@ -122,6 +186,12 @@ const googleSheetsModel: GoogleSheetsModel = {
             sheetData.addSheet(result.value.sheetTitle, result.value.rows);
           }
           if (result.status == "rejected") {
+            actions.addGoogleSheetError({
+              errorType: "failed to fetch layout or card sheet",
+              description: "could not retrieve google sheet",
+              source: "LAYOUTS/CARD",
+              link: "NA",
+            });
             console.error("failed ");
           }
         });
@@ -153,44 +223,30 @@ const googleSheetsModel: GoogleSheetsModel = {
   setLayoutsSheetUrl: action((state, layoutSheetUrl) => {
     state.formUrl = layoutSheetUrl;
   }),
+  addGoogleSheetError: action((state, googleSheetError) => {
+    const errorsString = state.googleSheetsErrors.map(
+      (error) => JSON.stringify(error) as string
+    );
+    const newError = JSON.stringify(googleSheetError);
+    if (!errorsString.includes(newError)) {
+      state.googleSheetsErrors.push(googleSheetError);
+    }
+  }),
 };
 
 export default googleSheetsModel;
 
-function urlToCsvUrl(url: string) {
-  console.log(url);
-  // https://docs.google.com/spreadsheets/d/1zwPZV75EhBLseFpcpQhHXEjLTV6JDrwfIGNhaI2GCXI/edit#gid=1913514186
-  let sections = url.split("/");
+/**Converts the key for a google sheet into a url which can be used to fetch as .csv blob */
+function googleSheetUrlToCSVUrl(url: string): string {
+  const sections = url.split("/");
   const sheetKey = sections[5];
-  let sectionsGid = url.split("gid=");
+  const sectionsGid = url.split("gid=");
   const gid = sectionsGid[1];
   const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetKey}/export?format=csv&gid=${gid}`;
   return csvUrl;
 }
 
-function parseData(
-  sheetTitle: SheetNames,
-  sheetId: SheetId
-): Promise<LoadSheetResult> {
-  let data;
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId.key}/export?format=csv&gid=${sheetId.gid}`;
-
-  return new Promise<LoadSheetResult>((resolve) => {
-    Papa.parse(csvUrl, {
-      download: true,
-      header: true,
-      delimiter: ",",
-      dynamicTyping: true,
-      complete: (results) => {
-        data = results.data;
-        resolve({ rows: data, sheetTitle: sheetTitle });
-      },
-    });
-  });
-}
-// https://docs.google.com/spreadsheets/d/e/2PACX-1vRalMG47cvXmCbEqeIJWn5qwd9bPhHUV16_VN7LuKsv5
-
-function getData(
+function getSheetData(
   sheetTitle: SheetNames,
   sheetUrl: string
 ): Promise<LoadSheetResult> {

@@ -19,9 +19,6 @@ import AppError from "./interfaces/AppError";
 
 const typedHooks = createTypedHooks<StoreModel>();
 
-// We export the hooks from our store as they will contain the
-// type information on them
-// see https://easy-peasy.vercel.app/docs/api/use-store-actions.html for more on store hooks
 export const useStoreActions = typedHooks.useStoreActions;
 export const useStoreDispatch = typedHooks.useStoreDispatch;
 export const useStoreState = typedHooks.useStoreState;
@@ -37,6 +34,7 @@ export function useToggle(initialValue: boolean): [boolean, () => void] {
 interface UseErrorProps {
   appErrors: AppError[];
   layoutErrors: AppError[];
+  googleSheetsErrors: AppError[];
 }
 
 export const useErrors = (): UseErrorProps => {
@@ -44,9 +42,13 @@ export const useErrors = (): UseErrorProps => {
   const layoutErrors = useStoreState(
     (state) => state.layoutsModel.layoutErrors
   );
+  const googleSheetsErrors = useStoreState(
+    (state) => state.googleSheetsModel.googleSheetsErrors
+  );
   return {
     appErrors,
     layoutErrors,
+    googleSheetsErrors,
   };
 };
 

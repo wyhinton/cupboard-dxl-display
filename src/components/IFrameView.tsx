@@ -105,8 +105,8 @@ const IFrameView: FC<IFrameViewProperties> = ({
           onError={(event) => {
             onError(event, card);
           }}
-          src={"blablahblah"}
-          // src={src}
+          // src={"blablahblah"}
+          src={src}
           style={{
             width: "100%",
             height: "100%",
