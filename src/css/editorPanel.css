@@ -117,6 +117,10 @@
   border-radius: 5px 5px 0 0;
   border: 1px solid white !important;
 }
+
+.react-tabs__tab-panel--selected {
+  height: 100%;
+}
 .react-tabs__tab:hover[aria-selected="false"] {
   background-color: #535353;
 }
@@ -124,7 +128,6 @@
 .react-tabs__tab-panel {
   display: flex;
   flex-flow: column;
-  height: 100%;
 }
 
 .contents-tab-container {
