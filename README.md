@@ -13,9 +13,10 @@
 
 # Live Demo
 
-- https://wyhinton.github.io/cuboard/
+- https://github.com/NCSU-Libraries/cupboard-dxl-display
 
 # Features
+
 - Author and save new masonry Layouts
 - Display images, iframe embeds, entire webpages, or videos
 - Fully featured Editor allows you to resize, delete, and add cards to a layout visually
@@ -23,10 +24,10 @@
 - Proven, scalable, and easy to understand project structure
 
 # Design
+
 Out of the box, Cupboard allows you to curate and design attractive masonry displays for digital signage. Load your content from links into a **Card**, then arrange cards to form a **Layout**. Select a layout from your layout collection, or cycle between layouts.
 
 Your cards and layouts are provided client side by a Google Sheet, while a Google Form Embed allows you to author and save new layouts. We've provided templates for both of these, and instruction on how to connect them to them to Cupboard.
-
 
 # Backend Setup
 
@@ -51,7 +52,6 @@ When developing your Cuboard, we suggest the following plugins:
 
 # Libraries
 
-- [react-use](https://github.com/streamich/react-use#readme) - Provides useful hooks for event handling like `useIdle` and `useLongPress`
 - [react-grid-layout](https://github.com/react-grid-layout/react-grid-layout) - Draggable and resizable grid layout with responsive breakpoints. Used for editing and display our card layotus.
 - [evergreen-ui](https://github.com/segmentio/evergreen) - React UI framework. Provides some componets for things like Buttons, Menus, etc., that work well with the projects design language. Allows us to avoid having to basic UI components from scratch.
 - [easy-peasy](https://github.com/ctrlplusb/easy-peasy) - Redux wrapper which allows us to design clear, centralized state managment for our application.
