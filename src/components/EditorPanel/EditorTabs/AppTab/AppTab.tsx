@@ -1,7 +1,11 @@
 import { Switch, TextInputField } from "evergreen-ui";
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import { useApp } from "../../../../hooks";
+import { useApp, useElementSize, useStoreState } from "../../../../hooks";
 import appConfig from "../../../../static/appConfig";
+import AppErrorTable from "./AppErrorTable";
+import { AutoSizer } from "react-virtualized";
+import { Scrollbars } from "react-custom-scrollbars";
+import FlexRow from "../../../Shared/FlexRow";
 
 const AppTab = (): JSX.Element => {
   const { rotationSpeed, setRotationSpeed, setRotateLayouts } = useApp();
@@ -31,14 +35,26 @@ const AppTab = (): JSX.Element => {
   useEffect(() => {
     console.log(val);
   }, [val]);
+
+  const [squareRef, { width, height }] = useElementSize();
+
   return (
-    <div style={{ padding: ".5em", height: 100, pointerEvents: "all" }}>
-      {/* <input type="text" value={val} onChange={handleChange} /> */}
-      <Label>Rotate Layouts</Label>
-      <Switch
-        checked={checked}
-        onChange={(e) => setChecked(e.target.checked)}
-      />
+    <div style={{ height: "100%", pointerEvents: "all" }}>
+      <div style={{ margin: ".5em" }}>
+        <FlexRow>
+          <Label>Rotate Layouts</Label>
+          <div style={{ paddingLeft: ".5em" }}>
+            <Switch
+              checked={checked}
+              onChange={(e) => setChecked(e.target.checked)}
+            />
+          </div>
+        </FlexRow>
+      </div>
+
+      <AppErrorTable />
+      {/* </div> */}
+
       {/* <input
         // label={<Label>Layout Duration</Label>}
         // description="Duration that layout is displayed"

@@ -53,7 +53,9 @@
     width: 100vw;
     top: 0;
     left: 0;
-    transition: "background-color 0.5s ease",
+    transition: "background-color 0.5s ease";
+    z-index: 1000000;
+    pointer-events: none;
     }
   </style>
   <div>
@@ -62,6 +64,7 @@
     <div id ="background"></div>
     <div id ="modal-backdrop"></div>
     <div id ="popup-container"></div>
+    <div id="tooltip-container"></div>
     <div id="root"></div>
     <div style="z-index: 10" id="portal"></div>
     <div style="z-index: 100" id="how-to-use-popup"></div>

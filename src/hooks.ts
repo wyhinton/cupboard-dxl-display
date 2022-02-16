@@ -4,6 +4,7 @@ import React, {
   EffectCallback,
   MouseEventHandler,
   RefObject,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -14,6 +15,7 @@ import LayoutData from "./data_structs/LayoutData";
 import CardData from "./data_structs/CardData";
 import WidgetData from "./data_structs/WidgetData";
 import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
+import AppError from "./interfaces/AppError";
 
 const typedHooks = createTypedHooks<StoreModel>();
 
@@ -32,6 +34,22 @@ export function useToggle(initialValue: boolean): [boolean, () => void] {
   return [value, toggleValue];
 }
 
+interface UseErrorProps {
+  appErrors: AppError[];
+  layoutErrors: AppError[];
+}
+
+export const useErrors = (): UseErrorProps => {
+  const appErrors = useStoreState((state) => state.appModel.appErrors);
+  const layoutErrors = useStoreState(
+    (state) => state.layoutsModel.layoutErrors
+  );
+  return {
+    appErrors,
+    layoutErrors,
+  };
+};
+
 interface UseAppProps {
   appMode: AppMode;
   rotationSpeed: number;
@@ -39,7 +57,9 @@ interface UseAppProps {
   toggleAppMode: ThunkCreator<void, any>;
   setRotateLayouts: ActionCreator<boolean>;
   rotateLayouts: boolean;
+  addAppError: ActionCreator<AppError>;
 }
+
 export const useApp = (): UseAppProps => {
   const toggleAppMode = useStoreActions(
     (actions) => actions.appModel.toggleAppMode
@@ -52,6 +72,9 @@ export const useApp = (): UseAppProps => {
   const setRotateLayouts = useStoreActions(
     (actions) => actions.appModel.setRotateLayouts
   );
+  const addAppError = useStoreActions(
+    (actions) => actions.appModel.addAppError
+  );
   const appMode = useStoreState((state) => state.appModel.appMode);
 
   return {
@@ -61,6 +84,7 @@ export const useApp = (): UseAppProps => {
     toggleAppMode,
     rotateLayouts,
     setRotateLayouts,
+    addAppError,
   };
 };
 
@@ -227,4 +251,143 @@ export function useInterval(callback: () => void, delay: number | null) {
 
     return () => clearInterval(id);
   }, [delay]);
+}
+
+function useEventListener<K extends keyof WindowEventMap>(
+  eventName: K,
+  handler: (event: WindowEventMap[K]) => void
+): void;
+function useEventListener<
+  K extends keyof HTMLElementEventMap,
+  T extends HTMLElement = HTMLDivElement
+>(
+  eventName: K,
+  handler: (event: HTMLElementEventMap[K]) => void,
+  element: RefObject<T>
+): void;
+
+function useEventListener<
+  KW extends keyof WindowEventMap,
+  KH extends keyof HTMLElementEventMap,
+  T extends HTMLElement | void = void
+>(
+  eventName: KW | KH,
+  handler: (
+    event: WindowEventMap[KW] | HTMLElementEventMap[KH] | Event
+  ) => void,
+  element?: RefObject<T>
+) {
+  // Create a ref that stores handler
+  const savedHandler = useRef<typeof handler>();
+
+  useEffect(() => {
+    // Define the listening target
+    const targetElement: T | Window = element?.current || window;
+    if (!(targetElement && targetElement.addEventListener)) {
+      return;
+    }
+
+    // Update saved handler if necessary
+    if (savedHandler.current !== handler) {
+      savedHandler.current = handler;
+    }
+
+    // Create event listener that calls handler function stored in ref
+    const eventListener: typeof handler = (event) => {
+      // eslint-disable-next-line no-extra-boolean-cast
+      if (!!savedHandler?.current) {
+        savedHandler.current(event);
+      }
+    };
+
+    targetElement.addEventListener(eventName, eventListener);
+
+    // Remove event listener on cleanup
+    return () => {
+      targetElement.removeEventListener(eventName, eventListener);
+    };
+  }, [eventName, element, handler]);
+}
+
+// See: https://usehooks-ts.com/react-hook/use-event-listener
+
+interface Size {
+  width: number;
+  height: number;
+}
+
+export function useElementSize<T extends HTMLElement = HTMLDivElement>(): [
+  (node: T | null) => void,
+  Size
+] {
+  // Mutable values like 'ref.current' aren't valid dependencies
+  // because mutating them doesn't re-render the component.
+  // Instead, we use a state as a ref to be reactive.
+  const [ref, setRef] = useState<T | null>(null);
+  const [size, setSize] = useState<Size>({
+    width: 0,
+    height: 0,
+  });
+
+  // Prevent too many rendering using useCallback
+  const handleSize = useCallback(() => {
+    setSize({
+      width: ref?.offsetWidth || 0,
+      height: ref?.offsetHeight || 0,
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref?.offsetHeight, ref?.offsetWidth]);
+
+  useEventListener("resize", handleSize);
+
+  useLayoutEffect(() => {
+    handleSize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref?.offsetHeight, ref?.offsetWidth]);
+
+  return [setRef, size];
+}
+
+export function useHover<T extends HTMLElement = HTMLElement>(
+  elementRef: RefObject<T>
+): boolean {
+  const [value, setValue] = useState<boolean>(false);
+
+  const handleMouseEnter = () => setValue(true);
+  const handleMouseLeave = () => setValue(false);
+
+  useEventListener("mouseenter", handleMouseEnter, elementRef);
+  useEventListener("mouseleave", handleMouseLeave, elementRef);
+
+  return value;
+}
+
+interface WindowSize {
+  width: number;
+  height: number;
+}
+
+export function useWindowSize(): WindowSize {
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: 0,
+    height: 0,
+  });
+
+  const handleSize = () => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
+
+  useEventListener("resize", handleSize);
+
+  // Set size at the first client-side load
+  useLayoutEffect(() => {
+    handleSize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return windowSize;
 }

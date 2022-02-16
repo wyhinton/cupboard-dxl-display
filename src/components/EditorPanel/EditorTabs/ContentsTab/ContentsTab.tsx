@@ -7,7 +7,12 @@ import { Scrollbars } from "react-custom-scrollbars";
 
 import CardData from "../../../../data_structs/CardData";
 import { DndTypes, DragSource } from "../../../../enums";
-import { useLayout, useStoreActions, useStoreState } from "../../../../hooks";
+import {
+  useHover,
+  useLayout,
+  useStoreActions,
+  useStoreState,
+} from "../../../../hooks";
 import { formatDate } from "../../../../utils";
 import IXDrop from "../../../DragAndDrop/IXDrop";
 import Button from "../../../Shared/Button";
@@ -17,6 +22,10 @@ import TableHeader from "../../TableHeader";
 import ReactImageFallback from "react-image-fallback";
 import ReactTooltip from "react-tooltip";
 import ToolTip from "react-portal-tooltip";
+import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
+import { useDomRect } from "powerhooks";
+import PopOver from "../../PopOver";
 
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
@@ -117,29 +126,22 @@ const ContentsTab = (): JSX.Element => {
         <table className="contents-tab-table">
           <tbody>
             <tr>
-              {["title", "added", "sourceId", "author", "interaction"].map(
-                (s, index) => {
-                  return (
-                    <TableHeader
-                      activeFilter={filterKey}
-                      className={contentTabHeader}
-                      headerTitle={s}
-                      key={index}
-                      setFilter={setFilterKey}
-                      setFilterDirection={setFilterDirection}
-                    ></TableHeader>
-                  );
-                }
-              )}
+              {["title", "author", "added"].map((s, index) => {
+                return (
+                  <TableHeader
+                    activeFilter={filterKey}
+                    className={contentTabHeader}
+                    headerTitle={s}
+                    key={index}
+                    setFilter={setFilterKey}
+                    setFilterDirection={setFilterDirection}
+                  ></TableHeader>
+                );
+              })}
             </tr>
           </tbody>
         </table>
-        <Scrollbars
-          autoHeight
-          autoHeightMax={319}
-          autoHeightMin={100}
-          onScrollFrame={(v) => console.log(v)}
-        >
+        <Scrollbars autoHeight autoHeightMax={319} autoHeightMin={100}>
           <table style={{ padding: "2em" }}>
             <tbody>
               {filteredCards.map((card, index) => {
@@ -165,24 +167,12 @@ const ContentsTab = (): JSX.Element => {
                   >
                     <>
                       <td>
-                        {/* <Tooltip
-                          content={<img src={src}> </img>}
-                          position={"left"}
-                        > */}
                         <TitleWithIcon card={card} />
-                        {/* </Tooltip> */}
                       </td>
-                      <td>{formatDate(added)}</td>
-                      <td>
-                        {/* <Tooltip
-                          content={<img src={src}> </img>}
-                          position={"left"}
-                        > */}
-                        <div>{src}</div>
-                        {/* </Tooltip> */}
-                      </td>
+                      {/* <td><div>{src}</div></td> */}
                       <td>{author}</td>
-                      <td>{interaction}</td>
+                      <td>{formatDate(added)}</td>
+                      {/* <td>{interaction}</td> */}
                     </>
                   </XDrag>
                 );
@@ -200,17 +190,51 @@ const ContentsTab = (): JSX.Element => {
  */
 const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   const { src, id } = card;
-  const pRef = useRef<HTMLDivElement>(null);
+  // const hoverRef = useRef(null);
+
+  const { ref, domRect } = useDomRect();
+  const isHover = useHover(ref);
+  const [position, setPosition] = useState([0, 0]);
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <div
-      style={{ display: "flex", border: "1px solid red", overflow: "visible" }}
-    >
-      <div id={id} style={{ width: 20 }} ref={pRef}>
+    <div style={{ display: "flex" }}>
+      <div
+        id={id}
+        onMouseEnter={(e) => {
+          const { pageX, pageY } = e;
+          setPosition([pageX, pageY]);
+          setHovered(true);
+        }}
+        onMouseLeave={(e) => {
+          setHovered(false);
+        }}
+        ref={ref}
+        style={{ display: "flex", width: 20 }}
+      >
         <ReactImageFallback
-          style={{ width: "100%", maxWidth: 20 }}
           className={
             card.isActive ? "row-favicon-active" : "row-favicon-inactive"
           }
+          fallbackImage={`${process.env.PUBLIC_URL}/question_mark.svg`}
+          src={
+            card.contentType === "image"
+              ? src
+              : `https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`
+          }
+          // onError={(e)=>}
+          style={{ width: "100%", maxWidth: 20 }}
+        />
+      </div>
+
+      <PopOver
+        x={position[0]}
+        y={position[1]}
+        visible={hovered && card.contentType === "image"}
+        // title={`Image Preview ${card.title}`}
+      >
+        <ReactImageFallback
+          style={{ width: "100%" }}
           fallbackImage={`${process.env.PUBLIC_URL}/question_mark.svg`}
           // onError={(e)=>}
           src={
@@ -219,27 +243,13 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
               : `https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`
           }
         />
-      </div>
-      {/* 
-      <ToolTip active={true} parent={pRef.current as React.RefObject<unknown>}>
-        <div>hello</div>
-      </ToolTip> */}
-      <div
-        style={{
-          width: 100,
-          height: 30,
-          position: "absolute",
-          backgroundColor: "red",
-        }}
-      ></div>
-      {/* <ReactTooltip id={id} place="top" effect="solid">
-        Tooltip for the register button
-      </ReactTooltip> */}
+      </PopOver>
       <div
         style={{
           marginTop: "auto",
           marginBottom: "auto",
           textAlign: "left",
+          paddingLeft: "1em",
         }}
       >
         {card.title}
@@ -249,3 +259,11 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
 };
 
 export default ContentsTab;
+
+// const Popover = (): JSX.Element =>{
+
+//   return(
+//     <div>hello</div>
+//   )
+
+// }

@@ -20,12 +20,13 @@ import appConfig from "../static/appConfig";
 import defaultStaticLayout from "../static/defaultStaticLayout";
 import { StoreModel } from "./index";
 import backupData from "../static/backupLayout.json";
+import AppError from "../interfaces/AppError";
 export interface LayoutsModel {
   //state
   activeLayout: LayoutData | undefined;
   externalLayouts: LayoutData[];
   bufferLayout: Layouts;
-  // tempLayout: Layouts;
+  layoutErrors: AppError[];
 
   //listeners
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
@@ -49,41 +50,46 @@ export interface LayoutsModel {
   addWidget: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   registerCardLoadFailure: Thunk<LayoutsModel, CardData, never, StoreModel>;
   resetLayout: Thunk<LayoutsModel, never, StoreModel>;
+  addLayoutError: Action<LayoutsModel, AppError>;
 }
 
-//TODO: Get feedback the whole buffer layout approach
 const layoutsModel: LayoutsModel = {
   //state
   activeLayout: undefined,
   externalLayouts: [],
+  layoutErrors: [],
   bufferLayout: backupData as unknown as Layouts,
-  // bufferLayout: defaultStaticLayout.layout,
-  // tempLayout: defaultStaticLayout.layout,
   layoutsString: computed([(state) => state.bufferLayout], (bufferLayout) => {
-    // const z =
     const val = JSON.stringify(bufferLayout);
-
-    // console.log(val);
     return val;
-    // return JSON.stringify(activeLayout);
   }),
-  // layoutsString: computed([(state) => state.activeLayout], (activeLayout) => {
-  //   const val = JSON.stringify(activeLayout);
-  //   console.log(val);
-  //   return val;
-  //   // return JSON.stringify(activeLayout);
-  // }),
 
   //listeners
   /**On setAppGoogleSheetData, create an array of LayoutData objects from the provided rows */
   onSetAppGoogleSheetData: thunkOn(
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
-    (actions, target) => {
+    (actions, target, { getState }) => {
       //TODO: ERROR HANDLING FOR LAYOUTS
       target.payload.getSheetRows<RawLayoutRow>("LAYOUTS").then((rows) => {
         const rawLayoutRows = rows;
-        const layouts = rawLayoutRows.map((l, i) => new LayoutData(l));
+        const layouts: LayoutData[] = [];
+        rawLayoutRows.forEach((row) => {
+          try {
+            const l = new LayoutData(row);
+            layouts.push(l);
+          } catch (error) {
+            actions.addLayoutError({
+              errorType: "failed to read layout row",
+              description: `failed to read layout row ${
+                row.title ?? "NO TITLE PROVIDED"
+              }`,
+              source: row.title ?? "NO TITLE PROVIDED",
+              link: "none",
+            });
+            console.log(error);
+          }
+        });
         let defaultLayout: LayoutData;
         if (appConfig.useStaticLayout) {
           // defaultLayout = defaultStaticLayout;
@@ -104,6 +110,25 @@ const layoutsModel: LayoutsModel = {
       });
     }
   ),
+  addLayoutError: action((state, error) => {
+    const errorsString = state.layoutErrors.map(
+      (error) => JSON.stringify(error) as string
+    );
+    const newError = JSON.stringify(error);
+    if (!errorsString.includes(newError)) {
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+      state.layoutErrors.push(error);
+    }
+  }),
   onToggleViewMode: thunkOn(
     // targetResolver:toggleAppMode
     (actions, storeActions) => storeActions.appModel.toggleAppMode,
@@ -224,9 +249,6 @@ const layoutsModel: LayoutsModel = {
   setBufferLayout: action((state, layouts) => {
     state.bufferLayout = layouts;
   }),
-  // setTempLayout: action((state, layouts) => {
-  //   state.tempLayout = layouts;
-  // }),
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;
     if (old) {

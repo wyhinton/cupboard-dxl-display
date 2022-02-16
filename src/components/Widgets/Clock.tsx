@@ -13,12 +13,13 @@ const Clock = (): JSX.Element => {
     height: "100%",
     padding: ".25em",
     width: "100%",
-    fontSize: "4vw",
+    // fontSize: "max(4vw, 10px)",
+    fontSize: "400%",
+    // fontSize: "4vw",
     fontWeight: 600,
     color: "white",
     boxSizing: "border-box",
   } as React.CSSProperties;
-
 
   useEffect(() => {
     const timerID = setInterval(() => tick(), 1000);

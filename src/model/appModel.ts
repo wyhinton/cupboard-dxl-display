@@ -7,21 +7,23 @@ import {
   ThunkOn,
   thunkOn,
 } from "easy-peasy";
+import _ from "lodash";
 // import type {Action, Thunk, ThunkOn} from "easy-peasy/types"
-import { Layouts } from "react-grid-layout";
 
 import CardData from "../data_structs/CardData";
 import WidgetData, { WidgetType } from "../data_structs/WidgetData";
 import type { SheetNames } from "../enums";
 import { AppMode } from "../enums";
+import AppError from "../interfaces/AppError";
 import type RawCardRow from "../interfaces/RawCardRow";
 import appConfig from "../static/appConfig";
-import defaultGridLayout from "../static/defaultStaticLayout";
+// import defaultGridLayout from "../static/defaultStaticLayout";
 import { StoreModel } from "./index";
 /**
  * Core app model
  * @param
  */
+
 export interface AppDataModel {
   //state
   availableCards: CardData[];
@@ -32,6 +34,7 @@ export interface AppDataModel {
   rotateLayouts: boolean;
   // currentLayout: Layouts;
   appMode: AppMode;
+  appErrors: AppError[];
 
   //listeners
   onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
@@ -41,14 +44,13 @@ export interface AppDataModel {
   manageViewModeChange: Thunk<AppDataModel, AppMode>;
   toggleAppMode: Thunk<AppDataModel, never>;
   //simple setters
+  addAppError: Action<AppDataModel, AppError>;
   setRotationSpeed: Action<AppDataModel, number>;
   setRotateLayouts: Action<AppDataModel, boolean>;
   setAppMode: Action<AppDataModel, AppMode>;
-  // setCurrentLayout: Action<AppDataModel, Layouts>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setActiveWidgets: Action<AppDataModel, WidgetData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
-  registerCardLoadFailure: Thunk<AppDataModel, CardData, never, StoreModel>;
 }
 
 const availableWidgets = appConfig.widgetIds.map(
@@ -61,12 +63,10 @@ const appModel: AppDataModel = {
   availableWidgets: availableWidgets,
   activeWidgets: [],
   activeCards: [],
+  appErrors: [],
   rotateLayouts: true,
   rotationSpeed: appConfig.rotationDuration,
-  // currentLayout: defaultGridLayout.layout,
   appMode: AppMode.DISPLAY,
-  // localStorageLayouts: [],
-
   //managers
   /**Control side effects for altering the view state of the app, and dispatch a setter for the state */
   manageViewModeChange: thunk((actions, viewModeEnum) => {
@@ -101,28 +101,32 @@ const appModel: AppDataModel = {
     console.log(getState().appMode);
   }),
   setAvailableCards: action((state, cardDataArray) => {
-    // console.log("setting available cards");
     state.availableCards = cardDataArray;
   }),
   setActiveCards: action((state, cardDataArray) => {
-    // console.log(cardDataArray);
     state.activeCards = cardDataArray;
   }),
   setActiveWidgets: action((state, widgetDataArray) => {
-    // console.log(widgetDataArray);
     state.activeWidgets = widgetDataArray;
   }),
   setAppMode: action((state, viewModeEnum) => {
-    // console.log("setting view mode");
     state.appMode = viewModeEnum;
   }),
   setRotationSpeed: action((state, speed) => {
-    // console.log("setting view mode");
     state.rotationSpeed = speed;
   }),
   setRotateLayouts: action((state, should) => {
-    // console.log("setting view mode");
     state.rotateLayouts = should;
+  }),
+  addAppError: action((state, error) => {
+    const errorsString = state.appErrors.map(
+      (error) => JSON.stringify(error) as string
+    );
+    const newError = JSON.stringify(error);
+    // const errorBasic = error.
+    if (!errorsString.includes(newError)) {
+      state.appErrors.push(error);
+    }
   }),
 
   //listeners
@@ -132,11 +136,7 @@ const appModel: AppDataModel = {
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     // handler:
     async (actions, target) => {
-      console.log("TRIGGERD");
-      // console.log("got on card sheet load success");
-      console.log(target.payload);
       target.payload.getSheetRows<RawCardRow>("CARDS").then((rows) => {
-        console.log(rows);
         const rawCardRowsArray = rows.map((row) => {
           return {
             src: row.src,
@@ -149,8 +149,6 @@ const appModel: AppDataModel = {
         });
 
         const cards = rawCardRowsArray.map((c: RawCardRow) => new CardData(c));
-        // console.log(cards);
-        // actions.setActiveCards(cards)
         actions.setAvailableCards(cards);
       });
     }
@@ -190,22 +188,7 @@ const appModel: AppDataModel = {
       actions.setActiveWidgets(activeWidgets);
     }
   ),
-  registerCardLoadFailure: thunk(
-    (actions, failedCard, { getState, getStoreState }) => {
-      console.log("Got card Register Load Failure at Layouts Model");
-      console.log(failedCard);
-      const { activeCards } = getState();
-      const failedId = failedCard.sourceId;
-      const newCards = activeCards.map((c) => {
-        if (c.sourceId === failedId) {
-          console.log("found failed");
-          c.fail();
-        }
-        return c;
-      });
-      actions.setActiveCards(newCards);
-    }
-  ),
+
   onSwapCardContent: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.swapCardContent,
     async (actions, payload, { getState }) => {
@@ -229,6 +212,9 @@ const appModel: AppDataModel = {
       console.log(debug(payload));
     }
   ),
+  // getLayoutCards: action((state, layoutId)=>{
+  //   return
+  // })
 };
 
 export default appModel;

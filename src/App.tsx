@@ -6,15 +6,22 @@ import React, { useEffect } from "react";
 import { useIdle, useInterval } from "react-use";
 
 import Background from "./components/Background";
-import CardGrid from "./components/CardLayout/CardLayout";
+import CardLayout from "./components/CardLayout/CardLayout";
 import AppDragContext from "./components/DragAndDrop/AppDragContext";
 import EditorPanel from "./components/EditorPanel/EditorPanel";
 import HowToUse from "./components/HowToUse/HowToUse";
 import ModeChangeButton from "./components/ModeChangeButton";
 import Screen from "./components/Shared/Screen";
 import { AppMode } from "./enums";
-import { useApp, useEffectOnce, useLayout, useStoreActions } from "./hooks";
+import {
+  useApp,
+  useEffectOnce,
+  useLayout,
+  useStoreActions,
+  useWindowSize,
+} from "./hooks";
 import appConfig from "./static/appConfig";
+import { Layouts } from "react-grid-layout";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
@@ -27,7 +34,8 @@ const App = (): JSX.Element => {
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
 
-  const { setRandomLayout, activeLayout } = useLayout();
+  const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
+    useLayout();
 
   const { appMode, toggleAppMode, rotateLayouts } = useApp();
 
@@ -47,6 +55,10 @@ const App = (): JSX.Element => {
     fetchTopLevelSheetThunk();
   });
 
+  // const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
+  useLayout();
+
+  const { width, height } = useWindowSize();
   return (
     <>
       <HowToUse />
@@ -56,7 +68,30 @@ const App = (): JSX.Element => {
         <EditorPanel />
         <Screen>
           <DndContext>
-            <CardGrid />
+            {activeLayout && (
+              <CardLayout
+                width={width}
+                height={height}
+                appMode={appMode}
+                layout={activeLayout}
+                margin={[20, 20]}
+                onLayoutChange={(l) => {
+                  const newLayout: Layouts = {
+                    lg: l,
+                    md: l,
+                    sm: l,
+                    xs: l,
+                    xxs: l,
+                  };
+
+                  setBufferLayout(newLayout);
+                }}
+                cards={[...activeCards]}
+                widgets={[...activeWidgets]}
+                isDraggable={appMode === AppMode.EDIT}
+                isResizable={appMode === AppMode.EDIT}
+              />
+            )}
           </DndContext>
         </Screen>
       </AppDragContext>

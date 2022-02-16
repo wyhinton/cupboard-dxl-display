@@ -59,6 +59,15 @@ export interface CardModel {
   // transform: Computed<CardModel, string>;
 }
 
+export type CardErrorHandler = (
+  e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>,
+  card: CardData
+) => void;
+export type CardLoadHandler = (
+  e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>,
+  card: CardData
+) => void;
+
 interface ViewCardProperties {
   // activeKey?: React.MutableRefObject<string>;
   cardId?: string;
@@ -68,12 +77,8 @@ interface ViewCardProperties {
   children?: (
     scale: number,
     cardView: CardView,
-    onError: (
-      e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
-    ) => void,
-    onLoad: (
-      e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
-    ) => void
+    onError: CardErrorHandler,
+    onLoad: CardLoadHandler
   ) => ReactNode;
   data?: CardData | WidgetData;
   dataGrid?: Layouts;
@@ -92,7 +97,7 @@ const ViewCard: FC<ViewCardProperties> = ({
 }: ViewCardProperties) => {
   const cardContainerReference = useRef<HTMLDivElement>(null);
   // const appMode = useStoreState((state) => state.appModel.appMode);
-  const { appMode } = useApp();
+  const { appMode, addAppError } = useApp();
   const { deleteCard } = useLayout();
   const [oldCardView, setCardView] = useState(CardView.GRID);
   const [isError, setIsError] = useState(false);
@@ -307,16 +312,25 @@ const ViewCard: FC<ViewCardProperties> = ({
     }
   };
 
-  const onError = (
-    event: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
-  ) => {
+  const onError: CardErrorHandler = (event, card) => {
+    console.log(event);
+    // addAppError({
+    //   errorType: "failed to load content",
+    //   description: "description",
+    // });
+    const { title, src } = card;
+    addAppError({
+      errorType: "failed to load content",
+      description: "description",
+      source: `Card: ${title}`,
+      link: src,
+    });
     setIsError(true);
+
     // console.log("Got Error");
   };
 
-  const onLoad = (
-    event: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
-  ) => {
+  const onLoad: CardLoadHandler = (event, card) => {
     setAnimationVariant("loaded");
     setIsLoaded(true);
     // console.log("Got Error");

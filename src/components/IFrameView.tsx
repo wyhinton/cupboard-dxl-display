@@ -14,17 +14,17 @@ import ReactPlayer from "react-player";
 
 import CardData from "../data_structs/CardData";
 import { CardView } from "../enums";
+import {
+  CardErrorHandler,
+  CardLoadHandler,
+} from "./CardLayout/ViewCard/ViewCard";
 
 interface IFrameViewProperties {
   card: CardData;
   scale: number;
   cardView: CardView;
-  onError: (
-    e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
-  ) => void;
-  onLoad: (
-    e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>
-  ) => void;
+  onError: CardErrorHandler;
+  onLoad: CardLoadHandler;
 }
 /**
  * Minimal warpper for an <iframe>. Can be toggled between a full screen, active view, and a regular card view.
@@ -89,9 +89,6 @@ const IFrameView: FC<IFrameViewProperties> = ({
         setActive(!active);
       }}
     >
-      {/* <div className={iframeOverlayClass}>
-        <Loader color="white" height={80} type="Grid" width={80} />
-      </div> */}
       {contentType === "video" ? (
         <ResponsivePlayer
           onReady={(event) => {
@@ -103,27 +100,22 @@ const IFrameView: FC<IFrameViewProperties> = ({
         <img
           onLoad={(event) => {
             // setIsLoaded(true);
-            onLoad(event);
+            onLoad(event, card);
           }}
-          onError={(e) => {
-            onError(e);
+          onError={(event) => {
+            onError(event, card);
           }}
-          // src={"blablahblah"}
-          src={src}
+          src={"blablahblah"}
+          // src={src}
           style={{
             width: "100%",
             height: "100%",
             objectFit: cardView === CardView.PREVIEW ? "contain" : "cover",
-            // objectFit: "cover",
             objectPosition:
               cardView === CardView.PREVIEW ? "contain" : "center",
-
-            // maxHeight: "90vh",
           }}
         />
       ) : (
-        //   </TransformComponent>
-        // </TransformWrapper>
         <iframe
           onLoad={(event) => {
             setIsLoaded(true);
