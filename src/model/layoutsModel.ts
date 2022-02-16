@@ -119,26 +119,68 @@ const layoutsModel: LayoutsModel = {
   }),
   onToggleViewMode: thunkOn(
     // targetResolver:toggleAppMode
-    (actions, storeActions) => storeActions.appModel.toggleAppMode,
+    (actions, storeActions) => storeActions.appModel.manageViewModeChange,
     // handler:
     (actions, target, { getState, getStoreState }) => {
-      const { activeLayout } = getState();
-      const buf = getState().bufferLayout;
-      if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
-        console.log("IT WAS IN DISPLAY MODE");
-        if (activeLayout?.layout) {
-          console.log(buf.lg[0]);
-          activeLayout.layout = buf;
-          actions.setActiveLayout(activeLayout);
-        }
+      const { activeLayout, bufferLayout } = getState();
+      if (activeLayout) {
+        const buf = getState().bufferLayout;
+        activeLayout.layout = buf;
+        activeLayout.setGridLayout(buf);
+        actions.setActiveLayout(activeLayout);
+
+        // const buf = bufferLayout;
+        // activeLayout.setGridLayout(buf);
+        // // activeLayout.layout = buf;
+        // actions.setActiveLayout(activeLayout);
+        // console.log(buf);
+        // console.log(activeLayout.layout);
+        // actions.setActiveLayout(activeLayout);
       }
+
+      // const { activeLayout } = getState();
+      // const buf = getState().bufferLayout;
+      // if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
+      //   console.log("IT WAS IN DISPLAY MODE");
+      //   if (activeLayout?.layout) {
+      //     console.log(buf.lg[0]);
+      //     activeLayout.layout = JSON.parse(JSON.stringify(buf));
+      //     actions.setActiveLayout(activeLayout);
+      //   }
+      // } else {
+      //   actions.setBufferLayout(
+      //     JSON.parse(JSON.stringify(activeLayout?.layout))
+      //   );
+      // }
     }
   ),
+  // onToggleViewMode: thunkOn(
+  //   // targetResolver:toggleAppMode
+  //   (actions, storeActions) => storeActions.appModel.toggleAppMode,
+  //   // handler:
+  //   (actions, target, { getState, getStoreState }) => {
+  //     const { activeLayout } = getState();
+  //     const buf = getState().bufferLayout;
+  //     console.log(buf);
+  //     if (getStoreState().appModel.appMode === AppMode.DISPLAY) {
+  //       console.log("IT WAS IN DISPLAY MODE");
+  //       if (activeLayout?.layout) {
+  //         console.log(buf.lg[0]);
+  //         activeLayout.layout = JSON.parse(JSON.stringify(buf));
+  //         actions.setActiveLayout(activeLayout);
+  //       }
+  //     } else {
+  //       actions.setBufferLayout(
+  //         JSON.parse(JSON.stringify(activeLayout?.layout))
+  //       );
+  //     }
+  //   }
+  // ),
   //simple setters
   setActiveLayout: action((state, newActiveLayout) => {
     console.log(newActiveLayout);
     state.activeLayout = newActiveLayout;
-    state.bufferLayout = newActiveLayout.layout;
+    state.bufferLayout = JSON.parse(JSON.stringify(newActiveLayout.layout));
   }),
   setRandomLayout: thunk((actions, _, { getState }) => {
     const { externalLayouts, activeLayout } = getState();
@@ -237,6 +279,7 @@ const layoutsModel: LayoutsModel = {
     }
   }),
   setBufferLayout: action((state, layouts) => {
+    console.log(layouts);
     state.bufferLayout = layouts;
   }),
   updateLayout: action((state, swap) => {

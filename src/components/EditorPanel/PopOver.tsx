@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { createPortal } from "react-dom";
+
 import { useWindowSize } from "../../hooks";
 
 const PopOver = ({
@@ -24,24 +25,7 @@ const PopOver = ({
   return createPortal(
     <AnimatePresence>
       {visible && (
-        //   {visible && (
         <motion.div
-          style={{
-            backgroundColor: "white",
-            boxShadow: "0 8px 32px 0 rgba(49, 49, 49, 0.37)",
-            // width: "40vmin",
-            // height: "40vmin",
-            width: width ?? windowSize.width * scale,
-            height: height ?? windowSize.height * scale,
-            position: "absolute",
-            x: x,
-            y: y,
-            border: "1px solid red",
-            transformBox: "view-box",
-            transformOrigin: "top left",
-            borderRadius: ".5em",
-            overflow: "hidden",
-          }}
           animate={{
             opacity: 1,
             transition: {
@@ -51,12 +35,25 @@ const PopOver = ({
             },
           }}
           exit={{ opacity: 0 }}
+          style={{
+            backgroundColor: "white",
+            boxShadow: "0 8px 32px 0 rgba(49, 49, 49, 0.37)",
+            width: width ?? windowSize.width * scale,
+            height: height ?? windowSize.height * scale,
+            position: "absolute",
+            x: x,
+            y: y,
+            transformBox: "view-box",
+            transformOrigin: "top left",
+            borderRadius: ".5em",
+            overflow: "hidden",
+          }}
         >
           {children}
         </motion.div>
       )}
     </AnimatePresence>,
-    document.getElementById("popup-container") as HTMLDivElement
+    document.querySelector("#popup-container") as HTMLDivElement
   );
 };
 

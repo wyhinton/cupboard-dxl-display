@@ -70,9 +70,11 @@ const App = (): JSX.Element => {
           <DndContext>
             {activeLayout && (
               <CardLayout
-                width={width}
-                height={height}
                 appMode={appMode}
+                cards={[...activeCards]}
+                height={height}
+                isDraggable={appMode === AppMode.EDIT}
+                isResizable={appMode === AppMode.EDIT}
                 layout={activeLayout}
                 margin={[20, 20]}
                 onLayoutChange={(l) => {
@@ -83,13 +85,15 @@ const App = (): JSX.Element => {
                     xs: l,
                     xxs: l,
                   };
+                  console.log(newLayout);
+                  if (l.length > 3) {
+                    activeLayout.layout = newLayout;
+                  }
 
                   setBufferLayout(newLayout);
                 }}
-                cards={[...activeCards]}
                 widgets={[...activeWidgets]}
-                isDraggable={appMode === AppMode.EDIT}
-                isResizable={appMode === AppMode.EDIT}
+                width={width}
               />
             )}
           </DndContext>

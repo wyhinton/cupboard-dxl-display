@@ -147,7 +147,11 @@ export default class LayoutData {
   }
   setGridLayout(newGridLayout: Layouts): void {
     console.log(newGridLayout);
-    this.layout = newGridLayout;
+    for (const [k, v] of Object.entries(this.layout)) {
+      for (const [index, layoutValue] of v.entries()) {
+        this.layout[k] = newGridLayout[k];
+      }
+    }
   }
   sources(): string[] {
     const lg = Object.entries(this.layout)[0][1];

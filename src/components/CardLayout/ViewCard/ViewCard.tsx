@@ -168,7 +168,6 @@ const ViewCard: FC<ViewCardProperties> = ({
             case CardView.GRID:
               if (data?.contentType !== "widget") {
                 actions.setCardView(CardView.PREVIEW);
-                console.log("SETTING CARD VIEW TO PREVIEW");
                 const el = document.getElementById(
                   data?.id ?? "view_card"
                 ) as HTMLDivElement;
@@ -234,7 +233,6 @@ const ViewCard: FC<ViewCardProperties> = ({
         <>
           <DeleteButton
             onClick={() => {
-              console.log("got delete button click");
               deleteCard(data.id);
             }}
             action={() => {
@@ -286,7 +284,6 @@ const ViewCard: FC<ViewCardProperties> = ({
   const containerReference = useRef(null);
   useOnClickOutside(containerReference, (e) => {
     e.preventDefault();
-    console.log("clicked outside");
     if (state.cardView == CardView.PREVIEW) {
       actions.setCardView(CardView.GRID);
     }
@@ -313,7 +310,6 @@ const ViewCard: FC<ViewCardProperties> = ({
   };
 
   const onError: CardErrorHandler = (event, card) => {
-    console.log(event);
     // addAppError({
     //   errorType: "failed to load content",
     //   description: "description",
@@ -350,14 +346,12 @@ const ViewCard: FC<ViewCardProperties> = ({
   const jj = useMemo(() => {
     if (cardContainerReference.current) {
       const rect = cardContainerReference.current.getBoundingClientRect();
-      console.log(calculateTransform2(rect));
       return calculateTransform2(rect);
     }
     // setVx(calculateTransform2(rect));
   }, [state.cardView]);
 
   useEffect(() => {
-    console.log(state.cardView);
     if (state.cardView === CardView.PREVIEW) {
       setAnimationVariant("preview");
     }

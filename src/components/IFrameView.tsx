@@ -56,8 +56,9 @@ const IFrameView: FC<IFrameViewProperties> = ({
   });
 
   useEffect(() => {
-    console.log(cardView);
+    // console.log(cardView);
   }, [cardView]);
+
   const iframeStyle = {
     border: "none",
     transform: `scale(${scale})`,
