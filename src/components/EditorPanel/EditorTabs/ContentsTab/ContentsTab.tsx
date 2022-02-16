@@ -21,10 +21,8 @@ import XDrag from "../../../DragAndDrop/DraggableRow";
 import TableHeader from "../../TableHeader";
 import ReactImageFallback from "react-image-fallback";
 import ReactTooltip from "react-tooltip";
-import ToolTip from "react-portal-tooltip";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import { useDomRect } from "powerhooks";
 import PopOver from "../../PopOver";
 
 /**
@@ -191,9 +189,6 @@ const ContentsTab = (): JSX.Element => {
 const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   const { src, id } = card;
   // const hoverRef = useRef(null);
-
-  const { ref, domRect } = useDomRect();
-  const isHover = useHover(ref);
   const [position, setPosition] = useState([0, 0]);
   const [hovered, setHovered] = useState(false);
 
@@ -209,7 +204,6 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
         onMouseLeave={(e) => {
           setHovered(false);
         }}
-        ref={ref}
         style={{ display: "flex", width: 20 }}
       >
         <ReactImageFallback

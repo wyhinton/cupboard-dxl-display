@@ -100,15 +100,11 @@ const googleSheetsModel: GoogleSheetsModel = {
           actions.fetchSheet([
             {
               name: "LAYOUTS",
-              url: googleSheetUrlToCSVUrl(
-                `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`
-              ),
+              url: `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`,
             },
             {
               name: "CARDS",
-              url: googleSheetUrlToCSVUrl(
-                `${process.env.PUBLIC_URL}/CARDS_BACKUP.csv`
-              ),
+              url: `${process.env.PUBLIC_URL}/CARDS_BACKUP.csv`,
             },
           ]);
         });
@@ -251,18 +247,22 @@ function getSheetData(
   sheetUrl: string
 ): Promise<LoadSheetResult> {
   let data;
-  return new Promise<LoadSheetResult>((resolve) => {
+  return new Promise<LoadSheetResult>((resolve, reject) => {
     console.log(sheetUrl);
-    Papa.parse(sheetUrl, {
-      download: true,
-      header: true,
-      delimiter: ",",
-      dynamicTyping: true,
-      complete: (results) => {
-        data = results.data;
-        console.log(data);
-        resolve({ rows: data, sheetTitle: sheetTitle });
-      },
-    });
+    try {
+      Papa.parse(sheetUrl, {
+        download: true,
+        header: true,
+        delimiter: ",",
+        dynamicTyping: true,
+        complete: (results) => {
+          data = results.data;
+          console.log(data);
+          resolve({ rows: data, sheetTitle: sheetTitle });
+        },
+      });
+    } catch (error) {
+      reject("failed to get sheet");
+    }
   });
 }
