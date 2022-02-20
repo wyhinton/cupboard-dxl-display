@@ -3,21 +3,19 @@ import "../../../../css/table.css";
 import React, { useEffect } from "react";
 
 import { DndTypes, DragSource } from "../../../../enums";
-import DraggableDiv from "../../../DragAndDrop/DraggableWidget";
-import IXDrop from "../../../DragAndDrop/IXDrop";
 import Clock from "../../../Widgets/Clock";
 import { useStoreState } from "../../../../hooks";
+import DraggableWidget from "../../../DragAndDrop/DraggableWidget";
+import IXDrop from "../../../DragAndDrop/IXDrop";
+
 /**
  * Table for displaying the available card layouts
  */
-
 const WidgetsTab = (): JSX.Element => {
   const currentLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
   );
 
-  // console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
-  // console.log(this.layout);
   // const lg = Object.entries(this.layout)[0][1];
   // if (lg.map(l=>l.i).includes(toAdd.id)){
   //   console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
@@ -41,7 +39,7 @@ const WidgetsTab = (): JSX.Element => {
         droppableId={DragSource.WIDGETS_TABLE}
         isDropDisabled={false}
       >
-        <DraggableDiv
+        <DraggableWidget
           className="draggable-widget"
           dndType={DndTypes.WIDGET}
           draggableId="clock"
@@ -49,8 +47,8 @@ const WidgetsTab = (): JSX.Element => {
           isDragDisabled={false}
         >
           <Clock />
-        </DraggableDiv>
-        <DraggableDiv
+        </DraggableWidget>
+        <DraggableWidget
           className="draggable-widget"
           dndType={DndTypes.WIDGET}
           draggableId="info"
@@ -58,7 +56,7 @@ const WidgetsTab = (): JSX.Element => {
           isDragDisabled={false}
         >
           <button>HELLO</button>
-        </DraggableDiv>
+        </DraggableWidget>
       </IXDrop>
     </div>
   );

@@ -19,10 +19,7 @@ const DraggableRow = ({
   dragAll,
   ...properties
 }: DraggableRowProperties) => {
-  // console.log(React.isValidElement(children));sss
-  // console.log(props);
   if (!React.isValidElement(children)) return <div />;
-  // const child = React.memo(children, []);
   return (
     <Draggable {...properties}>
       {(provided, snapshot) => {

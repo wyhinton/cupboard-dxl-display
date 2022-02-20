@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-interface FlexRowProps
+interface FlexColumnProps
   extends Omit<React.HTMLProps<HTMLDivElement>, "as" | "ref"> {}
 
-const FlexRow = (props: FlexRowProps): JSX.Element => {
+const FlexColumn = (props: FlexColumnProps): JSX.Element => {
   return (
     <div
       {...props}
       style={{
         ...(props.style || {}),
         display: "flex",
+        flexDirection: "column",
       }}
     ></div>
   );
 };
-export default FlexRow;
+export default FlexColumn;

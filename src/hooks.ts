@@ -16,12 +16,13 @@ import CardData from "./data_structs/CardData";
 import WidgetData from "./data_structs/WidgetData";
 import { CardAddEvent, CardSwapEvent } from "./interfaces/CardEvents";
 import AppError from "./interfaces/AppError";
+import { GoogleSheetsModel } from "./model/googleSheetsModel";
 
-const typedHooks = createTypedHooks<StoreModel>();
+const appModelHooks = createTypedHooks<StoreModel>();
 
-export const useStoreActions = typedHooks.useStoreActions;
-export const useStoreDispatch = typedHooks.useStoreDispatch;
-export const useStoreState = typedHooks.useStoreState;
+export const useStoreActions = appModelHooks.useStoreActions;
+export const useStoreDispatch = appModelHooks.useStoreDispatch;
+export const useStoreState = appModelHooks.useStoreState;
 
 export function useToggle(initialValue: boolean): [boolean, () => void] {
   const [value, setValue] = useState<boolean>(initialValue);
@@ -31,10 +32,25 @@ export function useToggle(initialValue: boolean): [boolean, () => void] {
   return [value, toggleValue];
 }
 
+interface UseSheetsProps {
+  fetchTopLevelSheet: ThunkCreator<void, any>;
+}
+
+export const UseSheets = () => {
+  const fetchTopLevelSheet = useStoreActions(
+    (actions) => actions.googleSheetsModel.fetchTopLevelSheet
+  );
+
+  return {
+    fetchTopLevelSheet,
+  };
+};
+
 interface UseErrorProps {
   appErrors: AppError[];
   layoutErrors: AppError[];
   googleSheetsErrors: AppError[];
+  allErrors: AppError[];
 }
 
 export const useErrors = (): UseErrorProps => {
@@ -45,10 +61,12 @@ export const useErrors = (): UseErrorProps => {
   const googleSheetsErrors = useStoreState(
     (state) => state.googleSheetsModel.googleSheetsErrors
   );
+  const allErrors = [...appErrors, ...layoutErrors, ...googleSheetsErrors];
   return {
     appErrors,
     layoutErrors,
     googleSheetsErrors,
+    allErrors,
   };
 };
 
@@ -60,14 +78,20 @@ interface UseAppProps {
   setRotateLayouts: ActionCreator<boolean>;
   rotateLayouts: boolean;
   addAppError: ActionCreator<AppError>;
+  sheetsAreLoaded: boolean;
 }
 
 export const useApp = (): UseAppProps => {
   const toggleAppMode = useStoreActions(
     (actions) => actions.appModel.toggleAppMode
   );
+
   const rotationSpeed = useStoreState((state) => state.appModel.rotationSpeed);
   const rotateLayouts = useStoreState((state) => state.appModel.rotateLayouts);
+  const sheetsAreLoaded = useStoreState(
+    (state) => state.googleSheetsModel.sheetsAreLoaded
+  );
+
   const setRotationSpeed = useStoreActions(
     (actions) => actions.appModel.setRotationSpeed
   );
@@ -87,6 +111,7 @@ export const useApp = (): UseAppProps => {
     rotateLayouts,
     setRotateLayouts,
     addAppError,
+    sheetsAreLoaded,
   };
 };
 

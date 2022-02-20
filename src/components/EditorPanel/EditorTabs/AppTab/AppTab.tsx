@@ -2,7 +2,7 @@ import { Switch, TextInputField } from "evergreen-ui";
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { useApp, useElementSize, useStoreState } from "../../../../hooks";
 import appConfig from "../../../../static/appConfig";
-import AppErrorTable from "./AppErrorTable";
+import IssuesTable from "../IssuesTab/IssuesTable";
 import { AutoSizer } from "react-virtualized";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlexRow from "../../../Shared/FlexRow";
@@ -51,8 +51,6 @@ const AppTab = (): JSX.Element => {
           </div>
         </FlexRow>
       </div>
-
-      <AppErrorTable />
       {/* </div> */}
 
       {/* <input

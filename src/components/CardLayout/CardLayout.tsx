@@ -10,11 +10,11 @@ import LayoutData from "../../data_structs/LayoutData";
 import WidgetData from "../../data_structs/WidgetData";
 import { AppMode, DndTypes } from "../../enums";
 import appConfig from "../../static/appConfig";
-import IXDrop from "../DragAndDrop/IXDrop";
 import IFrameView from "../IFrameView";
 import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
 import WidgetWrapper from "./ViewCard/WidgetWrapper";
+import IXDrop from "../DragAndDrop/IXDrop";
 
 export const CardLayout = ({
   layout,
@@ -135,16 +135,4 @@ export const CardLayout = ({
     </div>
   );
 };
-// export default React.memo(CardLayout);
 export default CardLayout;
-
-const cardContainerClass = (card: CardData, appMode: AppMode): string => {
-  const isFailed = card.failed;
-  if (isFailed && appMode === AppMode.DISPLAY) {
-    return "card-container-hidden";
-  } else if (isFailed && appMode === AppMode.EDIT) {
-    return "card-container-error";
-  } else {
-    return "card-container";
-  }
-};

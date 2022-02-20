@@ -370,14 +370,9 @@ const ViewCard: FC<ViewCardProperties> = ({
     },
     preview: {
       opacity: 1,
-      // x: jj ? jj[0] : 0,
-      // y: jj ? jj[1] : 0,
-      // scale: 1.5,
       transition: {
         duration: 0.2,
-        // ease: "linear",
       },
-      // zIndex: 1000,
     },
     normal: {
       opacity: 1,
@@ -396,7 +391,7 @@ const ViewCard: FC<ViewCardProperties> = ({
     loaded: {
       // border: "1px solid red",
       outline: [`0px solid green`, `4px solid green`, `0px solid green`],
-      opacity: [0, 1, 1],
+      opacity: 1,
       transition: {
         delay: randomNumber(0.4, 0.5),
         duration: 0.5,
@@ -407,28 +402,20 @@ const ViewCard: FC<ViewCardProperties> = ({
       // transition:
     },
     in: {
-      // opacity: 1,
-      opacity: [0, 1],
+      opacity: 1,
       transition: {
-        // delay: randomNumber(0.4, 0.5),
         duration: 0.5,
+        delay: randomNumber(0.4, 1.5),
+        ease: "easeOut",
       },
-      // x: 0,
-      // y: 0,
-      // backgroundColor: "green",
-      // transition:
     },
     out: {
       y: randomNumber(-50, 50),
-      // x: 0,
       opacity: [1, 0],
-      // opacity: 0,
       transition: {
         delay: randomNumber(0.4, 1.5),
         duration: 0.5,
       },
-      // backgroundColor: "green",
-      // transition:
     },
   };
 
@@ -456,66 +443,47 @@ const ViewCard: FC<ViewCardProperties> = ({
   // }, [children, state.cardView]);
 
   return (
-    //receives a drag objects
-    <>
-      <motion.div
-        exit={{ opacity: 0, x: -300 }}
-        ref={cardContainerReference}
-        layoutId="viewcard"
-        className={state.cardClass}
-        style={{
-          transformOrigin: "center",
-          willChange: "transform",
-          height: "100%",
-          // transform: state.transform,
-          backgroundColor: state.cardBackgroundColor,
-          // opacity: 0,
-          // opacity: 1,
-          // opacity: 1,
-        }}
-        initial={appMode === AppMode.EDIT ? false : true}
-        variants={variants}
-        // initial={false}
-        // intial={"loaded"}
-        animate={animationVariant}
-        // animate={
-        //   isError && state.cardView === CardView.GRID
-        //     ? "error"
-        //     : isLoaded && state.cardView === CardView.GRID
-        //     ? "loaded"
-        //     : state.cardView === CardView.PREVIEW
-        //     ? "preview"
-        //     : appMode == AppMode.DISPLAY
-        //     ? "active"
-        //     : "normal"
-        // }
-      >
-        {children && (
-          <div className={cardModalBackdrop}>
-            <div
-              className={cardChildContainer}
-              onMouseUp={() => {
-                actions.handleCardPress();
-                if (onClick) {
-                  onClick();
-                }
-              }}
-              ref={containerReference}
-            >
-              {/* {renderQrCode()} */}
-              {renderInternals()}
-              {activeChildren}
-              {/* {children(state.scale, state.cardView, onError, onLoad)} */}
-              <SettingsMenu
-                {...settingsMenuProperties}
-                isShown={state.showMenu}
-              />
-            </div>
-            {renderReturnButton()}
+    <motion.div
+      exit={{ opacity: 0, x: -300 }}
+      ref={cardContainerReference}
+      layoutId="viewcard"
+      className={state.cardClass}
+      style={{
+        transformOrigin: "center",
+        willChange: "transform",
+        height: "100%",
+        backgroundColor: state.cardBackgroundColor,
+        opacity: 0,
+      }}
+      initial={appMode === AppMode.EDIT ? false : true}
+      variants={variants}
+      // eslint-disable-next-line react/jsx-sort-props
+      animate={animationVariant}
+    >
+      {children && (
+        <div className={cardModalBackdrop}>
+          <div
+            className={cardChildContainer}
+            onMouseUp={() => {
+              actions.handleCardPress();
+              if (onClick) {
+                onClick();
+              }
+            }}
+            ref={containerReference}
+          >
+            {/* {renderQrCode()} */}
+            {renderInternals()}
+            {activeChildren}
+            <SettingsMenu
+              {...settingsMenuProperties}
+              isShown={state.showMenu}
+            />
           </div>
-        )}
-      </motion.div>
-    </>
+          {renderReturnButton()}
+        </div>
+      )}
+    </motion.div>
   );
 };
 // class App extends React.Component<{ message: string }, { count: number }> {

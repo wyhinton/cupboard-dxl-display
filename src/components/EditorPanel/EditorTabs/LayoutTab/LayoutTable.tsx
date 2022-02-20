@@ -6,7 +6,6 @@ import {
   useApp,
   useLayout,
 } from "../../../../hooks";
-import IXDrop from "../../../DragAndDrop/IXDrop";
 import { AppMode, DndTypes, DragSource } from "../../../../enums";
 import { StatusIndicator } from "evergreen-ui";
 import { formatDate } from "../../../../utils";
@@ -14,6 +13,7 @@ import "../../../../css/table.css";
 import PopOver from "../../PopOver";
 import CardLayout from "../../../CardLayout/CardLayout";
 import LayoutData from "../../../../data_structs/LayoutData";
+import IXDrop from "../../../DragAndDrop/IXDrop";
 /**
  * Displays the available layouts.
  */
@@ -24,10 +24,6 @@ const LayoutTable = (): JSX.Element => {
   );
   const activeLayoutState = useStoreState(
     (state) => state.layoutsModel.activeLayout
-  );
-
-  const setActiveLayoutAction = useStoreActions(
-    (actions) => actions.layoutsModel.setActiveLayout
   );
 
   const { setActiveLayout } = useLayout();

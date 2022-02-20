@@ -116,6 +116,8 @@
 .react-tabs__tab {
   border-radius: 5px 5px 0 0;
   border: 1px solid white !important;
+  border-bottom: 0px solid white !important;
+  display: inline-flex !important;
 }
 
 .react-tabs__tab-panel--selected {

@@ -7,9 +7,19 @@ import formEmbedUrl from "../../../../static/formEmbedUrl";
 import { useLayout, useStoreState } from "../../../../hooks";
 import classNames from "classnames";
 import Button from "../../../Shared/Button";
-import { ClipboardIcon, InlineAlert, CrossIcon, Heading } from "evergreen-ui";
+import {
+  ClipboardIcon,
+  InlineAlert,
+  CrossIcon,
+  Heading,
+  ArrowRightIcon,
+} from "evergreen-ui";
 import "../../../../css/copyField.css";
 import Scrollbars from "react-custom-scrollbars";
+import FlexRow from "../../../Shared/FlexRow";
+import { motion } from "framer-motion";
+import DeleteButton from "../../../CardLayout/ViewCard/DeleteButton";
+import FlexColumn from "../../../Shared/FlexColumn";
 
 /**
  * Modal popup for displaying cards when in preview mode. Displays on top of the CardLayout, and renders
@@ -28,22 +38,15 @@ const GoogleFormPopup = ({
 }: GoogleFormPopupProperties): JSX.Element => {
   const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
   const ls = useStoreState((state) => state.layoutsModel.layoutsString);
+  const layoutSheetUrl = useStoreState(
+    (state) => state.googleSheetsModel.layoutSheetUrl
+  );
   // console.log(layoutState?.extendedLayout);
   // console.log(layoutState?.extendedLayout.layoutSettings);
 
   const [isShown, setIsShown] = useState(visible);
   const [isCopiedJSON, setIsCopiedJson] = useState(false);
   console.log("HELLO IM HERE");
-  useEffect(() => {
-    console.log(ls);
-  }, [ls]);
-  // const [layoutString, setLayoutString] = useState(
-  //   JSON.stringify(layoutState?.layout)
-  // );
-
-  // const [layoutString, setLayoutString] = useState(
-  //   JSON.stringify(layoutState?.extendedLayout)
-  // );
   const { activeLayout } = useLayout();
   const layoutString = useStoreState((state) =>
     JSON.stringify(state.layoutsModel.activeLayout)
@@ -68,9 +71,6 @@ const GoogleFormPopup = ({
   //   activeLayout?.layout;
   // }, [activeLayout?.layout]);
   console.log(layoutString);
-  const copyFieldContainerClass = classNames("copy-field-container", {
-    "copy-field-container-closed": isCopiedJSON,
-  });
 
   return ReactDom.createPortal(
     <Modal
@@ -80,25 +80,53 @@ const GoogleFormPopup = ({
       backdropOpacity={0.5}
     >
       <div className={"google-form-popup-inner-container"}>
-        <Heading color={isCopiedJSON ? "green" : ""}>
-          1. Press the Copy Button
-        </Heading>
-        <Heading>
-          {isCopiedJSON
-            ? "2. Fill out the form, and paste the copied text into the Content field, then submit"
-            : ""}
-        </Heading>
-        <div className={copyFieldContainerClass}>
-          <CopyField
-            onCopy={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-              setIsCopiedJson(true);
+        <DeleteButton
+          onClick={onCloseComplete}
+          action={() => {
+            onCloseComplete;
+          }}
+        />
+        <FlexColumn>
+          <div style={{ borderBottom: "1px solid white", padding: "1vmin" }}>
+            <Heading color="white" size={900}>
+              Add a new layout
+            </Heading>
+            <Heading color="white" size={400}>
+              {`The layout will be stored in `}{" "}
+              <a
+                style={{ color: "lightblue" }}
+                target="_blank"
+                rel="noreferrer"
+                href={layoutSheetUrl}
+              >
+                {layoutSheetUrl}
+              </a>
+            </Heading>
+          </div>
+
+          <FlexRow
+            style={{
+              height: "50vh",
+              alignItems: "center",
+              justifyContent: "flex-start",
             }}
-            onCloseComplete={onCloseComplete}
-            text={layoutString}
-          />
-        </div>
+          >
+            <div
+              // className={copyFieldContainerClass}
+              style={{ width: "min-content" }}
+            >
+              <CopyField
+                onCopy={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                  setIsCopiedJson(true);
+                }}
+                onCloseComplete={onCloseComplete}
+                text={layoutString}
+              />
+            </div>
+            <GoogleFormIframe src={formEmbedUrl} active={isCopiedJSON} />
+          </FlexRow>
+        </FlexColumn>
       </div>
-      {isCopiedJSON ? <GoogleFormIframe src={formEmbedUrl} /> : <></>}
     </Modal>,
     document.querySelector("#google-form-popup") as HTMLElement
   );
@@ -119,11 +147,6 @@ const CopyField = ({
   const [isClipBoardCorrect, setIsClipBoardCorrect] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
-  const copyFieldClass = classNames("copy-field", {
-    "copy-field-success": isCopied && isClipBoardCorrect,
-    "copy-field-failure": !isCopied && !isClipBoardCorrect,
-  });
-
   useEffect(() => {
     navigator.clipboard
       .readText()
@@ -141,7 +164,7 @@ const CopyField = ({
       });
   }, [text]);
   return (
-    <div>
+    <>
       <Button
         iconBefore={<ClipboardIcon />}
         text={"Copy Layout To Clip Board"}
@@ -150,46 +173,113 @@ const CopyField = ({
           setIsCopied(true);
           onCopy(e);
         }}
-        width={"100%"}
+        width={300}
+        height={200}
         intent={"success"}
         appearance={"primary"}
       />
-      {!isClipBoardCorrect ? (
-        <InlineAlert intent="warning">
-          Current clipboard content is out of sync with current layout, copy the
-          layout to clipboard again.
-        </InlineAlert>
-      ) : (
-        <InlineAlert intent="success">Clipboard is current</InlineAlert>
-      )}
-      <div
+      {/* <div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: "1em",
+          }}
+        ></div>
+      </div> */}
+    </>
+  );
+};
+
+const GoogleFormIframe = ({
+  src,
+  active,
+}: {
+  src: string;
+  active: boolean;
+}): JSX.Element => {
+  return (
+    <div
+      style={{
+        width: 500,
+        height: "100%",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      <motion.div
         style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "red",
+          zIndex: 1,
+          top: 0,
+          left: 0,
+          opacity: 0.5,
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingTop: "1em",
+          alignItems: "center",
+          pointerEvents: active ? "none" : "all",
         }}
+        animate={active ? { opacity: 0 } : {}}
       >
-        <Button
-          iconBefore={<CrossIcon />}
-          text={"Return"}
-          onClick={onCloseComplete}
-        />
-      </div>
+        <div
+          style={{
+            width: "50%",
+            margin: "auto",
+            fontWeight: "bold",
+            border: "1px solid white",
+            padding: "1em",
+          }}
+        >
+          Press the Copy Layout Button before Submitting New Layout
+        </div>
+      </motion.div>
+      <iframe
+        src={src}
+        // className={"google-form-iframe"}
+        // width={"100%"}
+        frameBorder={0}
+        marginHeight={0}
+        marginWidth={0}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+      ></iframe>
     </div>
   );
 };
 
-const GoogleFormIframe = ({ src }: { src: string }): JSX.Element => {
+const SideButton = (): JSX.Element => {
   return (
-    <iframe
-      src={src}
-      className={"google-form-iframe"}
-      width={"100%"}
-      frameBorder={0}
-      marginHeight={0}
-      marginWidth={0}
-      // style={{ height: "60em" }}
-    ></iframe>
+    <div
+      style={{
+        // position: "absolute",
+        left: "-100%",
+        height: 300,
+        width: 300,
+        backgroundColor: "red",
+      }}
+    >
+      hello
+    </div>
   );
 };
+
+{
+  /* <Heading color={isCopiedJSON ? "green" : ""}>
+            1. Press the Copy Button
+          </Heading> */
+}
+{
+  /* <Heading>
+            {isCopiedJSON
+              ? "2. Fill out the form, and paste the copied text into the Content field, then submit"
+              : ""}
+          </Heading> */
+}

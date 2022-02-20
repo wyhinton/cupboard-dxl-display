@@ -1,6 +1,7 @@
 import { Action, Computed, computed, Thunk } from "easy-peasy";
 import { action, thunk } from "easy-peasy";
 import Papa from "papaparse";
+import { act } from "react-dom/test-utils";
 
 import GoogleSheetData from "../data_structs/GoogleSheetData";
 import { SheetNames } from "../enums";
@@ -55,27 +56,25 @@ const googleSheetsModel: GoogleSheetsModel = {
   layoutSheetUrl: undefined,
   cardSheetUrl: undefined,
   googleSheetsErrors: [],
-  // sheetsAreLoaded: computed((state=>state.layout)
-  //requests
+  sheetsAreLoaded: computed(
+    [
+      (state) => [
+        state.layoutDataGoogleSheet,
+        state.cardDataGoogleSheet,
+        state.appGoogleSheet,
+      ],
+    ],
+    (sheets) => {
+      return sheets.every((s) => s !== null);
+    }
+  ),
   fetchTopLevelSheet: thunk((actions) => {
     try {
-      // getSheetData("TOP_LEVEL", "ZZZZ" as string)
-      //   .then(
       getSheetData("TOP_LEVEL", process.env.REACT_APP_SHEET_URL as string)
         .then((r) => {
           const sheetRow = r.rows[0] as PrincipleSheetRow;
           actions.setFormUrl(sheetRow.googleForm);
-          actions.setLayoutsSheetUrl(
-            googleSheetUrlToCSVUrl(sheetRow.layoutsSheet)
-          );
-          actions.setCardSheetUrl(googleSheetUrlToCSVUrl(sheetRow.cardsSheet));
-          // actions.fetchSheet([
-          //   {
-          //     name: "LAYOUTS",
-          //     url: "FFFFF",
-          //   },
-          //   { name: "CARDS", url: "FFFF" },
-          // ]);
+          actions.setLayoutsSheetUrl(sheetRow.layoutsSheet);
           actions.fetchSheet([
             {
               name: "LAYOUTS",
@@ -88,8 +87,6 @@ const googleSheetsModel: GoogleSheetsModel = {
           ]);
         })
         .catch((error) => {
-          console.log("DOING CATCH");
-          // actions.setFormUrl(`${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`);
           actions.setLayoutsSheetUrl(
             googleSheetUrlToCSVUrl(
               `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`
@@ -118,20 +115,6 @@ const googleSheetsModel: GoogleSheetsModel = {
         source: process.env.REACT_APP_SHEET_URL ?? "NA",
         link: process.env.REACT_APP_SHEET_URL ?? "NA",
       });
-      // actions.fetchSheet([
-      //   {
-      //     name: "LAYOUTS",
-      //     url: googleSheetUrlToCSVUrl(
-      //       `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`
-      //     ),
-      //   },
-      //   {
-      //     name: "CARDS",
-      //     url: googleSheetUrlToCSVUrl(
-      //       `${process.env.PUBLIC_URL}/CARDS_BACKUP.csv`
-      //     ),
-      //   },
-      // ]);
     }
   }),
   fetchSheet: thunk(async (actions, sheets, { getState }) => {
@@ -215,10 +198,10 @@ const googleSheetsModel: GoogleSheetsModel = {
     state.formUrl = formUrl;
   }),
   setCardSheetUrl: action((state, cardSheetUrl) => {
-    state.formUrl = cardSheetUrl;
+    state.cardSheetUrl = cardSheetUrl;
   }),
   setLayoutsSheetUrl: action((state, layoutSheetUrl) => {
-    state.formUrl = layoutSheetUrl;
+    state.layoutSheetUrl = layoutSheetUrl;
   }),
   addGoogleSheetError: action((state, googleSheetError) => {
     const errorsString = state.googleSheetsErrors.map(

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useState, useRef, useEffect } from "react";
 //TODO: UNIFY MODAL CSS
 import "../../css/howToUse.css";
@@ -18,7 +19,7 @@ const Modal = ({
   containerClassName?: string;
 }): JSX.Element => {
   return (
-    <div
+    <motion.div
       className={"modal-container"}
       style={{
         display: active ? "flex" : "none",
@@ -26,13 +27,15 @@ const Modal = ({
         height: "100vh",
         justifyContent: "center",
         alignItems: "center",
+        // y: -200,
       }}
+      animate={{ y: 0 }}
     >
       <MyBackdrop onClose={onClose} backdropOpacity={backdropOpacity ?? 0} />
       <div style={{ zIndex: 1000 }} className={containerClassName}>
         {children}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

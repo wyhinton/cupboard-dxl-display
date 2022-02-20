@@ -124,7 +124,9 @@ export default class LayoutData {
     this.layout = JSON.parse(JSON.stringify(this.sourceLayout));
   }
   setGridLayout(newGridLayout: Layouts): void {
+    console.log(`SETTING GRID LAYOUT OF ${this.id}`);
     console.log(newGridLayout);
+
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
         this.layout[k] = newGridLayout[k];

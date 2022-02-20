@@ -2,36 +2,24 @@ import "../../../../css/table.css";
 
 import { SearchInput } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
+import ReactImageFallback from "react-image-fallback";
 
 import CardData from "../../../../data_structs/CardData";
 import { DndTypes, DragSource } from "../../../../enums";
-import {
-  useHover,
-  useLayout,
-  useStoreActions,
-  useStoreState,
-} from "../../../../hooks";
+import { useLayout, useStoreState } from "../../../../hooks";
 import { formatDate } from "../../../../utils";
+import DraggableRow from "../../../DragAndDrop/DraggableRow";
 import IXDrop from "../../../DragAndDrop/IXDrop";
 import Button from "../../../Shared/Button";
 import FlexRow from "../../../Shared/FlexRow";
-import XDrag from "../../../DragAndDrop/DraggableRow";
-import TableHeader from "../../TableHeader";
-import ReactImageFallback from "react-image-fallback";
-import ReactTooltip from "react-tooltip";
-import { createPortal } from "react-dom";
-import { motion } from "framer-motion";
 import PopOver from "../../PopOver";
-import { Column, Table, SortDirection, AutoSizer } from "react-virtualized";
-import imageThumbnail from "image-thumbnail";
+import TableHeader from "../../TableHeader";
 
 /**
  * Content tab display a list of the availalbe cards, and search bar for quickly finding cards by their title.
  */
-
-//TODO: REFACTOR
 
 const ContentsTab = (): JSX.Element => {
   const availableCards = useStoreState(
@@ -91,7 +79,7 @@ const ContentsTab = (): JSX.Element => {
   const contentTabHeader = "contents-table-header";
   return (
     <div className="contents-tab-container">
-      <FlexRow padding="0.5em">
+      <FlexRow style={{ padding: "0.5em" }}>
         <SearchInput
           onChange={(event: React.FormEvent<HTMLInputElement>) =>
             setSearchTerm(event.currentTarget.value)
@@ -155,7 +143,7 @@ const ContentsTab = (): JSX.Element => {
                   title,
                 } = card;
                 return (
-                  <XDrag
+                  <DraggableRow
                     className={
                       isActive ? "content-row-active" : "content-row-inactive"
                     }
@@ -172,7 +160,7 @@ const ContentsTab = (): JSX.Element => {
                       <td>{author}</td>
                       <td>{formatDate(added)}</td>
                     </>
-                  </XDrag>
+                  </DraggableRow>
                 );
               })}
             </tbody>
@@ -190,27 +178,6 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   const { src, id } = card;
   const [position, setPosition] = useState([0, 0]);
   const [hovered, setHovered] = useState(false);
-
-  useEffect(() => {
-    // console.log(position);
-  }, [position]);
-
-  // const tb = useMemo(() => {
-  //   if (card.contentType === "image") {
-  //     imageThumbnail(card.src)
-  //       .then((thumbnail: any) => {
-  //         console.log(thumbnail);
-  //       })
-  //       .catch((err: any) => console.error(err));
-  //   }
-  // }, []);
-
-  // const tb = useMemo(() => {
-  //   if (card.contentType === "image") {
-  //     return generate(card.src, { x: 50, y: 50 }, 50);
-  //   }
-  // }, []);
-  // console.log(tb);
 
   return (
     <div style={{ display: "flex" }}>
@@ -240,7 +207,6 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
           style={{ width: "100%", maxWidth: 20 }}
         />
       </div>
-
       <PopOver
         x={position[0]}
         y={position[1]}

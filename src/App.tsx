@@ -7,7 +7,7 @@ import { useIdle, useInterval } from "react-use";
 
 import Background from "./components/Background";
 import CardLayout from "./components/CardLayout/CardLayout";
-import AppDragContext from "./components/DragAndDrop/AppDragContext";
+import AppDragContext from "./components/AppWrappers/AppDragContext";
 import EditorPanel from "./components/EditorPanel/EditorPanel";
 import HowToUse from "./components/HowToUse/HowToUse";
 import ModeChangeButton from "./components/ModeChangeButton";
@@ -22,13 +22,15 @@ import {
 } from "./hooks";
 import appConfig from "./static/appConfig";
 import { Layouts } from "react-grid-layout";
+import Loader from "./components/Loader";
+import AppTimers from "./components/AppWrappers/AppTimers";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  */
 
 const App = (): JSX.Element => {
-  const isIdle = useIdle(appConfig.idleTime, false);
+  // const isIdle = useIdle(appConfig.idleTime, false);
 
   const fetchTopLevelSheetThunk = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
@@ -39,34 +41,29 @@ const App = (): JSX.Element => {
     setBufferLayout,
     activeCards,
     activeWidgets,
-    setActiveLayout,
     useNextLayout,
     externalLayouts,
   } = useLayout();
 
   console.log(externalLayouts[1]);
 
-  const { appMode, toggleAppMode, rotateLayouts } = useApp();
+  const { appMode, toggleAppMode, rotateLayouts, sheetsAreLoaded } = useApp();
 
-  useInterval(() => {
-    if (appMode === AppMode.DISPLAY && rotateLayouts) {
-      // setRandomLayout();
-      setActiveLayout(externalLayouts[1]);
-      setBufferLayout(externalLayouts[1].layout);
-    }
-  }, appConfig.rotationDuration);
+  // useInterval(() => {
+  //   if (appMode === AppMode.DISPLAY && rotateLayouts) {
+  //     useNextLayout();
+  //   }
+  // }, appConfig.rotationDuration);
 
-  useEffect(() => {
-    if (appMode === AppMode.EDIT) {
-      toggleAppMode();
-    }
-  }, [isIdle]);
+  // useEffect(() => {
+  //   if (appMode === AppMode.EDIT) {
+  //     toggleAppMode();
+  //   }
+  // }, [isIdle]);
 
   useEffectOnce(() => {
     fetchTopLevelSheetThunk();
   });
-
-  console.log(activeWidgets);
 
   const { width, height } = useWindowSize();
   return (
@@ -74,45 +71,42 @@ const App = (): JSX.Element => {
       <HowToUse />
       <Background />
       <ModeChangeButton />
-      <AppDragContext>
-        <EditorPanel />
-        <Screen>
-          <DndContext>
-            {activeLayout && (
-              <CardLayout
-                appMode={appMode}
-                cards={[...activeCards]}
-                widgets={[...activeWidgets]}
-                height={height}
-                isDraggable={appMode === AppMode.EDIT}
-                isResizable={appMode === AppMode.EDIT}
-                // layout={JSON.parse(JSON.stringify())}
-                layout={activeLayout}
-                margin={[20, 20]}
-                onLayoutChange={(l) => {
-                  const newLayout: Layouts = {
-                    lg: l,
-                    md: l,
-                    sm: l,
-                    xs: l,
-                    xxs: l,
-                  };
-                  console.log("DIONG ON LAYOUT CHANGE");
-                  console.log(newLayout);
-                  //TODO: FIX
-                  if (l.length > 3) {
-                    // console.log("WAS GREATER THAN THREE");
-                    activeLayout.layout = newLayout;
-                  }
-                  // activeLayout.layout = newLayout;
-                  setBufferLayout(newLayout);
-                }}
-                width={width}
-              />
-            )}
-          </DndContext>
-        </Screen>
-      </AppDragContext>
+      <AppTimers>
+        <AppDragContext>
+          <Loader visible={sheetsAreLoaded} />
+          <EditorPanel />
+          <Screen>
+            <DndContext>
+              {activeLayout && sheetsAreLoaded && (
+                <CardLayout
+                  appMode={appMode}
+                  cards={[...activeCards]}
+                  height={height}
+                  isDraggable={appMode === AppMode.EDIT}
+                  isResizable={appMode === AppMode.EDIT}
+                  layout={activeLayout}
+                  margin={[20, 20]}
+                  onLayoutChange={(l) => {
+                    const newLayout: Layouts = {
+                      lg: l,
+                      md: l,
+                      sm: l,
+                      xs: l,
+                      xxs: l,
+                    };
+                    if (appMode === AppMode.EDIT) {
+                      activeLayout.setGridLayout(newLayout);
+                    }
+                    setBufferLayout(newLayout);
+                  }}
+                  widgets={[...activeWidgets]}
+                  width={width}
+                />
+              )}
+            </DndContext>
+          </Screen>
+        </AppDragContext>
+      </AppTimers>
     </>
   );
 };
