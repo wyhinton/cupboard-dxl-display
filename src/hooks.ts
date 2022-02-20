@@ -100,15 +100,18 @@ interface useLayoutProps {
   swapCard: ThunkCreator<CardSwapEvent, any>;
   addWidget: ThunkCreator<CardAddEvent, any>;
   setActiveLayout: ActionCreator<LayoutData>;
-  setRandomLayout: ThunkCreator<void, any>;
+  useNextLayout: ThunkCreator<void, any>;
   clearCards: ThunkCreator<void, any>;
   resetLayout: ThunkCreator<void, any>;
+  externalLayouts: LayoutData[];
 }
 
 export const useLayout = (): useLayoutProps => {
   const activeCards = useStoreState((state) => state.appModel.activeCards);
   const activeWidgets = useStoreState((state) => state.appModel.activeWidgets);
-
+  const externalLayouts = useStoreState(
+    (state) => state.layoutsModel.externalLayouts
+  );
   const swapCard = useStoreActions(
     (actions) => actions.layoutsModel.swapCardContent
   );
@@ -130,8 +133,8 @@ export const useLayout = (): useLayoutProps => {
     (state) => state.layoutsModel.activeLayout
   );
 
-  const setRandomLayout = useStoreActions(
-    (actions) => actions.layoutsModel.setRandomLayout
+  const useNextLayout = useStoreActions(
+    (actions) => actions.layoutsModel.setNextLayout
   );
 
   const setActiveLayout = useStoreActions(
@@ -155,9 +158,10 @@ export const useLayout = (): useLayoutProps => {
     swapCard,
     addWidget,
     setActiveLayout,
-    setRandomLayout,
+    useNextLayout,
     clearCards,
     resetLayout,
+    externalLayouts,
   };
 };
 export const useKeyboardShortcut = ({

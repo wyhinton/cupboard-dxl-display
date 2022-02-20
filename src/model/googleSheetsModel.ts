@@ -1,4 +1,4 @@
-import type { Action, Thunk } from "easy-peasy";
+import { Action, Computed, computed, Thunk } from "easy-peasy";
 import { action, thunk } from "easy-peasy";
 import Papa from "papaparse";
 
@@ -24,6 +24,9 @@ export interface GoogleSheetsModel {
   layoutSheetUrl: string | undefined;
   cardSheetUrl: string | undefined;
   googleSheetsErrors: AppError[];
+
+  //computed
+  sheetsAreLoaded: Computed<GoogleSheetsModel, boolean>;
   //requests
   fetchTopLevelSheet: Thunk<GoogleSheetsModel>;
   fetchAppGoogleSheet: Thunk<GoogleSheetsModel>;
@@ -52,6 +55,7 @@ const googleSheetsModel: GoogleSheetsModel = {
   layoutSheetUrl: undefined,
   cardSheetUrl: undefined,
   googleSheetsErrors: [],
+  // sheetsAreLoaded: computed((state=>state.layout)
   //requests
   fetchTopLevelSheet: thunk((actions) => {
     try {

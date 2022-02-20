@@ -192,7 +192,7 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    console.log(position);
+    // console.log(position);
   }, [position]);
 
   // const tb = useMemo(() => {

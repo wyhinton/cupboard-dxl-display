@@ -34,14 +34,25 @@ const App = (): JSX.Element => {
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
 
-  const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
-    useLayout();
+  const {
+    activeLayout,
+    setBufferLayout,
+    activeCards,
+    activeWidgets,
+    setActiveLayout,
+    useNextLayout,
+    externalLayouts,
+  } = useLayout();
+
+  console.log(externalLayouts[1]);
 
   const { appMode, toggleAppMode, rotateLayouts } = useApp();
 
   useInterval(() => {
     if (appMode === AppMode.DISPLAY && rotateLayouts) {
       // setRandomLayout();
+      setActiveLayout(externalLayouts[1]);
+      setBufferLayout(externalLayouts[1].layout);
     }
   }, appConfig.rotationDuration);
 
@@ -56,9 +67,6 @@ const App = (): JSX.Element => {
   });
 
   console.log(activeWidgets);
-
-  // const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
-  useLayout();
 
   const { width, height } = useWindowSize();
   return (
@@ -78,6 +86,7 @@ const App = (): JSX.Element => {
                 height={height}
                 isDraggable={appMode === AppMode.EDIT}
                 isResizable={appMode === AppMode.EDIT}
+                // layout={JSON.parse(JSON.stringify())}
                 layout={activeLayout}
                 margin={[20, 20]}
                 onLayoutChange={(l) => {
@@ -88,10 +97,14 @@ const App = (): JSX.Element => {
                     xs: l,
                     xxs: l,
                   };
+                  console.log("DIONG ON LAYOUT CHANGE");
                   console.log(newLayout);
+                  //TODO: FIX
                   if (l.length > 3) {
+                    // console.log("WAS GREATER THAN THREE");
                     activeLayout.layout = newLayout;
                   }
+                  // activeLayout.layout = newLayout;
                   setBufferLayout(newLayout);
                 }}
                 width={width}

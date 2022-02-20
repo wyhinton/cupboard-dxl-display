@@ -42,7 +42,7 @@ export interface LayoutsModel {
   layoutsString: Computed<LayoutsModel, string>;
 
   //update
-  setRandomLayout: Thunk<LayoutsModel, never, StoreModel>;
+  setNextLayout: Thunk<LayoutsModel, never, StoreModel>;
   swapCardContent: Thunk<LayoutsModel, CardSwapEvent, StoreModel>;
   deleteCard: Thunk<LayoutsModel, string, StoreModel>;
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
@@ -136,7 +136,7 @@ const layoutsModel: LayoutsModel = {
     state.activeLayout = newActiveLayout;
     state.bufferLayout = JSON.parse(JSON.stringify(newActiveLayout.layout));
   }),
-  setRandomLayout: thunk((actions, _, { getState }) => {
+  setNextLayout: thunk((actions, _, { getState }) => {
     const { externalLayouts, activeLayout } = getState();
 
     // const possibleLayouts = externalLayouts.filter(
@@ -146,16 +146,14 @@ const layoutsModel: LayoutsModel = {
       const curIndex = externalLayouts
         .map((l) => l.id)
         .indexOf(activeLayout?.id);
-      console.log(curIndex);
       const nextIndex = (curIndex + 1) % externalLayouts.length;
       console.log(
         `SETTING LAYOUT INDEX TO ${nextIndex} - ${externalLayouts[nextIndex].id} `
       );
       const selectedRandom = externalLayouts[nextIndex];
-      // console.log(selectedRandom);
+      console.log(selectedRandom);
       actions.setActiveLayout(selectedRandom);
     }
-    // state.activeLayout = selectedRandom;
   }),
   setExternalLayouts: action((state, newLayoutArray) => {
     console.log("setting external layouts");
@@ -227,7 +225,7 @@ const layoutsModel: LayoutsModel = {
   }),
   setBufferLayout: action((state, layouts) => {
     console.log(layouts);
-    state.bufferLayout = layouts;
+    state.bufferLayout = JSON.parse(JSON.stringify(layouts));
   }),
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;

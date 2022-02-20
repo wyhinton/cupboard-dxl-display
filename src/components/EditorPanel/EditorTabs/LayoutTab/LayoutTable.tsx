@@ -4,6 +4,7 @@ import {
   useStoreActions,
   useWindowSize,
   useApp,
+  useLayout,
 } from "../../../../hooks";
 import IXDrop from "../../../DragAndDrop/IXDrop";
 import { AppMode, DndTypes, DragSource } from "../../../../enums";
@@ -28,6 +29,9 @@ const LayoutTable = (): JSX.Element => {
   const setActiveLayoutAction = useStoreActions(
     (actions) => actions.layoutsModel.setActiveLayout
   );
+
+  const { setActiveLayout } = useLayout();
+
   return (
     <div>
       <IXDrop
@@ -50,7 +54,7 @@ const LayoutTable = (): JSX.Element => {
             {externalLayoutsState.map((l, index) => {
               const { id, title, author, added } = l;
               return (
-                <tr key={index} onClick={(e) => setActiveLayoutAction(l)}>
+                <tr key={index} onClick={(e) => setActiveLayout(l)}>
                   <td
                     key={index}
                     style={{ display: "flex", justifyContent: "center" }}

@@ -39,7 +39,7 @@ const WidgetWrapper = ({
         );
         break;
     }
-    console.log(widget);
+    // console.log(widget);
     return widget;
   };
 

@@ -8,11 +8,9 @@ import {
   thunkOn,
 } from "easy-peasy";
 import _ from "lodash";
-// import type {Action, Thunk, ThunkOn} from "easy-peasy/types"
 
 import CardData from "../data_structs/CardData";
 import WidgetData, { WidgetType } from "../data_structs/WidgetData";
-import type { SheetNames } from "../enums";
 import { AppMode } from "../enums";
 import AppError from "../interfaces/AppError";
 import type RawCardRow from "../interfaces/RawCardRow";
@@ -26,6 +24,7 @@ import { StoreModel } from "./index";
 
 export interface AppDataModel {
   //state
+  isLoaded: boolean;
   availableCards: CardData[];
   availableWidgets: WidgetData[];
   activeWidgets: WidgetData[];
@@ -59,6 +58,7 @@ const availableWidgets = appConfig.widgetIds.map(
 
 const appModel: AppDataModel = {
   //state
+  isLoaded: false,
   availableCards: [],
   availableWidgets: availableWidgets,
   activeWidgets: [],
@@ -70,7 +70,6 @@ const appModel: AppDataModel = {
   //managers
   /**Control side effects for altering the view state of the app, and dispatch a setter for the state */
   manageViewModeChange: thunk((actions, viewModeEnum) => {
-    // console.log(viewModeEnum);
     actions.setAppMode(viewModeEnum);
     switch (viewModeEnum) {
       case AppMode.EDIT:
@@ -84,8 +83,6 @@ const appModel: AppDataModel = {
     }
   }),
   toggleAppMode: thunk((actions, _, { getState }) => {
-    // console.log("toggling view mod ");
-
     switch (getState().appMode) {
       case AppMode.EDIT:
         actions.setAppMode(AppMode.DISPLAY);
@@ -96,9 +93,7 @@ const appModel: AppDataModel = {
       case AppMode.CYCLE:
         break;
       default:
-        console.log("reached default in set view mode thunk");
     }
-    console.log(getState().appMode);
   }),
   setAvailableCards: action((state, cardDataArray) => {
     state.availableCards = cardDataArray;
@@ -190,7 +185,6 @@ const appModel: AppDataModel = {
       actions.setAvailableCards(availableCardsUpdated);
       actions.setActiveWidgets(availableWidgetsUpdated);
       actions.setActiveCards(activeCards);
-      console.log(activeWidgets);
       actions.setActiveWidgets(activeWidgets);
     }
   ),
@@ -198,15 +192,11 @@ const appModel: AppDataModel = {
   onSwapCardContent: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.swapCardContent,
     async (actions, payload, { getState }) => {
-      console.log("got swap card content");
-      console.log(payload.payload);
-      console.log(getState().activeCards);
       const newCards = getState().activeCards.map((c) => {
         if (c.sourceId === payload.payload.targetId) {
           const newSource = getState().availableCards.find(
             (c) => c.sourceId === payload.payload.sourceId
           );
-          console.log(newSource);
           return newSource;
         } else {
           return c;
@@ -215,12 +205,8 @@ const appModel: AppDataModel = {
       if (newCards) {
         actions.setActiveCards(newCards as CardData[]);
       }
-      console.log(debug(payload));
     }
   ),
-  // getLayoutCards: action((state, layoutId)=>{
-  //   return
-  // })
 };
 
 export default appModel;

@@ -135,7 +135,8 @@ export const CardLayout = ({
     </div>
   );
 };
-export default React.memo(CardLayout);
+// export default React.memo(CardLayout);
+export default CardLayout;
 
 const cardContainerClass = (card: CardData, appMode: AppMode): string => {
   const isFailed = card.failed;
