@@ -1,7 +1,7 @@
 import "../../css/cardLayout.css";
 import "../../css/libs/reactDraggable.css";
 
-import { Variants } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import React, { useEffect } from "react";
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 
@@ -88,7 +88,12 @@ export const CardLayout = ({
           {[...cards, ...widgets].map(
             (card: CardData | WidgetData, index: number) => {
               return (
-                <div className="card-container" draggable key={card.id}>
+                <motion.div
+                  key={card.id}
+                  className="card-container"
+                  style={{ width: "100%" }}
+                  exit={{ y: -100 }}
+                >
                   <IXDrop
                     cardType={DndTypes.IFRAME}
                     className="droppable-card"
@@ -125,7 +130,8 @@ export const CardLayout = ({
                       {}
                     </ViewCard>
                   </IXDrop>
-                </div>
+                </motion.div>
+                // </div>
               );
             }
           )}

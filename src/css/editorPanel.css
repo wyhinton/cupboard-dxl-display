@@ -47,7 +47,7 @@
   grid-area: header;
 }
 .panel-header {
-  width: 100%;
+  width: inherit;
   height: 100%;
   cursor: grab;
   display: flex;
@@ -112,6 +112,7 @@
 .react-tabs {
   display: flex;
   flex-direction: column;
+  width: inherit;
 }
 .react-tabs__tab {
   border-radius: 5px 5px 0 0;

@@ -326,7 +326,10 @@ const ViewCard: FC<ViewCardProperties> = ({
   };
 
   const onLoad: CardLoadHandler = (event, card) => {
-    setAnimationVariant("loaded");
+    if (appMode === AppMode.DISPLAY) {
+      setAnimationVariant("loaded");
+    }
+
     setIsLoaded(true);
     // console.log("Got Error");
   };
@@ -403,20 +406,21 @@ const ViewCard: FC<ViewCardProperties> = ({
     },
     in: {
       opacity: 1,
+      y: 0,
       transition: {
         duration: 0.5,
         delay: randomNumber(0.4, 1.5),
-        ease: "easeOut",
+        // ease: "easeOut",
       },
     },
-    out: {
-      y: randomNumber(-50, 50),
-      opacity: [1, 0],
-      transition: {
-        delay: randomNumber(0.4, 1.5),
-        duration: 0.5,
-      },
-    },
+    // out: {
+    //   y: randomNumber(-50, 50),
+    //   opacity: [1, 0],
+    //   transition: {
+    //     delay: randomNumber(0.4, 1.5),
+    //     duration: 0.5,
+    //   },
+    // },
   };
 
   const [animationVariant, setAnimationVariant] = useState("none");
@@ -444,7 +448,6 @@ const ViewCard: FC<ViewCardProperties> = ({
 
   return (
     <motion.div
-      exit={{ opacity: 0, x: -300 }}
       ref={cardContainerReference}
       layoutId="viewcard"
       className={state.cardClass}
@@ -453,7 +456,9 @@ const ViewCard: FC<ViewCardProperties> = ({
         willChange: "transform",
         height: "100%",
         backgroundColor: state.cardBackgroundColor,
-        opacity: 0,
+        opacity: appMode === AppMode.DISPLAY ? 0 : 1,
+        // y: appMode === AppMode.DISPLAY ? randomNumber(100, 0) : 0,
+        y: 0,
       }}
       initial={appMode === AppMode.EDIT ? false : true}
       variants={variants}

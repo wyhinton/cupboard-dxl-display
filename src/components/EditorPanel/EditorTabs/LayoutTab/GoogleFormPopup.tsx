@@ -103,12 +103,12 @@ const GoogleFormPopup = ({
               </a>
             </Heading>
           </div>
-
           <FlexRow
             style={{
               height: "50vh",
-              alignItems: "center",
-              justifyContent: "flex-start",
+              padding: "4vmin",
+              // alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
             <div
@@ -173,8 +173,8 @@ const CopyField = ({
           setIsCopied(true);
           onCopy(e);
         }}
-        width={300}
-        height={200}
+        width={250}
+        height={100}
         intent={"success"}
         appearance={"primary"}
       />
@@ -231,6 +231,8 @@ const GoogleFormIframe = ({
             fontWeight: "bold",
             border: "1px solid white",
             padding: "1em",
+            backgroundColor: "white",
+            opacity: 1,
           }}
         >
           Press the Copy Layout Button before Submitting New Layout

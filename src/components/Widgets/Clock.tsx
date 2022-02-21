@@ -1,6 +1,7 @@
 import "../../css/clock.css";
 
 import React, { useEffect, useState } from "react";
+import { Heading } from "evergreen-ui";
 
 /**
  * Simple clock widget for displaying the current time.
@@ -14,7 +15,7 @@ const Clock = (): JSX.Element => {
     padding: ".25em",
     width: "100%",
     // fontSize: "max(4vw, 10px)",
-    fontSize: "400%",
+    // fontSize: "400%",
     // fontSize: "4vw",
     fontWeight: 600,
     color: "white",
@@ -34,8 +35,10 @@ const Clock = (): JSX.Element => {
 
   return (
     <div style={containerStyle}>
-      <div>Data Experience Lab</div>
-      <div>
+      <div style={{ color: "white", fontSize: "9vmin" }}>
+        Data Experience Lab
+      </div>
+      <div style={{ color: "white", fontSize: "9vmin" }}>
         {date.toLocaleTimeString("en-IT", { hour12: true, timeStyle: "short" })}
       </div>
     </div>

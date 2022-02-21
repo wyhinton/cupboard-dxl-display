@@ -36,8 +36,7 @@ const appConfig: AppConfig = {
   showModeSwitchButton: false,
   useStaticLayout: false,
   gridBottomPadding: 50,
-  rotationDuration: 10000,
-  // rotationDuration: 5000,
+  rotationDuration: 5000, //ms
 };
 
 export default appConfig;

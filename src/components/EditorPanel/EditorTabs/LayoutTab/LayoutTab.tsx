@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 
 import {
   useLayout,
-  UseSheets,
+  useSheets,
   useStoreActions,
   useStoreState,
 } from "../../../../hooks";
@@ -16,7 +16,7 @@ import LayoutTable from "./LayoutTable";
 const LayoutTab = (): JSX.Element => {
   const bufferState = useStoreState((state) => state.layoutsModel.bufferLayout);
   const { activeLayout } = useLayout();
-  const { fetchTopLevelSheet } = UseSheets();
+  const { fetchTopLevelSheet } = useSheets();
 
   const [showNewLayoutPopup, setShowNewLayoutPopup] = useState(false);
 

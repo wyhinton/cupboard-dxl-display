@@ -6,7 +6,7 @@ interface PulsarProperties {}
 const Pulsar = () => {
   return (
     <div className="pulsar">
-      <AddIcon size={200}></AddIcon>
+      <AddIcon size={150}></AddIcon>
       {/* <div className={"ring"}></div> */}
       {/* <div className={"ring"}></div>
       <div className={"ring"}></div>

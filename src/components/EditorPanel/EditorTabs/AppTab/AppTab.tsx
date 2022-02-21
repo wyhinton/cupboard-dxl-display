@@ -1,11 +1,17 @@
-import { Switch, TextInputField } from "evergreen-ui";
+import { Heading, Switch, TextInputField } from "evergreen-ui";
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import { useApp, useElementSize, useStoreState } from "../../../../hooks";
+import {
+  useApp,
+  useElementSize,
+  useSheets,
+  useStoreState,
+} from "../../../../hooks";
 import appConfig from "../../../../static/appConfig";
 import IssuesTable from "../IssuesTab/IssuesTable";
 import { AutoSizer } from "react-virtualized";
 import { Scrollbars } from "react-custom-scrollbars";
 import FlexRow from "../../../Shared/FlexRow";
+import FlexColumn from "../../../Shared/FlexColumn";
 
 const AppTab = (): JSX.Element => {
   const { rotationSpeed, setRotationSpeed, setRotateLayouts } = useApp();
@@ -28,7 +34,7 @@ const AppTab = (): JSX.Element => {
       //   setRotationSpeed(4000);
       //   setRotationSpeed(appConfig.rotationDuration);
     } else {
-      setRotationSpeed(10000);
+      setRotationSpeed(appConfig.rotationDuration);
     }
   }, [checked]);
 
@@ -39,12 +45,16 @@ const AppTab = (): JSX.Element => {
   const [squareRef, { width, height }] = useElementSize();
 
   return (
-    <div style={{ height: "100%", pointerEvents: "all" }}>
+    <div style={{ height: "100%", pointerEvents: "all", padding: "1vmin" }}>
+      <Heading size={600} style={{ color: "white" }}>
+        General
+      </Heading>
       <div style={{ margin: ".5em" }}>
-        <FlexRow>
+        <FlexRow style={{ alignItems: "center" }}>
           <Label>Rotate Layouts</Label>
           <div style={{ paddingLeft: ".5em" }}>
             <Switch
+              style={{ margin: "auto" }}
               checked={checked}
               onChange={(e) => setChecked(e.target.checked)}
             />
@@ -52,7 +62,7 @@ const AppTab = (): JSX.Element => {
         </FlexRow>
       </div>
       {/* </div> */}
-
+      <SheetLinks />
       {/* <input
         // label={<Label>Layout Duration</Label>}
         // description="Duration that layout is displayed"
@@ -83,3 +93,62 @@ const Label = ({ children }: { children: string }) => {
 };
 
 export default AppTab;
+
+const SheetLinks = (): JSX.Element => {
+  const { cardSheetUrl, layoutSheetUrl, formUrl, parentSheetUrl } = useSheets();
+  const links = [parentSheetUrl, cardSheetUrl, layoutSheetUrl, formUrl];
+  const titles = ["Parent Sheet", "Content", "Layouts", "Google Form"];
+
+  return (
+    <FlexColumn>
+      <Heading size={600} style={{ color: "white" }}>
+        Google Sheets
+      </Heading>
+      <FlexColumn
+        style={{
+          padding: ".5em",
+          backgroundColor: "#1f1f1f",
+          overflow: "hidden",
+        }}
+      >
+        {links.map((link, i) => (
+          <SheetLink title={titles[i]} link={link ?? "not provided"} />
+        ))}
+      </FlexColumn>
+    </FlexColumn>
+  );
+};
+
+const SheetLink = ({
+  title,
+  link,
+}: {
+  title: string;
+  link: string;
+}): JSX.Element => {
+  return (
+    <FlexRow
+      style={{
+        padding: ".5em",
+        backgroundColor: "#1f1f1f",
+        overflow: "hidden",
+        justifyContent: "space-between",
+      }}
+    >
+      <Heading style={{ color: "white" }}>{title + ":  "}</Heading>
+      <a
+        href={link}
+        style={{
+          color: "white",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: "80%",
+        }}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {link}
+      </a>
+    </FlexRow>
+  );
+};

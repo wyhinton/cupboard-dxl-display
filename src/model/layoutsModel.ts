@@ -73,10 +73,16 @@ const layoutsModel: LayoutsModel = {
       target.payload.getSheetRows<RawLayoutRow>("LAYOUTS").then((rows) => {
         const rawLayoutRows = rows;
         const layouts: LayoutData[] = [];
+        const curLayoutIds = getState().externalLayouts.map(
+          (layout) => layout.id
+        );
+
         rawLayoutRows.forEach((row) => {
           try {
             const l = new LayoutData(row);
-            layouts.push(l);
+            if (!curLayoutIds.includes(l.id)) {
+              layouts.push(l);
+            }
           } catch (error) {
             actions.addLayoutError({
               errorType: "failed to read layout row",

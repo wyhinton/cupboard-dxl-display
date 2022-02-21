@@ -18,10 +18,12 @@ import cardDataSheetKey from "../static/cardDataSheetKey";
 
 export interface GoogleSheetsModel {
   //state
-  appGoogleSheet: GoogleSheetData | undefined;
+  parentGoogleSheet: GoogleSheetData | undefined;
   cardDataGoogleSheet: RawCardRow[] | null;
   layoutDataGoogleSheet: RawLayoutRow[] | null;
+
   formUrl: string | undefined;
+  parentSheetUrl: string | undefined;
   layoutSheetUrl: string | undefined;
   cardSheetUrl: string | undefined;
   googleSheetsErrors: AppError[];
@@ -34,6 +36,7 @@ export interface GoogleSheetsModel {
   fetchSheet: Thunk<GoogleSheetsModel, { url: string; name: SheetNames }[]>;
   //setters
   setFormUrl: Action<GoogleSheetsModel, string>;
+  setParentSheetUrl: Action<GoogleSheetsModel, string>;
   setCardSheetUrl: Action<GoogleSheetsModel, string>;
   setLayoutsSheetUrl: Action<GoogleSheetsModel, string>;
   setAppGoogleSheetData: Action<GoogleSheetsModel, GoogleSheetData>;
@@ -48,20 +51,23 @@ interface LoadSheetResult {
 }
 
 const googleSheetsModel: GoogleSheetsModel = {
-  //state
+  //sheets
   layoutDataGoogleSheet: null,
   cardDataGoogleSheet: null,
-  appGoogleSheet: undefined,
+  parentGoogleSheet: undefined,
+  //sheet urls
+  parentSheetUrl: undefined,
   formUrl: undefined,
   layoutSheetUrl: undefined,
   cardSheetUrl: undefined,
+  //other state
   googleSheetsErrors: [],
   sheetsAreLoaded: computed(
     [
       (state) => [
         state.layoutDataGoogleSheet,
         state.cardDataGoogleSheet,
-        state.appGoogleSheet,
+        state.parentGoogleSheet,
       ],
     ],
     (sheets) => {
@@ -75,6 +81,8 @@ const googleSheetsModel: GoogleSheetsModel = {
           const sheetRow = r.rows[0] as PrincipleSheetRow;
           actions.setFormUrl(sheetRow.googleForm);
           actions.setLayoutsSheetUrl(sheetRow.layoutsSheet);
+          actions.setCardSheetUrl(sheetRow.cardsSheet);
+          actions.setParentSheetUrl(process.env.REACT_APP_SHEET_URL as string);
           actions.fetchSheet([
             {
               name: "LAYOUTS",
@@ -186,13 +194,16 @@ const googleSheetsModel: GoogleSheetsModel = {
     );
   }),
   setAppGoogleSheetData: action((state, googleSheet) => {
-    state.appGoogleSheet = googleSheet;
+    state.parentGoogleSheet = googleSheet;
   }),
   setCardDataGoogleSheet: action((state, sheet) => {
     state.cardDataGoogleSheet = sheet;
   }),
   setLayoutDataGoogleSheet: action((state, sheet) => {
     state.layoutDataGoogleSheet = sheet;
+  }),
+  setParentSheetUrl: action((state, parentSheetUrl) => {
+    state.parentSheetUrl = parentSheetUrl;
   }),
   setFormUrl: action((state, formUrl) => {
     state.formUrl = formUrl;

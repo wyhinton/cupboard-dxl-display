@@ -8,7 +8,7 @@ import ReactImageFallback from "react-image-fallback";
 
 import CardData from "../../../../data_structs/CardData";
 import { DndTypes, DragSource } from "../../../../enums";
-import { useLayout, useStoreState } from "../../../../hooks";
+import { useLayout, useStoreState, useTimeout } from "../../../../hooks";
 import { formatDate } from "../../../../utils";
 import DraggableRow from "../../../DragAndDrop/DraggableRow";
 import IXDrop from "../../../DragAndDrop/IXDrop";
@@ -178,19 +178,46 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   const { src, id } = card;
   const [position, setPosition] = useState([0, 0]);
   const [hovered, setHovered] = useState(false);
+  const def = () => {};
+  const [func, setFunc] = useState(def);
+
+  const [delayHandler, setDelayHandler] = useState<NodeJS.Timeout>();
+
+  const handleMouseEnter = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    setDelayHandler(
+      setTimeout(() => {
+        const { pageX, pageY } = event;
+        setPosition([pageX, pageY]);
+        setHovered(true);
+      }, 250)
+    );
+  };
+
+  const handleMouseLeave = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    if (delayHandler) {
+      clearTimeout(delayHandler);
+      setHovered(false);
+    }
+  };
 
   return (
     <div style={{ display: "flex" }}>
       <div
         id={id}
-        onMouseEnter={(e) => {
-          const { pageX, pageY } = e;
-          setPosition([pageX, pageY]);
-          setHovered(true);
-        }}
-        onMouseLeave={(e) => {
-          setHovered(false);
-        }}
+        // onMouseEnter={(e) => {
+        //   const { pageX, pageY } = e;
+        //   setPosition([pageX, pageY]);
+        //   setHovered(true);
+        // }}
+        onMouseEnter={handleMouseEnter}
+        // onMouseLeave={(e) => {
+        //   setHovered(false);
+        // }}
+        onMouseLeave={handleMouseLeave}
         style={{ display: "flex", width: 20 }}
       >
         <ReactImageFallback

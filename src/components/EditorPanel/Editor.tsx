@@ -11,6 +11,7 @@ import IssuesTab from "./EditorTabs/IssuesTab/IssuesTab";
 import { useErrors } from "../../hooks";
 // https://github.com/goodoldneon/react-drag-and-dock#api
 
+/**Contains all the tab components for the editor panel */
 const Editor = (): JSX.Element => {
   return (
     <Tabs>
@@ -66,5 +67,3 @@ const ErrorsNofictions = (): JSX.Element => {
     </div>
   );
 };
-// fill: #52BD95;
-// #D14343;

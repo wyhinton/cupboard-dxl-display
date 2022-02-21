@@ -34,15 +34,35 @@ export function useToggle(initialValue: boolean): [boolean, () => void] {
 
 interface UseSheetsProps {
   fetchTopLevelSheet: ThunkCreator<void, any>;
+
+  parentSheetUrl: string | undefined;
+  cardSheetUrl: string | undefined;
+  layoutSheetUrl: string | undefined;
+  formUrl: string | undefined;
 }
 
-export const UseSheets = () => {
+export const useSheets = (): UseSheetsProps => {
   const fetchTopLevelSheet = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
+  const parentSheetUrl = useStoreState(
+    (state) => state.googleSheetsModel.cardSheetUrl
+  );
+
+  const cardSheetUrl = useStoreState(
+    (state) => state.googleSheetsModel.cardSheetUrl
+  );
+  const layoutSheetUrl = useStoreState(
+    (state) => state.googleSheetsModel.layoutSheetUrl
+  );
+  const formUrl = useStoreState((state) => state.googleSheetsModel.formUrl);
 
   return {
     fetchTopLevelSheet,
+    parentSheetUrl,
+    cardSheetUrl,
+    layoutSheetUrl,
+    formUrl,
   };
 };
 
@@ -262,8 +282,52 @@ export function useEffectOnce(effect: EffectCallback) {
   useEffect(effect, []);
 }
 
-export function useInterval(callback: () => void, delay: number | null) {
+export function useTimeout(
+  callback: () => void,
+  delay: number | null
+): { reset: () => void; stop: () => void } {
   const savedCallback = useRef(callback);
+  const timeOutRef = useRef<NodeJS.Timeout>();
+
+  // Remember the latest callback if it changes.
+  useLayoutEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    // Don't schedule if no delay is specified.
+    // Note: 0 is a valid value for delay.
+    if (!delay && delay !== 0) {
+      return;
+    }
+
+    const id = setTimeout(() => savedCallback.current(), delay);
+    timeOutRef.current = id;
+    return () => clearTimeout(id);
+  }, [delay]);
+
+  const reset = useCallback(() => {
+    if (timeOutRef.current && delay) {
+      clearTimeout(timeOutRef.current);
+      timeOutRef.current = setTimeout(savedCallback.current, delay);
+    }
+  }, [delay]);
+
+  const stop = useCallback(() => {
+    if (timeOutRef.current) {
+      clearTimeout(timeOutRef.current);
+    }
+  }, []);
+
+  return { reset, stop };
+}
+export function useInterval(
+  callback: () => void,
+  delay: number | null
+): { reset: () => void; stop: () => void } {
+  const savedCallback = useRef(callback);
+  const intervalRef = useRef<NodeJS.Timeout>();
 
   // Remember the latest callback if it changes.
   useLayoutEffect(() => {
@@ -279,9 +343,24 @@ export function useInterval(callback: () => void, delay: number | null) {
     }
 
     const id = setInterval(() => savedCallback.current(), delay);
-
+    intervalRef.current = id;
     return () => clearInterval(id);
   }, [delay]);
+
+  const reset = useCallback(() => {
+    if (intervalRef.current && delay) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(savedCallback.current, delay);
+    }
+  }, [delay]);
+
+  const stop = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  }, []);
+
+  return { reset, stop };
 }
 
 function useEventListener<K extends keyof WindowEventMap>(
@@ -421,4 +500,12 @@ export function useWindowSize(): WindowSize {
   }, []);
 
   return windowSize;
+}
+
+type Handler = (event: MouseEvent) => void;
+
+export function useClickAnyWhere(handler: Handler) {
+  useEventListener("click", (event) => {
+    handler(event);
+  });
 }
