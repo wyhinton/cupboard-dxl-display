@@ -187,9 +187,11 @@ const layoutsModel: LayoutsModel = {
   clearCards: thunk((actions, _, { getState }) => {
     const { activeLayout } = getState();
     if (activeLayout) {
-      const buf = getState().bufferLayout;
-      activeLayout.layout = buf;
+      // const buf = getState().bufferLayout;
+      // activeLayout.layout = buf;
       activeLayout.clearCards();
+      console.log(activeLayout.layout.lg);
+      actions.setBufferLayout(activeLayout.layout);
       actions.setActiveLayout(activeLayout);
     }
   }),

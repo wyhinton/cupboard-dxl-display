@@ -1,63 +1,113 @@
 import "../../../../css/table.css";
+import "../../../../css/viewCard.css";
+import "../../../../css/widgetsTab.css";
 
-import React, { useEffect } from "react";
+import { Heading } from "evergreen-ui";
+import React, { useEffect, useRef, useState } from "react";
+import { Layout, Layouts } from "react-grid-layout";
 
+import WidgetData, { WidgetType } from "../../../../data_structs/WidgetData";
 import { DndTypes, DragSource } from "../../../../enums";
-import Clock from "../../../Widgets/Clock";
-import { useStoreState } from "../../../../hooks";
+import { useLayout, useStoreState, useWindowSize } from "../../../../hooks";
+import appConfig from "../../../../static/appConfig";
 import DraggableWidget from "../../../DragAndDrop/DraggableWidget";
 import IXDrop from "../../../DragAndDrop/IXDrop";
+import Clock from "../../../Widgets/Clock";
 
 /**
  * Table for displaying the available card layouts
  */
 const WidgetsTab = (): JSX.Element => {
-  const currentLayoutState = useStoreState(
-    (state) => state.layoutsModel.activeLayout
+  const { activeLayout } = useLayout();
+  const availableWidgets = useStoreState(
+    (state) => state.appModel.availableWidgets
   );
+  const [scalar, setScalar] = useState(1);
+  const { width, height } = useWindowSize();
+  const [widgetsToRender, setWidgetsToRender] =
+    useState<WidgetData[]>(availableWidgets);
+  const [useLayouts, setuseLayouts] = useState<Layouts>({ lg: [] });
 
-  // const lg = Object.entries(this.layout)[0][1];
-  // if (lg.map(l=>l.i).includes(toAdd.id)){
-  //   console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
-  // }
-  // for (const [k, v] of Object.entries(this.layout)) {
-  //   const newItem: Layout = {
-  //     x: pos.x,
-  //     y: pos.y,
-  //     w: 1,
-  //     h: 1,
-  //     i: toAdd.id,
-  //   };
-  //   this.layout[k].push(newItem);
-  // }
+  useEffect(() => {
+    setWidgetsToRender(
+      availableWidgets.filter((w) => !activeLayout?.widgets().includes(w.id))
+    );
+  }, [availableWidgets]);
+
+  const editorPanelRef = useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    editorPanelRef.current = document.getElementById(
+      "editor-panel"
+    ) as HTMLDivElement;
+    console.log(editorPanelRef.current.getBoundingClientRect().width);
+    setScalar(editorPanelRef.current.getBoundingClientRect().width / width);
+  }, [width]);
+
+  useEffect(() => {
+    console.log(scalar);
+  }, [scalar]);
+  const colWidth = width / appConfig.gridCols;
+  const rowHeight = height / appConfig.gridRows;
+
+  const renderWidget = (widgetId: WidgetType) => {
+    let widg = null;
+    switch (widgetId) {
+      case "clock":
+        widg = <Clock />;
+        break;
+      default:
+        widg = <Heading>hello</Heading>;
+    }
+
+    return widg;
+  };
+
+  // const testWidgs =
 
   return (
-    <div>
-      <IXDrop
-        cardType={DndTypes.CLOCK}
-        className="table-container"
-        droppableId={DragSource.WIDGETS_TABLE}
-        isDropDisabled={false}
-      >
-        <DraggableWidget
-          className="draggable-widget"
-          dndType={DndTypes.WIDGET}
-          draggableId="clock"
-          index={0}
-          isDragDisabled={false}
+    <div style={{ width: "100%", height: "100%" }}>
+      {widgetsToRender.length == 0 ? (
+        <div>All Widgets in Use</div>
+      ) : (
+        <IXDrop
+          cardType={DndTypes.CLOCK}
+          className="widgets-container"
+          droppableId={DragSource.WIDGETS_TABLE}
+          isDropDisabled={false}
         >
-          <Clock />
-        </DraggableWidget>
-        <DraggableWidget
-          className="draggable-widget"
-          dndType={DndTypes.WIDGET}
-          draggableId="info"
-          index={1}
-          isDragDisabled={false}
-        >
-          <button>HELLO</button>
-        </DraggableWidget>
-      </IXDrop>
+          {widgetsToRender
+            .filter((w) => !activeLayout?.widgets().includes(w.id))
+            .map((w, i) => {
+              return (
+                <DraggableWidget
+                  className="draggable-widget"
+                  dndType={DndTypes.WIDGET}
+                  draggableId="clock"
+                  index={0}
+                  height={scalar * w.h * rowHeight}
+                  isDragDisabled={false}
+                >
+                  <div
+                    key={i}
+                    className="card-display"
+                    style={{
+                      // width: width,
+                      width: w.w * colWidth,
+                      height: w.h * rowHeight,
+                      transform: `scale(${scalar})`,
+                      transformOrigin: "top left",
+                      borderRadius: ".5em",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {renderWidget(w.id)}
+                  </div>
+                </DraggableWidget>
+              );
+            })}
+        </IXDrop>
+      )}
     </div>
   );
 };

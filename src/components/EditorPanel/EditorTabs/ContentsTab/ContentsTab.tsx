@@ -7,11 +7,13 @@ import { Scrollbars } from "react-custom-scrollbars";
 import ReactImageFallback from "react-image-fallback";
 
 import CardData from "../../../../data_structs/CardData";
-import { DndTypes, DragSource } from "../../../../enums";
-import { useLayout, useStoreState, useTimeout } from "../../../../hooks";
+import { CardView, DndTypes, DragSource } from "../../../../enums";
+import { useLayout, useStoreState } from "../../../../hooks";
 import { formatDate } from "../../../../utils";
 import DraggableRow from "../../../DragAndDrop/DraggableRow";
 import IXDrop from "../../../DragAndDrop/IXDrop";
+import IFrameView from "../../../IFrameView";
+import Loader from "../../../Loader";
 import Button from "../../../Shared/Button";
 import FlexRow from "../../../Shared/FlexRow";
 import PopOver from "../../PopOver";
@@ -90,7 +92,7 @@ const ContentsTab = (): JSX.Element => {
         <Button
           appearance="default"
           intent="danger"
-          onClick={(event) => {
+          onClick={(_event) => {
             resetLayout();
           }}
           text="Reset Layout"
@@ -98,7 +100,7 @@ const ContentsTab = (): JSX.Element => {
         <Button
           appearance="minimal"
           intent="danger"
-          onClick={(event) => {
+          onClick={(_event) => {
             clearCards();
           }}
           // width={"10%"}
@@ -175,29 +177,34 @@ const ContentsTab = (): JSX.Element => {
  * Fetches a favicon for a card and displays the cards title
  */
 const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
-  const { src, id } = card;
+  const { src, id, title } = card;
+
+  const iconId = id + "_icon";
+
   const [position, setPosition] = useState([0, 0]);
   const [hovered, setHovered] = useState(false);
-  const def = () => {};
-  const [func, setFunc] = useState(def);
 
+  const [preivewLoaded, setPreviewLoaded] = useState(false);
   const [delayHandler, setDelayHandler] = useState<NodeJS.Timeout>();
 
   const handleMouseEnter = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  ): void => {
     setDelayHandler(
       setTimeout(() => {
-        const { pageX, pageY } = event;
-        setPosition([pageX, pageY]);
+        const { pageY } = event;
+        const el = document.getElementById(iconId)
+          ?.parentElement as HTMLDivElement;
+        const { x } = el.getBoundingClientRect();
+        setPosition([x + 100, pageY]);
         setHovered(true);
       }, 250)
     );
   };
 
   const handleMouseLeave = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+    _event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
     if (delayHandler) {
       clearTimeout(delayHandler);
       setHovered(false);
@@ -205,21 +212,12 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <div
-        id={id}
-        // onMouseEnter={(e) => {
-        //   const { pageX, pageY } = e;
-        //   setPosition([pageX, pageY]);
-        //   setHovered(true);
-        // }}
-        onMouseEnter={handleMouseEnter}
-        // onMouseLeave={(e) => {
-        //   setHovered(false);
-        // }}
-        onMouseLeave={handleMouseLeave}
-        style={{ display: "flex", width: 20 }}
-      >
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ display: "flex" }}
+    >
+      <div id={iconId} style={{ display: "flex", width: 20 }}>
         <ReactImageFallback
           className={
             card.isActive ? "row-favicon-active" : "row-favicon-inactive"
@@ -230,25 +228,19 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
               ? src
               : `https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`
           }
-          // onError={(e)=>}
           style={{ width: "100%", maxWidth: 20 }}
         />
       </div>
-      <PopOver
-        x={position[0]}
-        y={position[1]}
-        visible={hovered && card.contentType === "image"}
-        // title={`Image Preview ${card.title}`}
-      >
-        <ReactImageFallback
-          style={{ width: "100%", height: "100%", objectFit: "contain" }}
-          fallbackImage={`${process.env.PUBLIC_URL}/question_mark.svg`}
-          // onError={(e)=>}
-          src={
-            card.contentType === "image"
-              ? src
-              : `https://s2.googleusercontent.com/s2/favicons?domain_url=${card.src}`
-          }
+      <PopOver visible={hovered} x={position[0]} y={position[1]}>
+        <IFrameView
+          card={card}
+          cardView={CardView.GRID}
+          objectFit={"contain"}
+          onError={(_c) => {}}
+          onLoad={(_c) => {
+            setPreviewLoaded(true);
+          }}
+          scale={1}
         />
       </PopOver>
       <div
@@ -259,7 +251,7 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
           paddingLeft: "1em",
         }}
       >
-        {card.title}
+        {title}
       </div>
     </div>
   );
@@ -267,42 +259,19 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
 
 export default ContentsTab;
 
-// function ThumbnailGenerator() {
-
-function generate(
-  imgSrc: string,
-  thumbDims: { x: number; y: number },
-  compression: number
-): Promise<string> {
-  const resizeCanvas = document.createElement("canvas") as HTMLCanvasElement;
-
-  [resizeCanvas.width, resizeCanvas.height] = [thumbDims.x, thumbDims.y];
-  const ctx = resizeCanvas.getContext("2d") as CanvasRenderingContext2D;
-
-  const tmp = new Image();
-  // tmp.setAttribute()
-  tmp.setAttribute("crossorigin", "anonymous");
-  const ret = new Promise((resolve) => {
-    tmp.onload = () => {
-      ctx.drawImage(tmp, 0, 0, thumbDims.x, thumbDims.y);
-      resolve(resizeCanvas.toDataURL("image/jpeg", compression || 0.5));
-    };
-  });
-  tmp.src = imgSrc;
-  return ret as Promise<string>;
-}
-
-// function generateBatch(imgSrcs: string[], thumbDims: {x: number, y: number}[], compression: number) {
-//   return Promise.all(imgSrcs.map(img =>generate(img, thumbDims, compression)));
-// }
-
-// return this;
-// }
-
-// const Popover = (): JSX.Element =>{
-
-//   return(
-//     <div>hello</div>
-//   )
-
-// }
+const LoaderOverlay = ({ visible }: { visible: boolean }): JSX.Element => {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        backgroundColor: "red",
+        position: "absolute",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <Loader visible={true} />
+    </div>
+  );
+};

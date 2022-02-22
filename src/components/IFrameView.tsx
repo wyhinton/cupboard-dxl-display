@@ -25,6 +25,7 @@ interface IFrameViewProperties {
   cardView: CardView;
   onError: CardErrorHandler;
   onLoad: CardLoadHandler;
+  objectFit?: string;
 }
 /**
  * Minimal warpper for an <iframe>. Can be toggled between a full screen, active view, and a regular card view.
@@ -41,6 +42,7 @@ const IFrameView: FC<IFrameViewProperties> = ({
   cardView,
   onError,
   onLoad,
+  objectFit,
 }) => {
   const [active, setActive] = useState(false);
   const [valid, setIsValid] = useState(true);
@@ -111,7 +113,8 @@ const IFrameView: FC<IFrameViewProperties> = ({
           style={{
             width: "100%",
             height: "100%",
-            objectFit: cardView === CardView.PREVIEW ? "contain" : "cover",
+            objectFit:
+              objectFit ?? cardView === CardView.PREVIEW ? "contain" : "cover",
             objectPosition:
               cardView === CardView.PREVIEW ? "contain" : "center",
           }}

@@ -13,10 +13,8 @@ const Clock = (): JSX.Element => {
   const containerStyle = {
     height: "100%",
     padding: ".25em",
+    overflow: "hidden",
     width: "100%",
-    // fontSize: "max(4vw, 10px)",
-    // fontSize: "400%",
-    // fontSize: "4vw",
     fontWeight: 600,
     color: "white",
     boxSizing: "border-box",

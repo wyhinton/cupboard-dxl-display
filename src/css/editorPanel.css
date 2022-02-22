@@ -31,10 +31,12 @@
 .editor-panel-full {
   width: 500px;
   height: 500px;
+  overflow: visible;
 }
 .editor-panel-minimized {
   width: 10rem;
   height: 34px;
+  overflow: hidden;
   /* height: fit-content; */
 }
 .hidden {

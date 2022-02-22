@@ -1,39 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { AppMode } from "../enums";
-import { useStoreState } from "../hooks";
 import "../css/background.css";
+
 import classNames from "classnames";
-import BackgroundShader from "./Background/BackgroundShader";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
+import { AppMode } from "../enums";
+import { useApp } from "../hooks";
+import BackgroundShader from "./Background/BackgroundShader";
+
 const Background = (): JSX.Element => {
-  const viewMode = useStoreState((state) => state.appModel.appMode);
-  const [size, setSize] = useState({
-    x: window.innerWidth,
-    y: window.innerHeight,
-  });
+  const { appMode } = useApp();
 
   const [backgroundStyle, setBackgroundStyle] = useState({
     backgroundColor: "gray",
   } as React.CSSProperties);
   useEffect(() => {
-    const isEditMode = viewMode == AppMode.EDIT;
-
     const style = {
       position: "absolute",
       height: "100vh",
       width: "100vw",
       top: 0,
       left: 0,
-      backgroundColor: isEditMode ? "white" : "gray",
+      backgroundColor: appMode === AppMode.EDIT ? "#2d2d2d" : "gray",
       transition: "background-color 0.5s ease",
     } as React.CSSProperties;
     setBackgroundStyle(style);
-  }, [viewMode]);
+  }, [appMode]);
 
   const backgroundClass = classNames("background-container", {
-    "background-container-display-mode": viewMode == AppMode.DISPLAY,
-    "background-container-edit-mode": viewMode == AppMode.EDIT,
+    "background-container-display-mode": appMode == AppMode.DISPLAY,
+    "background-container-edit-mode": appMode == AppMode.EDIT,
   });
 
   const bgFillSolid = {
@@ -47,8 +43,8 @@ const Background = (): JSX.Element => {
   } as React.CSSProperties;
 
   return ReactDOM.createPortal(
-    <div style={backgroundStyle} className={backgroundClass}>
-      {viewMode === AppMode.EDIT ? (
+    <div className={backgroundClass} style={backgroundStyle}>
+      {appMode === AppMode.EDIT ? (
         <div style={bgFillSolid}></div>
       ) : (
         <div className="background-container">

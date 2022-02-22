@@ -1,6 +1,8 @@
 import {
   Action,
   action,
+  computed,
+  Computed,
   debug,
   Thunk,
   thunk,
@@ -8,6 +10,7 @@ import {
   thunkOn,
 } from "easy-peasy";
 import _ from "lodash";
+import { Layout } from "react-grid-layout";
 
 import CardData from "../data_structs/CardData";
 import WidgetData, { WidgetType } from "../data_structs/WidgetData";
@@ -15,6 +18,7 @@ import { AppMode } from "../enums";
 import AppError from "../interfaces/AppError";
 import type RawCardRow from "../interfaces/RawCardRow";
 import appConfig from "../static/appConfig";
+import widgets from "../static/widgets";
 // import defaultGridLayout from "../static/defaultStaticLayout";
 import { StoreModel } from "./index";
 /**
@@ -28,6 +32,8 @@ export interface AppDataModel {
   availableCards: CardData[];
   availableWidgets: WidgetData[];
   activeWidgets: WidgetData[];
+  // activeWidgets: Computed<AppDataModel, WidgetData[], StoreModel>;
+  // activeWidgets: WidgetData[];
   activeCards: CardData[];
   rotationSpeed: number;
   rotateLayouts: boolean;
@@ -52,8 +58,8 @@ export interface AppDataModel {
   setAvailableCards: Action<AppDataModel, CardData[]>;
 }
 
-const availableWidgets = appConfig.widgetIds.map(
-  (n) => new WidgetData(n as WidgetType)
+const availableWidgets = Object.values(widgets).map(
+  (widgetInfo) => new WidgetData(widgetInfo)
 );
 
 const appModel: AppDataModel = {
@@ -155,6 +161,14 @@ const appModel: AppDataModel = {
       const activeWidgetIds = new Set(
         layout.payload.layoutWidgets.map((w) => w.id) ?? []
       );
+      console.log("DOING ON SET ACTIVE LAYOUT");
+      console.log(layout.payload.layout);
+      console.log(layout.payload.widgets());
+      const { availableWidgets } = getState();
+      // const availableIds = availableWidgets.map(w=>w)
+      actions.setActiveWidgets(
+        availableWidgets.filter((w) => layout.payload.widgets().includes(w.id))
+      );
 
       const availableCardsUpdated = getState().availableCards.map((card) => {
         if (activeSourceIds.has(card.sourceId)) {
@@ -183,9 +197,9 @@ const appModel: AppDataModel = {
         return activeWidgetIds.has(card.id);
       });
       actions.setAvailableCards(availableCardsUpdated);
-      actions.setActiveWidgets(availableWidgetsUpdated);
+      // actions.setActiveWidgets(availableWidgetsUpdated);
       actions.setActiveCards(activeCards);
-      actions.setActiveWidgets(activeWidgets);
+      // actions.setActiveWidgets(activeWidgets);
     }
   ),
 

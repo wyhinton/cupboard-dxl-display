@@ -75,17 +75,15 @@ export default class LayoutData {
   }
 
   clearCards(): void {
-    console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
         this.layout[k] = [];
       }
     }
+    console.log(this.layout);
   }
 
   addCard(toAdd: CardData, pos: GridPosition): void {
-    console.log("ADDING CARD AT LAYOUT DATA");
-    console.log(this.layout);
     const lg = Object.entries(this.layout)[0][1];
     if (lg.map((l) => l.i).includes(toAdd.sourceId)) {
       console.log("ADDING SOMETHING THAT'S ALREADY PRESENT");
@@ -105,9 +103,9 @@ export default class LayoutData {
     // console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
     // console.log(this.layout);
     const lg = Object.entries(this.layout)[0][1];
-    if (lg.map((l) => l.i).includes(toAdd.id)) {
-      console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
-    }
+    // if (lg.map((l) => l.i).includes(toAdd.id)) {
+    //   console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
+    // }
     this.layoutWidgets.push(toAdd);
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
@@ -124,9 +122,6 @@ export default class LayoutData {
     this.layout = JSON.parse(JSON.stringify(this.sourceLayout));
   }
   setGridLayout(newGridLayout: Layouts): void {
-    console.log(`SETTING GRID LAYOUT OF ${this.id}`);
-    console.log(newGridLayout);
-
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
         this.layout[k] = newGridLayout[k];
@@ -138,13 +133,11 @@ export default class LayoutData {
     return lg.map((l: any) => l.i);
   }
   widgets(): string[] {
-    console.log("GETTING WIDGETS AT WIDGET LAYOUTDATA");
     const lg = Object.entries(this.layout)[0][1];
-    console.log(lg);
+    console.log(this.layout.lg);
     const justWidgets = lg.filter((l: any) =>
       appConfig.widgetIds.includes(l.i)
     );
-    console.log("just widgets", justWidgets);
     return justWidgets.map((l: any) => l.i);
   }
 }

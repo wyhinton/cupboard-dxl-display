@@ -45,7 +45,7 @@
     "test": "react-scripts test",
     "fix": "eslint --fix --ext .ts,.tsx .",
     "fix-style": "eslint --fix --rule \"react/jsx-sort-props: ['warn']\"",
-    "fix-imports": "eslint --fix --rule simple-import-sort/imports: ['warn']'",
+    "fix-imports": "eslint --fix --ext .tsx --rule \"simple-import-sort/imports: ['warn']\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },

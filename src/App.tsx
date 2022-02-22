@@ -46,26 +46,19 @@ const App = (): JSX.Element => {
   } = useLayout();
 
   console.log(externalLayouts[1]);
+  console.log(activeWidgets);
 
   const { appMode, toggleAppMode, rotateLayouts, sheetsAreLoaded } = useApp();
-
-  // useInterval(() => {
-  //   if (appMode === AppMode.DISPLAY && rotateLayouts) {
-  //     useNextLayout();
-  //   }
-  // }, appConfig.rotationDuration);
-
-  // useEffect(() => {
-  //   if (appMode === AppMode.EDIT) {
-  //     toggleAppMode();
-  //   }
-  // }, [isIdle]);
 
   useEffectOnce(() => {
     fetchTopLevelSheetThunk();
   });
 
   const { width, height } = useWindowSize();
+
+  useEffect(() => {
+    console.log(activeWidgets);
+  }, [activeWidgets]);
   return (
     <>
       <HowToUse />
@@ -80,11 +73,13 @@ const App = (): JSX.Element => {
               {activeLayout && sheetsAreLoaded && (
                 <CardLayout
                   appMode={appMode}
+                  cols={appConfig.gridCols}
+                  rows={appConfig.gridRows}
                   cards={[...activeCards]}
                   height={height}
                   isDraggable={appMode === AppMode.EDIT}
                   isResizable={appMode === AppMode.EDIT}
-                  layout={activeLayout}
+                  layout={activeLayout.layout}
                   margin={[20, 20]}
                   onLayoutChange={(l) => {
                     const newLayout: Layouts = {
@@ -97,6 +92,7 @@ const App = (): JSX.Element => {
                     if (appMode === AppMode.EDIT) {
                       activeLayout.setGridLayout(newLayout);
                     }
+                    console.log(l);
                     setBufferLayout(newLayout);
                   }}
                   widgets={[...activeWidgets]}

@@ -23,38 +23,39 @@ const PopOver = ({
   const windowSize = useWindowSize();
   const scale = 0.4;
   return createPortal(
-    // <AnimatePresence>
     <>
-      {visible && (
-        <motion.div
-          animate={{
-            opacity: 1,
-            transition: {
-              delay: 0.1,
-              duration: 0.5,
-              ease: "circIn",
-            },
-          }}
-          exit={{ opacity: 0 }}
-          style={{
-            backgroundColor: "white",
-            boxShadow: "0 8px 32px 0 rgba(49, 49, 49, 0.37)",
-            width: width ?? windowSize.width * scale,
-            height: height ?? windowSize.height * scale,
-            position: "absolute",
-            x: x,
-            y: y,
-            transformBox: "view-box",
-            transformOrigin: "top left",
-            borderRadius: ".5em",
-            overflow: "hidden",
-          }}
-        >
-          {children}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            animate={{
+              opacity: 1,
+              transition: {
+                delay: 0.1,
+                duration: 0.2,
+                ease: "circIn",
+              },
+            }}
+            exit={{ opacity: 0 }}
+            style={{
+              backgroundColor: "white",
+              boxShadow: "0 8px 32px 0 rgba(49, 49, 49, 0.37)",
+              width: width ?? windowSize.width * scale,
+              height: height ?? windowSize.height * scale,
+              position: "absolute",
+              x: x,
+              y: y,
+              transformBox: "view-box",
+              transformOrigin: "top left",
+              borderRadius: ".5em",
+              overflow: "hidden",
+            }}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>,
-    // </AnimatePresence>,
+
     document.querySelector("#popup-container") as HTMLDivElement
   );
 };

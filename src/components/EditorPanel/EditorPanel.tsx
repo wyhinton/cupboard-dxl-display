@@ -38,7 +38,7 @@ const EditorPanel = (): JSX.Element => {
       defaultPosition={{ x: 100, y: 100 }}
       handle=".editor-panel-handle"
     >
-      <div className={editorClass}>
+      <div className={editorClass} id="editor-panel">
         <PanelHeader>
           <BarButton
             icon={<PlusIcon />}

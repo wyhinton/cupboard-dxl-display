@@ -3,7 +3,7 @@ import "../../css/libs/reactDraggable.css";
 
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import React, { useEffect } from "react";
-import { Layout, Responsive, WidthProvider } from "react-grid-layout";
+import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
 
 import CardData from "../../data_structs/CardData";
 import LayoutData from "../../data_structs/LayoutData";
@@ -25,15 +25,20 @@ export const CardLayout = ({
   onLayoutChange,
   cards,
   widgets,
+  cols,
+  rows,
   isDraggable,
   isResizable,
   useControls,
 }: {
-  layout: LayoutData;
+  layout: Layouts | undefined;
+  // layout: LayoutData;
   appMode: AppMode;
   width: number;
   height: number;
   margin: [number, number];
+  cols: number;
+  rows: number;
   onLayoutChange?: (l: Layout[]) => void;
   cards: CardData[];
   widgets: WidgetData[];
@@ -54,11 +59,11 @@ export const CardLayout = ({
   const sharedGridSettings = {
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: {
-      lg: appConfig.gridCols,
-      md: appConfig.gridCols,
-      sm: appConfig.gridCols,
-      xs: appConfig.gridCols,
-      xxs: appConfig.gridCols,
+      lg: cols,
+      md: cols,
+      sm: cols,
+      xs: cols,
+      xxs: cols,
     },
     rowHeight: (height - appConfig.gridBottomPadding) / appConfig.gridRows,
     margin: margin,
@@ -66,6 +71,7 @@ export const CardLayout = ({
     compactType: null,
   };
 
+  console.log(widgets);
   return (
     <div>
       <div className="card-grid-container">
@@ -74,7 +80,7 @@ export const CardLayout = ({
           className="card-layout"
           isDraggable={isDraggable ?? false}
           isResizable={isResizable ?? false}
-          layouts={activeLayout ? activeLayout.layout : { lg: [] }}
+          layouts={layout ?? { lg: [] }}
           onDragStart={(layout, oldItem, newItem, placeholder, e, element) => {
             const previousStyle = element.style;
             previousStyle.border = "2px solid cyan";
@@ -123,6 +129,7 @@ export const CardLayout = ({
                             return (
                               <WidgetWrapper
                                 widget={card as WidgetData}
+                                // widget={card as WidgetData}
                                 scale={scale}
                               />
                             );
@@ -131,7 +138,6 @@ export const CardLayout = ({
                     </ViewCard>
                   </IXDrop>
                 </motion.div>
-                // </div>
               );
             }
           )}

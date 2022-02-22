@@ -1,25 +1,27 @@
+import { WidgetInfo } from "../static/widgets";
 import { ContentType } from "./CardData";
 
-export type WidgetType = "clock"|"group label"|"info"
+export type WidgetType = "clock" | "info";
 
-interface WidgetCardData{
-  widgetType: WidgetType;
-}
 /**Contains all the information needed to create a display card */
 export default class WidgetData {
-  readonly id: string;
-  readonly contentType: ContentType
+  readonly id: WidgetType;
+  readonly contentType: ContentType;
+  readonly w: number;
+  readonly h: number;
+
   isActive: boolean;
 
-
-  constructor(name: WidgetType) {
-    this.id = name as string
+  constructor(data: WidgetInfo) {
+    // constructor(name: WidgetType) {
+    this.id = data.id;
+    this.w = data.w;
+    this.h = data.h;
+    // this.id = name as string;
     this.isActive = false;
-    this.contentType = "widget"
+    this.contentType = "widget";
   }
   setActive(b: boolean): void {
     this.isActive = b;
   }
-
 }
- 

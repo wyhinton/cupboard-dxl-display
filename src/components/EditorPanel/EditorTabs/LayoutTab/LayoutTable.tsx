@@ -14,6 +14,7 @@ import PopOver from "../../PopOver";
 import CardLayout from "../../../CardLayout/CardLayout";
 import LayoutData from "../../../../data_structs/LayoutData";
 import IXDrop from "../../../DragAndDrop/IXDrop";
+import appConfig from "../../../../static/appConfig";
 /**
  * Displays the available layouts.
  */
@@ -132,9 +133,11 @@ const LayoutTitle = ({ layout }: { layout: LayoutData }): JSX.Element => {
             }}
           >
             <CardLayout
+              cols={appConfig.gridCols}
+              rows={appConfig.gridRows}
               width={width}
               height={height}
-              layout={layout}
+              layout={layout.layout}
               margin={[20, 20]}
               appMode={AppMode.DISPLAY}
               onLayoutChange={(l) => {}}

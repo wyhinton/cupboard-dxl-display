@@ -18,7 +18,7 @@ const DraggableRow = ({
   children,
   dragAll,
   ...properties
-}: DraggableRowProperties) => {
+}: DraggableRowProperties): JSX.Element => {
   if (!React.isValidElement(children)) return <div />;
   return (
     <Draggable {...properties}>
