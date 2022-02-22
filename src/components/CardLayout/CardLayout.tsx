@@ -15,6 +15,7 @@ import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
 import WidgetWrapper from "./ViewCard/WidgetWrapper";
 import IXDrop from "../DragAndDrop/IXDrop";
+import WidgetRenderer from "../Widgets/WidgetRenderer";
 
 export const CardLayout = ({
   layout,
@@ -65,7 +66,8 @@ export const CardLayout = ({
       xs: cols,
       xxs: cols,
     },
-    rowHeight: (height - appConfig.gridBottomPadding) / appConfig.gridRows,
+    rowHeight: height / appConfig.gridRows,
+    // rowHeight: (height - appConfig.gridBottomPadding) / appConfig.gridRows,
     margin: margin,
     preventCollision: true,
     compactType: null,
@@ -127,10 +129,9 @@ export const CardLayout = ({
                           }
                         : (scale) => {
                             return (
-                              <WidgetWrapper
+                              <WidgetRenderer
                                 widget={card as WidgetData}
-                                // widget={card as WidgetData}
-                                scale={scale}
+                                scale={1}
                               />
                             );
                           }}

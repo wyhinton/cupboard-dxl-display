@@ -8,13 +8,20 @@ import { useIdle } from "react-use";
 const AppTimers = ({ children }: { children: JSX.Element }): JSX.Element => {
   const isIdle = useIdle(appConfig.idleTime, false);
 
-  const { appMode, toggleAppMode, rotateLayouts, sheetsAreLoaded } = useApp();
+  const {
+    appMode,
+    toggleAppMode,
+    rotateLayouts,
+    sheetsAreLoaded,
+    transitionLayout,
+  } = useApp();
 
   const { useNextLayout } = useLayout();
 
   const { reset, stop } = useInterval(() => {
     if (appMode === AppMode.DISPLAY && rotateLayouts) {
-      useNextLayout();
+      transitionLayout(1);
+      // useNextLayout();
     }
   }, appConfig.rotationDuration);
 

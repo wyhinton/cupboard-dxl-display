@@ -17,6 +17,7 @@ import {
   useApp,
   useEffectOnce,
   useLayout,
+  useSheets,
   useStoreActions,
   useWindowSize,
 } from "./hooks";
@@ -30,28 +31,15 @@ import AppTimers from "./components/AppWrappers/AppTimers";
  */
 
 const App = (): JSX.Element => {
-  // const isIdle = useIdle(appConfig.idleTime, false);
+  const { fetchTopLevelSheet } = useSheets();
 
-  const fetchTopLevelSheetThunk = useStoreActions(
-    (actions) => actions.googleSheetsModel.fetchTopLevelSheet
-  );
+  const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
+    useLayout();
 
-  const {
-    activeLayout,
-    setBufferLayout,
-    activeCards,
-    activeWidgets,
-    useNextLayout,
-    externalLayouts,
-  } = useLayout();
-
-  console.log(externalLayouts[1]);
-  console.log(activeWidgets);
-
-  const { appMode, toggleAppMode, rotateLayouts, sheetsAreLoaded } = useApp();
+  const { appMode, sheetsAreLoaded } = useApp();
 
   useEffectOnce(() => {
-    fetchTopLevelSheetThunk();
+    fetchTopLevelSheet();
   });
 
   const { width, height } = useWindowSize();
@@ -61,7 +49,6 @@ const App = (): JSX.Element => {
   }, [activeWidgets]);
   return (
     <>
-      <HowToUse />
       <Background />
       <ModeChangeButton />
       <AppTimers>
@@ -73,9 +60,8 @@ const App = (): JSX.Element => {
               {activeLayout && sheetsAreLoaded && (
                 <CardLayout
                   appMode={appMode}
-                  cols={appConfig.gridCols}
-                  rows={appConfig.gridRows}
                   cards={[...activeCards]}
+                  cols={appConfig.gridCols}
                   height={height}
                   isDraggable={appMode === AppMode.EDIT}
                   isResizable={appMode === AppMode.EDIT}
@@ -92,9 +78,9 @@ const App = (): JSX.Element => {
                     if (appMode === AppMode.EDIT) {
                       activeLayout.setGridLayout(newLayout);
                     }
-                    console.log(l);
                     setBufferLayout(newLayout);
                   }}
+                  rows={appConfig.gridRows}
                   widgets={[...activeWidgets]}
                   width={width}
                 />

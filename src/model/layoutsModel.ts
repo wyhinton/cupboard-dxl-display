@@ -1,26 +1,15 @@
-import {
-  Action,
-  action,
-  computed,
-  Computed,
-  Thunk,
-  thunk,
-  ThunkOn,
-  thunkOn,
-} from "easy-peasy";
+import type { Action, Computed, Thunk, ThunkOn } from "easy-peasy";
+import { action, computed, thunk, thunkOn } from "easy-peasy";
 import { Layouts } from "react-grid-layout";
 
-import CardData from "../data_structs/CardData";
 import LayoutData from "../data_structs/LayoutData";
-import type { SheetNames } from "../enums";
-import { AppMode } from "../enums";
+import AppError from "../interfaces/AppError";
 import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
 import RawLayoutRow from "../interfaces/RawLayoutRow";
 import appConfig from "../static/appConfig";
-import defaultStaticLayout from "../static/defaultStaticLayout";
-import { StoreModel } from "./index";
 import backupData from "../static/backupLayout.json";
-import AppError from "../interfaces/AppError";
+import { StoreModel } from "./index";
+
 export interface LayoutsModel {
   //state
   activeLayout: LayoutData | undefined;
@@ -36,7 +25,6 @@ export interface LayoutsModel {
   setActiveLayout: Action<LayoutsModel, LayoutData>;
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;
-  // setTempLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
 
   layoutsString: Computed<LayoutsModel, string>;
@@ -47,9 +35,12 @@ export interface LayoutsModel {
   deleteCard: Thunk<LayoutsModel, string, StoreModel>;
   clearCards: Thunk<LayoutsModel, never, StoreModel>;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
-  addWidget: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
   resetLayout: Thunk<LayoutsModel, never, StoreModel>;
   addLayoutError: Action<LayoutsModel, AppError>;
+
+  animationCounter: number;
+  transitionLayout: Thunk<LayoutsModel, number>;
+  setAnimationCounter: Action<LayoutsModel, number>;
 }
 
 const layoutsModel: LayoutsModel = {
@@ -59,8 +50,7 @@ const layoutsModel: LayoutsModel = {
   layoutErrors: [],
   bufferLayout: backupData as unknown as Layouts,
   layoutsString: computed([(state) => state.bufferLayout], (bufferLayout) => {
-    const val = JSON.stringify(bufferLayout);
-    return val;
+    return JSON.stringify(bufferLayout);
   }),
 
   //listeners
@@ -69,18 +59,17 @@ const layoutsModel: LayoutsModel = {
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     (actions, target, { getState }) => {
-      //TODO: ERROR HANDLING FOR LAYOUTS
       target.payload.getSheetRows<RawLayoutRow>("LAYOUTS").then((rows) => {
         const rawLayoutRows = rows;
         const layouts: LayoutData[] = [];
-        const curLayoutIds = getState().externalLayouts.map(
-          (layout) => layout.id
+        const currentLayoutIds = new Set(
+          getState().externalLayouts.map((layout) => layout.id)
         );
 
-        rawLayoutRows.forEach((row) => {
+        for (const row of rawLayoutRows) {
           try {
             const l = new LayoutData(row);
-            if (!curLayoutIds.includes(l.id)) {
+            if (!currentLayoutIds.has(l.id)) {
               layouts.push(l);
             }
           } catch (error) {
@@ -92,10 +81,8 @@ const layoutsModel: LayoutsModel = {
               source: row.title ?? "NO TITLE PROVIDED",
               link: "none",
             });
-            console.log(error);
           }
-        });
-        let defaultLayout: LayoutData;
+        }
         if (appConfig.useStaticLayout) {
           // actions.setActiveLayout(defaultLayout);
           // actions.setBufferLayout(defaultLayout.layout);
@@ -104,7 +91,6 @@ const layoutsModel: LayoutsModel = {
             (layout) => layout.title === appConfig.defaultLayoutName
           )[0];
           if (defaultLayout) {
-            console.log(defaultLayout);
             actions.setActiveLayout(defaultLayout);
             actions.setBufferLayout(defaultLayout.layout);
           }
@@ -138,31 +124,21 @@ const layoutsModel: LayoutsModel = {
   ),
   //simple setters
   setActiveLayout: action((state, newActiveLayout) => {
-    console.log(newActiveLayout);
     state.activeLayout = newActiveLayout;
     state.bufferLayout = JSON.parse(JSON.stringify(newActiveLayout.layout));
   }),
   setNextLayout: thunk((actions, _, { getState }) => {
     const { externalLayouts, activeLayout } = getState();
-
-    // const possibleLayouts = externalLayouts.filter(
-    //   (l) => l.id !== activeLayout?.id
-    // );
     if (activeLayout) {
-      const curIndex = externalLayouts
+      const currentIndex = externalLayouts
         .map((l) => l.id)
         .indexOf(activeLayout?.id);
-      const nextIndex = (curIndex + 1) % externalLayouts.length;
-      console.log(
-        `SETTING LAYOUT INDEX TO ${nextIndex} - ${externalLayouts[nextIndex].id} `
-      );
+      const nextIndex = (currentIndex + 1) % externalLayouts.length;
       const selectedRandom = externalLayouts[nextIndex];
-      console.log(selectedRandom);
       actions.setActiveLayout(selectedRandom);
     }
   }),
   setExternalLayouts: action((state, newLayoutArray) => {
-    console.log("setting external layouts");
     state.externalLayouts = newLayoutArray;
   }),
   //mutators
@@ -187,18 +163,17 @@ const layoutsModel: LayoutsModel = {
   clearCards: thunk((actions, _, { getState }) => {
     const { activeLayout } = getState();
     if (activeLayout) {
-      // const buf = getState().bufferLayout;
-      // activeLayout.layout = buf;
       activeLayout.clearCards();
-      console.log(activeLayout.layout.lg);
       actions.setBufferLayout(activeLayout.layout);
       actions.setActiveLayout(activeLayout);
     }
   }),
   addCard: thunk((actions, cardAddEvent, { getState, getStoreState }) => {
-    const { availableCards } = getStoreState().appModel;
+    const { availableCards, availableWidgets } = getStoreState().appModel;
     const { sourceId, targetPosition } = cardAddEvent;
-    const cardToAdd = availableCards.find((c) => c.sourceId == sourceId);
+    const cardToAdd = [...availableCards, ...availableWidgets].find(
+      (c) => c.id == sourceId
+    );
     const { activeLayout } = getState();
     if (activeLayout && cardToAdd) {
       const buf = getState().bufferLayout;
@@ -207,20 +182,6 @@ const layoutsModel: LayoutsModel = {
       actions.setActiveLayout(activeLayout);
     }
   }),
-  addWidget: thunk((actions, cardAddEvent, { getState, getStoreState }) => {
-    console.log("ADDING NEW WIDGET!!!");
-    const { availableWidgets } = getStoreState().appModel;
-    const { sourceId, targetPosition } = cardAddEvent;
-    const widgetToAdd = availableWidgets.find((c) => c.id == sourceId);
-    const { activeLayout } = getState();
-    if (activeLayout && widgetToAdd) {
-      const buf = getState().bufferLayout;
-      activeLayout.setGridLayout(buf);
-      activeLayout?.addWidget(widgetToAdd, targetPosition);
-      actions.setActiveLayout(activeLayout);
-    }
-  }),
-
   resetLayout: thunk((actions, _, { getState }) => {
     const { activeLayout } = getState();
     if (activeLayout) {
@@ -232,7 +193,6 @@ const layoutsModel: LayoutsModel = {
     }
   }),
   setBufferLayout: action((state, layouts) => {
-    console.log(layouts);
     state.bufferLayout = JSON.parse(JSON.stringify(layouts));
   }),
   updateLayout: action((state, swap) => {
@@ -241,6 +201,17 @@ const layoutsModel: LayoutsModel = {
       old.swapCard(swap);
       state.activeLayout = old;
     }
+  }),
+  animationCounter: 0,
+  setAnimationCounter: action((state, value) => {
+    state.animationCounter += 1;
+  }),
+
+  transitionLayout: thunk((actions, val, { getState }) => {
+    actions.setAnimationCounter(getState().animationCounter + 1);
+    setTimeout(() => {
+      actions.setNextLayout();
+    }, 1000);
   }),
 };
 

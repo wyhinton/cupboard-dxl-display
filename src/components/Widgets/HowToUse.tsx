@@ -3,7 +3,9 @@ import "../../css/clock.css";
 import React, { useEffect, useState } from "react";
 import Button from "../Shared/Button";
 import { HandUpIcon } from "evergreen-ui";
-import { useToggle } from "../../hooks";
+import { useApp, useToggle } from "../../hooks";
+import { AppMode } from "../../enums";
+import HowToUsePopUp from "../HowToUse/HowToUsePopUp";
 
 /**
  * Simple clock widget for displaying the current time.
@@ -14,9 +16,9 @@ const HowToUse = (): JSX.Element => {
 
   const containerStyle = {
     height: "100%",
-    padding: ".25em",
+    // padding: ".25em",
     width: "100%",
-    fontSize: "4vw",
+    fontSize: "9vmin",
     fontWeight: 600,
     color: "white",
     boxSizing: "border-box",
@@ -36,19 +38,27 @@ const HowToUse = (): JSX.Element => {
     setDate(new Date());
   }
 
+  const { appMode } = useApp();
+
   return (
-    <div style={containerStyle} id="how-to-use-button-container">
+    <div style={containerStyle} id="how-to-use-button-widget">
+      {/* {appMode === AppMode.DISPLAY && ( */}
+      <HowToUsePopUp active={visible} onClose={toggleVisible} />
+      {/* )} */}
+      {/* {appMode === AppMode.DISPLAY && ( */}
       <Button
-        fontSize={"xx-large"}
-        height={"5vh"}
-        width={"35vw"}
+        appearance="primary"
+        className="how-to-use-button"
+        fontSize="xx-large"
+        // height="4vh"
         iconBefore={<HandUpIcon />}
         onClick={toggleVisible}
-        appearance="primary"
         text="Learn how to use this display"
-        className={"how-to-use-button"}
-        containerClass={"custom-button-wrapper"}
+        // width="35vw"
+        width="100%"
+        height="100%"
       />
+      {/* )} */}
     </div>
   );
 };

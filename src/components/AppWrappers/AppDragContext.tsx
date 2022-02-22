@@ -34,7 +34,7 @@ const AppDragContext = ({
 }: {
   children: JSX.Element | JSX.Element[];
 }): JSX.Element => {
-  const { addCard, swapCard, addWidget, setActiveLayout } = useLayout();
+  const { addCard, swapCard, setActiveLayout } = useLayout();
 
   const externalLayoutsState = useStoreState(
     (state) => state.layoutsModel.externalLayouts
@@ -71,15 +71,12 @@ const AppDragContext = ({
         }
         break;
       case DragSource.WIDGETS_TABLE:
-        // console.log(draggableId);
-        // console.log(destination.droppableId);
-        // console.log("DRAGGING FROM WIDGETS TABLE");
         const cardPos = stringToGridPos(destination.droppableId);
         const addEvent = {
           sourceId: draggableId,
           targetPosition: cardPos,
         } as CardAddEvent;
-        addWidget(addEvent);
+        addCard(addEvent);
         break;
       case DragSource.LAYOUT_TABLE:
         const newLayout = externalLayoutsState.filter(

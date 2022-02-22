@@ -10,6 +10,7 @@ import {
 import formEmbedUrl from "../../../../static/formEmbedUrl";
 import Button from "../../../Shared/Button";
 import Panel from "../../../Shared/Panel";
+import TabPane from "../TabPane";
 import GoogleFormPopup from "./GoogleFormPopup";
 import LayoutTable from "./LayoutTable";
 
@@ -30,11 +31,10 @@ const LayoutTab = (): JSX.Element => {
 
   return (
     <div>
-      <div
+      <TabPane
         style={{
           display: "flex",
           width: "100%",
-          padding: ".5em",
           justifyContent: "flex-start",
         }}
       >
@@ -48,7 +48,7 @@ const LayoutTab = (): JSX.Element => {
           intent="success"
           appearance="primary"
         />
-      </div>
+      </TabPane>
       {showNewLayoutPopup && (
         <GoogleFormPopup
           onCloseComplete={() => {

@@ -1,25 +1,14 @@
-import {
-  Action,
-  action,
-  computed,
-  Computed,
-  debug,
-  Thunk,
-  thunk,
-  ThunkOn,
-  thunkOn,
-} from "easy-peasy";
+import type { Action, Thunk, ThunkOn } from "easy-peasy";
+import { action, thunk, thunkOn } from "easy-peasy";
 import _ from "lodash";
-import { Layout } from "react-grid-layout";
 
 import CardData from "../data_structs/CardData";
-import WidgetData, { WidgetType } from "../data_structs/WidgetData";
+import WidgetData from "../data_structs/WidgetData";
 import { AppMode } from "../enums";
 import AppError from "../interfaces/AppError";
 import type RawCardRow from "../interfaces/RawCardRow";
 import appConfig from "../static/appConfig";
 import widgets from "../static/widgets";
-// import defaultGridLayout from "../static/defaultStaticLayout";
 import { StoreModel } from "./index";
 /**
  * Core app model
@@ -32,15 +21,12 @@ export interface AppDataModel {
   availableCards: CardData[];
   availableWidgets: WidgetData[];
   activeWidgets: WidgetData[];
-  // activeWidgets: Computed<AppDataModel, WidgetData[], StoreModel>;
-  // activeWidgets: WidgetData[];
   activeCards: CardData[];
   rotationSpeed: number;
   rotateLayouts: boolean;
-  // currentLayout: Layouts;
   appMode: AppMode;
   appErrors: AppError[];
-
+  // animationCounter: number;
   //listeners
   onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
   onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
@@ -53,9 +39,11 @@ export interface AppDataModel {
   setRotationSpeed: Action<AppDataModel, number>;
   setRotateLayouts: Action<AppDataModel, boolean>;
   setAppMode: Action<AppDataModel, AppMode>;
+  // setAnimationCounter: Action<AppDataModel, number>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setActiveWidgets: Action<AppDataModel, WidgetData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
+  // transitionLayout: Thunk<AppDataModel, number>;
 }
 
 const availableWidgets = Object.values(widgets).map(
@@ -73,6 +61,7 @@ const appModel: AppDataModel = {
   rotateLayouts: true,
   rotationSpeed: appConfig.rotationDuration,
   appMode: AppMode.DISPLAY,
+  // animationCounter: 0,
   //managers
   /**Control side effects for altering the view state of the app, and dispatch a setter for the state */
   manageViewModeChange: thunk((actions, viewModeEnum) => {
@@ -85,7 +74,7 @@ const appModel: AppDataModel = {
       case AppMode.CYCLE:
         break;
       default:
-        console.log("reached default in set view mode thunk");
+        undefined;
     }
   }),
   toggleAppMode: thunk((actions, _, { getState }) => {
@@ -119,6 +108,17 @@ const appModel: AppDataModel = {
   setRotateLayouts: action((state, should) => {
     state.rotateLayouts = should;
   }),
+  // transitionLayout: thunk((actions, val, {getState}) => {
+
+  //   actions.setAnimationCounter(getState().animationCounter+1)
+  //   setTimeout(()=>{
+  //     actions.set
+  //   })
+  // }),
+  // setAnimationCounter: action((state, value) => {
+  //   state.animationCounter += 1;
+  // }),
+
   addAppError: action((state, error) => {
     const errorsString = state.appErrors.map(
       (error) => JSON.stringify(error) as string
@@ -149,7 +149,9 @@ const appModel: AppDataModel = {
           } as RawCardRow;
         });
 
-        const cards = rawCardRowsArray.map((c: RawCardRow) => new CardData(c));
+        const cards = rawCardRowsArray.map(
+          (c: RawCardRow, index) => new CardData(c, index)
+        );
         actions.setAvailableCards(cards);
       });
     }
@@ -158,48 +160,25 @@ const appModel: AppDataModel = {
     (actions, storeActions) => storeActions.layoutsModel.setActiveLayout,
     async (actions, layout, { getState }) => {
       const activeSourceIds = new Set(layout.payload.sources());
-      const activeWidgetIds = new Set(
-        layout.payload.layoutWidgets.map((w) => w.id) ?? []
-      );
-      console.log("DOING ON SET ACTIVE LAYOUT");
-      console.log(layout.payload.layout);
-      console.log(layout.payload.widgets());
+
       const { availableWidgets } = getState();
-      // const availableIds = availableWidgets.map(w=>w)
       actions.setActiveWidgets(
         availableWidgets.filter((w) => layout.payload.widgets().includes(w.id))
       );
 
       const availableCardsUpdated = getState().availableCards.map((card) => {
-        if (activeSourceIds.has(card.sourceId)) {
+        if (activeSourceIds.has(card.id)) {
           card.setActive(true);
         } else {
           card.setActive(false);
         }
         return card;
       });
-
-      const availableWidgetsUpdated = getState().availableWidgets.map(
-        (widget) => {
-          if (activeSourceIds.has(widget.id)) {
-            widget.setActive(true);
-          } else {
-            widget.setActive(false);
-          }
-          return widget;
-        }
-      );
-
       const activeCards = getState().availableCards.filter((card) => {
-        return activeSourceIds.has(card.sourceId);
-      });
-      const activeWidgets = availableWidgets.filter((card) => {
-        return activeWidgetIds.has(card.id);
+        return activeSourceIds.has(card.id);
       });
       actions.setAvailableCards(availableCardsUpdated);
-      // actions.setActiveWidgets(availableWidgetsUpdated);
       actions.setActiveCards(activeCards);
-      // actions.setActiveWidgets(activeWidgets);
     }
   ),
 
@@ -207,14 +186,11 @@ const appModel: AppDataModel = {
     (actions, storeActions) => storeActions.layoutsModel.swapCardContent,
     async (actions, payload, { getState }) => {
       const newCards = getState().activeCards.map((c) => {
-        if (c.sourceId === payload.payload.targetId) {
-          const newSource = getState().availableCards.find(
-            (c) => c.sourceId === payload.payload.sourceId
-          );
-          return newSource;
-        } else {
-          return c;
-        }
+        return c.id === payload.payload.targetId
+          ? getState().availableCards.find(
+              (c) => c.id === payload.payload.sourceId
+            )
+          : c;
       });
       if (newCards) {
         actions.setActiveCards(newCards as CardData[]);

@@ -28,6 +28,7 @@ import {
   useKeyboardShortcut,
   useLayout,
   useOnClickOutside,
+  useStoreState,
 } from "../../../hooks";
 import appConfig from "../../../static/appConfig";
 import { randomNumber } from "../../../utils";
@@ -55,7 +56,6 @@ export interface CardModel {
   setShowMenu: Action<CardModel, boolean>;
   showMenu: boolean;
   toggleMenu: Action<CardModel>;
-  // transform: Computed<CardModel, string>;
 }
 
 export type CardErrorHandler = (
@@ -68,7 +68,6 @@ export type CardLoadHandler = (
 ) => void;
 
 interface ViewCardProperties {
-  // activeKey?: React.MutableRefObject<string>;
   cardId?: string;
   cardType: DndTypes;
   useAnimation: boolean;
@@ -88,20 +87,34 @@ interface ViewCardProperties {
 const ViewCard: FC<ViewCardProperties> = ({
   cardType,
   children,
-  // activeKey,
   cardId,
   data,
   onClick,
   useAnimation,
 }: ViewCardProperties) => {
   const cardContainerReference = useRef<HTMLDivElement>(null);
-  // const appMode = useStoreState((state) => state.appModel.appMode);
   const { appMode, addAppError } = useApp();
   const { deleteCard } = useLayout();
   const [oldCardView, setCardView] = useState(CardView.GRID);
   const [isError, setIsError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [activeChildren, setActiveChildren] = useState<ReactNode>();
+
+  const [animationVariant, setAnimationVariant] = useState(
+    data?.contentType === "widget" ? "loaded" : ""
+  );
+
+  const animationCounter = useStoreState(
+    (state) => state.layoutsModel.animationCounter
+  );
+
+  useEffect(() => {
+    if (appMode === AppMode.DISPLAY) {
+      setAnimationVariant("out");
+    }
+    if (data?.contentType === "widget") {
+      setAnimationVariant("loaded");
+    }
+  }, [animationCounter]);
 
   const [state, actions] = useLocalStore<CardModel>(
     () => ({
@@ -165,13 +178,13 @@ const ViewCard: FC<ViewCardProperties> = ({
         if (appMode === AppMode.DISPLAY && cardId != undefined) {
           switch (getState().cardView) {
             case CardView.GRID:
-              if (data?.contentType !== "widget") {
-                actions.setCardView(CardView.PREVIEW);
-                const el = document.getElementById(
-                  data?.id ?? "view_card"
-                ) as HTMLDivElement;
-                el.style.zIndex = "1000";
-              }
+              // if (data?.contentType !== "widget") {
+              //   actions.setCardView(CardView.PREVIEW);
+              //   const el = document.getElementById(
+              //     data?.id ?? "view_card"
+              //   ) as HTMLDivElement;
+              //   el.style.zIndex = "1000";
+              // }
               // console.log(data);
 
               break;
@@ -309,10 +322,6 @@ const ViewCard: FC<ViewCardProperties> = ({
   };
 
   const onError: CardErrorHandler = (event, card) => {
-    // addAppError({
-    //   errorType: "failed to load content",
-    //   description: "description",
-    // });
     const { title, src } = card;
     addAppError({
       errorType: "failed to load content",
@@ -321,44 +330,21 @@ const ViewCard: FC<ViewCardProperties> = ({
       link: src,
     });
     setIsError(true);
-
-    // console.log("Got Error");
   };
 
   const onLoad: CardLoadHandler = (event, card) => {
     if (appMode === AppMode.DISPLAY) {
       setAnimationVariant("loaded");
     }
-
     setIsLoaded(true);
-    // console.log("Got Error");
   };
 
   useEffect(() => {
-    if (cardContainerReference.current) {
-      const cardGrandParent =
-        cardContainerReference.current?.parentElement?.parentElement;
-      // console.log(cardGrandParent);
-      if (cardGrandParent) {
-        cardGrandParent.id = data?.id ?? "view_card";
-      }
-    }
-  }, []);
-
-  const jj = useMemo(() => {
-    if (cardContainerReference.current) {
-      const rect = cardContainerReference.current.getBoundingClientRect();
-      return calculateTransform2(rect);
-    }
-    // setVx(calculateTransform2(rect));
-  }, [state.cardView]);
-
-  useEffect(() => {
     if (state.cardView === CardView.PREVIEW) {
-      setAnimationVariant("preview");
+      // setAnimationVariant("preview");
     }
     if (state.cardView === CardView.GRID) {
-      setAnimationVariant("none");
+      // setAnimationVariant("none");
     }
     // if (state.)
   }, [state.cardView]);
@@ -377,93 +363,55 @@ const ViewCard: FC<ViewCardProperties> = ({
         duration: 0.2,
       },
     },
-    normal: {
-      opacity: 1,
-    },
     none: {
       opacity: 1,
       x: 0,
       y: 0,
     },
     error: {
-      // border: "1px solid red",
-      opacity: [1, 0],
+      // opacity: [1, 0],
       backgroundColor: "red",
-      // transition:
     },
     loaded: {
-      // border: "1px solid red",
-      outline: [`0px solid green`, `4px solid green`, `0px solid green`],
+      // opacity: [0, 1],
+      // y: [randomNumber(-50, -75), 0],
       opacity: 1,
       transition: {
         delay: randomNumber(0.4, 0.5),
         duration: 0.5,
       },
       x: 0,
-      y: 0,
-      // backgroundColor: "green",
-      // transition:
     },
-    in: {
-      opacity: 1,
-      y: 0,
+    out: {
+      y: randomNumber(-50, -75),
+      opacity: 0,
       transition: {
+        delay: randomNumber(0.1, 0.5),
         duration: 0.5,
-        delay: randomNumber(0.4, 1.5),
-        // ease: "easeOut",
       },
     },
-    // out: {
-    //   y: randomNumber(-50, 50),
-    //   opacity: [1, 0],
-    //   transition: {
-    //     delay: randomNumber(0.4, 1.5),
-    //     duration: 0.5,
-    //   },
-    // },
   };
 
-  const [animationVariant, setAnimationVariant] = useState("none");
-  // const [animate, setAnimate] = useState("in");
   useEffect(() => {
-    // console.log(children);
-    if (children) {
-      if (useAnimation) {
-        setAnimationVariant("out");
-        setTimeout(() => {
-          setAnimationVariant("in");
-          setActiveChildren(
-            children(state.scale, state.cardView, onError, onLoad)
-          );
-        }, 500);
-      } else {
-        setAnimationVariant("none");
-        setActiveChildren(
-          children(state.scale, state.cardView, onError, onLoad)
-        );
-      }
-    }
-  }, [children]);
-  // }, [children, state.cardView]);
+    console.log(animationVariant);
+  }, [animationVariant]);
 
   return (
     <motion.div
-      ref={cardContainerReference}
-      layoutId="viewcard"
+      animate={animationVariant}
       className={state.cardClass}
+      initial={data?.contentType === "widget" ? "loaded" : ""}
+      layoutId="viewcard"
+      ref={cardContainerReference}
       style={{
         transformOrigin: "center",
         willChange: "transform",
         height: "100%",
         backgroundColor: state.cardBackgroundColor,
         opacity: appMode === AppMode.DISPLAY ? 0 : 1,
-        // y: appMode === AppMode.DISPLAY ? randomNumber(100, 0) : 0,
         y: 0,
       }}
-      initial={appMode === AppMode.EDIT ? false : true}
       variants={variants}
-      // eslint-disable-next-line react/jsx-sort-props
-      animate={animationVariant}
     >
       {children && (
         <div className={cardModalBackdrop}>
@@ -479,7 +427,7 @@ const ViewCard: FC<ViewCardProperties> = ({
           >
             {/* {renderQrCode()} */}
             {renderInternals()}
-            {activeChildren}
+            {children(state.scale, state.cardView, onError, onLoad)}
             <SettingsMenu
               {...settingsMenuProperties}
               isShown={state.showMenu}

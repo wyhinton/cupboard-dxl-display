@@ -8,33 +8,110 @@ import { Layout, Layouts } from "react-grid-layout";
 
 import WidgetData, { WidgetType } from "../../../../data_structs/WidgetData";
 import { DndTypes, DragSource } from "../../../../enums";
-import { useLayout, useStoreState, useWindowSize } from "../../../../hooks";
+import {
+  useApp,
+  useLayout,
+  useStoreState,
+  useWindowSize,
+} from "../../../../hooks";
 import appConfig from "../../../../static/appConfig";
 import DraggableWidget from "../../../DragAndDrop/DraggableWidget";
 import IXDrop from "../../../DragAndDrop/IXDrop";
 import Clock from "../../../Widgets/Clock";
+import HowToUse from "../../../Widgets/HowToUse";
+import WidgetRenderer from "../../../Widgets/WidgetRenderer";
+import TabPane from "../TabPane";
 
 /**
  * Table for displaying the available card layouts
  */
 const WidgetsTab = (): JSX.Element => {
-  const { activeLayout } = useLayout();
+  const { activeLayout, activeWidgets } = useLayout();
   const availableWidgets = useStoreState(
     (state) => state.appModel.availableWidgets
   );
-  const [scalar, setScalar] = useState(1);
-  const { width, height } = useWindowSize();
+  //
+  // const {  } = useApp();
+
   const [widgetsToRender, setWidgetsToRender] =
     useState<WidgetData[]>(availableWidgets);
-  const [useLayouts, setuseLayouts] = useState<Layouts>({ lg: [] });
 
   useEffect(() => {
     setWidgetsToRender(
       availableWidgets.filter((w) => !activeLayout?.widgets().includes(w.id))
     );
-  }, [availableWidgets]);
+  }, [availableWidgets, activeLayout, activeWidgets.length]);
 
+  return (
+    <TabPane>
+      <div
+        style={{
+          backgroundColor: "#1f1f1f",
+          borderRadius: ".5em",
+          overflow: "hidden",
+          padding: "1em",
+        }}
+      >
+        {widgetsToRender.length == 0 ? (
+          <div>All Widgets in Use</div>
+        ) : (
+          <IXDrop
+            cardType={DndTypes.CLOCK}
+            className="widgets-container"
+            droppableId={DragSource.WIDGETS_TABLE}
+            isDropDisabled={false}
+          >
+            <WidgetWrapper>
+              {(scale, colWidth, rowHeight) => {
+                return widgetsToRender
+                  .filter((w) => !activeLayout?.widgets().includes(w.id))
+                  .map((w, i) => {
+                    return (
+                      <DraggableWidget
+                        className="draggable-widget"
+                        dndType={DndTypes.WIDGET}
+                        draggableId={w.id}
+                        height={scale * w.h * rowHeight}
+                        index={i}
+                        isDragDisabled={false}
+                        key={i}
+                        id={`widgets-tab-draggable-${w.id}`}
+                      >
+                        <WidgetRenderer
+                          widget={w}
+                          scale={scale}
+                          colWidth={colWidth}
+                          rowHeight={rowHeight}
+                        />
+                      </DraggableWidget>
+                    );
+                  });
+              }}
+            </WidgetWrapper>
+          </IXDrop>
+        )}
+      </div>
+    </TabPane>
+  );
+};
+
+export default WidgetsTab;
+
+const WidgetWrapper = ({
+  children,
+}: {
+  children: (
+    scale: number,
+    colWidth: number,
+    rowHeight: number
+  ) => JSX.Element | JSX.Element[];
+}): JSX.Element => {
   const editorPanelRef = useRef<HTMLDivElement>();
+  const [scalar, setScalar] = useState(1);
+  const { width, height } = useWindowSize();
+
+  const colWidth = width / appConfig.gridCols;
+  const rowHeight = height / appConfig.gridRows;
 
   useEffect(() => {
     editorPanelRef.current = document.getElementById(
@@ -44,72 +121,5 @@ const WidgetsTab = (): JSX.Element => {
     setScalar(editorPanelRef.current.getBoundingClientRect().width / width);
   }, [width]);
 
-  useEffect(() => {
-    console.log(scalar);
-  }, [scalar]);
-  const colWidth = width / appConfig.gridCols;
-  const rowHeight = height / appConfig.gridRows;
-
-  const renderWidget = (widgetId: WidgetType) => {
-    let widg = null;
-    switch (widgetId) {
-      case "clock":
-        widg = <Clock />;
-        break;
-      default:
-        widg = <Heading>hello</Heading>;
-    }
-
-    return widg;
-  };
-
-  // const testWidgs =
-
-  return (
-    <div style={{ width: "100%", height: "100%" }}>
-      {widgetsToRender.length == 0 ? (
-        <div>All Widgets in Use</div>
-      ) : (
-        <IXDrop
-          cardType={DndTypes.CLOCK}
-          className="widgets-container"
-          droppableId={DragSource.WIDGETS_TABLE}
-          isDropDisabled={false}
-        >
-          {widgetsToRender
-            .filter((w) => !activeLayout?.widgets().includes(w.id))
-            .map((w, i) => {
-              return (
-                <DraggableWidget
-                  className="draggable-widget"
-                  dndType={DndTypes.WIDGET}
-                  draggableId="clock"
-                  index={0}
-                  height={scalar * w.h * rowHeight}
-                  isDragDisabled={false}
-                >
-                  <div
-                    key={i}
-                    className="card-display"
-                    style={{
-                      // width: width,
-                      width: w.w * colWidth,
-                      height: w.h * rowHeight,
-                      transform: `scale(${scalar})`,
-                      transformOrigin: "top left",
-                      borderRadius: ".5em",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {renderWidget(w.id)}
-                  </div>
-                </DraggableWidget>
-              );
-            })}
-        </IXDrop>
-      )}
-    </div>
-  );
+  return <div>{children(scalar * 1.5, colWidth, rowHeight)}</div>;
 };
-
-export default WidgetsTab;

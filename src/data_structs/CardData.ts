@@ -23,7 +23,7 @@ export default class CardData {
   readonly src: string;
   readonly title: string;
   readonly added?: Date;
-  readonly sourceId: string;
+  // readonly sourceId: string;
   readonly author: string;
   readonly interaction: InteractionType;
   readonly contentType: ContentType;
@@ -32,13 +32,14 @@ export default class CardData {
   isActive!: boolean;
   failed!: boolean;
 
-  constructor(row: RawCardRow) {
+  constructor(row: RawCardRow, index: number) {
     // console.log(`GOT IMAGE CARD ROW: ${isImgLink(row.src)}`);
-    this.id = row.src;
+    this.id = `row_${index}_${row.title}`;
+    // this.id = row.src;
     this.src = row.src;
     this.title = row.title;
     this.added = new Date(row.added);
-    this.sourceId = row.src;
+    // this.sourceId = row.src;
     this.author = row.author;
     this.interaction =
       InteractionType[row.interaction as keyof typeof InteractionType];

@@ -90,10 +90,11 @@ export const useErrors = (): UseErrorProps => {
   };
 };
 
-interface UseAppProps {
+interface UseAppProperties {
   appMode: AppMode;
   rotationSpeed: number;
   setRotationSpeed: ActionCreator<number>;
+  transitionLayout: ThunkCreator<number, any>;
   toggleAppMode: ThunkCreator<void, any>;
   setRotateLayouts: ActionCreator<boolean>;
   rotateLayouts: boolean;
@@ -101,7 +102,7 @@ interface UseAppProps {
   sheetsAreLoaded: boolean;
 }
 
-export const useApp = (): UseAppProps => {
+export const useApp = (): UseAppProperties => {
   const toggleAppMode = useStoreActions(
     (actions) => actions.appModel.toggleAppMode
   );
@@ -114,6 +115,9 @@ export const useApp = (): UseAppProps => {
 
   const setRotationSpeed = useStoreActions(
     (actions) => actions.appModel.setRotationSpeed
+  );
+  const transitionLayout = useStoreActions(
+    (actions) => actions.layoutsModel.transitionLayout
   );
   const setRotateLayouts = useStoreActions(
     (actions) => actions.appModel.setRotateLayouts
@@ -132,6 +136,8 @@ export const useApp = (): UseAppProps => {
     setRotateLayouts,
     addAppError,
     sheetsAreLoaded,
+    transitionLayout,
+    // animationCounter,
   };
 };
 
@@ -143,7 +149,7 @@ interface useLayoutProps {
   deleteCard: ThunkCreator<string, any>;
   addCard: ThunkCreator<CardAddEvent, any>;
   swapCard: ThunkCreator<CardSwapEvent, any>;
-  addWidget: ThunkCreator<CardAddEvent, any>;
+  // addWidget: ThunkCreator<CardAddEvent, any>;
   setActiveLayout: ActionCreator<LayoutData>;
   useNextLayout: ThunkCreator<void, any>;
   clearCards: ThunkCreator<void, any>;
@@ -161,9 +167,9 @@ export const useLayout = (): useLayoutProps => {
     (actions) => actions.layoutsModel.swapCardContent
   );
 
-  const addWidget = useStoreActions(
-    (actions) => actions.layoutsModel.addWidget
-  );
+  // const addWidget = useStoreActions(
+  //   (actions) => actions.layoutsModel.addWidget
+  // );
 
   const deleteCard = useStoreActions(
     (actions) => actions.layoutsModel.deleteCard
@@ -201,7 +207,7 @@ export const useLayout = (): useLayoutProps => {
     deleteCard,
     addCard,
     swapCard,
-    addWidget,
+    // addWidget,
     setActiveLayout,
     useNextLayout,
     clearCards,
@@ -215,9 +221,9 @@ export const useKeyboardShortcut = ({
   disabled,
 }: {
   keyCode: number;
-  action: (e: KeyboardEvent) => void;
+  action: (event: KeyboardEvent) => void;
   disabled: boolean;
-}) => {
+}): { enable: () => void; disable: () => void } => {
   React.useEffect(() => {
     if (!disabled) {
       enable();

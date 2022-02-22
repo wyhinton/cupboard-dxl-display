@@ -3,11 +3,10 @@ import { Layout, Layouts } from "react-grid-layout";
 import type { CardSwapEvent } from "../interfaces/CardEvents";
 import type { GridPosition } from "../interfaces/GridPosition";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
-import appConfig from "../static/appConfig";
 import extendedLayoutTest from "../static/extendedLayoutTest";
+import widgets from "../static/widgets";
 import CardData from "./CardData";
 import WidgetData from "./WidgetData";
-import imageThumbnail from "image-thumbnail";
 
 export interface CardOptions {
   id: string;
@@ -46,7 +45,6 @@ export default class LayoutData {
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
     this.sourceLayout = JSON.parse(row.layout).layout;
-    console.log(JSON.parse(row.layout));
 
     this.layoutWidgets = JSON.parse(row.layout).layoutWidgets
       ? JSON.parse(row.layout).layoutWidgets
@@ -66,7 +64,6 @@ export default class LayoutData {
   }
 
   removeCard(toRemoveId: string): void {
-    console.log(this.layout);
     for (const [k, v] of Object.entries(this.layout)) {
       for (const [index, layoutValue] of v.entries()) {
         this.layout[k] = v.filter((l) => l.i !== toRemoveId);
@@ -80,12 +77,11 @@ export default class LayoutData {
         this.layout[k] = [];
       }
     }
-    console.log(this.layout);
   }
 
-  addCard(toAdd: CardData, pos: GridPosition): void {
+  addCard(toAdd: CardData | WidgetData, pos: GridPosition): void {
     const lg = Object.entries(this.layout)[0][1];
-    if (lg.map((l) => l.i).includes(toAdd.sourceId)) {
+    if (lg.map((l) => l.i).includes(toAdd.id)) {
       console.log("ADDING SOMETHING THAT'S ALREADY PRESENT");
     }
     for (const [k, v] of Object.entries(this.layout)) {
@@ -94,18 +90,12 @@ export default class LayoutData {
         y: pos.y,
         w: 1,
         h: 1,
-        i: toAdd.sourceId,
+        i: toAdd.id,
       };
       this.layout[k].push(newItem);
     }
   }
   addWidget(toAdd: WidgetData, pos: GridPosition): void {
-    // console.log("ADDING WIDGET AT LAYOUT DATA", toAdd);
-    // console.log(this.layout);
-    const lg = Object.entries(this.layout)[0][1];
-    // if (lg.map((l) => l.i).includes(toAdd.id)) {
-    //   console.log("ADDING A WIDGET THAT'S ALREADY PRESENT");
-    // }
     this.layoutWidgets.push(toAdd);
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
@@ -129,14 +119,13 @@ export default class LayoutData {
     }
   }
   sources(): string[] {
-    const lg = Object.entries(this.layout)[0][1];
-    return lg.map((l: any) => l.i);
+    const lg = this.layout.lg;
+    return lg.map((l: Layout) => l.i);
   }
   widgets(): string[] {
-    const lg = Object.entries(this.layout)[0][1];
-    console.log(this.layout.lg);
+    const lg = this.layout.lg;
     const justWidgets = lg.filter((l: any) =>
-      appConfig.widgetIds.includes(l.i)
+      Object.keys(widgets).includes(l.i)
     );
     return justWidgets.map((l: any) => l.i);
   }

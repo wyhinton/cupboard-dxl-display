@@ -135,22 +135,15 @@ const ContentsTab = (): JSX.Element => {
           <table style={{ padding: "2em" }}>
             <tbody>
               {filteredCards.map((card, index) => {
-                const {
-                  added,
-                  src,
-                  author,
-                  interaction,
-                  sourceId,
-                  isActive,
-                  title,
-                } = card;
+                const { added, id, author, interaction, isActive } = card;
                 return (
                   <DraggableRow
                     className={
                       isActive ? "content-row-active" : "content-row-inactive"
                     }
+                    card={card}
                     dndType={DndTypes.CARD_ROW}
-                    draggableId={sourceId}
+                    draggableId={id}
                     index={index}
                     isDragDisabled={isActive}
                     key={index.toString()}
