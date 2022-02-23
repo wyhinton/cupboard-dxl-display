@@ -14,7 +14,6 @@ interface AppConfig {
   defaultEmbedScale: number;
   //the default layout from your "layouts" google sheet to display
   defaultLayoutName: string;
-  //
   showModeSwitchButton: boolean;
   widgetIds: string[];
   useStaticLayout: boolean;
@@ -36,7 +35,7 @@ const appConfig: AppConfig = {
   showModeSwitchButton: false,
   useStaticLayout: false,
   gridBottomPadding: 50,
-  rotationDuration: 20000, //ms
+  rotationDuration: 100000, //ms
 };
 
 export default appConfig;

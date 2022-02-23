@@ -1,6 +1,6 @@
 import "../../../../css/table.css";
 
-import { SearchInput } from "evergreen-ui";
+import { IconButton, RefreshIcon, SearchInput } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -8,7 +8,7 @@ import ReactImageFallback from "react-image-fallback";
 
 import CardData from "../../../../data_structs/CardData";
 import { CardView, DndTypes, DragSource } from "../../../../enums";
-import { useLayout, useStoreState } from "../../../../hooks";
+import { useLayout, useSheets, useStoreState } from "../../../../hooks";
 import { formatDate } from "../../../../utils";
 import DraggableRow from "../../../DragAndDrop/DraggableRow";
 import IXDrop from "../../../DragAndDrop/IXDrop";
@@ -29,6 +29,7 @@ const ContentsTab = (): JSX.Element => {
   );
 
   const { clearCards, resetLayout } = useLayout();
+  const { fetchTopLevelSheet } = useSheets();
 
   const [filterKey, setFilterKey] = useState<string | undefined>();
   const [filterDirection, setFilterDirection] = useState(true);
@@ -87,25 +88,39 @@ const ContentsTab = (): JSX.Element => {
             setSearchTerm(event.currentTarget.value)
           }
           placeholder="search title"
-          width="80%"
+          width="90%"
         />
-        <Button
-          appearance="default"
-          intent="danger"
-          onClick={(_event) => {
-            resetLayout();
-          }}
-          text="Reset Layout"
-        />
-        <Button
-          appearance="minimal"
-          intent="danger"
-          onClick={(_event) => {
-            clearCards();
-          }}
-          // width={"10%"}
-          text="Clear All"
-        />
+        <FlexRow style={{ width: "100%", justifyContent: "space-around" }}>
+          <div style={{ height: "100%", width: "10%" }}>
+            <IconButton
+              icon={<RefreshIcon />}
+              width={"20%"}
+              onClick={(
+                _event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+              ) => {
+                fetchTopLevelSheet();
+              }}
+              height={"100%"}
+            />
+          </div>
+          <Button
+            appearance="default"
+            intent="danger"
+            onClick={(_event) => {
+              resetLayout();
+            }}
+            text="Reset Layout"
+          />
+          <Button
+            appearance="minimal"
+            intent="danger"
+            onClick={(_event) => {
+              clearCards();
+            }}
+            // width={"10%"}
+            text="Clear All"
+          />
+        </FlexRow>
       </FlexRow>
       <IXDrop
         cardType={DndTypes.CLOCK}
@@ -114,7 +129,7 @@ const ContentsTab = (): JSX.Element => {
         isDropDisabled
       >
         <table className="contents-tab-table">
-          <tbody>
+          <tbody onClick={(e) => {}}>
             <tr>
               {["title", "author", "added"].map((s, index) => {
                 return (

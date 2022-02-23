@@ -26,7 +26,6 @@ export interface AppDataModel {
   rotateLayouts: boolean;
   appMode: AppMode;
   appErrors: AppError[];
-  // animationCounter: number;
   //listeners
   onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
   onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
@@ -39,11 +38,9 @@ export interface AppDataModel {
   setRotationSpeed: Action<AppDataModel, number>;
   setRotateLayouts: Action<AppDataModel, boolean>;
   setAppMode: Action<AppDataModel, AppMode>;
-  // setAnimationCounter: Action<AppDataModel, number>;
   setActiveCards: Action<AppDataModel, CardData[]>;
   setActiveWidgets: Action<AppDataModel, WidgetData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
-  // transitionLayout: Thunk<AppDataModel, number>;
 }
 
 const availableWidgets = Object.values(widgets).map(
@@ -136,7 +133,7 @@ const appModel: AppDataModel = {
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     // handler:
-    async (actions, target) => {
+    async (actions, target, { getState }) => {
       target.payload.getSheetRows<RawCardRow>("CARDS").then((rows) => {
         const rawCardRowsArray = rows.map((row) => {
           return {
@@ -148,10 +145,17 @@ const appModel: AppDataModel = {
             interaction: row.interaction,
           } as RawCardRow;
         });
-
-        const cards = rawCardRowsArray.map(
-          (c: RawCardRow, index) => new CardData(c, index)
-        );
+        const cards = getState().availableCards;
+        // const cards: CardData[] = [];
+        rawCardRowsArray.forEach((row, index) => {
+          if (
+            !getState()
+              .availableCards.map((c) => c.src)
+              .includes(row.src)
+          ) {
+            cards.push(new CardData(row, index));
+          }
+        });
         actions.setAvailableCards(cards);
       });
     }

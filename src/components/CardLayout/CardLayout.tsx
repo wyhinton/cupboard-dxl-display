@@ -66,11 +66,13 @@ export const CardLayout = ({
       xs: cols,
       xxs: cols,
     },
+    // rowHeight: 500,
     rowHeight: height / appConfig.gridRows,
     // rowHeight: (height - appConfig.gridBottomPadding) / appConfig.gridRows,
     margin: margin,
     preventCollision: true,
     compactType: null,
+    // containerPadding: [0, 0],
   };
 
   console.log(widgets);

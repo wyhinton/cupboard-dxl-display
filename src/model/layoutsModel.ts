@@ -61,16 +61,18 @@ const layoutsModel: LayoutsModel = {
     (actions, target, { getState }) => {
       target.payload.getSheetRows<RawLayoutRow>("LAYOUTS").then((rows) => {
         const rawLayoutRows = rows;
-        const layouts: LayoutData[] = [];
+        // const layouts: LayoutData[] = [];
+        const { externalLayouts } = getState();
+        // const layouts = getState().externalLayouts
         const currentLayoutIds = new Set(
-          getState().externalLayouts.map((layout) => layout.id)
+          externalLayouts.map((layout) => layout.id)
         );
 
         for (const row of rawLayoutRows) {
           try {
             const l = new LayoutData(row);
             if (!currentLayoutIds.has(l.id)) {
-              layouts.push(l);
+              externalLayouts.push(l);
             }
           } catch (error) {
             actions.addLayoutError({
@@ -87,15 +89,16 @@ const layoutsModel: LayoutsModel = {
           // actions.setActiveLayout(defaultLayout);
           // actions.setBufferLayout(defaultLayout.layout);
         } else {
-          const defaultLayout = layouts.filter(
-            (layout) => layout.title === appConfig.defaultLayoutName
-          )[0];
+          // const defaultLayout = externalLayouts.filter(
+          //   (layout) => layout.title === appConfig.defaultLayoutName
+          // )[0];
+          const defaultLayout = externalLayouts[0];
           if (defaultLayout) {
             actions.setActiveLayout(defaultLayout);
             actions.setBufferLayout(defaultLayout.layout);
           }
         }
-        actions.setExternalLayouts(layouts);
+        actions.setExternalLayouts(externalLayouts);
       });
     }
   ),

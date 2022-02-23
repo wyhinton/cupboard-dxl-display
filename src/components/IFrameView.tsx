@@ -1,16 +1,8 @@
 import "../css/iframeView.css";
 
 import classNames from "classnames";
-import React, {
-  FC,
-  PropsWithChildren,
-  SyntheticEvent,
-  useEffect,
-  useState,
-} from "react";
-import Loader from "react-loader-spinner";
+import React, { FC, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
-// import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 
 import CardData from "../data_structs/CardData";
 import { CardView } from "../enums";
@@ -18,6 +10,7 @@ import {
   CardErrorHandler,
   CardLoadHandler,
 } from "./CardLayout/ViewCard/ViewCard";
+import { useAppSettings } from "../hooks";
 
 interface IFrameViewProperties {
   card: CardData;
@@ -44,14 +37,11 @@ const IFrameView: FC<IFrameViewProperties> = ({
   onLoad,
   objectFit,
 }) => {
+  const { enableIframeInteractions } = useAppSettings();
+
   const [active, setActive] = useState(false);
   const [valid, setIsValid] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const iframeOverlayClass = classNames("iframe-view-overlay", {
-    "iframe-view-overlay-hidden": isLoaded,
-    "iframe-view-overlay-loading": !isLoaded,
-  });
 
   const indexFrameContainerClass = classNames("iframe-container", {
     "iframe-container-hidden": !valid,
@@ -125,7 +115,13 @@ const IFrameView: FC<IFrameViewProperties> = ({
             setIsLoaded(true);
           }}
           src={src}
-          style={active ? iframeActive : iframeStyle}
+          style={{
+            transform: `scale(${scale})`,
+            pointerEvents: enableIframeInteractions ? "all" : "none",
+            width: `${100 * (1 / scale)}%`,
+            height: `${100 * (1 / scale)}%`,
+            transformOrigin: "top left",
+          }}
         ></iframe>
       )}
     </div>

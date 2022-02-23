@@ -1,65 +1,49 @@
-import { Heading, Switch, TextInputField } from "evergreen-ui";
-import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import {
-  useApp,
-  useElementSize,
-  useSheets,
-  useStoreState,
-} from "../../../../hooks";
-import appConfig from "../../../../static/appConfig";
-import IssuesTable from "../IssuesTab/IssuesTable";
-import { AutoSizer } from "react-virtualized";
-import { Scrollbars } from "react-custom-scrollbars";
-import FlexRow from "../../../Shared/FlexRow";
+import { Heading, Switch } from "evergreen-ui";
+import React, { useState } from "react";
+
+import { useAppSettings, useSheets } from "../../../../hooks";
 import FlexColumn from "../../../Shared/FlexColumn";
+import FlexRow from "../../../Shared/FlexRow";
+import TabPane from "../TabPane";
 
 const AppTab = (): JSX.Element => {
-  const { rotationSpeed, setRotationSpeed, setRotateLayouts } = useApp();
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRotationSpeed(parseInt(e.target.value));
-  };
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    //@ts-ignore
-    console.log(e.target.value);
-  // setval(e.target.value);
-  const [val, setval] = useState("");
-  const [checked, setChecked] = React.useState(true);
-
-  useEffect(() => {
-    console.log(checked);
-    setRotateLayouts(checked);
-    if (checked) {
-      //   setRotationSpeed(4000);
-      //   setRotationSpeed(appConfig.rotationDuration);
-    } else {
-      setRotationSpeed(appConfig.rotationDuration);
-    }
-  }, [checked]);
-
-  useEffect(() => {
-    console.log(val);
-  }, [val]);
-
-  const [squareRef, { width, height }] = useElementSize();
+  const {
+    setRotationSpeed,
+    setBlockIframeInteractions,
+    setShowQrCodes,
+    enableIframeInteractions,
+    setRotateLayouts,
+    setMuteIframeAudio,
+    enableIframeAudio,
+    rotateLayouts,
+  } = useAppSettings();
 
   return (
-    <div style={{ height: "100%", pointerEvents: "all", padding: "1vmin" }}>
+    <TabPane>
       <Heading size={600} style={{ color: "white" }}>
         General
       </Heading>
       <div style={{ margin: ".5em" }}>
-        <FlexRow style={{ alignItems: "center" }}>
-          <Label>Rotate Layouts</Label>
-          <div style={{ paddingLeft: ".5em" }}>
-            <Switch
-              style={{ margin: "auto" }}
-              checked={checked}
-              onChange={(e) => setChecked(e.target.checked)}
-            />
-          </div>
-        </FlexRow>
+        <FlexColumn>
+          <SwitchContainer
+            onChange={(value) => setRotateLayouts(value)}
+            value={rotateLayouts}
+          >
+            RotateLayouts
+          </SwitchContainer>
+          <SwitchContainer
+            onChange={(value) => setBlockIframeInteractions(value)}
+            value={enableIframeInteractions}
+          >
+            Enable IFrame Interactions
+          </SwitchContainer>
+          <SwitchContainer
+            onChange={(value) => setMuteIframeAudio(value)}
+            value={enableIframeAudio}
+          >
+            Enable IFrame Audio
+          </SwitchContainer>
+        </FlexColumn>
       </div>
       {/* </div> */}
       <SheetLinks />
@@ -84,7 +68,38 @@ const AppTab = (): JSX.Element => {
         //   // e()
         // }}
       /> */}
-    </div>
+    </TabPane>
+  );
+};
+
+const SwitchContainer = ({
+  children,
+  onChange,
+  value,
+}: {
+  children: string;
+  onChange: (value_: boolean) => void;
+  value: boolean;
+}): JSX.Element => {
+  const [checked, setChecked] = useState(value);
+  return (
+    <FlexRow
+      style={{ margin: ".5em", justifyContent: "space-between", width: "50%" }}
+    >
+      <Label>{children}</Label>
+      <div style={{ paddingLeft: ".5em" }}>
+        <Switch
+          checked={checked}
+          defaultChecked={false}
+          onChange={(e) => {
+            console.log(e.target.value);
+            onChange(e.target.checked);
+            setChecked(e.target.checked);
+          }}
+          style={{ margin: "auto" }}
+        />
+      </div>
+    </FlexRow>
   );
 };
 
@@ -111,8 +126,8 @@ const SheetLinks = (): JSX.Element => {
           overflow: "hidden",
         }}
       >
-        {links.map((link, i) => (
-          <SheetLink title={titles[i]} link={link ?? "not provided"} />
+        {links.map((link, index) => (
+          <SheetLink link={link ?? "not provided"} title={titles[index]} />
         ))}
       </FlexColumn>
     </FlexColumn>
@@ -138,6 +153,7 @@ const SheetLink = ({
       <Heading style={{ color: "white" }}>{title + ":  "}</Heading>
       <a
         href={link}
+        rel="noreferrer"
         style={{
           color: "white",
           overflow: "hidden",
@@ -145,7 +161,6 @@ const SheetLink = ({
           maxWidth: "80%",
         }}
         target="_blank"
-        rel="noreferrer"
       >
         {link}
       </a>

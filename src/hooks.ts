@@ -32,7 +32,66 @@ export function useToggle(initialValue: boolean): [boolean, () => void] {
   return [value, toggleValue];
 }
 
-interface UseSheetsProps {
+interface UseAppSettingsProperties {
+  rotationSpeed: number;
+  enableQrCodes: boolean;
+  rotateLayouts: boolean;
+  enableIframeAudio: boolean;
+  enableIframeInteractions: boolean;
+  setRotationSpeed: ActionCreator<number>;
+  setShowQrCodes: ActionCreator<boolean>;
+  setBlockIframeInteractions: ActionCreator<boolean>;
+  setMuteIframeAudio: ActionCreator<boolean>;
+  setRotateLayouts: ActionCreator<boolean>;
+}
+
+export const useAppSettings = (): UseAppSettingsProperties => {
+  const setRotationSpeed = useStoreActions(
+    (actions) => actions.appSettingsModel.setRotationSpeed
+  );
+  const setShowQrCodes = useStoreActions(
+    (actions) => actions.appSettingsModel.setShowQrCodes
+  );
+  const setBlockIframeInteractions = useStoreActions(
+    (actions) => actions.appSettingsModel.setEnableIframeInteractions
+  );
+  const setMuteIframeAudio = useStoreActions(
+    (state) => state.appSettingsModel.setEnableIframeAudio
+  );
+  const setRotateLayouts = useStoreActions(
+    (actions) => actions.appSettingsModel.setRotateLayouts
+  );
+  const rotationSpeed = useStoreState(
+    (state) => state.appSettingsModel.rotationSpeed
+  );
+  const enableIframeAudio = useStoreState(
+    (state) => state.appSettingsModel.enableIframeAudio
+  );
+  const rotateLayouts = useStoreState(
+    (state) => state.appSettingsModel.rotateLayouts
+  );
+  const enableQrCodes = useStoreState(
+    (state) => state.appSettingsModel.enableQrCodes
+  );
+  const enableIframeInteractions = useStoreState(
+    (state) => state.appSettingsModel.enableIframeInteractions
+  );
+
+  return {
+    rotationSpeed,
+    enableQrCodes,
+    enableIframeInteractions,
+    rotateLayouts,
+    enableIframeAudio,
+    setRotationSpeed,
+    setShowQrCodes,
+    setBlockIframeInteractions,
+    setRotateLayouts,
+    setMuteIframeAudio,
+  };
+};
+
+interface UseSheetsProperties {
   fetchTopLevelSheet: ThunkCreator<void, any>;
 
   parentSheetUrl: string | undefined;
@@ -41,7 +100,7 @@ interface UseSheetsProps {
   formUrl: string | undefined;
 }
 
-export const useSheets = (): UseSheetsProps => {
+export const useSheets = (): UseSheetsProperties => {
   const fetchTopLevelSheet = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );

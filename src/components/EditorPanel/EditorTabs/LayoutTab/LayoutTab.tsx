@@ -1,4 +1,4 @@
-import { AddIcon } from "evergreen-ui";
+import { AddIcon, IconButton, RefreshIcon } from "evergreen-ui";
 import React, { FC, useEffect, useState } from "react";
 
 import {
@@ -9,6 +9,7 @@ import {
 } from "../../../../hooks";
 import formEmbedUrl from "../../../../static/formEmbedUrl";
 import Button from "../../../Shared/Button";
+import FlexRow from "../../../Shared/FlexRow";
 import Panel from "../../../Shared/Panel";
 import TabPane from "../TabPane";
 import GoogleFormPopup from "./GoogleFormPopup";
@@ -38,16 +39,30 @@ const LayoutTab = (): JSX.Element => {
           justifyContent: "flex-start",
         }}
       >
-        <Button
-          iconBefore={<AddIcon />}
-          onClick={(e) => {
-            setShowNewLayoutPopup(true);
-          }}
-          text="Add New Layout"
-          width="55%"
-          intent="success"
-          appearance="primary"
-        />
+        <FlexRow style={{ height: "100%", width: "100%" }}>
+          <Button
+            iconBefore={<AddIcon />}
+            onClick={(e) => {
+              setShowNewLayoutPopup(true);
+            }}
+            text="Add New Layout"
+            width="55%"
+            intent="success"
+            appearance="primary"
+          />
+          <div style={{ height: "auto", width: "10%" }}>
+            <IconButton
+              icon={<RefreshIcon />}
+              width={"20%"}
+              height={"100%"}
+              onClick={(
+                _event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+              ) => {
+                fetchTopLevelSheet();
+              }}
+            />
+          </div>
+        </FlexRow>
       </TabPane>
       {showNewLayoutPopup && (
         <GoogleFormPopup
