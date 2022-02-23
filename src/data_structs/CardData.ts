@@ -23,6 +23,8 @@ export default class CardData {
   readonly src: string;
   readonly title: string;
   readonly added?: Date;
+  readonly backgroundColor?: string;
+  readonly scale?: string;
   // readonly sourceId: string;
   readonly author: string;
   readonly interaction: InteractionType;

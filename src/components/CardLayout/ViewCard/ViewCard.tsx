@@ -28,6 +28,7 @@ import {
   useKeyboardShortcut,
   useLayout,
   useOnClickOutside,
+  useStoreActions,
   useStoreState,
 } from "../../../hooks";
 import appConfig from "../../../static/appConfig";
@@ -103,6 +104,12 @@ const ViewCard: FC<ViewCardProperties> = ({
     data?.contentType === "widget" ? "loaded" : ""
   );
 
+  const setCardSettings = useStoreActions(
+    (actions) => actions.layoutsModel.setCardSettings
+  );
+  const setCardScale = useStoreActions(
+    (actions) => actions.layoutsModel.setCardScale
+  );
   const animationCounter = useStoreState(
     (state) => state.layoutsModel.animationCounter
   );
@@ -128,6 +135,9 @@ const ViewCard: FC<ViewCardProperties> = ({
           : appConfig.defaultIframeScale,
       setScale: action((state, scale) => {
         state.scale += scale;
+        if (data) {
+          setCardScale({ cardId: data?.id, scale });
+        }
       }),
       cardBackgroundColor: "",
       setBackgroundColor: action((state, color) => {

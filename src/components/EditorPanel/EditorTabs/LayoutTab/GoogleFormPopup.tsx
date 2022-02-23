@@ -1,25 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
-import ReactDom from "react-dom";
 import "../../../../css/googleFormPopup.css";
-import { Pane, Dialog } from "evergreen-ui";
-import Modal from "../../../Shared/Modal";
-import formEmbedUrl from "../../../../static/formEmbedUrl";
-import { useLayout, useStoreState } from "../../../../hooks";
-import classNames from "classnames";
-import Button from "../../../Shared/Button";
-import {
-  ClipboardIcon,
-  InlineAlert,
-  CrossIcon,
-  Heading,
-  ArrowRightIcon,
-} from "evergreen-ui";
 import "../../../../css/copyField.css";
-import Scrollbars from "react-custom-scrollbars";
-import FlexRow from "../../../Shared/FlexRow";
+
+import { ClipboardIcon, Heading } from "evergreen-ui";
 import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import ReactDom from "react-dom";
+
+import { useLayout, useSheets, useStoreState } from "../../../../hooks";
+import formEmbedUrl from "../../../../static/formEmbedUrl";
 import DeleteButton from "../../../CardLayout/ViewCard/DeleteButton";
+import Button from "../../../Shared/Button";
 import FlexColumn from "../../../Shared/FlexColumn";
+import FlexRow from "../../../Shared/FlexRow";
+import Modal from "../../../Shared/Modal";
 
 /**
  * Modal popup for displaying cards when in preview mode. Displays on top of the CardLayout, and renders
@@ -36,45 +29,34 @@ const GoogleFormPopup = ({
   visible,
   onCloseComplete,
 }: GoogleFormPopupProperties): JSX.Element => {
-  const layoutState = useStoreState((state) => state.layoutsModel.activeLayout);
-  const ls = useStoreState((state) => state.layoutsModel.layoutsString);
-  const layoutSheetUrl = useStoreState(
-    (state) => state.googleSheetsModel.layoutSheetUrl
-  );
-  // console.log(layoutState?.extendedLayout);
-  // console.log(layoutState?.extendedLayout.layoutSettings);
-
+  const { layoutSheetUrl } = useSheets();
+  const { activeLayout } = useLayout();
   const [isShown, setIsShown] = useState(visible);
   const [isCopiedJSON, setIsCopiedJson] = useState(false);
-  console.log("HELLO IM HERE");
-  const { activeLayout } = useLayout();
+  const [contentString, setContentString] = useState("");
+  // const [trueLayoutString, setTrueLayoutString] = useState("");
+  // const { activeLayout } = useLayout();
   const layoutString = useStoreState((state) =>
     JSON.stringify(state.layoutsModel.activeLayout)
   );
-  const bufferLayout = useStoreState((state) =>
-    JSON.stringify(state.layoutsModel.bufferLayout)
+  const trueLayoutString = useStoreState((state) =>
+    JSON.stringify(state.layoutsModel.activeLayout?.layout.lg)
   );
+
   useEffect(() => {
-    // console.log(state.layoutsModel.activeLayout);
-    // activeLayout?.layout;
-    // bufferLayout;
-    console.log(bufferLayout);
-  }, [bufferLayout]);
-  useEffect(() => {
-    // console.log(state.layoutsModel.activeLayout);
-    // activeLayout?.layout;
-    // bufferLayout;
-    console.log(layoutString);
-  }, [layoutString]);
-  // useEffect(() => {
-  //   // console.log(state.layoutsModel.activeLayout);
-  //   activeLayout?.layout;
-  // }, [activeLayout?.layout]);
-  console.log(layoutString);
+    // console.log(layoutString);
+    // console.log(trueLayoutString);
+    // const toEdit = JSON.parse(layoutString);
+    // delete toEdit.backupLayout;
+    // delete toEdit.sourceLayout;
+    // toEdit.layout = JSON.parse(JSON.stringify(activeLayout?.layout.lg));
+    // setContentString(JSON.stringify(toEdit));
+    // console.log(toEdit);
+  }, [layoutString, activeLayout]);
 
   return ReactDom.createPortal(
     <Modal
-      onClose={onCloseComplete}
+      onClose={() => {}}
       active={isShown}
       containerClassName="google-form-popup"
       backdropOpacity={0.5}
@@ -111,10 +93,7 @@ const GoogleFormPopup = ({
               justifyContent: "space-between",
             }}
           >
-            <div
-              // className={copyFieldContainerClass}
-              style={{ width: "min-content" }}
-            >
+            <div style={{ width: "min-content" }}>
               <CopyField
                 onCopy={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                   setIsCopiedJson(true);

@@ -15,6 +15,7 @@ import CardLayout from "../../../CardLayout/CardLayout";
 import LayoutData from "../../../../data_structs/LayoutData";
 import IXDrop from "../../../DragAndDrop/IXDrop";
 import appConfig from "../../../../static/appConfig";
+import { motion } from "framer-motion";
 /**
  * Displays the available layouts.
  */

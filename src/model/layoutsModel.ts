@@ -2,7 +2,7 @@ import type { Action, Computed, Thunk, ThunkOn } from "easy-peasy";
 import { action, computed, thunk, thunkOn } from "easy-peasy";
 import { Layouts } from "react-grid-layout";
 
-import LayoutData from "../data_structs/LayoutData";
+import LayoutData, { CardOptions } from "../data_structs/LayoutData";
 import AppError from "../interfaces/AppError";
 import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
 import RawLayoutRow from "../interfaces/RawLayoutRow";
@@ -26,6 +26,8 @@ export interface LayoutsModel {
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
+  setCardSettings: Action<LayoutsModel, CardOptions>;
+  setCardScale: Action<LayoutsModel, { cardId: string; scale: number }>;
 
   layoutsString: Computed<LayoutsModel, string>;
 
@@ -197,6 +199,18 @@ const layoutsModel: LayoutsModel = {
   }),
   setBufferLayout: action((state, layouts) => {
     state.bufferLayout = JSON.parse(JSON.stringify(layouts));
+  }),
+  setCardSettings: action((state, settings) => {
+    console.log(settings);
+    const currentSettings =
+      state.activeLayout?.sourceLayout.layoutSettings.cardSettings;
+    console.log(currentSettings);
+  }),
+  setCardScale: action((state, scale) => {
+    console.log(scale);
+    const currentSettings =
+      state.activeLayout?.sourceLayout.layoutSettings.cardSettings;
+    console.log(currentSettings);
   }),
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;

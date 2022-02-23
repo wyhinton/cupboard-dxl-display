@@ -35,6 +35,7 @@ export default class LayoutData {
   readonly added: Date;
   readonly id: string;
   readonly sourceLayout: ExtendedLayout;
+  readonly layoutSettings: LayoutSettings;
   layout: Layouts;
   layoutWidgets: WidgetData[];
 
@@ -45,7 +46,17 @@ export default class LayoutData {
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
     this.sourceLayout = JSON.parse(row.layout).layout;
-
+    if (JSON.parse(row.layout).layoutSettings) {
+      console.log("HAD SETTINGSS");
+      this.layoutSettings = JSON.parse(row.layout).layoutSettings;
+    } else {
+      console.log("NO SETTINGSS");
+      this.layoutSettings = {
+        cardSettings: [],
+        gridSettings: { defaultBackgroundColor: "red" },
+      };
+      console.log(this.layoutSettings);
+    }
     this.layoutWidgets = JSON.parse(row.layout).layoutWidgets
       ? JSON.parse(row.layout).layoutWidgets
       : [];
@@ -120,6 +131,8 @@ export default class LayoutData {
   }
   sources(): string[] {
     const lg = this.layout.lg;
+    console.log(lg);
+    console.log(this.title);
     return lg.map((l: Layout) => l.i);
   }
   widgets(): string[] {
