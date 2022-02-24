@@ -3,23 +3,27 @@ import "../../css/libs/reactDraggable.css";
 
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import React, { useEffect } from "react";
-import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
+import type { Layout, Layouts} from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout";
 
-import CardData from "../../data_structs/CardData";
+import type CardData from "../../data_structs/CardData";
 import LayoutData from "../../data_structs/LayoutData";
-import WidgetData from "../../data_structs/WidgetData";
-import { AppMode, DndTypes } from "../../enums";
+import type WidgetData from "../../data_structs/WidgetData";
+import type { AppMode} from "../../enums";
+import { DndTypes } from "../../enums";
+import type { CardSettings } from "../../interfaces/CardSettings";
 import appConfig from "../../static/appConfig";
-import IFrameView from "../IFrameView";
+import IFrameView from "../CardContent";
+import IXDrop from "../DragAndDrop/IXDrop";
+import WidgetRenderer from "../Widgets/WidgetRenderer";
 import GuideGrid from "./GuideGrid";
 import ViewCard from "./ViewCard/ViewCard";
 import WidgetWrapper from "./ViewCard/WidgetWrapper";
-import IXDrop from "../DragAndDrop/IXDrop";
-import WidgetRenderer from "../Widgets/WidgetRenderer";
 
 export const CardLayout = ({
-  layout,
   appMode,
+  layout,
+  cardSettings,
   width,
   height,
   margin,
@@ -30,22 +34,20 @@ export const CardLayout = ({
   rows,
   isDraggable,
   isResizable,
-  useControls,
 }: {
-  layout: Layouts | undefined;
-  // layout: LayoutData;
   appMode: AppMode;
-  width: number;
-  height: number;
-  margin: [number, number];
+  cards: CardData[];
   cols: number;
+  cardSettings: CardSettings[];
+  height: number;
+  layout: Layouts | undefined;
+  margin: [number, number];
   rows: number;
   onLayoutChange?: (l: Layout[]) => void;
-  cards: CardData[];
-  widgets: WidgetData[];
   isDraggable?: boolean;
   isResizable?: boolean;
-  useControls?: boolean;
+  widgets: WidgetData[];
+  width: number;
 }): JSX.Element => {
   const activeLayout = layout;
 
@@ -78,7 +80,11 @@ export const CardLayout = ({
   console.log(widgets);
   return (
     <div>
-      <div className="card-grid-container">
+      <motion.div
+        animate={{ opacity: 1, y: 0, transition: { delay: 1 } }}
+        className="card-grid-container"
+        initial={{ opacity: 0, y: 50 }}
+      >
         <ResponsiveGridLayout
           {...sharedGridSettings}
           className="card-layout"
@@ -99,10 +105,11 @@ export const CardLayout = ({
             (card: CardData | WidgetData, index: number) => {
               return (
                 <motion.div
-                  key={card.id}
                   className="card-container"
-                  style={{ width: "100%" }}
                   exit={{ y: -100 }}
+                  id={`${card.id}_grid_container`}
+                  key={card.id}
+                  style={{ width: "100%" }}
                 >
                   <IXDrop
                     cardType={DndTypes.IFRAME}
@@ -112,28 +119,33 @@ export const CardLayout = ({
                   >
                     <ViewCard
                       cardId={index.toString()}
+                      cardSettings={
+                        cardSettings.find((s) => s.id === card.id)
+                      }
                       cardType={DndTypes.IFRAME}
                       data={card}
                       useAnimation={card.contentType !== "widget"}
                     >
                       {card.contentType !== "widget"
-                        ? (scale, cardView, onError, onLoad) => {
+                        ? (scale, cardView, onError, onLoad, cardSettings) => {
                             const contentCard = card as CardData;
                             return (
                               <IFrameView
                                 card={contentCard}
-                                scale={scale}
+                                cardSettings={cardSettings}
                                 cardView={cardView}
                                 onError={onError}
                                 onLoad={onLoad}
+                                scale={scale}
                               />
                             );
                           }
-                        : (scale) => {
+                        : (scale, cardView, onError, onLoad, cardSettings) => {
                             return (
                               <WidgetRenderer
-                                widget={card as WidgetData}
+                                cardSettings={cardSettings}
                                 scale={1}
+                                widget={card as WidgetData}
                               />
                             );
                           }}
@@ -145,7 +157,7 @@ export const CardLayout = ({
             }
           )}
         </ResponsiveGridLayout>
-      </div>
+      </motion.div>
       <GuideGrid gridSettings={sharedGridSettings} />
     </div>
   );

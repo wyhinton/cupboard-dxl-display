@@ -21,11 +21,11 @@ interface AppConfig {
 }
 
 const appConfig: AppConfig = {
-  idleTime: process.env.NODE_ENV === "development" ? 100000000 : 10000000,
+  idleTime: process.env.NODE_ENV === "development" ? 100_000_000 : 10_000_000,
   sheetLink:
     "https://docs.google.com/spreadsheets/d/1BR1AQ5Zmt_o_0dOm9AvDht0G3Q6RXQUhX71Vi4H7tTU/edit#gid=0",
   defaultIframeScale: 0.5,
-  defaultEmbedScale: 1.0,
+  defaultEmbedScale: 1,
   // defaultLayoutName: "PostersV3",
   defaultLayoutName: "Data Vis Types Chart 1",
   formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
@@ -35,7 +35,8 @@ const appConfig: AppConfig = {
   showModeSwitchButton: false,
   useStaticLayout: false,
   gridBottomPadding: 50,
-  rotationDuration: 100000, //ms
+  rotationDuration: 100_000, //ms
+  // rotationDuration: 10000, //ms
 };
 
 export default appConfig;

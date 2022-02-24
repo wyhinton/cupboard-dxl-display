@@ -22,10 +22,10 @@ class IFrameValidator {
     console.log(malformedUrlCheckArray);
   }
   isValid(): boolean {
-    return this.errors.length == 0;
+    return this.errors.length === 0;
   }
   errorMessages(): string[] {
-    let errors: string[] = [];
+    const errors: string[] = [];
     this.errors.map((e) => {
       switch (e) {
         case IFrameLoadError.CROSS_ORIGIN:
@@ -45,8 +45,8 @@ export default IFrameValidator;
 
 
 
-function validURL(str: string): IFrameLoadWarning[] {
-  let warningsArray = [];
+function validURL(string: string): IFrameLoadWarning[] {
+  const warningsArray = [];
   const pattern = new RegExp(
     "^(https?:\\/\\/)?" + // protocol
       "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
@@ -56,7 +56,7 @@ function validURL(str: string): IFrameLoadWarning[] {
       "(\\#[-a-z\\d_]*)?$",
     "i"
   ); // fragment locator
-  if (!pattern.test(str)) {
+  if (!pattern.test(string)) {
     warningsArray.push(IFrameLoadWarning.MALFORMED_URL);
   }
   return warningsArray;

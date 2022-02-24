@@ -1,6 +1,8 @@
 import React from "react";
 
-import WidgetData, { WidgetType } from "../../data_structs/WidgetData";
+import type { WidgetType } from "../../data_structs/WidgetData";
+import type WidgetData from "../../data_structs/WidgetData";
+import type { CardSettings } from "../../interfaces/CardSettings";
 import Clock from "./Clock";
 import HowToUse from "./HowToUse";
 
@@ -9,11 +11,13 @@ const WidgetRenderer = ({
   scale,
   colWidth,
   rowHeight,
+  cardSettings,
 }: {
   widget: WidgetData;
   scale?: number;
   colWidth?: number;
   rowHeight?: number;
+  cardSettings?: CardSettings;
 }): JSX.Element => {
   const renderWidget = (widgetId: WidgetType) => {
     let widg = <div></div>;

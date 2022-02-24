@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef,useState } from "react";
 
-interface TabPaneProps
-  extends Omit<React.HTMLProps<HTMLDivElement>, "as" | "ref"> {}
+type TabPaneProperties = Omit<React.HTMLProps<HTMLDivElement>, "as" | "ref">
 
 const TabPane = (
-  properties: TabPaneProps
+  properties: TabPaneProperties
   //   children: JSX.Element | JSX.Element[]
 ): JSX.Element => {
   return (
@@ -12,7 +11,7 @@ const TabPane = (
       {...properties}
       style={{
         ...(properties.style || {}),
-        width: "inherit",
+        width: properties?.style?.width ?? "inherit",
         padding: ".5em",
       }}
     >

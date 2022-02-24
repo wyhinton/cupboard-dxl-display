@@ -1,7 +1,7 @@
 import "../../css/clock.css";
 
-import React, { useEffect, useState } from "react";
 import { Heading } from "evergreen-ui";
+import React, { useEffect, useState } from "react";
 
 /**
  * Simple clock widget for displaying the current time.

@@ -5,11 +5,11 @@ import _ from "lodash";
 import CardData from "../data_structs/CardData";
 import WidgetData from "../data_structs/WidgetData";
 import { AppMode } from "../enums";
-import AppError from "../interfaces/AppError";
+import type AppError from "../interfaces/AppError";
 import type RawCardRow from "../interfaces/RawCardRow";
 import appConfig from "../static/appConfig";
 import widgets from "../static/widgets";
-import { StoreModel } from "./index";
+import type { StoreModel } from "./index";
 /**
  * Core app model
  * @param
@@ -26,6 +26,7 @@ export interface AppDataModel {
   rotateLayouts: boolean;
   appMode: AppMode;
   appErrors: AppError[];
+  editingCard: CardData | undefined;
   //listeners
   onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
   onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
@@ -41,6 +42,7 @@ export interface AppDataModel {
   setActiveCards: Action<AppDataModel, CardData[]>;
   setActiveWidgets: Action<AppDataModel, WidgetData[]>;
   setAvailableCards: Action<AppDataModel, CardData[]>;
+  setEditingCard: Action<AppDataModel, CardData | undefined>;
 }
 
 const availableWidgets = Object.values(widgets).map(
@@ -58,6 +60,7 @@ const appModel: AppDataModel = {
   rotateLayouts: true,
   rotationSpeed: appConfig.rotationDuration,
   appMode: AppMode.DISPLAY,
+  editingCard: undefined,
   // animationCounter: 0,
   //managers
   /**Control side effects for altering the view state of the app, and dispatch a setter for the state */
@@ -74,9 +77,12 @@ const appModel: AppDataModel = {
         undefined;
     }
   }),
+  /**utility for switching between app modes with the mode switcher button. Also sets the editing card to undefined when switching back into display mode*/
   toggleAppMode: thunk((actions, _, { getState }) => {
     switch (getState().appMode) {
       case AppMode.EDIT:
+        // eslint-disable-next-line unicorn/no-useless-undefined
+        actions.setEditingCard(undefined);
         actions.setAppMode(AppMode.DISPLAY);
         break;
       case AppMode.DISPLAY:
@@ -105,17 +111,9 @@ const appModel: AppDataModel = {
   setRotateLayouts: action((state, should) => {
     state.rotateLayouts = should;
   }),
-  // transitionLayout: thunk((actions, val, {getState}) => {
-
-  //   actions.setAnimationCounter(getState().animationCounter+1)
-  //   setTimeout(()=>{
-  //     actions.set
-  //   })
-  // }),
-  // setAnimationCounter: action((state, value) => {
-  //   state.animationCounter += 1;
-  // }),
-
+  setEditingCard: action((state, card) => {
+    state.editingCard = card;
+  }),
   addAppError: action((state, error) => {
     const errorsString = state.appErrors.map(
       (error) => JSON.stringify(error) as string
@@ -146,8 +144,7 @@ const appModel: AppDataModel = {
           } as RawCardRow;
         });
         const cards = getState().availableCards;
-        // const cards: CardData[] = [];
-        rawCardRowsArray.forEach((row, index) => {
+        for (const [index, row] of rawCardRowsArray.entries()) {
           if (
             !getState()
               .availableCards.map((c) => c.src)
@@ -155,7 +152,7 @@ const appModel: AppDataModel = {
           ) {
             cards.push(new CardData(row, index));
           }
-        });
+        }
         actions.setAvailableCards(cards);
       });
     }

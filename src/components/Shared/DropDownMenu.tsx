@@ -1,5 +1,6 @@
+import type { SelectMenuItem } from "evergreen-ui";
+import { Button, Position, SelectMenu } from "evergreen-ui";
 import React, { useState } from "react";
-import { SelectMenu, Position, Button, SelectMenuItem } from "evergreen-ui";
 
 // export interface SelectMenuItem {
 //   label: string
@@ -26,17 +27,17 @@ const DropDownMenu = ({
     <div>
       {`${title}: `}
       <SelectMenu
-        height={180}
-        width={180}
-        hasTitle={false}
         hasFilter={false}
-        position={Position.TOP}
-        options={items}
-        selected={value}
+        hasTitle={false}
+        height={180}
         onSelect={(item) => {
           onSelect(item);
           setValue(item.label);
         }}
+        options={items}
+        position={Position.TOP}
+        selected={value}
+        width={180}
       >
         <Button>{value}</Button>
       </SelectMenu>

@@ -1,9 +1,10 @@
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { useStoreActions } from "../hooks";
 import { useLongPress } from "react-use";
+
+import { useStoreActions } from "../hooks";
 import appConfig from "../static/appConfig";
-import { motion } from "framer-motion";
 
 /**Invisible button in the bottom left corner of the screen. Hold touch/click to toggle app mode */
 const ModeChangeButton = (): JSX.Element => {

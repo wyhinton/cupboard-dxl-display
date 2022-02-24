@@ -1,5 +1,5 @@
-import { WidgetInfo } from "../static/widgets";
-import { ContentType } from "./CardData";
+import type { WidgetInfo } from "../static/widgets";
+import type { ContentType } from "./CardData";
 
 export type WidgetType = "clock" | "info";
 

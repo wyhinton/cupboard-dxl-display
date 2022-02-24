@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import WidgetData from "../../../data_structs/WidgetData";
+import React, { useEffect, useRef,useState } from "react";
+
+import type WidgetData from "../../../data_structs/WidgetData";
 import { DndTypes } from "../../../enums";
 import Clock from "../../Widgets/Clock";
 import ViewCard from "./ViewCard";
@@ -18,9 +19,9 @@ const WidgetWrapper = ({
       case "clock":
         widget = (
           <ViewCard
-            useAnimation={false}
             cardType={DndTypes.CLOCK}
             onClick={() => {}}
+            useAnimation={false}
           >
             {(scale) => {
               return <Clock />;
@@ -31,7 +32,7 @@ const WidgetWrapper = ({
         break;
       case "info":
         widget = (
-          <ViewCard useAnimation={false} cardType={DndTypes.CLOCK}>
+          <ViewCard cardType={DndTypes.CLOCK} useAnimation={false}>
             {(scale) => {
               return <div></div>;
             }}

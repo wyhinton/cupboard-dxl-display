@@ -1,8 +1,5 @@
-import {
-  Button as EverGreenButton,
-  ButtonAppearance,
-  IntentTypes,
-} from "evergreen-ui";
+import type { ButtonAppearance, IntentTypes } from "evergreen-ui";
+import { Button as EverGreenButton } from "evergreen-ui";
 import React from "react";
 
 /**

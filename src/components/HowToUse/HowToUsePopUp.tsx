@@ -36,11 +36,11 @@ const HowToUsePopUp = ({
     <Modal
       active={active}
       // containerClassName="how-to-use-popup"
-      onClose={onClose}
       backdropOpacity={0}
+      onClose={onClose}
     >
       <motion.div
-        variants={variants}
+        animate={active ? "visible" : "hidden"}
         style={{
           width: "30vw",
           height: "80vh",
@@ -48,7 +48,7 @@ const HowToUsePopUp = ({
           borderRadius: 10,
           padding: "1em",
         }}
-        animate={active ? "visible" : "hidden"}
+        variants={variants}
       >
         <Panel>
           <Heading>Connect Labtop</Heading>
@@ -68,7 +68,7 @@ const HowToUsePopUp = ({
         </Panel>
       </motion.div>
     </Modal>,
-    document.getElementById("popup-container") as HTMLDivElement
+    document.querySelector("#popup-container") as HTMLDivElement
   );
 };
 

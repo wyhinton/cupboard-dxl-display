@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import ViewCard from "./ViewCard/ViewCard";
 import { DndTypes } from "../../enums";
-import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
+import type { Layout, Layouts} from "react-grid-layout";
+import { Responsive, WidthProvider } from "react-grid-layout";
 import "../../css/cardLayout.css";
 import appConfig from "../../static/appConfig";
-import { GridPosition } from "../../interfaces/GridPosition";
+import type { GridPosition } from "../../interfaces/GridPosition";
 import IXDrop from "../DragAndDrop/IXDrop";
 
 type GuideGridSettings = Partial<ReactGridLayout.ResponsiveProps>;
@@ -36,26 +37,26 @@ export const GuideGrid = ({
       <ResponsiveGridLayout
         {...gridSettings}
         className="card-layout"
-        layouts={guideCards}
-        resizeHandles={[]}
-        preventCollision={true}
         isDraggable={false}
         isResizable={false}
+        layouts={guideCards}
+        preventCollision
+        resizeHandles={[]}
       >
         {justCardNames.map((p, index) => {
           return (
             <div key={p}>
               <IXDrop
                 cardType={DndTypes.PLACEHOLDER}
-                className={"droppable-guide"}
+                className="droppable-guide"
                 droppableId={p}
                 key={index}
               >
                 <ViewCard
-                  key={p}
-                  // eslint-disable-next-line react/jsx-sort-props
                   cardId={p}
+                  // eslint-disable-next-line react/jsx-sort-props
                   cardType={DndTypes.PLACEHOLDER}
+                  key={p}
                   useAnimation={false}
                 ></ViewCard>
               </IXDrop>

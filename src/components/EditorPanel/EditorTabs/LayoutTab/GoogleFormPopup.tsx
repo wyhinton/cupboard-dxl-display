@@ -56,17 +56,17 @@ const GoogleFormPopup = ({
 
   return ReactDom.createPortal(
     <Modal
-      onClose={() => {}}
       active={isShown}
-      containerClassName="google-form-popup"
       backdropOpacity={0.5}
+      containerClassName="google-form-popup"
+      onClose={() => {}}
     >
-      <div className={"google-form-popup-inner-container"}>
+      <div className="google-form-popup-inner-container">
         <DeleteButton
-          onClick={onCloseComplete}
           action={() => {
             onCloseComplete;
           }}
+          onClick={onCloseComplete}
         />
         <FlexColumn>
           <div style={{ borderBottom: "1px solid white", padding: "1vmin" }}>
@@ -76,10 +76,10 @@ const GoogleFormPopup = ({
             <Heading color="white" size={400}>
               {`The layout will be stored in `}{" "}
               <a
+                href={layoutSheetUrl}
+                rel="noreferrer"
                 style={{ color: "lightblue" }}
                 target="_blank"
-                rel="noreferrer"
-                href={layoutSheetUrl}
               >
                 {layoutSheetUrl}
               </a>
@@ -95,14 +95,14 @@ const GoogleFormPopup = ({
           >
             <div style={{ width: "min-content" }}>
               <CopyField
+                onCloseComplete={onCloseComplete}
                 onCopy={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                   setIsCopiedJson(true);
                 }}
-                onCloseComplete={onCloseComplete}
                 text={layoutString}
               />
             </div>
-            <GoogleFormIframe src={formEmbedUrl} active={isCopiedJSON} />
+            <GoogleFormIframe active={isCopiedJSON} src={formEmbedUrl} />
           </FlexRow>
         </FlexColumn>
       </div>
@@ -138,24 +138,24 @@ const CopyField = ({
           setIsClipBoardCorrect(false);
         }
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.error("Failed to read clipboard contents:", error);
       });
   }, [text]);
   return (
     <>
       <Button
+        appearance="primary"
+        height={100}
         iconBefore={<ClipboardIcon />}
-        text={"Copy Layout To Clip Board"}
+        intent="success"
         onClick={(e) => {
           navigator.clipboard.writeText(text);
           setIsCopied(true);
           onCopy(e);
         }}
+        text="Copy Layout To Clip Board"
         width={250}
-        height={100}
-        intent={"success"}
-        appearance={"primary"}
       />
       {/* <div>
         <div
@@ -188,6 +188,7 @@ const GoogleFormIframe = ({
       }}
     >
       <motion.div
+        animate={active ? { opacity: 0 } : {}}
         style={{
           position: "absolute",
           width: "100%",
@@ -201,7 +202,6 @@ const GoogleFormIframe = ({
           alignItems: "center",
           pointerEvents: active ? "none" : "all",
         }}
-        animate={active ? { opacity: 0 } : {}}
       >
         <div
           style={{
@@ -218,12 +218,12 @@ const GoogleFormIframe = ({
         </div>
       </motion.div>
       <iframe
-        src={src}
+        frameBorder={0}
         // className={"google-form-iframe"}
         // width={"100%"}
-        frameBorder={0}
         marginHeight={0}
         marginWidth={0}
+        src={src}
         style={{
           position: "absolute",
           top: 0,

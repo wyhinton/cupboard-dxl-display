@@ -1,7 +1,11 @@
-import appModel, { AppDataModel } from "./appModel";
-import layoutsModel, { LayoutsModel } from "./layoutsModel";
-import googleSheetsModel, { GoogleSheetsModel } from "./googleSheetsModel";
-import appSettingsModel, { AppSettingsModel } from "./appSettingsModel";
+import type { AppDataModel } from "./appModel";
+import appModel from "./appModel";
+import type { AppSettingsModel } from "./appSettingsModel";
+import appSettingsModel from "./appSettingsModel";
+import type { GoogleSheetsModel } from "./googleSheetsModel";
+import googleSheetsModel from "./googleSheetsModel";
+import type { LayoutsModel } from "./layoutsModel";
+import layoutsModel from "./layoutsModel";
 // https://codesandbox.io/s/easy-peasy-typescript-v3-riqbl?file=/src/model/todos.ts
 
 export interface StoreModel {

@@ -1,13 +1,15 @@
-import React, { ReactElement, ReactNode, useEffect, useRef } from "react";
+import type { ReactNode} from "react";
+import React, { ReactElement, useEffect, useRef } from "react";
+import type {
+  DraggableProps} from "react-beautiful-dnd";
 import {
   Draggable,
-  DraggableProps,
   DraggableProvided,
   DraggingStyle,
 } from "react-beautiful-dnd";
 import { createPortal } from "react-dom";
 
-import { DndTypes } from "../../enums";
+import type { DndTypes } from "../../enums";
 import { useStoreState } from "../../hooks";
 
 interface DraggableDiv extends Omit<DraggableProps, "children"> {
@@ -83,8 +85,8 @@ const DraggableWidget = ({
             }
             return (
               <div
-                id={id}
                 className={className}
+                id={id}
                 ref={provided.innerRef}
                 // style={getItemStyle()}
                 {...provided.draggableProps}

@@ -1,11 +1,12 @@
 import "../../css/clock.css";
 
-import React, { useEffect, useState } from "react";
-import Button from "../Shared/Button";
 import { HandUpIcon } from "evergreen-ui";
-import { useApp, useToggle } from "../../hooks";
+import React, { useEffect, useState } from "react";
+
 import { AppMode } from "../../enums";
+import { useApp, useToggle } from "../../hooks";
 import HowToUsePopUp from "../HowToUse/HowToUsePopUp";
+import Button from "../Shared/Button";
 
 /**
  * Simple clock widget for displaying the current time.
@@ -41,7 +42,7 @@ const HowToUse = (): JSX.Element => {
   const { appMode } = useApp();
 
   return (
-    <div style={containerStyle} id="how-to-use-button-widget">
+    <div id="how-to-use-button-widget" style={containerStyle}>
       {/* {appMode === AppMode.DISPLAY && ( */}
       <HowToUsePopUp active={visible} onClose={toggleVisible} />
       {/* )} */}
@@ -51,12 +52,12 @@ const HowToUse = (): JSX.Element => {
         className="how-to-use-button"
         fontSize="xx-large"
         // height="4vh"
+        height="100%"
         iconBefore={<HandUpIcon />}
         onClick={toggleVisible}
-        text="Learn how to use this display"
         // width="35vw"
+        text="Learn how to use this display"
         width="100%"
-        height="100%"
       />
       {/* )} */}
     </div>

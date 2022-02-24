@@ -43,6 +43,7 @@ module.exports = {
     ],
     "no-console": ["warn"],
     "unicorn/filename-case": "off",
+    "unicorn/no-nested-ternary": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
@@ -91,6 +92,8 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-non-null-assertion": "error",
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/explicit-function-return-type": [
       "warn",
       {

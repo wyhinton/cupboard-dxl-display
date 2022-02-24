@@ -40,25 +40,25 @@ const LayoutTab = (): JSX.Element => {
         }}
       >
         <Button
+          appearance="primary"
           iconBefore={<AddIcon />}
+          intent="success"
           onClick={(e) => {
             setShowNewLayoutPopup(true);
           }}
           text="Add New Layout"
           width="55%"
-          intent="success"
-          appearance="primary"
         />
         <div style={{ height: "auto", width: "10%" }}>
           <IconButton
+            height="100%"
             icon={<RefreshIcon />}
-            width={"20%"}
-            height={"100%"}
             onClick={(
               _event: React.MouseEvent<HTMLButtonElement, MouseEvent>
             ) => {
               fetchTopLevelSheet();
             }}
+            width="20%"
           />
         </div>
       </TabPane>

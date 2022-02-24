@@ -3,13 +3,16 @@ import "./css/global.css";
 
 import { DndContext } from "@dnd-kit/core";
 import React, { useEffect } from "react";
+import type { Layouts } from "react-grid-layout";
 import { useIdle, useInterval } from "react-use";
 
+import AppDragContext from "./components/AppWrappers/AppDragContext";
+import AppTimers from "./components/AppWrappers/AppTimers";
 import Background from "./components/Background";
 import CardLayout from "./components/CardLayout/CardLayout";
-import AppDragContext from "./components/AppWrappers/AppDragContext";
 import EditorPanel from "./components/EditorPanel/EditorPanel";
 import HowToUse from "./components/HowToUse/HowToUse";
+import Loader from "./components/Loader";
 import ModeChangeButton from "./components/ModeChangeButton";
 import Screen from "./components/Shared/Screen";
 import { AppMode } from "./enums";
@@ -22,15 +25,13 @@ import {
   useWindowSize,
 } from "./hooks";
 import appConfig from "./static/appConfig";
-import { Layouts } from "react-grid-layout";
-import Loader from "./components/Loader";
-import AppTimers from "./components/AppWrappers/AppTimers";
+import { BrowserRouter, Router, useLocation } from "react-router-dom";
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  */
 
-const App = (): JSX.Element => {
+const Body = (): JSX.Element => {
   const { fetchTopLevelSheet } = useSheets();
 
   const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
@@ -47,6 +48,11 @@ const App = (): JSX.Element => {
   useEffect(() => {
     console.log(activeWidgets);
   }, [activeWidgets]);
+
+  const { search } = useLocation();
+  const link = new URLSearchParams(search);
+
+  console.log(link);
   return (
     <>
       <Background />
@@ -60,6 +66,7 @@ const App = (): JSX.Element => {
               {activeLayout && sheetsAreLoaded && (
                 <CardLayout
                   appMode={appMode}
+                  cardSettings={activeLayout.layoutSettings.cardSettings}
                   cards={[...activeCards]}
                   cols={appConfig.gridCols}
                   height={height}
@@ -90,6 +97,14 @@ const App = (): JSX.Element => {
         </AppDragContext>
       </AppTimers>
     </>
+  );
+};
+
+const App = (): JSX.Element => {
+  return (
+    <BrowserRouter>
+      <Body />
+    </BrowserRouter>
   );
 };
 

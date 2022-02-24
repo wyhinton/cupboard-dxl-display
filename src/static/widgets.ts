@@ -1,4 +1,4 @@
-import { WidgetType } from "../data_structs/WidgetData";
+import type { WidgetType } from "../data_structs/WidgetData";
 
 const clock = { id: "clock" as WidgetType, w: 2, h: 2 };
 const info = { id: "info" as WidgetType, w: 1, h: 1 };

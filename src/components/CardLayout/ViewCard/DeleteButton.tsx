@@ -13,8 +13,8 @@ const DeleteButton = ({ onClick, action }: DeleteButtonProperties): JSX.Element 
     return (
       <div
         className="delete-button-container"
-        onMouseUp={onClick}
         onClick={onClick}
+        onMouseUp={onClick}
         onTouchEnd={(e)=>{action}}
       >
         <div

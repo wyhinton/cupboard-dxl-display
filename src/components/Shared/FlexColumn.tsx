@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect,useState } from "react";
 
-interface FlexColumnProps
-  extends Omit<React.HTMLProps<HTMLDivElement>, "as" | "ref"> {}
+type FlexColumnProperties = Omit<React.HTMLProps<HTMLDivElement>, "as" | "ref">
 
-const FlexColumn = (props: FlexColumnProps): JSX.Element => {
+const FlexColumn = (properties: FlexColumnProperties): JSX.Element => {
   return (
     <div
-      {...props}
+      {...properties}
       style={{
-        ...(props.style || {}),
+        ...(properties.style || {}),
         display: "flex",
         flexDirection: "column",
       }}

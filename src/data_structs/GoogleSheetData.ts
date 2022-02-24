@@ -1,4 +1,4 @@
-import { SheetNames } from "../enums";
+import type { SheetNames } from "../enums";
 
 export default class GoogleSheetData {
   title!: string;

@@ -1,4 +1,6 @@
-import { action, Action, thunk, Thunk } from "easy-peasy";
+import type { Action} from "easy-peasy";
+import { action, Thunk,thunk } from "easy-peasy";
+
 import appConfig from "../static/appConfig";
 import { StoreModel } from "./index";
 

@@ -1,9 +1,13 @@
-import React, { FC, ReactNode, useEffect } from "react";
-import { Droppable, DroppableProps } from "react-beautiful-dnd";
-import { AddIcon } from "evergreen-ui";
 import "../../css/droppable.css";
+
+import { AddIcon } from "evergreen-ui";
+import type { FC, ReactNode} from "react";
+import React, { useEffect } from "react";
+import type { DroppableProps } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
+
+import type { DndTypes } from "../../enums";
 import Pulsar from "../Shared/Pulsar";
-import { DndTypes } from "../../enums";
 interface IXDrop extends Omit<DroppableProps, "children"> {
   children: ReactNode;
   cardType: DndTypes;
@@ -19,17 +23,17 @@ const IXDrop: FC<IXDrop> = ({
 }) => {
   // const droppableContainert className = {"droppable " + className}
   return (
-    <Droppable {...properties} type={"DEFAULT"}>
+    <Droppable {...properties} type="DEFAULT">
       {(provided, snapshot) => {
         return (
           <div
             {...provided.innerRef}
-            ref={provided.innerRef}
             className={
               snapshot.isDraggingOver
                 ? "droppable-hovered" + " " + className
                 : "droppable" + " " + className
             }
+            ref={provided.innerRef}
           >
             <div
               className={

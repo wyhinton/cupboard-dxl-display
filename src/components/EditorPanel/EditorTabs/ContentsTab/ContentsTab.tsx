@@ -6,13 +6,13 @@ import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 import ReactImageFallback from "react-image-fallback";
 
-import CardData from "../../../../data_structs/CardData";
+import type CardData from "../../../../data_structs/CardData";
 import { CardView, DndTypes, DragSource } from "../../../../enums";
 import { useLayout, useSheets, useStoreState } from "../../../../hooks";
 import { formatDate } from "../../../../utils";
+import IFrameView from "../../../CardContent";
 import DraggableRow from "../../../DragAndDrop/DraggableRow";
 import IXDrop from "../../../DragAndDrop/IXDrop";
-import IFrameView from "../../../IFrameView";
 import Loader from "../../../Loader";
 import Button from "../../../Shared/Button";
 import FlexRow from "../../../Shared/FlexRow";
@@ -85,22 +85,21 @@ const ContentsTab = (): JSX.Element => {
       <FlexRow style={{ padding: "0.5em" }}>
         <SearchInput
           onChange={(event: React.FormEvent<HTMLInputElement>) =>
-            setSearchTerm(event.currentTarget.value)
-          }
+            setSearchTerm(event.currentTarget.value)}
           placeholder="search title"
           width="90%"
         />
         <FlexRow style={{ width: "100%", justifyContent: "space-around" }}>
           <div style={{ height: "100%", width: "10%" }}>
             <IconButton
+              height="100%"
               icon={<RefreshIcon />}
-              width={"20%"}
               onClick={(
                 _event: React.MouseEvent<HTMLButtonElement, MouseEvent>
               ) => {
                 fetchTopLevelSheet();
               }}
-              height={"100%"}
+              width="20%"
             />
           </div>
           <Button
@@ -153,10 +152,10 @@ const ContentsTab = (): JSX.Element => {
                 const { added, id, author, interaction, isActive } = card;
                 return (
                   <DraggableRow
+                    card={card}
                     className={
                       isActive ? "content-row-active" : "content-row-inactive"
                     }
-                    card={card}
                     dndType={DndTypes.CARD_ROW}
                     draggableId={id}
                     index={index}
@@ -201,9 +200,9 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
     setDelayHandler(
       setTimeout(() => {
         const { pageY } = event;
-        const el = document.getElementById(iconId)
+        const element = document.getElementById(iconId)
           ?.parentElement as HTMLDivElement;
-        const { x } = el.getBoundingClientRect();
+        const { x } = element.getBoundingClientRect();
         setPosition([x + 100, pageY]);
         setHovered(true);
       }, 250)
@@ -243,7 +242,7 @@ const TitleWithIcon = ({ card }: { card: CardData }): JSX.Element => {
         <IFrameView
           card={card}
           cardView={CardView.GRID}
-          objectFit={"contain"}
+          objectFit="contain"
           onError={(_c) => {}}
           onLoad={(_c) => {
             setPreviewLoaded(true);
@@ -279,7 +278,7 @@ const LoaderOverlay = ({ visible }: { visible: boolean }): JSX.Element => {
         alignItems: "center",
       }}
     >
-      <Loader visible={true} />
+      <Loader visible />
     </div>
   );
 };

@@ -1,6 +1,7 @@
-import React from "react";
 import "../../css/pulsar.css";
+
 import { AddIcon } from "evergreen-ui";
+import React from "react";
 interface PulsarProperties {}
 
 const Pulsar = () => {

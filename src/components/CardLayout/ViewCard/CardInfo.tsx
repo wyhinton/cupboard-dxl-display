@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import CardData from "../../../data_structs/CardData";
 import "../../../css/cardInfo.css"
+
+import React, { useState } from "react";
+
+import type CardData from "../../../data_structs/CardData";
 /**
  * Formats text from a CardData object, including it's title and source url.
  * @component
@@ -18,8 +20,7 @@ const CardInfo = ({
     // fontSize: "large",
   };
   return (
-    <>
-      <div className={"card-footer"}>
+    <div className="card-footer">
         <h2 style={titleStyle}>{data.title}</h2>
         {/* <a>{data.src}</a> */}
         <p>
@@ -29,7 +30,6 @@ const CardInfo = ({
           and scrambled it to make a type specimen book{" "}
         </p>
       </div>
-    </>
   );
 };
 

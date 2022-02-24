@@ -1,12 +1,12 @@
-import { Action, Computed, computed, Thunk } from "easy-peasy";
-import { action, thunk } from "easy-peasy";
+import type { Action, Computed, Thunk } from "easy-peasy";
+import { action, computed , thunk } from "easy-peasy";
 import Papa from "papaparse";
 import { act } from "react-dom/test-utils";
 
 import GoogleSheetData from "../data_structs/GoogleSheetData";
-import { SheetNames } from "../enums";
-import AppError from "../interfaces/AppError";
-import PrincipleSheetRow from "../interfaces/PrincipleSheetRow";
+import type { SheetNames } from "../enums";
+import type AppError from "../interfaces/AppError";
+import type PrincipleSheetRow from "../interfaces/PrincipleSheetRow";
 import type RawCardRow from "../interfaces/RawCardRow";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import cardDataSheetKey from "../static/cardDataSheetKey";
@@ -94,7 +94,7 @@ const googleSheetsModel: GoogleSheetsModel = {
             },
           ]);
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
           actions.setLayoutsSheetUrl(
             googleSheetUrlToCSVUrl(
               `${process.env.PUBLIC_URL}/LAYOUTS_BACKUP.csv`
@@ -114,7 +114,7 @@ const googleSheetsModel: GoogleSheetsModel = {
             },
           ]);
         });
-    } catch (error) {
+    } catch {
       console.log("DOING BACKUP");
       actions.addGoogleSheetError({
         errorType: "failed to fetch master google sheet",
@@ -132,7 +132,7 @@ const googleSheetsModel: GoogleSheetsModel = {
       const sheetData = new GoogleSheetData("DSC App", cardDataSheetKey.key);
       const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
 
-      results.forEach((result, num) => {
+      for (const [number, result] of results.entries()) {
         console.log(result);
         if (result.status == "fulfilled") {
           goodValues.push(result);
@@ -141,7 +141,7 @@ const googleSheetsModel: GoogleSheetsModel = {
         if (result.status == "rejected") {
           console.error("failed ");
         }
-      });
+      }
       actions.setAppGoogleSheetData(sheetData);
       sheetData.getSheetRows("CARDS").then((r) => {
         actions.setCardDataGoogleSheet(r as RawCardRow[]);
@@ -167,7 +167,7 @@ const googleSheetsModel: GoogleSheetsModel = {
         const sheetData = new GoogleSheetData("DSC App", cardDataSheetKey.key);
         const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
 
-        results.forEach((result, num) => {
+        for (const [number, result] of results.entries()) {
           console.log(result);
           if (result.status == "fulfilled") {
             goodValues.push(result);
@@ -182,7 +182,7 @@ const googleSheetsModel: GoogleSheetsModel = {
             });
             console.error("failed ");
           }
-        });
+        }
         actions.setAppGoogleSheetData(sheetData);
         sheetData.getSheetRows("CARDS").then((r) => {
           actions.setCardDataGoogleSheet(r as RawCardRow[]);
@@ -233,8 +233,7 @@ function googleSheetUrlToCSVUrl(url: string): string {
   const sheetKey = sections[5];
   const sectionsGid = url.split("gid=");
   const gid = sectionsGid[1];
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetKey}/export?format=csv&gid=${gid}`;
-  return csvUrl;
+  return `https://docs.google.com/spreadsheets/d/${sheetKey}/export?format=csv&gid=${gid}`;
 }
 
 function getSheetData(
@@ -255,7 +254,7 @@ function getSheetData(
           resolve({ rows: data, sheetTitle: sheetTitle });
         },
       });
-    } catch (error) {
+    } catch {
       reject("failed to get sheet");
     }
   });
