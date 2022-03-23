@@ -1,5 +1,5 @@
 import type { Action, Computed, Thunk } from "easy-peasy";
-import { action, computed , thunk } from "easy-peasy";
+import { action, computed, thunk } from "easy-peasy";
 import Papa from "papaparse";
 import { act } from "react-dom/test-utils";
 
@@ -27,6 +27,7 @@ export interface GoogleSheetsModel {
   layoutSheetUrl: string | undefined;
   cardSheetUrl: string | undefined;
   googleSheetsErrors: AppError[];
+  urlSheet: string | null;
 
   //computed
   sheetsAreLoaded: Computed<GoogleSheetsModel, boolean>;
@@ -43,6 +44,7 @@ export interface GoogleSheetsModel {
   setCardDataGoogleSheet: Action<GoogleSheetsModel, RawCardRow[]>;
   setLayoutDataGoogleSheet: Action<GoogleSheetsModel, RawLayoutRow[]>;
   addGoogleSheetError: Action<GoogleSheetsModel, AppError>;
+  setUrlSheet: Action<GoogleSheetsModel, string | null>;
 }
 
 interface LoadSheetResult {
@@ -55,6 +57,7 @@ const googleSheetsModel: GoogleSheetsModel = {
   layoutDataGoogleSheet: null,
   cardDataGoogleSheet: null,
   parentGoogleSheet: undefined,
+  urlSheet: null,
   //sheet urls
   parentSheetUrl: undefined,
   formUrl: undefined,
@@ -213,6 +216,9 @@ const googleSheetsModel: GoogleSheetsModel = {
   }),
   setLayoutsSheetUrl: action((state, layoutSheetUrl) => {
     state.layoutSheetUrl = layoutSheetUrl;
+  }),
+  setUrlSheet: action((state, urlSheet) => {
+    state.urlSheet = urlSheet;
   }),
   addGoogleSheetError: action((state, googleSheetError) => {
     const errorsString = state.googleSheetsErrors.map(

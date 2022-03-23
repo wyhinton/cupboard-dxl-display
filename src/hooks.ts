@@ -140,7 +140,7 @@ export const useAppSettings = (): UseAppSettingsProperties => {
 
 interface UseSheetsProperties {
   fetchTopLevelSheet: ThunkCreator<void, any>;
-
+  setUrlSheet: ActionCreator<string | null>;
   parentSheetUrl: string | undefined;
   cardSheetUrl: string | undefined;
   layoutSheetUrl: string | undefined;
@@ -161,6 +161,10 @@ export const useSheets = (): UseSheetsProperties => {
   const layoutSheetUrl = useStoreState(
     (state) => state.googleSheetsModel.layoutSheetUrl
   );
+
+  const setUrlSheet = useStoreActions(
+    (actions) => actions.googleSheetsModel.setUrlSheet
+  );
   const formUrl = useStoreState((state) => state.googleSheetsModel.formUrl);
 
   return {
@@ -169,6 +173,7 @@ export const useSheets = (): UseSheetsProperties => {
     cardSheetUrl,
     layoutSheetUrl,
     formUrl,
+    setUrlSheet,
   };
 };
 

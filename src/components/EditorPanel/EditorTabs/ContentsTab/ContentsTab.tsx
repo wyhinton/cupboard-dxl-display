@@ -1,6 +1,6 @@
 import "../../../../css/table.css";
 
-import { IconButton, RefreshIcon, SearchInput } from "evergreen-ui";
+import { IconButton, RefreshIcon, SearchInput, Tooltip } from "evergreen-ui";
 import fuzzysort from "fuzzysort";
 import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
@@ -91,6 +91,7 @@ const ContentsTab = (): JSX.Element => {
         />
         <FlexRow style={{ width: "100%", justifyContent: "space-around" }}>
           <div style={{ height: "100%", width: "10%" }}>
+            <Tooltip content="Reload content">
             <IconButton
               height="100%"
               icon={<RefreshIcon />}
@@ -101,6 +102,7 @@ const ContentsTab = (): JSX.Element => {
               }}
               width="20%"
             />
+            </Tooltip>
           </div>
           <Button
             appearance="default"

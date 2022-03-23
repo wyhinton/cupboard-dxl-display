@@ -2,9 +2,7 @@ interface AppConfig {
   //time for the app to return to display mode after no interactions in edit mode
   idleTime: number;
   //link to the sheet containing the list of different card content
-  sheetLink: string;
   //google sheets form link for saving new layouts
-  formLink: string;
   gridRows: number;
   gridCols: number;
   gridBottomPadding: number;
@@ -22,13 +20,10 @@ interface AppConfig {
 
 const appConfig: AppConfig = {
   idleTime: process.env.NODE_ENV === "development" ? 100_000_000 : 10_000_000,
-  sheetLink:
-    "https://docs.google.com/spreadsheets/d/1BR1AQ5Zmt_o_0dOm9AvDht0G3Q6RXQUhX71Vi4H7tTU/edit#gid=0",
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1,
   // defaultLayoutName: "PostersV3",
   defaultLayoutName: "Data Vis Types Chart 1",
-  formLink: "https://forms.gle/nc3UQFtFUtSaF5mu6",
   widgetIds: ["clock", "group label", "info"],
   gridRows: 6,
   gridCols: 4,
@@ -40,3 +35,6 @@ const appConfig: AppConfig = {
 };
 
 export default appConfig;
+
+// s=1zwPZV75EhBLseFpcpQhHXEjLTV6JDrwfIGNhaI2GCXI
+// gid=996942125

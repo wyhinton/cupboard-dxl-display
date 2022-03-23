@@ -21,38 +21,39 @@ import {
   useEffectOnce,
   useLayout,
   useSheets,
-  useStoreActions,
   useWindowSize,
 } from "./hooks";
 import appConfig from "./static/appConfig";
 import { BrowserRouter, Router, useLocation } from "react-router-dom";
+
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
  */
 
 const Body = (): JSX.Element => {
-  const { fetchTopLevelSheet } = useSheets();
+  const { fetchTopLevelSheet, setUrlSheet } = useSheets();
 
   const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
     useLayout();
 
   const { appMode, sheetsAreLoaded } = useApp();
 
+  const query = useQuery();
   useEffectOnce(() => {
+    setUrlSheet(query.get("url"));
     fetchTopLevelSheet();
   });
 
   const { width, height } = useWindowSize();
 
-  useEffect(() => {
-    console.log(activeWidgets);
-  }, [activeWidgets]);
-
-  const { search } = useLocation();
-  const link = new URLSearchParams(search);
-
-  console.log(link);
+  console.log(query.get("url"));
+  // account?url=https://docs.google.com/spreadsheets/d/e/2PACX-1vRalMG47cvXmCbEqeIJWn5qwd9bPhHUV16_VN7LuKsv53YQdn9e8XSAzNulXCtP_BIFBTUy0Z5e6KKE/pub?output=csv
   return (
     <>
       <Background />
