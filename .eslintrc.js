@@ -16,6 +16,7 @@ module.exports = {
     "unicorn",
     "only-warn",
     "etc",
+    "sort-exports",
     "simple-import-sort",
   ],
   extends: [
@@ -44,6 +45,7 @@ module.exports = {
     "no-console": ["warn"],
     "unicorn/filename-case": "off",
     "unicorn/no-nested-ternary": "off",
+    "unicorn/prefer-array-find": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
@@ -60,7 +62,6 @@ module.exports = {
     "react/jsx-curly-newline": "warn",
     "react/jsx-first-prop-new-line": "warn",
     "react/jsx-fragments": "warn",
-    // "react/jsx-indent": "warn",
     "react/jsx-newline": ["warn", { prevent: true }],
     "react/jsx-no-useless-fragment": "warn",
     "react/jsx-pascal-case": "warn",

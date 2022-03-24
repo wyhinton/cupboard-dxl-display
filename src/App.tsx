@@ -2,16 +2,15 @@ import "./App.global.css";
 import "./css/global.css";
 
 import { DndContext } from "@dnd-kit/core";
-import React, { useEffect } from "react";
+import React from "react";
 import type { Layouts } from "react-grid-layout";
-import { useIdle, useInterval } from "react-use";
+import { BrowserRouter, Router, useLocation } from "react-router-dom";
 
 import AppDragContext from "./components/AppWrappers/AppDragContext";
 import AppTimers from "./components/AppWrappers/AppTimers";
 import Background from "./components/Background";
 import CardLayout from "./components/CardLayout/CardLayout";
 import EditorPanel from "./components/EditorPanel/EditorPanel";
-import HowToUse from "./components/HowToUse/HowToUse";
 import Loader from "./components/Loader";
 import ModeChangeButton from "./components/ModeChangeButton";
 import Screen from "./components/Shared/Screen";
@@ -24,7 +23,6 @@ import {
   useWindowSize,
 } from "./hooks";
 import appConfig from "./static/appConfig";
-import { BrowserRouter, Router, useLocation } from "react-router-dom";
 
 function useQuery() {
   const { search } = useLocation();
@@ -47,7 +45,10 @@ const Body = (): JSX.Element => {
   const query = useQuery();
   useEffectOnce(() => {
     setUrlSheet(query.get("url"));
-    fetchTopLevelSheet();
+    const url = query.get("url");
+    if (url) {
+      fetchTopLevelSheet(url);
+    }
   });
 
   const { width, height } = useWindowSize();

@@ -76,47 +76,48 @@ const layoutsModel: LayoutsModel = {
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     (actions, target, { getState }) => {
-      target.payload.getSheetRows<RawLayoutRow>("LAYOUTS").then((rows) => {
-        const rawLayoutRows = rows;
-        // const layouts: LayoutData[] = [];
-        const { externalLayouts } = getState();
-        // const layouts = getState().externalLayouts
-        const currentLayoutIds = new Set(
-          externalLayouts.map((layout) => layout.id)
-        );
-
-        for (const row of rawLayoutRows) {
-          try {
-            const l = new LayoutData(row);
-            if (!currentLayoutIds.has(l.id)) {
-              externalLayouts.push(l);
+      target.payload
+        .getSheetRows<RawLayoutRow>("LAYOUTS")
+        .then((rawLayoutRows) => {
+          const { externalLayouts } = getState();
+          const currentLayoutIds = new Set(
+            externalLayouts.map((layout) => layout.id)
+          );
+          console.log(rawLayoutRows);
+          for (const row of rawLayoutRows) {
+            try {
+              const l = new LayoutData(row);
+              console.log(l);
+              if (!currentLayoutIds.has(l.id)) {
+                externalLayouts.push(l);
+              }
+            } catch {
+              console.log("FAILED TO MAKE LAYOUT DATA");
+              actions.addLayoutError({
+                errorType: "failed to read layout row",
+                description: `failed to read layout row ${
+                  row.title ?? "NO TITLE PROVIDED"
+                }`,
+                source: row.title ?? "NO TITLE PROVIDED",
+                link: "none",
+              });
             }
-          } catch {
-            actions.addLayoutError({
-              errorType: "failed to read layout row",
-              description: `failed to read layout row ${
-                row.title ?? "NO TITLE PROVIDED"
-              }`,
-              source: row.title ?? "NO TITLE PROVIDED",
-              link: "none",
-            });
           }
-        }
-        if (appConfig.useStaticLayout) {
-          // actions.setActiveLayout(defaultLayout);
-          // actions.setBufferLayout(defaultLayout.layout);
-        } else {
-          // const defaultLayout = externalLayouts.filter(
-          //   (layout) => layout.title === appConfig.defaultLayoutName
-          // )[0];
-          const defaultLayout = externalLayouts[0];
-          if (defaultLayout) {
-            actions.setActiveLayout(defaultLayout);
-            actions.setBufferLayout(defaultLayout.layout);
+          if (appConfig.useStaticLayout) {
+            // actions.setActiveLayout(defaultLayout);
+            // actions.setBufferLayout(defaultLayout.layout);
+          } else {
+            // const defaultLayout = externalLayouts.filter(
+            //   (layout) => layout.title === appConfig.defaultLayoutName
+            // )[0];
+            const defaultLayout = externalLayouts[0];
+            if (defaultLayout) {
+              actions.setActiveLayout(defaultLayout);
+              actions.setBufferLayout(defaultLayout.layout);
+            }
           }
-        }
-        actions.setExternalLayouts(externalLayouts);
-      });
+          actions.setExternalLayouts(externalLayouts);
+        });
     }
   ),
   addLayoutError: action((state, error) => {

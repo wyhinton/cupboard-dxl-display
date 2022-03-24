@@ -139,12 +139,13 @@ export const useAppSettings = (): UseAppSettingsProperties => {
 };
 
 interface UseSheetsProperties {
-  fetchTopLevelSheet: ThunkCreator<void, any>;
+  fetchTopLevelSheet: ThunkCreator<string, any>;
   setUrlSheet: ActionCreator<string | null>;
   parentSheetUrl: string | undefined;
   cardSheetUrl: string | undefined;
   layoutSheetUrl: string | undefined;
   formUrl: string | undefined;
+  refreshSheets: ThunkCreator<void, any>;
 }
 
 export const useSheets = (): UseSheetsProperties => {
@@ -167,6 +168,9 @@ export const useSheets = (): UseSheetsProperties => {
   );
   const formUrl = useStoreState((state) => state.googleSheetsModel.formUrl);
 
+  const refreshSheets = useStoreActions(
+    (actions) => actions.googleSheetsModel.refreshSheets
+  );
   return {
     fetchTopLevelSheet,
     parentSheetUrl,
@@ -174,6 +178,7 @@ export const useSheets = (): UseSheetsProperties => {
     layoutSheetUrl,
     formUrl,
     setUrlSheet,
+    refreshSheets,
   };
 };
 
@@ -402,7 +407,7 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
   }, [reference, handler]);
 }
 
-export function useEffectOnce(effect: EffectCallback) {
+export function useEffectOnce(effect: EffectCallback): void {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(effect, []);
 }

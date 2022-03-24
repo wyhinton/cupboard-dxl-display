@@ -9,7 +9,6 @@ import type AppError from "../interfaces/AppError";
 import type PrincipleSheetRow from "../interfaces/PrincipleSheetRow";
 import type RawCardRow from "../interfaces/RawCardRow";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
-import cardDataSheetKey from "../static/cardDataSheetKey";
 
 /**
  * Responsible for making requests to google sheets. Other models must listen this model to intercept the sheet payload.
@@ -32,7 +31,7 @@ export interface GoogleSheetsModel {
   //computed
   sheetsAreLoaded: Computed<GoogleSheetsModel, boolean>;
   //requests
-  fetchTopLevelSheet: Thunk<GoogleSheetsModel>;
+  fetchTopLevelSheet: Thunk<GoogleSheetsModel, string>;
   fetchAppGoogleSheet: Thunk<GoogleSheetsModel>;
   fetchSheet: Thunk<GoogleSheetsModel, { url: string; name: SheetNames }[]>;
   //setters
@@ -45,6 +44,7 @@ export interface GoogleSheetsModel {
   setLayoutDataGoogleSheet: Action<GoogleSheetsModel, RawLayoutRow[]>;
   addGoogleSheetError: Action<GoogleSheetsModel, AppError>;
   setUrlSheet: Action<GoogleSheetsModel, string | null>;
+  refreshSheets: Thunk<GoogleSheetsModel>;
 }
 
 interface LoadSheetResult {
@@ -77,15 +77,15 @@ const googleSheetsModel: GoogleSheetsModel = {
       return sheets.every((s) => s !== null);
     }
   ),
-  fetchTopLevelSheet: thunk((actions) => {
+  fetchTopLevelSheet: thunk((actions, parentSheetUrl) => {
     try {
-      getSheetData("TOP_LEVEL", process.env.REACT_APP_SHEET_URL as string)
+      getSheetData("TOP_LEVEL", parentSheetUrl)
         .then((r) => {
           const sheetRow = r.rows[0] as PrincipleSheetRow;
           actions.setFormUrl(sheetRow.googleForm);
           actions.setLayoutsSheetUrl(sheetRow.layoutsSheet);
           actions.setCardSheetUrl(sheetRow.cardsSheet);
-          actions.setParentSheetUrl(process.env.REACT_APP_SHEET_URL as string);
+          actions.setParentSheetUrl(parentSheetUrl);
           actions.fetchSheet([
             {
               name: "LAYOUTS",
@@ -129,30 +129,39 @@ const googleSheetsModel: GoogleSheetsModel = {
     }
   }),
   fetchSheet: thunk(async (actions, sheets, { getState }) => {
-    console.log(getState().cardSheetUrl, getState().layoutSheetUrl);
     const sheetResponses = sheets.map((s) => getSheetData(s.name, s.url));
-    Promise.allSettled(sheetResponses).then((results) => {
-      const sheetData = new GoogleSheetData("DSC App", cardDataSheetKey.key);
-      const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
+    const { cardSheetUrl } = getState();
+    console.log(sheetResponses);
 
-      for (const [number, result] of results.entries()) {
-        console.log(result);
-        if (result.status == "fulfilled") {
-          goodValues.push(result);
-          sheetData.addSheet(result.value.sheetTitle, result.value.rows);
+    if (cardSheetUrl) {
+      Promise.allSettled(sheetResponses).then((results) => {
+        const sheetData = new GoogleSheetData("DSC App", cardSheetUrl);
+        const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
+
+        for (const [number, result] of results.entries()) {
+          if (result.status == "fulfilled") {
+            goodValues.push(result);
+            sheetData.addSheet(result.value.sheetTitle, result.value.rows);
+          }
+          if (result.status == "rejected") {
+          }
         }
-        if (result.status == "rejected") {
-          console.error("failed ");
-        }
-      }
-      actions.setAppGoogleSheetData(sheetData);
-      sheetData.getSheetRows("CARDS").then((r) => {
-        actions.setCardDataGoogleSheet(r as RawCardRow[]);
+        actions.setAppGoogleSheetData(sheetData);
+        sheetData.getSheetRows("CARDS").then((r) => {
+          actions.setCardDataGoogleSheet(r as RawCardRow[]);
+        });
+        sheetData.getSheetRows("LAYOUTS").then((r) => {
+          actions.setLayoutDataGoogleSheet(r as RawLayoutRow[]);
+        });
       });
-      sheetData.getSheetRows("LAYOUTS").then((r) => {
-        actions.setLayoutDataGoogleSheet(r as RawLayoutRow[]);
+    } else {
+      actions.addGoogleSheetError({
+        errorType: "no url for cards provided",
+        description: "",
+        source: "",
+        link: "",
       });
-    });
+    }
   }),
 
   fetchAppGoogleSheet: thunk(async (actions, _, { getState }) => {
@@ -167,34 +176,41 @@ const googleSheetsModel: GoogleSheetsModel = {
 
     Promise.allSettled([getCardDataResponse, getLayoutDataResponse]).then(
       (results) => {
-        const sheetData = new GoogleSheetData("DSC App", cardDataSheetKey.key);
-        const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
+        const { cardSheetUrl } = getState();
+        if (cardSheetUrl) {
+          const sheetData = new GoogleSheetData("DSC App", cardSheetUrl);
+          const goodValues: PromiseFulfilledResult<LoadSheetResult>[] = [];
 
-        for (const [number, result] of results.entries()) {
-          console.log(result);
-          if (result.status == "fulfilled") {
-            goodValues.push(result);
-            sheetData.addSheet(result.value.sheetTitle, result.value.rows);
+          for (const [number, result] of results.entries()) {
+            if (result.status == "fulfilled") {
+              goodValues.push(result);
+              sheetData.addSheet(result.value.sheetTitle, result.value.rows);
+            }
+            if (result.status == "rejected") {
+              actions.addGoogleSheetError({
+                errorType: "failed to fetch layout or card sheet",
+                description: "could not retrieve google sheet",
+                source: "LAYOUTS/CARD",
+                link: "NA",
+              });
+            }
           }
-          if (result.status == "rejected") {
-            actions.addGoogleSheetError({
-              errorType: "failed to fetch layout or card sheet",
-              description: "could not retrieve google sheet",
-              source: "LAYOUTS/CARD",
-              link: "NA",
-            });
-            console.error("failed ");
-          }
+          actions.setAppGoogleSheetData(sheetData);
+          sheetData.getSheetRows("CARDS").then((r) => {
+            actions.setCardDataGoogleSheet(r as RawCardRow[]);
+          });
+          sheetData.getSheetRows("LAYOUTS").then((r) => {
+            actions.setLayoutDataGoogleSheet(r as RawLayoutRow[]);
+          });
         }
-        actions.setAppGoogleSheetData(sheetData);
-        sheetData.getSheetRows("CARDS").then((r) => {
-          actions.setCardDataGoogleSheet(r as RawCardRow[]);
-        });
-        sheetData.getSheetRows("LAYOUTS").then((r) => {
-          actions.setLayoutDataGoogleSheet(r as RawLayoutRow[]);
-        });
       }
     );
+  }),
+  refreshSheets: thunk(async (actions, _, { getState }) => {
+    const { parentSheetUrl } = getState();
+    if (parentSheetUrl) {
+      actions.fetchTopLevelSheet(parentSheetUrl);
+    }
   }),
   setAppGoogleSheetData: action((state, googleSheet) => {
     state.parentGoogleSheet = googleSheet;

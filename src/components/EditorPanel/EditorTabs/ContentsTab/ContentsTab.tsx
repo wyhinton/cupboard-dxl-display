@@ -29,7 +29,7 @@ const ContentsTab = (): JSX.Element => {
   );
 
   const { clearCards, resetLayout } = useLayout();
-  const { fetchTopLevelSheet } = useSheets();
+  const { refreshSheets } = useSheets();
 
   const [filterKey, setFilterKey] = useState<string | undefined>();
   const [filterDirection, setFilterDirection] = useState(true);
@@ -85,23 +85,24 @@ const ContentsTab = (): JSX.Element => {
       <FlexRow style={{ padding: "0.5em" }}>
         <SearchInput
           onChange={(event: React.FormEvent<HTMLInputElement>) =>
-            setSearchTerm(event.currentTarget.value)}
+            setSearchTerm(event.currentTarget.value)
+          }
           placeholder="search title"
           width="90%"
         />
         <FlexRow style={{ width: "100%", justifyContent: "space-around" }}>
           <div style={{ height: "100%", width: "10%" }}>
             <Tooltip content="Reload content">
-            <IconButton
-              height="100%"
-              icon={<RefreshIcon />}
-              onClick={(
-                _event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-              ) => {
-                fetchTopLevelSheet();
-              }}
-              width="20%"
-            />
+              <IconButton
+                height="100%"
+                icon={<RefreshIcon />}
+                onClick={(
+                  _event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                ) => {
+                  refreshSheets();
+                }}
+                width="20%"
+              />
             </Tooltip>
           </div>
           <Button

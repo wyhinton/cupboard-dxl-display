@@ -7,12 +7,12 @@ import React, { useEffect, useState } from "react";
 import ReactDom from "react-dom";
 
 import { useLayout, useSheets, useStoreState } from "../../../../hooks";
-import formEmbedUrl from "../../../../static/formEmbedUrl";
 import DeleteButton from "../../../CardLayout/ViewCard/DeleteButton";
 import Button from "../../../Shared/Button";
 import FlexColumn from "../../../Shared/FlexColumn";
 import FlexRow from "../../../Shared/FlexRow";
 import Modal from "../../../Shared/Modal";
+import GoogleFormIframe from "./GoogleFormPopup/GoogleFormIframe";
 
 /**
  * Modal popup for displaying cards when in preview mode. Displays on top of the CardLayout, and renders
@@ -29,13 +29,12 @@ const GoogleFormPopup = ({
   visible,
   onCloseComplete,
 }: GoogleFormPopupProperties): JSX.Element => {
-  const { layoutSheetUrl } = useSheets();
+  const { layoutSheetUrl, formUrl } = useSheets();
+
   const { activeLayout } = useLayout();
   const [isShown, setIsShown] = useState(visible);
   const [isCopiedJSON, setIsCopiedJson] = useState(false);
   const [contentString, setContentString] = useState("");
-  // const [trueLayoutString, setTrueLayoutString] = useState("");
-  // const { activeLayout } = useLayout();
   const layoutString = useStoreState((state) =>
     JSON.stringify(state.layoutsModel.activeLayout)
   );
@@ -89,20 +88,19 @@ const GoogleFormPopup = ({
             style={{
               height: "50vh",
               padding: "4vmin",
-              // alignItems: "center",
               justifyContent: "space-between",
             }}
           >
             <div style={{ width: "min-content" }}>
-              <CopyField
+              {/* <CopyField
                 onCloseComplete={onCloseComplete}
-                onCopy={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                onCopy={() => {
                   setIsCopiedJson(true);
                 }}
                 text={layoutString}
-              />
+              /> */}
             </div>
-            <GoogleFormIframe active={isCopiedJSON} src={formEmbedUrl} />
+            <GoogleFormIframe active={isCopiedJSON} />
           </FlexRow>
         </FlexColumn>
       </div>
@@ -111,130 +109,66 @@ const GoogleFormPopup = ({
   );
 };
 export default GoogleFormPopup;
-//TODO: IMPROVE INHERITANCE OF BUTTONS
-const CopyField = ({
-  text,
-  onCloseComplete,
-  onCopy,
-  isCurrentClipBoardContent,
-}: {
-  text: string;
-  isCurrentClipBoardContent?: boolean;
-  onCloseComplete: () => void;
-  onCopy: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-}): JSX.Element => {
-  const [isClipBoardCorrect, setIsClipBoardCorrect] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
 
-  useEffect(() => {
-    navigator.clipboard
-      .readText()
-      .then((clipboardText) => {
-        if (text === clipboardText) {
-          setIsClipBoardCorrect(true);
-          setIsCopied(true);
-        } else {
-          setIsCopied(false);
-          setIsClipBoardCorrect(false);
-        }
-      })
-      .catch((error: unknown) => {
-        console.error("Failed to read clipboard contents:", error);
-      });
-  }, [text]);
-  return (
-    <>
-      <Button
-        appearance="primary"
-        height={100}
-        iconBefore={<ClipboardIcon />}
-        intent="success"
-        onClick={(e) => {
-          navigator.clipboard.writeText(text);
-          setIsCopied(true);
-          onCopy(e);
-        }}
-        text="Copy Layout To Clip Board"
-        width={250}
-      />
-      {/* <div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            paddingTop: "1em",
-          }}
-        ></div>
-      </div> */}
-    </>
-  );
-};
+// //TODO: IMPROVE INHERITANCE OF BUTTONS
+// const CopyField = ({
+//   text,
+//   onCloseComplete,
+//   onCopy,
+//   isCurrentClipBoardContent,
+// }: {
+//   text: string;
+//   isCurrentClipBoardContent?: boolean;
+//   onCloseComplete: () => void;
+//   onCopy: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+// }): JSX.Element => {
+//   const [isClipBoardCorrect, setIsClipBoardCorrect] = useState(false);
+//   const [isCopied, setIsCopied] = useState(false);
 
-const GoogleFormIframe = ({
-  src,
-  active,
-}: {
-  src: string;
-  active: boolean;
-}): JSX.Element => {
-  return (
-    <div
-      style={{
-        width: 500,
-        height: "100%",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
-      <motion.div
-        animate={active ? { opacity: 0 } : {}}
-        style={{
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          backgroundColor: "red",
-          zIndex: 1,
-          top: 0,
-          left: 0,
-          opacity: 0.5,
-          display: "flex",
-          alignItems: "center",
-          pointerEvents: active ? "none" : "all",
-        }}
-      >
-        <div
-          style={{
-            width: "50%",
-            margin: "auto",
-            fontWeight: "bold",
-            border: "1px solid white",
-            padding: "1em",
-            backgroundColor: "white",
-            opacity: 1,
-          }}
-        >
-          Press the Copy Layout Button before Submitting New Layout
-        </div>
-      </motion.div>
-      <iframe
-        frameBorder={0}
-        // className={"google-form-iframe"}
-        // width={"100%"}
-        marginHeight={0}
-        marginWidth={0}
-        src={src}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-        }}
-      ></iframe>
-    </div>
-  );
-};
+//   useEffect(() => {
+//     navigator.clipboard
+//       .readText()
+//       .then((clipboardText) => {
+//         if (text === clipboardText) {
+//           setIsClipBoardCorrect(true);
+//           setIsCopied(true);
+//         } else {
+//           setIsCopied(false);
+//           setIsClipBoardCorrect(false);
+//         }
+//       })
+//       .catch((error: unknown) => {
+//         console.error("Failed to read clipboard contents:", error);
+//       });
+//   }, [text]);
+//   return (
+//     <>
+//       <Button
+//         appearance="primary"
+//         height={100}
+//         iconBefore={<ClipboardIcon />}
+//         intent="success"
+//         onClick={(e) => {
+//           navigator.clipboard.writeText(text);
+//           setIsCopied(true);
+//           onCopy(e);
+//         }}
+//         text="Copy Layout To Clip Board"
+//         width={250}
+//       />
+//       {/* <div>
+//         <div
+//           style={{
+//             display: "flex",
+//             flexDirection: "row",
+//             justifyContent: "center",
+//             paddingTop: "1em",
+//           }}
+//         ></div>
+//       </div> */}
+//     </>
+//   );
+// };
 
 const SideButton = (): JSX.Element => {
   return (

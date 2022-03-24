@@ -23,6 +23,17 @@ export interface ExtendedLayout {
   widgets: WidgetData[];
 }
 
+//in case the layout doe not provide any card settings
+const defaultCardSettings = {
+  scale: 1,
+  backgroundColor: undefined,
+  objectPosition: "center",
+};
+
+const defaultGridSettings = {
+  defaultBackgroundColor: "red",
+};
+
 export default class LayoutData {
   readonly title: string;
   readonly author: string;
@@ -40,22 +51,18 @@ export default class LayoutData {
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
     this.sourceLayout = JSON.parse(row.layout).layout;
-    if (JSON.parse(row.layout).layoutSettings) {
-      this.layoutSettings = JSON.parse(row.layout).layoutSettings;
-    } else {
-      this.layoutSettings = {
-        cardSettings: layout.lg.map((l) => {
-          return {
-            id: l.i,
-            scale: 1,
-            backgroundColor: undefined,
-            objectPosition: "center",
-          };
-        }),
-        gridSettings: { defaultBackgroundColor: "red" },
-      };
-      console.log(this.layoutSettings);
-    }
+
+    this.layoutSettings = JSON.parse(row.layout).layoutSettings
+      ? JSON.parse(row.layout).layoutSettings
+      : {
+          cardSettings: layout.lg.map((l) => {
+            return {
+              id: l.i,
+              ...defaultCardSettings,
+            };
+          }),
+          gridSettings: defaultGridSettings,
+        };
     this.layoutWidgets = JSON.parse(row.layout).layoutWidgets
       ? JSON.parse(row.layout).layoutWidgets
       : [];
@@ -138,8 +145,6 @@ export default class LayoutData {
   }
   sources(): string[] {
     const lg = this.layout.lg;
-    console.log(lg);
-    console.log(this.title);
     return lg.map((l: Layout) => l.i);
   }
   widgets(): string[] {
@@ -152,32 +157,26 @@ export default class LayoutData {
   getCardSettings(cardId: string): CardSettings {
     return this.layoutSettings.cardSettings.filter((c) => c.id === cardId)[0];
   }
-  setCardScale(id: string, scale: number) {
+  setCardScale(id: string, scale: number): void {
     if (this.sources().includes(id)) {
       this.layoutSettings.cardSettings.filter((cs) => cs.id === id)[0].scale =
         scale;
     }
-    console.log(this.layoutSettings.cardSettings);
   }
-  setCardBackgroundColor(id: string, backgroundColor: string) {
-    console.log("SETTING CARD SCALE");
+  setCardBackgroundColor(id: string, backgroundColor: string): void {
     if (this.sources().includes(id)) {
       this.layoutSettings.cardSettings.filter(
         (cs) => cs.id === id
       )[0].backgroundColor = backgroundColor;
     }
-    console.log(this.layoutSettings.cardSettings);
   }
-  setCardContentFit(id: string, contentFit: string) {
-    console.log("SETTING CARD SCALE");
+  setCardContentFit(id: string, contentFit: string): void {
     if (this.sources().includes(id)) {
       this.layoutSettings.cardSettings.filter(
         (cs) => cs.id === id
       )[0].contentFit = contentFit;
     }
-    console.log(this.layoutSettings.cardSettings);
   }
-
   layoutToString(): string {
     const object = {
       layout: this.layout.lg,
