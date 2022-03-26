@@ -68,7 +68,7 @@ const Body = (): JSX.Element => {
                     appMode={appMode}
                     cardSettings={activeLayout.layoutSettings.cardSettings}
                     cards={[...activeCards]}
-                    cols={appConfig.gridCols}
+                    cols={appConfig.gridSettings.gridCols}
                     height={height}
                     isDraggable={appMode === AppMode.EDIT}
                     isResizable={appMode === AppMode.EDIT}
@@ -87,7 +87,7 @@ const Body = (): JSX.Element => {
                       }
                       setBufferLayout(newLayout);
                     }}
-                    rows={appConfig.gridRows}
+                    rows={appConfig.gridSettings.gridRows}
                     widgets={[...activeWidgets]}
                     width={width}
                   />

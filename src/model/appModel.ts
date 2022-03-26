@@ -58,7 +58,7 @@ const appModel: AppDataModel = {
   activeCards: [],
   appErrors: [],
   rotateLayouts: true,
-  rotationSpeed: appConfig.rotationDuration,
+  rotationSpeed: appConfig.timers.rotationDuration,
   appMode: AppMode.DISPLAY,
   editingCard: undefined,
   // animationCounter: 0,

@@ -12,7 +12,7 @@ import appConfig from "../../static/appConfig";
 import { useIdle } from "react-use";
 
 const AppTimers = ({ children }: { children: JSX.Element }): JSX.Element => {
-  const isIdle = useIdle(appConfig.idleTime, false);
+  const isIdle = useIdle(appConfig.timers.idleTime, false);
   const { rotationSpeed, rotateLayouts } = useAppSettings();
   const { appMode, toggleAppMode, transitionLayout } = useApp();
 

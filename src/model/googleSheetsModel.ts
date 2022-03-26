@@ -18,10 +18,14 @@ import type RawLayoutRow from "../interfaces/RawLayoutRow";
 
 export interface GoogleSheetsModel {
   //state
+  //contains links to the card layout sheet and layout data sheet
   parentGoogleSheet: GoogleSheetData | undefined;
+  //google sheet for the card data
   cardDataGoogleSheet: RawCardRow[] | null;
+  //google sheet for the layout data
   layoutDataGoogleSheet: RawLayoutRow[] | null;
 
+  //google form url
   formUrl: string | undefined;
   parentSheetUrl: string | undefined;
   layoutSheetUrl: string | undefined;
@@ -30,11 +34,14 @@ export interface GoogleSheetsModel {
   urlSheet: string | null;
 
   //computed
+  //all google sheets have been loaded
   sheetsAreLoaded: Computed<GoogleSheetsModel, boolean>;
+
   //requests
   fetchTopLevelSheet: Thunk<GoogleSheetsModel, string>;
   fetchAppGoogleSheet: Thunk<GoogleSheetsModel>;
   fetchSheet: Thunk<GoogleSheetsModel, { url: string; name: SheetNames }[]>;
+
   //setters
   setFormUrl: Action<GoogleSheetsModel, string>;
   setParentSheetUrl: Action<GoogleSheetsModel, string>;
@@ -43,9 +50,14 @@ export interface GoogleSheetsModel {
   setAppGoogleSheetData: Action<GoogleSheetsModel, GoogleSheetData>;
   setCardDataGoogleSheet: Action<GoogleSheetsModel, RawCardRow[]>;
   setLayoutDataGoogleSheet: Action<GoogleSheetsModel, RawLayoutRow[]>;
-  addGoogleSheetError: Action<GoogleSheetsModel, AppError>;
   setUrlSheet: Action<GoogleSheetsModel, string | null>;
+
+  //utils
+  //reload both the card and layout sheet so updates from the sheets are shown in the editor UI
   refreshSheets: Thunk<GoogleSheetsModel>;
+
+  //errors
+  addGoogleSheetError: Action<GoogleSheetsModel, AppError>;
 }
 
 interface LoadSheetResult {

@@ -2,7 +2,7 @@ import "../../../../css/table.css";
 
 import { StatusIndicator } from "evergreen-ui";
 import { motion } from "framer-motion";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import type LayoutData from "../../../../data_structs/LayoutData";
 import { AppMode, DndTypes, DragSource } from "../../../../enums";
@@ -138,12 +138,12 @@ const LayoutTitle = ({ layout }: { layout: LayoutData }): JSX.Element => {
               appMode={AppMode.DISPLAY}
               cardSettings={layout.layoutSettings.cardSettings}
               cards={cards}
-              cols={appConfig.gridCols}
+              cols={appConfig.gridSettings.gridCols}
               height={height}
               layout={layout.layout}
               margin={[20, 20]}
               onLayoutChange={(l) => {}}
-              rows={appConfig.gridRows}
+              rows={appConfig.gridSettings.gridRows}
               widgets={widgets}
               width={width}
             />

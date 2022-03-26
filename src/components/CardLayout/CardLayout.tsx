@@ -3,13 +3,13 @@ import "../../css/libs/reactDraggable.css";
 
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import React, { useEffect } from "react";
-import type { Layout, Layouts} from "react-grid-layout";
+import type { Layout, Layouts } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import type CardData from "../../data_structs/CardData";
 import LayoutData from "../../data_structs/LayoutData";
 import type WidgetData from "../../data_structs/WidgetData";
-import type { AppMode} from "../../enums";
+import type { AppMode } from "../../enums";
 import { DndTypes } from "../../enums";
 import type { CardSettings } from "../../interfaces/CardSettings";
 import appConfig from "../../static/appConfig";
@@ -69,7 +69,7 @@ export const CardLayout = ({
       xxs: cols,
     },
     // rowHeight: 500,
-    rowHeight: height / appConfig.gridRows,
+    rowHeight: height / appConfig.gridSettings.gridRows,
     // rowHeight: (height - appConfig.gridBottomPadding) / appConfig.gridRows,
     margin: margin,
     preventCollision: true,
@@ -119,9 +119,7 @@ export const CardLayout = ({
                   >
                     <ViewCard
                       cardId={index.toString()}
-                      cardSettings={
-                        cardSettings.find((s) => s.id === card.id)
-                      }
+                      cardSettings={cardSettings.find((s) => s.id === card.id)}
                       cardType={DndTypes.IFRAME}
                       data={card}
                       useAnimation={card.contentType !== "widget"}

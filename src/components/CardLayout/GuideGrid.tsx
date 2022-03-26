@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import ViewCard from "./ViewCard/ViewCard";
 import { DndTypes } from "../../enums";
-import type { Layout, Layouts} from "react-grid-layout";
+import type { Layout, Layouts } from "react-grid-layout";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import "../../css/cardLayout.css";
 import appConfig from "../../static/appConfig";
@@ -18,8 +18,8 @@ export const GuideGrid = ({
 }): JSX.Element => {
   const ResponsiveGridLayout = WidthProvider(Responsive);
   const guideCards = generateFilledLayout(
-    appConfig.gridRows,
-    appConfig.gridCols
+    appConfig.gridSettings.gridRows,
+    appConfig.gridSettings.gridCols
   );
   const justCardNames = guideCards.lg.map((c) => c.i);
 

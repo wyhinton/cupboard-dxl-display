@@ -18,6 +18,7 @@ module.exports = {
     "etc",
     "sort-exports",
     "simple-import-sort",
+    "typescript-sort-keys",
   ],
   extends: [
     "plugin:etc/recommended",
@@ -27,6 +28,7 @@ module.exports = {
     "plugin:unicorn/recommended",
     // "plugin:github/recommended",
     "plugin:boundaries/recommended",
+    "plugin:typescript-sort-keys/recommended",
   ],
   rules: {
     "etc/no-commented-out-code": "warn",

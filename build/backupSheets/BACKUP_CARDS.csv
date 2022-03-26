@@ -1,0 +1,61 @@
+title,src,added,author,interaction
+"A Simple CodePen Example (feat. HTML, CSS, & JavaScript)","https://codepen.io/rcyou/embed/QEObEk?height=265&theme-id=light&default-tab=css,result",1/2/2021,F Person,INTERACTIVE
+Sketfab Characther Model 1,https://sketchfab.com/models/e55956fee6444011b574bad021a03eae/embed?autostart=1,1/10/2021,Webb Hinton,STATIC
+Leaflet Choropleth Map,https://leafletjs.com/examples/choropleth/example.html,2/20/2022,C Person,STATIC
+D3 Cell Packing,https://observablehq.com/embed/@d3/zoomable-circle-packing?cells=chart,3/20/2022,Webb Hinton,STATIC
+D3 Zoomable Sunburst,https://observablehq.com/embed/@d3/zoomable-sunburst?cells=chart,6/24/2021,E Person,STATIC
+D3 Sortable Bar Chart,https://observablehq.com/embed/@d3/sortable-bar-chart?cells=chart,6/24/2021,Webb Hinton,STATIC
+D3 Zoom to Bounding Box,https://observablehq.com/embed/@d3/zoom-to-bounding-box?cells=chart,6/25/2021,Webb Hinton,STATIC
+D3 Collapislbe Tree,https://observablehq.com/embed/@d3/collapsible-tree?cells=chart,6/25/2021,Webb Hinton,STATIC
+D3 World Tour,https://observablehq.com/embed/@d3/world-tour?cells=canvas,6/26/2021,B Person,STATIC
+D3 Icelandic Populiation,https://observablehq.com/embed/@mbostock/icelandic-population-by-age-1841-2019?cells=chart,6/27/2021,B Person,STATIC
+D3 Zoomable Icicle,https://observablehq.com/embed/@d3/zoomable-icicle?cells=chart,6/27/2021,D Person,STATIC
+D3 Contours,https://observablehq.com/embed/@d3/contours?cells=chart,6/28/2021,Webb Hinton,STATIC
+D3 Cells,https://observablehq.com/embed/@d3/hexbin-map?cells=chart,6/29/2021,Webb Hinton,STATIC
+D3 Parallel Sets,https://observablehq.com/embed/@d3/parallel-sets?cells=chart,6/30/2021,Webb Hinton,STATIC
+Dear Image,https://hosfeldinsurance.com/wp-content/uploads/2019/05/deer.jpg,6/29/2021,Webb Hinton,STATIC
+Large Map Image,https://cdn.shopify.com/s/files/1/0977/4104/products/MC-EUR-955416.jpg?v=1536741405,6/24/2021,Webb Hinton,STATIC
+Youtube Video,https://www.youtube.com/watch?v=ecK3EnyGD8o&t=76s,6/25/2021,Webb Hinton,STATIC
+Data Viz Project,https://datavizproject.com/,6/25/2021,Webb Hinton,STATIC
+Google Earth,"https://earth.google.com/web/@0,0,0a,22251752.77375655d,35y,0h,0t,0r",6/25/2021,Webb Hinton,STATIC
+Open Data Raleigh,https://data-ral.opendata.arcgis.com/,6/25/2021,Webb Hinton,STATIC
+Data Visulizaiton Catalogue,https://datavizcatalogue.com/,6/25/2021,Webb Hinton,STATIC
+D3.js Graph Gallery,https://www.d3-graph-gallery.com/,6/25/2021,Webb Hinton,STATIC
+R Graph Gallery,https://www.r-graph-gallery.com/,6/25/2021,Webb Hinton,STATIC
+Learning Resources,https://docs.google.com/document/d/1m260nfiE0DWJ9OVWr2K0fv2hcTJtgnaQaZhLJbAvcaE/edit?usp=sharing,6/25/2021,Webb Hinton,STATIC
+Beautiful News Daily,https://informationisbeautiful.net/beautifulnews/,6/25/2021,Webb Hinton,STATIC
+Bioinformatics Center,https://brc.ncsu.edu/consulting,6/25/2021,Webb Hinton,STATIC
+Matplot Lib Examples,https://matplotlib.org/stable/gallery/index.html,6/25/2021,Webb Hinton,STATIC
+Seaborn Examples,https://seaborn.pydata.org/examples/index.html,6/25/2021,Webb Hinton,STATIC
+Bokeh Python LIbrary Examples,https://demo.bokeh.org/,6/25/2021,Webb Hinton,STATIC
+Altair Python Library Examples,https://altair-viz.github.io/gallery/index.html,6/25/2021,Webb Hinton,STATIC
+Plotly Python LIbary Examples,https://plotly.com/python/,6/25/2021,Webb Hinton,STATIC
+How Livable Will Earth Be,https://github.com/wyhinton/dxl_content/blob/master/videos/how_livable_will_earth_be.mp4?raw=true,11/1/2021,Webb Hinton,STATIC
+DuBois Racism,https://raw.githubusercontent.com/wyhinton/dxl_content/master/images/DuBois_Racism.png,11/1/2021,Webb Hinton,STATIC
+Video Game Stats,https://raw.githubusercontent.com/wyhinton/dxl_content/master/images/VideoGames.jpeg,11/1/2021,Webb Hinton,STATIC
+Lib Image Example,https://imvr.lib.ncsu.edu/play/58,11/2/2021,Webb Hinton,STATIC
+MLK Vid,https://cedar.lib.ncsu.edu/content/media/nasa_daily_sun_video.mp4,11/2/2021,Webb Hinton,STATIC
+Who is Bottling Plastic Waste?,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/PLASTIC_POLLUTION.jpg,1/1/2022,Webb Hinton,STATIC
+Storms and Hurricanes,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/STORMS_AND_HURRICANES.png,1/1/2022,Webb Hinton,STATIC
+Una Mujer,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/weather_something.jpg,1/1/2022,Webb Hinton,STATIC
+Atmospheric Pollution,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/ATMOSPHERIC_C02.png,1/1/2022,Webb Hinton,STATIC
+Near Earth Objects,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/NEAR_EARTH_OBJECTS.jpg,1/1/2022,Webb Hinton,STATIC
+Space Junk,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/SPACE_jUNK.jpg,1/1/2022,Webb Hinton,STATIC
+Flow Map,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/FLOW_MAP.png,2/1/2022,Webb Hinton,STATIC
+Radial Line Graph,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/RADIAL_LINE_GRAPH.png,2/1/2022,Webb Hinton,STATIC
+Waterfall Plot,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/WATERFALL_PLOT.png,2/1/2022,Webb Hinton,STATIC
+Alluvial Diagram,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/ALLUVIAL_DIAGRAM.png,2/1/2022,Webb Hinton,STATIC
+Arc Diagram,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/ARC_DIAGRAM.png,2/1/2022,Webb Hinton,STATIC
+Violin Plot,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/VIOLIN_PLOT.png,2/1/2022,Webb Hinton,STATIC
+Tree Map,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/TREE_MAP.png,2/1/2022,Webb Hinton,STATIC
+Pictorial Fraction Chart,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/PICORIAL_FRACTION_CHART.png,2/1/2022,Webb Hinton,STATIC
+Parallel Sets,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/PARALLEL_SETS.png,2/1/2022,Webb Hinton,STATIC
+Stacked Alluvial,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/STACKED_AREA_CHART.png,2/1/2022,Webb Hinton,STATIC
+Radial Histogram,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/RADIAL_HISTOGRAM.png,2/1/2022,Webb Hinton,STATIC
+Bayeux ,"https://ncsu-libraries.github.io/annona/tools/#/display?url=https%3A%2F%2Fdnoneill.github.io%2Fannotate%2Fannotations%2Ffullbayeux-list.json&viewtype=iiif-storyboard&settings=%7B%22fit%22%3A%22horizontal%22,%22fullpage%22%3Atrue%7D",2/9/2022,Mike Nutt,STATIC
+Donut Chart,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavisdiagrams_8b28548b-e67d-40e9-b8a5-c4028a2c7109/DONUT_CHART.png,2/1/2022,Webb Hinton,STATIC
+Codepen Heat Averages,"https://codepen.io/harakido1/embed/zezrrz?default-tab=result&theme-id=dark"" frameborder=""no"" loading=""lazy"" allowtransparency=""true"" allowfullscreen=""true""",2/1/2022,Webb Hinton,STATIC
+Nationa Bridge Inventory Illinois,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/NATIONAL_BRIDGE_INVENTORY_ILLINOIS.png,2/1/2022,Webb Hinton,STATIC
+Migration Between States,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/MIGRATION_BETWEEN_STATES.png,2/22/2022,Webb Hinton,STATIC
+Population By Census Block,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/POPULATION_BY_CENSUS_GROUP.png,2/22/2022,Webb Hinton,STATIC
+Top 25 Mountains By Tography,https://imvr.lib.ncsu.edu/imageProxy/galleries/datavis-images_a739cb8b-7021-4052-a62d-3c4b3b236fce/Top25MountainsByTopographic.jpg,2/1/2022,Webb Hinton,STATIC

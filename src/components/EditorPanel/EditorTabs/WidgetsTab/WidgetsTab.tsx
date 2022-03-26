@@ -111,15 +111,17 @@ const WidgetWrapper = ({
   const [scalar, setScalar] = useState(1);
   const { width, height } = useWindowSize();
 
-  const colWidth = width / appConfig.gridCols;
-  const rowHeight = height / appConfig.gridRows;
+  const colWidth = width / appConfig.gridSettings.gridCols;
+  const rowHeight = height / appConfig.gridSettings.gridRows;
 
   useEffect(() => {
     editorPanelReference.current = document.querySelector(
       "#editor-panel"
     ) as HTMLDivElement;
     console.log(editorPanelReference.current.getBoundingClientRect().width);
-    setScalar(editorPanelReference.current.getBoundingClientRect().width / width);
+    setScalar(
+      editorPanelReference.current.getBoundingClientRect().width / width
+    );
   }, [width]);
 
   return <div>{children(scalar * 1.5, colWidth, rowHeight)}</div>;

@@ -112,13 +112,14 @@ const NoUrlError = (): JSX.Element => {
       <Heading size={900}>{}</Heading>
       <Heading size={900}>
         No Google Sheet Provided via URL! <br></br>
-        <br></br>Switching to backup sheet in {`${appConfig.noUrlTimeout}`}s.
+        <br></br>Switching to backup sheet in{" "}
+        {`${appConfig.timers.noUrlTimeout}`}s.
         <Timer
           onEnd={() => {
             setVisible(false);
             fetchTopLevelSheet(appConfig.backupParentSheetUrl);
           }}
-          seconds={appConfig.noUrlTimeout}
+          seconds={appConfig.timers.noUrlTimeout}
         />
         Visit{" "}
         <a

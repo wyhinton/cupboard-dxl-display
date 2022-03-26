@@ -1,5 +1,5 @@
-import type { Action} from "easy-peasy";
-import { action, Thunk,thunk } from "easy-peasy";
+import type { Action } from "easy-peasy";
+import { action, Thunk, thunk } from "easy-peasy";
 
 import appConfig from "../static/appConfig";
 import { StoreModel } from "./index";
@@ -23,7 +23,7 @@ export interface AppSettingsModel {
 
 const appSettingsModel: AppSettingsModel = {
   //state
-  rotationSpeed: appConfig.rotationDuration,
+  rotationSpeed: appConfig.timers.rotationDuration,
   enableQrCodes: true,
   enableIframeInteractions: false,
   rotateLayouts: true,
