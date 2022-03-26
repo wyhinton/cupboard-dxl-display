@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/cupboard-dxl-display/static/css/main.915b009d.chunk.css",
-    "main.js": "/cupboard-dxl-display/static/js/main.67313c0b.chunk.js",
-    "main.js.map": "/cupboard-dxl-display/static/js/main.67313c0b.chunk.js.map",
+    "main.js": "/cupboard-dxl-display/static/js/main.1438acc8.chunk.js",
+    "main.js.map": "/cupboard-dxl-display/static/js/main.1438acc8.chunk.js.map",
     "runtime-main.js": "/cupboard-dxl-display/static/js/runtime-main.dc20b182.js",
     "runtime-main.js.map": "/cupboard-dxl-display/static/js/runtime-main.dc20b182.js.map",
     "static/css/2.27175f2b.chunk.css": "/cupboard-dxl-display/static/css/2.27175f2b.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.27175f2b.chunk.css",
     "static/js/2.06d2bc2c.chunk.js",
     "static/css/main.915b009d.chunk.css",
-    "static/js/main.67313c0b.chunk.js"
+    "static/js/main.1438acc8.chunk.js"
   ]
 }
