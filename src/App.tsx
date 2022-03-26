@@ -4,7 +4,7 @@ import "./css/global.css";
 import { DndContext } from "@dnd-kit/core";
 import React from "react";
 import type { Layouts } from "react-grid-layout";
-import { BrowserRouter, Router, useLocation } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import AppDragContext from "./components/AppWrappers/AppDragContext";
 import AppTimers from "./components/AppWrappers/AppTimers";
@@ -19,16 +19,12 @@ import {
   useApp,
   useEffectOnce,
   useLayout,
+  useQuery,
   useSheets,
   useWindowSize,
 } from "./hooks";
+import LoadingScreen from "./LoadingScreen";
 import appConfig from "./static/appConfig";
-
-function useQuery() {
-  const { search } = useLocation();
-
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
 
 /**
  * High level container, the root component. Initial fetch requests to spreadsheets are made here via a useEffect hook.
@@ -39,6 +35,7 @@ const Body = (): JSX.Element => {
 
   const { activeLayout, setBufferLayout, activeCards, activeWidgets } =
     useLayout();
+  const { urlQueryLink } = useSheets();
 
   const { appMode, sheetsAreLoaded } = useApp();
 
@@ -53,51 +50,53 @@ const Body = (): JSX.Element => {
 
   const { width, height } = useWindowSize();
 
-  console.log(query.get("url"));
   // account?url=https://docs.google.com/spreadsheets/d/e/2PACX-1vRalMG47cvXmCbEqeIJWn5qwd9bPhHUV16_VN7LuKsv53YQdn9e8XSAzNulXCtP_BIFBTUy0Z5e6KKE/pub?output=csv
   return (
     <>
       <Background />
       <ModeChangeButton />
-      <AppTimers>
-        <AppDragContext>
-          <Loader visible={sheetsAreLoaded} />
-          <EditorPanel />
-          <Screen>
-            <DndContext>
-              {activeLayout && sheetsAreLoaded && (
-                <CardLayout
-                  appMode={appMode}
-                  cardSettings={activeLayout.layoutSettings.cardSettings}
-                  cards={[...activeCards]}
-                  cols={appConfig.gridCols}
-                  height={height}
-                  isDraggable={appMode === AppMode.EDIT}
-                  isResizable={appMode === AppMode.EDIT}
-                  layout={activeLayout.layout}
-                  margin={[20, 20]}
-                  onLayoutChange={(l) => {
-                    const newLayout: Layouts = {
-                      lg: l,
-                      md: l,
-                      sm: l,
-                      xs: l,
-                      xxs: l,
-                    };
-                    if (appMode === AppMode.EDIT) {
-                      activeLayout.setGridLayout(newLayout);
-                    }
-                    setBufferLayout(newLayout);
-                  }}
-                  rows={appConfig.gridRows}
-                  widgets={[...activeWidgets]}
-                  width={width}
-                />
-              )}
-            </DndContext>
-          </Screen>
-        </AppDragContext>
-      </AppTimers>
+      <LoadingScreen />
+      {sheetsAreLoaded && (
+        <AppTimers>
+          <AppDragContext>
+            <Loader visible={sheetsAreLoaded} />
+            <EditorPanel />
+            <Screen>
+              <DndContext>
+                {activeLayout && sheetsAreLoaded && (
+                  <CardLayout
+                    appMode={appMode}
+                    cardSettings={activeLayout.layoutSettings.cardSettings}
+                    cards={[...activeCards]}
+                    cols={appConfig.gridCols}
+                    height={height}
+                    isDraggable={appMode === AppMode.EDIT}
+                    isResizable={appMode === AppMode.EDIT}
+                    layout={activeLayout.layout}
+                    margin={[20, 20]}
+                    onLayoutChange={(l) => {
+                      const newLayout: Layouts = {
+                        lg: l,
+                        md: l,
+                        sm: l,
+                        xs: l,
+                        xxs: l,
+                      };
+                      if (appMode === AppMode.EDIT) {
+                        activeLayout.setGridLayout(newLayout);
+                      }
+                      setBufferLayout(newLayout);
+                    }}
+                    rows={appConfig.gridRows}
+                    widgets={[...activeWidgets]}
+                    width={width}
+                  />
+                )}
+              </DndContext>
+            </Screen>
+          </AppDragContext>
+        </AppTimers>
+      )}
     </>
   );
 };

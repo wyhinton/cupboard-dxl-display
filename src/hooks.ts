@@ -8,6 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useLocation } from "react-router-dom";
 
 import type CardData from "./data_structs/CardData";
 import type LayoutData from "./data_structs/LayoutData";
@@ -146,16 +147,20 @@ interface UseSheetsProperties {
   layoutSheetUrl: string | undefined;
   formUrl: string | undefined;
   refreshSheets: ThunkCreator<void, any>;
+  urlQueryLink: string | null;
 }
 
 export const useSheets = (): UseSheetsProperties => {
   const fetchTopLevelSheet = useStoreActions(
     (actions) => actions.googleSheetsModel.fetchTopLevelSheet
   );
-  const parentSheetUrl = useStoreState(
-    (state) => state.googleSheetsModel.cardSheetUrl
+  const urlQueryLink = useStoreState(
+    (state) => state.googleSheetsModel.urlSheet
   );
 
+  const parentSheetUrl = useStoreState(
+    (state) => state.googleSheetsModel.parentSheetUrl
+  );
   const cardSheetUrl = useStoreState(
     (state) => state.googleSheetsModel.cardSheetUrl
   );
@@ -171,6 +176,7 @@ export const useSheets = (): UseSheetsProperties => {
   const refreshSheets = useStoreActions(
     (actions) => actions.googleSheetsModel.refreshSheets
   );
+
   return {
     fetchTopLevelSheet,
     parentSheetUrl,
@@ -179,6 +185,7 @@ export const useSheets = (): UseSheetsProperties => {
     formUrl,
     setUrlSheet,
     refreshSheets,
+    urlQueryLink,
   };
 };
 
@@ -265,7 +272,12 @@ export const useApp = (): UseAppProperties => {
   };
 };
 
-interface useLayoutProperties {
+export function useQuery() {
+  const { search } = useLocation();
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
+interface UseLayoutProperties {
   activeCards: CardData[];
   activeWidgets: WidgetData[];
   setBufferLayout: ActionCreator<ReactGridLayout.Layouts>;
@@ -281,7 +293,7 @@ interface useLayoutProperties {
   externalLayouts: LayoutData[];
 }
 
-export const useLayout = (): useLayoutProperties => {
+export const useLayout = (): UseLayoutProperties => {
   const activeCards = useStoreState((state) => state.appModel.activeCards);
   const activeWidgets = useStoreState((state) => state.appModel.activeWidgets);
   const externalLayouts = useStoreState(

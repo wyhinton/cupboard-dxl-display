@@ -16,13 +16,14 @@ interface AppConfig {
   widgetIds: string[];
   useStaticLayout: boolean;
   rotationDuration: number;
+  noUrlTimeout: number;
+  backupParentSheetUrl: string;
 }
 
 const appConfig: AppConfig = {
   idleTime: process.env.NODE_ENV === "development" ? 100_000_000 : 10_000_000,
   defaultIframeScale: 0.5,
   defaultEmbedScale: 1,
-  // defaultLayoutName: "PostersV3",
   defaultLayoutName: "Data Vis Types Chart 1",
   widgetIds: ["clock", "group label", "info"],
   gridRows: 6,
@@ -31,10 +32,8 @@ const appConfig: AppConfig = {
   useStaticLayout: false,
   gridBottomPadding: 50,
   rotationDuration: 100_000, //ms
-  // rotationDuration: 10000, //ms
+  noUrlTimeout: 10,
+  backupParentSheetUrl: "./backupSheets/BACKUP_PARENT_SHEET",
 };
 
 export default appConfig;
-
-// s=1zwPZV75EhBLseFpcpQhHXEjLTV6JDrwfIGNhaI2GCXI
-// gid=996942125

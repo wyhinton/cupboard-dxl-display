@@ -12,6 +12,7 @@ import type RawLayoutRow from "../interfaces/RawLayoutRow";
 
 /**
  * Responsible for making requests to google sheets. Other models must listen this model to intercept the sheet payload.
+  console.log(query.get("url"));
  * Also stores the fetch data purely for debugging purposes.
  */
 
