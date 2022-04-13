@@ -68,7 +68,11 @@ const LoadingScreen = (): JSX.Element => {
               x: "-50%",
               top: "50%",
               borderRadius: "10px",
+<<<<<<< HEAD
               backdropFilter: "blur(10px)", 
+=======
+              backdropFilter: "blur(10px)",
+>>>>>>> 1831a28e736b88812ec445c3ac0c774b3b31a111
               border: " 1px solid rgba(255, 255, 255, 0.294)",
               boxShadow: "0 8px 32px 0 rgba(49, 49, 49, 0.37)",
               padding: "1em",
@@ -112,13 +116,22 @@ const NoUrlError = (): JSX.Element => {
       <Heading size={900}>{}</Heading>
       <Heading size={900}>
         No Google Sheet Provided via URL! <br></br>
+<<<<<<< HEAD
         <br></br>Switching to backup sheet in {`${appConfig.noUrlTimeout}`}s.
+=======
+        <br></br>Switching to backup sheet in{" "}
+        {`${appConfig.timers.noUrlTimeout}`}s.
+>>>>>>> 1831a28e736b88812ec445c3ac0c774b3b31a111
         <Timer
           onEnd={() => {
             setVisible(false);
             fetchTopLevelSheet(appConfig.backupParentSheetUrl);
           }}
+<<<<<<< HEAD
           seconds={appConfig.noUrlTimeout}
+=======
+          seconds={appConfig.timers.noUrlTimeout}
+>>>>>>> 1831a28e736b88812ec445c3ac0c774b3b31a111
         />
         Visit{" "}
         <a

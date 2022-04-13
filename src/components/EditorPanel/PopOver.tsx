@@ -23,8 +23,7 @@ const PopOver = ({
   const windowSize = useWindowSize();
   const scale = 0.4;
   return createPortal(
-    <>
-      <AnimatePresence>
+    <AnimatePresence>
         {visible && (
           <motion.div
             animate={{
@@ -53,8 +52,7 @@ const PopOver = ({
             {children}
           </motion.div>
         )}
-      </AnimatePresence>
-    </>,
+      </AnimatePresence>,
 
     document.querySelector("#popup-container") as HTMLDivElement
   );

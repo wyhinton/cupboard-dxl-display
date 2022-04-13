@@ -1,4 +1,4 @@
-import { WidgetType } from "../data_structs/WidgetData";
+import type { WidgetType } from "../data_structs/WidgetData";
 
 
 //describes the column names in a spreadsheet containing card data

@@ -40,21 +40,20 @@ export function formatDate(date: Date | undefined): string {
 }
 
 // String.prototype.toTitleCase = function () { return this.valueOf().toLowerCase().replace(this.valueOf()[0], this.valueOf()[0].toUpperCase()); }
-export function toTitleCase(str: string) {
-  const words = str.split(" ");
-  const title = words.map((w) => titleCapitilization(w)).join(" ");
-  return title;
+export function toTitleCase(string: string) {
+  const words = string.split(" ");
+  return words.map((w) => titleCapitilization(w)).join(" ");
 }
-function titleCapitilization(str: string) {
+function titleCapitilization(string: string) {
   const regex = /^[a-z]{0,1}|\s\w/gi;
 
-  str = str.toLowerCase();
+  string = string.toLowerCase();
 
-  str.match(regex)?.forEach((char) => {
-    str = str.replace(char, char.toUpperCase());
+  string.match(regex)?.forEach((char) => {
+    string = string.replace(char, char.toUpperCase());
   });
 
-  return str;
+  return string;
 }
 
 export function randomIntFromInterval(min: number, max: number) {

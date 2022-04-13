@@ -1,6 +1,7 @@
-import React from "react";
 import "../../css/panel.css";
+
 import { AddIcon } from "evergreen-ui";
+import React from "react";
 
 interface PanelProperties{
     children: JSX.Element | JSX.Element[]
@@ -17,7 +18,7 @@ const Panel = ({children, className, padding, flexDirection}:PanelProperties): J
   } as React.CSSProperties
 
   return (
-    <div style = {panelStyle} className={"panel"+ " " + className??""}>
+    <div className={"panel"+ " " + className??""} style = {panelStyle}>
         {children}
     </div>
   );

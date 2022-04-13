@@ -1,10 +1,11 @@
 import React from "react";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import type { DropResult } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 
 import { DragSource } from "../../enums";
 import { useLayout, useStoreState } from "../../hooks";
-import { CardAddEvent, CardSwapEvent } from "../../interfaces/CardEvents";
-import { GridPosition } from "../../interfaces/GridPosition";
+import type { CardAddEvent, CardSwapEvent } from "../../interfaces/CardEvents";
+import type { GridPosition } from "../../interfaces/GridPosition";
 
 /**
  * Handles all functionality for dragging and dropping content into the layout
@@ -40,15 +41,10 @@ const AppDragContext = ({
     (state) => state.layoutsModel.externalLayouts
   );
 
-  const onDragEnd = (response: DropResult) => {
+  const onDragEnd = (response: DropResult): void => {
     if (response.destination?.droppableId == response.source?.droppableId)
       return;
     const { source, destination, draggableId } = response;
-    console.log(
-      `dragged from ${draggableId} to ${
-        destination?.droppableId
-      } current title: ${"yes"}`
-    );
 
     if (!destination) return;
     switch (source.droppableId) {
@@ -61,7 +57,6 @@ const AppDragContext = ({
               targetPosition: cardPos,
             } as CardAddEvent;
             addCard(addEvent);
-            console.log("dropped onto an empty card, adding card");
           } else {
             swapCard({
               sourceId: draggableId,

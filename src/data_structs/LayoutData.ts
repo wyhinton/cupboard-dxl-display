@@ -1,25 +1,19 @@
-import { Layout, Layouts } from "react-grid-layout";
+import type { Layout, Layouts } from "react-grid-layout";
 
 import type { CardSwapEvent } from "../interfaces/CardEvents";
+import type { CardSettings } from "../interfaces/CardSettings";
 import type { GridPosition } from "../interfaces/GridPosition";
 import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import extendedLayoutTest from "../static/extendedLayoutTest";
 import widgets from "../static/widgets";
-import CardData from "./CardData";
-import WidgetData from "./WidgetData";
-
-export interface CardOptions {
-  id: string;
-  scale: number;
-  backgroundColor: string;
-  objectPosition: string;
-}
+import type CardData from "./CardData";
+import type WidgetData from "./WidgetData";
 
 export interface GridSettings {
   defaultBackgroundColor: string;
 }
 export interface LayoutSettings {
-  cardSettings: CardOptions[];
+  cardSettings: CardSettings[];
   gridSettings: GridSettings;
 }
 
@@ -28,6 +22,17 @@ export interface ExtendedLayout {
   layoutSettings: LayoutSettings;
   widgets: WidgetData[];
 }
+
+//in case the layout doe not provide any card settings
+const defaultCardSettings = {
+  scale: 1,
+  backgroundColor: undefined,
+  objectPosition: "center",
+};
+
+const defaultGridSettings = {
+  defaultBackgroundColor: "red",
+};
 
 export default class LayoutData {
   readonly title: string;
@@ -46,17 +51,18 @@ export default class LayoutData {
     this.author = row.author;
     this.added = new Date(row.timestamp.split(" ")[0]);
     this.sourceLayout = JSON.parse(row.layout).layout;
-    if (JSON.parse(row.layout).layoutSettings) {
-      console.log("HAD SETTINGSS");
-      this.layoutSettings = JSON.parse(row.layout).layoutSettings;
-    } else {
-      console.log("NO SETTINGSS");
-      this.layoutSettings = {
-        cardSettings: [],
-        gridSettings: { defaultBackgroundColor: "red" },
-      };
-      console.log(this.layoutSettings);
-    }
+
+    this.layoutSettings = JSON.parse(row.layout).layoutSettings
+      ? JSON.parse(row.layout).layoutSettings
+      : {
+          cardSettings: layout.lg.map((l) => {
+            return {
+              id: l.i,
+              ...defaultCardSettings,
+            };
+          }),
+          gridSettings: defaultGridSettings,
+        };
     this.layoutWidgets = JSON.parse(row.layout).layoutWidgets
       ? JSON.parse(row.layout).layoutWidgets
       : [];
@@ -91,19 +97,27 @@ export default class LayoutData {
   }
 
   addCard(toAdd: CardData | WidgetData, pos: GridPosition): void {
-    const lg = Object.entries(this.layout)[0][1];
-    if (lg.map((l) => l.i).includes(toAdd.id)) {
-      console.log("ADDING SOMETHING THAT'S ALREADY PRESENT");
-    }
-    for (const [k, v] of Object.entries(this.layout)) {
-      const newItem: Layout = {
-        x: pos.x,
-        y: pos.y,
-        w: 1,
-        h: 1,
-        i: toAdd.id,
-      };
-      this.layout[k].push(newItem);
+    if (!this.sources().includes(toAdd.id)) {
+      for (const [k, v] of Object.entries(this.layout)) {
+        const newItem: Layout = {
+          x: pos.x,
+          y: pos.y,
+          w: 1,
+          h: 1,
+          i: toAdd.id,
+        };
+        this.layout[k].push(newItem);
+      }
+      if (
+        !this.layoutSettings.cardSettings.map((cs) => cs.id).includes(toAdd.id)
+      ) {
+        this.layoutSettings.cardSettings.push({
+          id: toAdd.id,
+          scale: 1,
+          backgroundColor: undefined,
+          objectPosition: "center",
+        });
+      }
     }
   }
   addWidget(toAdd: WidgetData, pos: GridPosition): void {
@@ -131,8 +145,6 @@ export default class LayoutData {
   }
   sources(): string[] {
     const lg = this.layout.lg;
-    console.log(lg);
-    console.log(this.title);
     return lg.map((l: Layout) => l.i);
   }
   widgets(): string[] {
@@ -141,6 +153,36 @@ export default class LayoutData {
       Object.keys(widgets).includes(l.i)
     );
     return justWidgets.map((l: any) => l.i);
+  }
+  getCardSettings(cardId: string): CardSettings {
+    return this.layoutSettings.cardSettings.filter((c) => c.id === cardId)[0];
+  }
+  setCardScale(id: string, scale: number): void {
+    if (this.sources().includes(id)) {
+      this.layoutSettings.cardSettings.filter((cs) => cs.id === id)[0].scale =
+        scale;
+    }
+  }
+  setCardBackgroundColor(id: string, backgroundColor: string): void {
+    if (this.sources().includes(id)) {
+      this.layoutSettings.cardSettings.filter(
+        (cs) => cs.id === id
+      )[0].backgroundColor = backgroundColor;
+    }
+  }
+  setCardContentFit(id: string, contentFit: string): void {
+    if (this.sources().includes(id)) {
+      this.layoutSettings.cardSettings.filter(
+        (cs) => cs.id === id
+      )[0].contentFit = contentFit;
+    }
+  }
+  layoutToString(): string {
+    const object = {
+      layout: this.layout.lg,
+      layoutSettings: this.layoutSettings,
+    };
+    return JSON.stringify(object);
   }
 }
 function testGetLayout(row: RawLayoutRow): ExtendedLayout {

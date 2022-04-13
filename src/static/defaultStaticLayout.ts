@@ -1,6 +1,9 @@
-import { Layout, Layouts } from "react-grid-layout";
-import LayoutData, { ExtendedLayout } from "../data_structs/LayoutData";
-import RawLayoutRow from "../interfaces/RawLayoutRow";
+import type { Layout} from "react-grid-layout";
+import { Layouts } from "react-grid-layout";
+
+import type { ExtendedLayout } from "../data_structs/LayoutData";
+import LayoutData from "../data_structs/LayoutData";
+import type RawLayoutRow from "../interfaces/RawLayoutRow";
 // const availableHandles: ResizeHandle[] = [
 //   "s",
 //   "w",

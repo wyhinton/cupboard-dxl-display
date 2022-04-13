@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { toTitleCase } from "../../utils";
 /**
  * <th> component with a arrow indicating the filter direction

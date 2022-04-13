@@ -1,8 +1,9 @@
+import imageThumbnail from "image-thumbnail";
+
 import { InteractionType } from "../enums";
 import IFrameValidator from "../IFrameValidator";
 import type RawCardRow from "../interfaces/RawCardRow";
-import { WidgetType } from "./WidgetData";
-import imageThumbnail from "image-thumbnail";
+import type { WidgetType } from "./WidgetData";
 
 export type ContentType = "video" | "image" | "website" | "embed" | "widget";
 

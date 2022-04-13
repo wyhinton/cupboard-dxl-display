@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
+import "../../../../css/table.css";
+
+import { StatusIndicator } from "evergreen-ui";
+import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+
+import type LayoutData from "../../../../data_structs/LayoutData";
+import { AppMode, DndTypes, DragSource } from "../../../../enums";
 import {
-  useStoreState,
-  useStoreActions,
-  useWindowSize,
   useApp,
   useLayout,
+  useStoreActions,
+  useStoreState,
+  useWindowSize,
 } from "../../../../hooks";
-import { AppMode, DndTypes, DragSource } from "../../../../enums";
-import { StatusIndicator } from "evergreen-ui";
-import { formatDate } from "../../../../utils";
-import "../../../../css/table.css";
-import PopOver from "../../PopOver";
-import CardLayout from "../../../CardLayout/CardLayout";
-import LayoutData from "../../../../data_structs/LayoutData";
-import IXDrop from "../../../DragAndDrop/IXDrop";
 import appConfig from "../../../../static/appConfig";
-import { motion } from "framer-motion";
+import { formatDate } from "../../../../utils";
+import CardLayout from "../../../CardLayout/CardLayout";
+import IXDrop from "../../../DragAndDrop/IXDrop";
+import PopOver from "../../PopOver";
 /**
  * Displays the available layouts.
  */
@@ -33,10 +35,10 @@ const LayoutTable = (): JSX.Element => {
   return (
     <div>
       <IXDrop
-        className={"table-container"}
+        cardType={DndTypes.CLOCK}
+        className="table-container"
         droppableId={DragSource.LAYOUT_TABLE}
         isDropDisabled={false}
-        cardType={DndTypes.CLOCK}
       >
         <table>
           <tbody>
@@ -116,14 +118,13 @@ const LayoutTitle = ({ layout }: { layout: LayoutData }): JSX.Element => {
       >
         {title}
       </div>
-
       {appMode === AppMode.EDIT && hovered && (
         <PopOver
-          width={width * scale}
           height={height * scale}
+          visible={hovered}
+          width={width * scale}
           x={position[0]}
           y={position[1]}
-          visible={hovered}
         >
           <div
             style={{
@@ -134,16 +135,17 @@ const LayoutTitle = ({ layout }: { layout: LayoutData }): JSX.Element => {
             }}
           >
             <CardLayout
-              cols={appConfig.gridCols}
-              rows={appConfig.gridRows}
-              width={width}
+              appMode={AppMode.DISPLAY}
+              cardSettings={layout.layoutSettings.cardSettings}
+              cards={cards}
+              cols={appConfig.gridSettings.gridCols}
               height={height}
               layout={layout.layout}
               margin={[20, 20]}
-              appMode={AppMode.DISPLAY}
               onLayoutChange={(l) => {}}
-              cards={cards}
+              rows={appConfig.gridSettings.gridRows}
               widgets={widgets}
+              width={width}
             />
           </div>
         </PopOver>

@@ -1,14 +1,18 @@
-import React, { FC, ReactElement, ReactNode, useEffect, useRef } from "react";
-import {
-  Draggable,
+import type { ReactElement, ReactNode} from "react";
+import React, { FC, useEffect, useRef } from "react";
+import type {
   DraggableProps,
   DraggableProvided,
-  DraggingStyle,
+  DraggingStyle} from "react-beautiful-dnd";
+import {
+  Draggable
 } from "react-beautiful-dnd";
 import { createPortal } from "react-dom";
-import CardData from "../../data_structs/CardData";
-import { CardView, DndTypes } from "../../enums";
-import IFrameView from "../IFrameView";
+
+import type CardData from "../../data_structs/CardData";
+import type { DndTypes } from "../../enums";
+import { CardView } from "../../enums";
+import IFrameView from "../CardContent";
 
 interface DraggableRowProperties extends Omit<DraggableProps, "children"> {
   dndType: DndTypes;
@@ -30,10 +34,10 @@ const useDraggableInPortal = () => {
       element.style.top = "0";
       // element.style.border = "5px solid red";
 
-      document.body.appendChild(element);
+      document.body.append(element);
 
       return () => {
-        document.body.removeChild(element);
+        element.remove();
       };
     }
   }, [element]);
@@ -101,7 +105,6 @@ const DraggableRow = ({
             >
               {React.cloneElement(children, { provided })}
             </tr>
-
             {/* {
               //@ts-ignore
               renderDraggable((provided, snapshot) => {

@@ -1,16 +1,8 @@
 import { AddIcon, IconButton, RefreshIcon } from "evergreen-ui";
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import {
-  useLayout,
-  useSheets,
-  useStoreActions,
-  useStoreState,
-} from "../../../../hooks";
-import formEmbedUrl from "../../../../static/formEmbedUrl";
+import { useLayout, useSheets, useStoreState } from "../../../../hooks";
 import Button from "../../../Shared/Button";
-import FlexRow from "../../../Shared/FlexRow";
-import Panel from "../../../Shared/Panel";
 import TabPane from "../TabPane";
 import GoogleFormPopup from "./GoogleFormPopup";
 import LayoutTable from "./LayoutTable";
@@ -18,7 +10,7 @@ import LayoutTable from "./LayoutTable";
 const LayoutTab = (): JSX.Element => {
   const bufferState = useStoreState((state) => state.layoutsModel.bufferLayout);
   const { activeLayout } = useLayout();
-  const { fetchTopLevelSheet } = useSheets();
+  const { refreshSheets } = useSheets();
 
   const [showNewLayoutPopup, setShowNewLayoutPopup] = useState(false);
 
@@ -40,32 +32,32 @@ const LayoutTab = (): JSX.Element => {
         }}
       >
         <Button
+          appearance="primary"
           iconBefore={<AddIcon />}
+          intent="success"
           onClick={(e) => {
             setShowNewLayoutPopup(true);
           }}
           text="Add New Layout"
           width="55%"
-          intent="success"
-          appearance="primary"
         />
         <div style={{ height: "auto", width: "10%" }}>
           <IconButton
+            height="100%"
             icon={<RefreshIcon />}
-            width={"20%"}
-            height={"100%"}
             onClick={(
               _event: React.MouseEvent<HTMLButtonElement, MouseEvent>
             ) => {
-              fetchTopLevelSheet();
+              refreshSheets();
             }}
+            width="20%"
           />
         </div>
       </TabPane>
       {showNewLayoutPopup && (
         <GoogleFormPopup
           onCloseComplete={() => {
-            fetchTopLevelSheet();
+            refreshSheets();
             setShowNewLayoutPopup(false);
           }}
           visible={showNewLayoutPopup}

@@ -7,23 +7,24 @@ import ReactDom from "react-dom";
 import Draggable from "react-draggable";
 
 import { AppMode } from "../../enums";
-import { useStoreState } from "../../hooks";
-import Editor from "./Editor";
+import { useApp, useStoreState } from "../../hooks";
+import EditorTabs from "./EditorTabs/EditorTabs";
+import SettingsMenu from "./SettingsMenu";
 
 /**Draggable panel which contains the editor body, as well as a header bar with a min/max button for resizing the panel. Renders to "editor-panel-container" div in index.html*/
 
 const EditorPanel = (): JSX.Element => {
-  const viewModeState = useStoreState((state) => state.appModel.appMode);
+  const { appMode, editingCard } = useApp();
 
   const [minimized, setMinimized] = useState(false);
 
   const editorPanelClass = classNames("editor-panel", {
     "editor-panel-full": !minimized,
-    hidden: viewModeState === AppMode.DISPLAY,
+    hidden: appMode === AppMode.DISPLAY,
     "editor-panel-minimized": minimized,
   });
   const editorClass = classNames("editor", {
-    "editor-visible": viewModeState === AppMode.EDIT,
+    "editor-visible": appMode === AppMode.EDIT,
   });
 
   return ReactDom.createPortal(
@@ -53,7 +54,8 @@ const EditorPanel = (): JSX.Element => {
             }}
           />
         </PanelHeader>
-        <Editor />
+        {editingCard && <SettingsMenu card={editingCard} />}
+        <EditorTabs />
       </div>
     </Draggable>,
     document.querySelector("#editor-panel-container") as HTMLDivElement

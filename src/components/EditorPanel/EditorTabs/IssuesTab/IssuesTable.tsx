@@ -5,7 +5,7 @@ import React from "react";
 import Scrollbars from "react-custom-scrollbars";
 
 import { useElementSize, useErrors } from "../../../../hooks";
-import AppError from "../../../../interfaces/AppError";
+import type AppError from "../../../../interfaces/AppError";
 
 /**
  * Table for displaying app errors from the apps store model

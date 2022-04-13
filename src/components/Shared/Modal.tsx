@@ -1,8 +1,9 @@
-import { motion } from "framer-motion";
-import React, { useState, useRef, useEffect } from "react";
 //TODO: UNIFY MODAL CSS
 import "../../css/howToUse.css";
 import "../../css/popup.css";
+
+import { motion } from "framer-motion";
+import React, { useEffect,useRef, useState } from "react";
 
 const Modal = ({
   children,
@@ -20,7 +21,8 @@ const Modal = ({
 }): JSX.Element => {
   return (
     <motion.div
-      className={"modal-container"}
+      animate={{ y: 0 }}
+      className="modal-container"
       style={{
         display: active ? "flex" : "none",
         width: "100vw",
@@ -29,10 +31,9 @@ const Modal = ({
         alignItems: "center",
         // y: -200,
       }}
-      animate={{ y: 0 }}
     >
-      <MyBackdrop onClose={onClose} backdropOpacity={backdropOpacity ?? 0} />
-      <div style={{ zIndex: 1000 }} className={containerClassName}>
+      <MyBackdrop backdropOpacity={backdropOpacity ?? 0} onClose={onClose} />
+      <div className={containerClassName} style={{ zIndex: 1000 }}>
         {children}
       </div>
     </motion.div>
@@ -48,9 +49,9 @@ interface BackdropProperties {
 const MyBackdrop = ({ onClose, backdropOpacity }: BackdropProperties) => {
   return (
     <div
+      className="pop-up-background"
       onMouseUp={onClose}
       style={{ opacity: backdropOpacity, zIndex: 200 }}
-      className={"pop-up-background"}
     ></div>
   );
 };

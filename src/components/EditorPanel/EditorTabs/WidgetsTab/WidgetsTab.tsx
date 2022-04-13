@@ -6,7 +6,8 @@ import { Heading } from "evergreen-ui";
 import React, { useEffect, useRef, useState } from "react";
 import { Layout, Layouts } from "react-grid-layout";
 
-import WidgetData, { WidgetType } from "../../../../data_structs/WidgetData";
+import type WidgetData from "../../../../data_structs/WidgetData";
+import { WidgetType } from "../../../../data_structs/WidgetData";
 import { DndTypes, DragSource } from "../../../../enums";
 import {
   useApp,
@@ -52,7 +53,7 @@ const WidgetsTab = (): JSX.Element => {
           padding: "1em",
         }}
       >
-        {widgetsToRender.length == 0 ? (
+        {widgetsToRender.length === 0 ? (
           <div>All Widgets in Use</div>
         ) : (
           <IXDrop
@@ -65,23 +66,23 @@ const WidgetsTab = (): JSX.Element => {
               {(scale, colWidth, rowHeight) => {
                 return widgetsToRender
                   .filter((w) => !activeLayout?.widgets().includes(w.id))
-                  .map((w, i) => {
+                  .map((w, index) => {
                     return (
                       <DraggableWidget
                         className="draggable-widget"
                         dndType={DndTypes.WIDGET}
                         draggableId={w.id}
                         height={scale * w.h * rowHeight}
-                        index={i}
-                        isDragDisabled={false}
-                        key={i}
                         id={`widgets-tab-draggable-${w.id}`}
+                        index={index}
+                        isDragDisabled={false}
+                        key={index}
                       >
                         <WidgetRenderer
-                          widget={w}
-                          scale={scale}
                           colWidth={colWidth}
                           rowHeight={rowHeight}
+                          scale={scale}
+                          widget={w}
                         />
                       </DraggableWidget>
                     );
@@ -106,19 +107,21 @@ const WidgetWrapper = ({
     rowHeight: number
   ) => JSX.Element | JSX.Element[];
 }): JSX.Element => {
-  const editorPanelRef = useRef<HTMLDivElement>();
+  const editorPanelReference = useRef<HTMLDivElement>();
   const [scalar, setScalar] = useState(1);
   const { width, height } = useWindowSize();
 
-  const colWidth = width / appConfig.gridCols;
-  const rowHeight = height / appConfig.gridRows;
+  const colWidth = width / appConfig.gridSettings.gridCols;
+  const rowHeight = height / appConfig.gridSettings.gridRows;
 
   useEffect(() => {
-    editorPanelRef.current = document.getElementById(
-      "editor-panel"
+    editorPanelReference.current = document.querySelector(
+      "#editor-panel"
     ) as HTMLDivElement;
-    console.log(editorPanelRef.current.getBoundingClientRect().width);
-    setScalar(editorPanelRef.current.getBoundingClientRect().width / width);
+    console.log(editorPanelReference.current.getBoundingClientRect().width);
+    setScalar(
+      editorPanelReference.current.getBoundingClientRect().width / width
+    );
   }, [width]);
 
   return <div>{children(scalar * 1.5, colWidth, rowHeight)}</div>;

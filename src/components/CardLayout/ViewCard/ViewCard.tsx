@@ -1,43 +1,39 @@
 import "../../../css/viewCard.css";
 
 import classNames from "classnames";
-import type { Action, Computed, Thunk } from "easy-peasy";
-import { action, computed, thunk, useLocalStore } from "easy-peasy";
-import { InlineAlert } from "evergreen-ui";
-import { motion } from "framer-motion";
-import React, {
+import type { Action, Thunk } from "easy-peasy";
+import { action, thunk, useLocalStore } from "easy-peasy";
+import type {
   FC,
   MouseEventHandler,
   PropsWithChildren,
   ReactNode,
   RefObject,
   SyntheticEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
 } from "react";
-import { Layouts } from "react-grid-layout";
+import React, { useEffect, useRef, useState } from "react";
+import type { Layouts } from "react-grid-layout";
 import QRCode from "react-qr-code";
 
-import CardData from "../../../data_structs/CardData";
-import WidgetData from "../../../data_structs/WidgetData";
-import { AppMode, CardView, DndTypes } from "../../../enums";
+import type CardData from "../../../data_structs/CardData";
+import type WidgetData from "../../../data_structs/WidgetData";
+import type { DndTypes } from "../../../enums";
+import { AppMode, CardView } from "../../../enums";
 import {
   useApp,
+  useCardEditor,
   useKeyboardShortcut,
   useLayout,
   useOnClickOutside,
-  useStoreActions,
   useStoreState,
 } from "../../../hooks";
-import appConfig from "../../../static/appConfig";
-import { randomNumber } from "../../../utils";
+import type { CardSettings } from "../../../interfaces/CardSettings";
 import Button from "../../Shared/Button";
+import CardBackdrop from "./CardBackdrop";
 import CardInfo from "./CardInfo";
+import CardMotionWrapper from "./CardMotionWrapper";
 import DeleteButton from "./DeleteButton";
 import SettingsButton from "./SettingsButton";
-import SettingsMenu from "./SettingsMenu";
 /**
  * Wraps each of the cards in the card layouts.
  * Click/Touch => Change the cards view mode
@@ -45,8 +41,6 @@ import SettingsMenu from "./SettingsMenu";
  */
 export interface CardModel {
   cardBackgroundColor: string;
-  cardClass: Computed<CardModel, string>;
-  cardInfoClass: Computed<CardModel, string>;
   cardType: DndTypes;
   cardView: CardView;
   handleCardPress: Thunk<CardModel>;
@@ -72,16 +66,16 @@ interface ViewCardProperties {
   cardId?: string;
   cardType: DndTypes;
   useAnimation: boolean;
-  //pass a set of information to all child components
+  cardSettings?: CardSettings;
   children?: (
     scale: number,
     cardView: CardView,
     onError: CardErrorHandler,
-    onLoad: CardLoadHandler
+    onLoad: CardLoadHandler,
+    cardSettings: CardSettings
   ) => ReactNode;
   data?: CardData | WidgetData;
   dataGrid?: Layouts;
-  layoutRef?: React.MutableRefObject<Layouts | null>;
   onClick?: () => void;
 }
 
@@ -91,10 +85,11 @@ const ViewCard: FC<ViewCardProperties> = ({
   cardId,
   data,
   onClick,
+  cardSettings,
   useAnimation,
 }: ViewCardProperties) => {
-  const cardContainerReference = useRef<HTMLDivElement>(null);
-  const { appMode, addAppError } = useApp();
+  // const cardContainerReference = useRef<HTMLDivElement>(null);
+  const { appMode, addAppError, setEditingCard } = useApp();
   const { deleteCard } = useLayout();
   const [oldCardView, setCardView] = useState(CardView.GRID);
   const [isError, setIsError] = useState(false);
@@ -104,12 +99,8 @@ const ViewCard: FC<ViewCardProperties> = ({
     data?.contentType === "widget" ? "loaded" : ""
   );
 
-  const setCardSettings = useStoreActions(
-    (actions) => actions.layoutsModel.setCardSettings
-  );
-  const setCardScale = useStoreActions(
-    (actions) => actions.layoutsModel.setCardScale
-  );
+  const { setCardScale } = useCardEditor();
+
   const animationCounter = useStoreState(
     (state) => state.layoutsModel.animationCounter
   );
@@ -129,14 +120,14 @@ const ViewCard: FC<ViewCardProperties> = ({
       setCardView: action((state, cardView) => {
         state.cardView = cardView;
       }),
-      scale:
-        data?.contentType === "embed"
-          ? appConfig.defaultEmbedScale
-          : appConfig.defaultIframeScale,
+      scale: cardSettings?.scale ?? 1,
+      // data?.contentType === "embed"
+      //   ? appConfig.defaultEmbedScale
+      //   : appConfig.defaultIframeScale,
       setScale: action((state, scale) => {
         state.scale += scale;
         if (data) {
-          setCardScale({ cardId: data?.id, scale });
+          setCardScale({ cardId: data?.id, scale: state.scale });
         }
       }),
       cardBackgroundColor: "",
@@ -151,33 +142,8 @@ const ViewCard: FC<ViewCardProperties> = ({
       }),
       showMenu: false,
       cardType: cardType,
-      cardClass: computed([(state) => state.cardView], (cardView) => {
-        const test = classNames("card", {
-          "card-edit": appMode === AppMode.EDIT,
-          "card-display":
-            appMode === AppMode.DISPLAY && cardView == CardView.GRID,
-          "card-preview": cardView === CardView.PREVIEW,
-          "card-fullscreen": cardView === CardView.FULL_SCREEN,
-          "card-empty": appMode === AppMode.EDIT && !children,
-          "card-empty-hidden": !children && appMode == AppMode.DISPLAY,
-          "card-locked":
-            state.cardType === DndTypes.CLOCK && appMode === AppMode.EDIT,
-          // "card-error": data?.failed,
-        });
-        return test;
-      }),
-      cardInfoClass: computed((state) => {
-        return classNames("info", {
-          "info-hidden": appMode === AppMode.EDIT,
-          "info-display": appMode === AppMode.DISPLAY,
-          "info-preview": state.cardView === CardView.PREVIEW,
-        });
-      }),
       handleCardPress: thunk((actions, _, { getState }) => {
-        // console.log("HANDLED PRESS");
-        // console.log(getState().cardClass);
-        // console.log(appMode);
-        const rootel = document.getElementById("root") as HTMLDivElement;
+        const rootel = document.querySelector("#root") as HTMLDivElement;
         if ((rootel.style.pointerEvents = "all")) {
           rootel.style.pointerEvents = "none";
         }
@@ -188,22 +154,13 @@ const ViewCard: FC<ViewCardProperties> = ({
         if (appMode === AppMode.DISPLAY && cardId != undefined) {
           switch (getState().cardView) {
             case CardView.GRID:
-              // if (data?.contentType !== "widget") {
-              //   actions.setCardView(CardView.PREVIEW);
-              //   const el = document.getElementById(
-              //     data?.id ?? "view_card"
-              //   ) as HTMLDivElement;
-              //   el.style.zIndex = "1000";
-              // }
-              // console.log(data);
-
               break;
             case CardView.PREVIEW:
               actions.setCardView(CardView.GRID);
-              const el = document.getElementById(
+              const element = document.getElementById(
                 data?.id ?? "view_card"
               ) as HTMLDivElement;
-              el.style.zIndex = "0";
+              element.style.zIndex = "0";
               break;
             default:
               break;
@@ -216,13 +173,6 @@ const ViewCard: FC<ViewCardProperties> = ({
       return { devTools: false };
     }
   );
-
-  const settingsMenuProperties = {
-    scale: state.scale,
-    setScale: actions.setScale,
-    setBackgroundColor: actions.setBackgroundColor,
-    setShowMenu: actions.setShowMenu,
-  };
 
   const cardModalBackdrop = classNames("card-modal-backdrop", {
     "card-modal-backdrop-active":
@@ -254,18 +204,22 @@ const ViewCard: FC<ViewCardProperties> = ({
       return (
         <>
           <DeleteButton
-            onClick={() => {
-              deleteCard(data.id);
-            }}
             action={() => {
               deleteCard(data.id);
             }}
-          />
-          <SettingsButton
-            onClick={(e) => {
-              actions.toggleMenu();
+            onClick={() => {
+              deleteCard(data.id);
             }}
           />
+          {data.contentType !== "widget" && (
+            <SettingsButton
+              onClick={(e) => {
+                if (data.contentType !== "widget") {
+                  setEditingCard(data as CardData);
+                }
+              }}
+            />
+          )}
         </>
       );
     }
@@ -277,18 +231,14 @@ const ViewCard: FC<ViewCardProperties> = ({
       data &&
       data.contentType !== "widget"
     ) {
-      return (
-        <CardInfo className={state.cardInfoClass} data={data as CardData} />
-      );
+      return <CardInfo className="" data={data as CardData} />;
     }
   };
 
   const renderInternals = () => {
-    if (data?.contentType !== "widget") {
-      return [showDeleteButton(), renderCardInfo()];
-    } else {
-      return [showDeleteButton()];
-    }
+    return data?.contentType !== "widget"
+      ? [showDeleteButton(), renderCardInfo()]
+      : [showDeleteButton()];
   };
 
   const renderReturnButton = (): JSX.Element | undefined => {
@@ -359,97 +309,53 @@ const ViewCard: FC<ViewCardProperties> = ({
     // if (state.)
   }, [state.cardView]);
 
-  const variants = {
-    active: {
-      opacity: 1,
-      transition: {
-        delay: randomNumber(0.4, 0.5),
-        duration: 0.5,
-      },
-    },
-    preview: {
-      opacity: 1,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    none: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-    },
-    error: {
-      // opacity: [1, 0],
-      backgroundColor: "red",
-    },
-    loaded: {
-      // opacity: [0, 1],
-      // y: [randomNumber(-50, -75), 0],
-      opacity: 1,
-      transition: {
-        delay: randomNumber(0.4, 0.5),
-        duration: 0.5,
-      },
-      x: 0,
-    },
-    out: {
-      y: randomNumber(-50, -75),
-      opacity: 0,
-      transition: {
-        delay: randomNumber(0.1, 0.5),
-        duration: 0.5,
-      },
-    },
-  };
-
   useEffect(() => {
     console.log(animationVariant);
   }, [animationVariant]);
 
   return (
-    <motion.div
-      animate={animationVariant}
-      className={state.cardClass}
-      initial={data?.contentType === "widget" ? "loaded" : ""}
-      layoutId="viewcard"
-      ref={cardContainerReference}
-      style={{
-        transformOrigin: "center",
-        willChange: "transform",
-        height: "100%",
-        backgroundColor: state.cardBackgroundColor,
-        opacity: appMode === AppMode.DISPLAY ? 0 : 1,
-        y: 0,
-      }}
-      variants={variants}
-    >
-      {children && (
-        <div className={cardModalBackdrop}>
-          <div
-            className={cardChildContainer}
-            onMouseUp={() => {
-              actions.handleCardPress();
-              if (onClick) {
-                onClick();
-              }
-            }}
-            ref={containerReference}
-          >
-            {/* {renderQrCode()} */}
-            {renderInternals()}
-            {children(state.scale, state.cardView, onError, onLoad)}
-            <SettingsMenu
-              {...settingsMenuProperties}
-              isShown={state.showMenu}
-            />
-          </div>
-          {renderReturnButton()}
-        </div>
+    <>
+      {data && (
+        <CardMotionWrapper
+          animation={animationVariant}
+          backgroundColor={state.cardBackgroundColor}
+          card={data}
+        >
+          {children && (
+            <div className={cardModalBackdrop}>
+              <div
+                className={cardChildContainer}
+                onMouseUp={() => {
+                  actions.handleCardPress();
+                  if (onClick) {
+                    onClick();
+                  }
+                }}
+                ref={containerReference}
+              >
+                {/* {renderQrCode()} */}
+                {renderInternals()}
+                <CardBackdrop card={data} cardSettings={cardSettings}>
+                  {children(
+                    state.scale,
+                    state.cardView,
+                    onError,
+                    onLoad,
+                    cardSettings ?? {
+                      id: "not found",
+                      scale: 1,
+                    }
+                  )}
+                </CardBackdrop>
+              </div>
+              {renderReturnButton()}
+            </div>
+          )}
+        </CardMotionWrapper>
       )}
-    </motion.div>
+    </>
   );
 };
-// class App extends React.Component<{ message: string }, { count: number }> {
 
 const calculateTransform2 = (boundingBox: DOMRect): [number, number] => {
   const windowWidth = window.innerWidth;
@@ -502,20 +408,6 @@ const setGpZindex = (
 //   }
 // };
 //depending on the view state of the card, change its html output node
-
-const FailureNotice = ({ errors }: { errors: string[] }): JSX.Element => {
-  return (
-    <div className="failure-notice-container">
-      {errors.map((error, index) => (
-        <div className="failure-message" key={index}>
-          <InlineAlert intent="danger" key={index}>
-            {error}
-          </InlineAlert>
-        </div>
-      ))}
-    </div>
-  );
-};
 
 const ReturnButton = ({
   onClick,

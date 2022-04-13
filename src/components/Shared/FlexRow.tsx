@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect,useState } from "react";
 
-interface FlexRowProps
-  extends Omit<React.HTMLProps<HTMLDivElement>, "as" | "ref"> {}
+type FlexRowProperties = Omit<React.HTMLProps<HTMLDivElement>, "as" | "ref">
 
-const FlexRow = (props: FlexRowProps): JSX.Element => {
+const FlexRow = (properties: FlexRowProperties): JSX.Element => {
   return (
     <div
-      {...props}
+      {...properties}
       style={{
-        ...(props.style || {}),
+        ...(properties.style || {}),
         display: "flex",
       }}
     ></div>

@@ -1,14 +1,15 @@
 import type { Action, Computed, Thunk, ThunkOn } from "easy-peasy";
 import { action, computed, thunk, thunkOn } from "easy-peasy";
-import { Layouts } from "react-grid-layout";
+import type { Layouts } from "react-grid-layout";
 
-import LayoutData, { CardOptions } from "../data_structs/LayoutData";
-import AppError from "../interfaces/AppError";
-import { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
-import RawLayoutRow from "../interfaces/RawLayoutRow";
+import LayoutData from "../data_structs/LayoutData";
+import type AppError from "../interfaces/AppError";
+import type { CardAddEvent, CardSwapEvent } from "../interfaces/CardEvents";
+import type { CardSettings } from "../interfaces/CardSettings";
+import type RawLayoutRow from "../interfaces/RawLayoutRow";
 import appConfig from "../static/appConfig";
 import backupData from "../static/backupLayout.json";
-import { StoreModel } from "./index";
+import type { StoreModel } from "./index";
 
 export interface LayoutsModel {
   //state
@@ -16,6 +17,9 @@ export interface LayoutsModel {
   externalLayouts: LayoutData[];
   bufferLayout: Layouts;
   layoutErrors: AppError[];
+  cardScale: number | undefined;
+  cardBackgroundColor: string | undefined;
+  cardContentFit: string | undefined;
 
   //listeners
   onSetAppGoogleSheetData: ThunkOn<LayoutsModel, never, StoreModel>;
@@ -26,8 +30,16 @@ export interface LayoutsModel {
   setExternalLayouts: Action<LayoutsModel, LayoutData[]>;
   setBufferLayout: Action<LayoutsModel, Layouts>;
   updateLayout: Action<LayoutsModel, CardSwapEvent>;
-  setCardSettings: Action<LayoutsModel, CardOptions>;
+  setCardSettings: Action<LayoutsModel, CardSettings>;
   setCardScale: Action<LayoutsModel, { cardId: string; scale: number }>;
+  setCardBackgroundColor: Action<
+    LayoutsModel,
+    { cardId: string; color: string }
+  >;
+  setCardContentFit: Action<
+    LayoutsModel,
+    { cardId: string; contentFit: string }
+  >;
 
   layoutsString: Computed<LayoutsModel, string>;
 
@@ -50,6 +62,9 @@ const layoutsModel: LayoutsModel = {
   activeLayout: undefined,
   externalLayouts: [],
   layoutErrors: [],
+  cardScale: undefined,
+  cardBackgroundColor: undefined,
+  cardContentFit: undefined,
   bufferLayout: backupData as unknown as Layouts,
   layoutsString: computed([(state) => state.bufferLayout], (bufferLayout) => {
     return JSON.stringify(bufferLayout);
@@ -61,47 +76,48 @@ const layoutsModel: LayoutsModel = {
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
     (actions, target, { getState }) => {
-      target.payload.getSheetRows<RawLayoutRow>("LAYOUTS").then((rows) => {
-        const rawLayoutRows = rows;
-        // const layouts: LayoutData[] = [];
-        const { externalLayouts } = getState();
-        // const layouts = getState().externalLayouts
-        const currentLayoutIds = new Set(
-          externalLayouts.map((layout) => layout.id)
-        );
-
-        for (const row of rawLayoutRows) {
-          try {
-            const l = new LayoutData(row);
-            if (!currentLayoutIds.has(l.id)) {
-              externalLayouts.push(l);
+      target.payload
+        .getSheetRows<RawLayoutRow>("LAYOUTS")
+        .then((rawLayoutRows) => {
+          const { externalLayouts } = getState();
+          const currentLayoutIds = new Set(
+            externalLayouts.map((layout) => layout.id)
+          );
+          console.log(rawLayoutRows);
+          for (const row of rawLayoutRows) {
+            try {
+              const l = new LayoutData(row);
+              console.log(l);
+              if (!currentLayoutIds.has(l.id)) {
+                externalLayouts.push(l);
+              }
+            } catch {
+              console.log("FAILED TO MAKE LAYOUT DATA");
+              actions.addLayoutError({
+                errorType: "failed to read layout row",
+                description: `failed to read layout row ${
+                  row.title ?? "NO TITLE PROVIDED"
+                }`,
+                source: row.title ?? "NO TITLE PROVIDED",
+                link: "none",
+              });
             }
-          } catch (error) {
-            actions.addLayoutError({
-              errorType: "failed to read layout row",
-              description: `failed to read layout row ${
-                row.title ?? "NO TITLE PROVIDED"
-              }`,
-              source: row.title ?? "NO TITLE PROVIDED",
-              link: "none",
-            });
           }
-        }
-        if (appConfig.useStaticLayout) {
-          // actions.setActiveLayout(defaultLayout);
-          // actions.setBufferLayout(defaultLayout.layout);
-        } else {
-          // const defaultLayout = externalLayouts.filter(
-          //   (layout) => layout.title === appConfig.defaultLayoutName
-          // )[0];
-          const defaultLayout = externalLayouts[0];
-          if (defaultLayout) {
-            actions.setActiveLayout(defaultLayout);
-            actions.setBufferLayout(defaultLayout.layout);
+          if (appConfig.useStaticLayout) {
+            // actions.setActiveLayout(defaultLayout);
+            // actions.setBufferLayout(defaultLayout.layout);
+          } else {
+            // const defaultLayout = externalLayouts.filter(
+            //   (layout) => layout.title === appConfig.defaultLayoutName
+            // )[0];
+            const defaultLayout = externalLayouts[0];
+            if (defaultLayout) {
+              actions.setActiveLayout(defaultLayout);
+              actions.setBufferLayout(defaultLayout.layout);
+            }
           }
-        }
-        actions.setExternalLayouts(externalLayouts);
-      });
+          actions.setExternalLayouts(externalLayouts);
+        });
     }
   ),
   addLayoutError: action((state, error) => {
@@ -206,11 +222,24 @@ const layoutsModel: LayoutsModel = {
       state.activeLayout?.sourceLayout.layoutSettings.cardSettings;
     console.log(currentSettings);
   }),
-  setCardScale: action((state, scale) => {
+  setCardScale: action((state, { cardId, scale }) => {
     console.log(scale);
-    const currentSettings =
-      state.activeLayout?.sourceLayout.layoutSettings.cardSettings;
-    console.log(currentSettings);
+    const currentSettings = state.activeLayout?.layoutSettings.cardSettings;
+    state.activeLayout?.setCardScale(cardId, scale);
+    state.cardScale = scale;
+    // state.activeLayout.console.log(currentSettings);
+  }),
+  setCardBackgroundColor: action((state, { cardId, color }) => {
+    console.log(color);
+    state.activeLayout?.setCardBackgroundColor(cardId, color);
+    state.cardBackgroundColor = color;
+    // state.activeLayout.console.log(currentSettings);
+  }),
+  setCardContentFit: action((state, { cardId, contentFit }) => {
+    console.log(contentFit);
+    state.activeLayout?.setCardContentFit(cardId, contentFit);
+    state.cardContentFit = contentFit;
+    // state.activeLayout.console.log(currentSettings);
   }),
   updateLayout: action((state, swap) => {
     const old = state.activeLayout;
@@ -224,7 +253,7 @@ const layoutsModel: LayoutsModel = {
     state.animationCounter += 1;
   }),
 
-  transitionLayout: thunk((actions, val, { getState }) => {
+  transitionLayout: thunk((actions, value, { getState }) => {
     actions.setAnimationCounter(getState().animationCounter + 1);
     setTimeout(() => {
       actions.setNextLayout();

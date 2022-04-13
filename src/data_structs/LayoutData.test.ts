@@ -8,6 +8,6 @@ describe("LayoutData.default.swapCard", () => {
   });
 
   test("0", () => {
-    inst.swapCard(undefined);
+    inst.swapCard();
   });
 });
