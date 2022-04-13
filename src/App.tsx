@@ -2,8 +2,9 @@ import "./App.global.css";
 import "./css/global.css";
 
 import { DndContext } from "@dnd-kit/core";
-import React, { useEffect } from "react";
-import { useIdle, useInterval } from "react-use";
+import React, { useState } from "react";
+import type { Layouts } from "react-grid-layout";
+import { BrowserRouter } from "react-router-dom";
 
 import Background from "./components/Background";
 import CardLayout from "./components/CardLayout/CardLayout";
@@ -41,12 +42,10 @@ const App = (): JSX.Element => {
   useEffectOnce(() => {
     fetchTopLevelSheet();
   });
-
+  const [searchString, setSearchString] = useState<string>();
   const { width, height } = useWindowSize();
 
-  useEffect(() => {
-    console.log(activeWidgets);
-  }, [activeWidgets]);
+  // ?url=https://docs.google.com/spreadsheets/d/e/2PACX-1vRalMG47cvXmCbEqeIJWn5qwd9bPhHUV16_VN7LuKsv53YQdn9e8XSAzNulXCtP_BIFBTUy0Z5e6KKE/pub?output=csv
   return (
     <>
       <Background />

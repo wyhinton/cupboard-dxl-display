@@ -102,7 +102,17 @@ const GoogleFormPopup = ({
                 text={layoutString}
               />
             </div>
+<<<<<<< Updated upstream
             <GoogleFormIframe src={formEmbedUrl} active={isCopiedJSON} />
+=======
+            <Button
+              onClick={(e) => {
+                navigator.clipboard.writeText(trueLayoutString);
+                setIsCopiedJson(true);
+              }}
+            ></Button>
+            <GoogleFormIframe active={isCopiedJSON} />
+>>>>>>> Stashed changes
           </FlexRow>
         </FlexColumn>
       </div>

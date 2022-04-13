@@ -12,7 +12,7 @@ const Clock = (): JSX.Element => {
 
   const containerStyle = {
     height: "100%",
-    padding: ".25em",
+    padding: "3vmin",
     overflow: "hidden",
     width: "100%",
     fontWeight: 600,

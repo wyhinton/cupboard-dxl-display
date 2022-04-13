@@ -80,14 +80,45 @@ const ContentsTab = (): JSX.Element => {
   }, [filterKey, availableCards, filterDirection]);
 
   const contentTabHeader = "contents-table-header";
+
+  const onInputChange: React.ChangeEventHandler<HTMLInputElement> = (e: any) =>
+    setSearchTerm(e.target.value);
+  const [test, setTest] = React.useState("");
+  React.useEffect(() => {
+    setTimeout(() => setTest("lolol"), 1000);
+  });
+  useEffect(() => {
+    console.log(test);
+  }, [test]);
+
   return (
     <div className="contents-tab-container">
+      {/* <input
+        // key
+        name="something"
+        type="text"
+        defaultValue={searchString}
+        key={searchString}
+        // defaultValue={"hello"}
+        value={searchString}
+        onChange={(e) => setSearchString(e.target.value)}
+      /> */}
+      {/* <OtherInput /> */}
       <FlexRow style={{ padding: "0.5em" }}>
         <SearchInput
-          onChange={(event: React.FormEvent<HTMLInputElement>) =>
-            setSearchTerm(event.currentTarget.value)
-          }
-          placeholder="search title"
+          // onChange={(event: React.FormEvent<HTMLInputElement>) => {
+          //   console.log(event);
+          //   setSearchTerm(event.currentTarget.value);
+          // }}
+          // onChange={(e: React.ChangeEventHandler<HTMLInputElement>) => {
+          //   // let v = e.target;
+          //   // setSearchTerm(e.);
+          //   console.log(e);
+          // }}
+          onChange={onInputChange}
+          value={searchTerm}
+          disabled={false}
+          // placeholder="search title"
           width="90%"
         />
         <FlexRow style={{ width: "100%", justifyContent: "space-around" }}>
@@ -178,6 +209,33 @@ const ContentsTab = (): JSX.Element => {
         </Scrollbars>
       </IXDrop>
     </div>
+  );
+};
+
+const OtherInput = (): JSX.Element => {
+  const [searchString, setSearchString] = useState<string>("babbba");
+
+  useEffect(() => {
+    console.log(searchString);
+  }, [searchString]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setSearchString(name);
+    // setUser({ [name]: value });
+  };
+  return (
+    <input
+      // key
+      type="text"
+      id="userName"
+      value={searchString}
+      placeholder="Enter User Name"
+      // required
+      // defaultValue={searchString}
+      key={searchString}
+      onChange={handleChange}
+    />
   );
 };
 
