@@ -1,4 +1,4 @@
-![Cuboard](.public/CUBOARD_LOGO_CENTERED.svg)
+![Cuboard](https://raw.githubusercontent.com/NCSU-Libraries/cupboard-dxl-display/0b90de8f971c45bd8ceb366ae63aeb7fa82fdc20/public/CUBOARD_LOGO_CENTERED.svg)
 
 <p align="center">
 <img src = "https://github.com/wyhinton/dx_display_iframe_prototype/actions/workflows/firebase.js.yml/badge.svg">
