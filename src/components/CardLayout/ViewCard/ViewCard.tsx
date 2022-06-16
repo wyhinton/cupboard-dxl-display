@@ -3,14 +3,7 @@ import "../../../css/viewCard.css";
 import classNames from "classnames";
 import type { Action, Thunk } from "easy-peasy";
 import { action, thunk, useLocalStore } from "easy-peasy";
-import type {
-  FC,
-  MouseEventHandler,
-  PropsWithChildren,
-  ReactNode,
-  RefObject,
-  SyntheticEvent,
-} from "react";
+import type { FC, MouseEventHandler, ReactNode, SyntheticEvent } from "react";
 import React, { useEffect, useRef, useState } from "react";
 import type { Layouts } from "react-grid-layout";
 import QRCode from "react-qr-code";
@@ -36,8 +29,6 @@ import DeleteButton from "./DeleteButton";
 import SettingsButton from "./SettingsButton";
 /**
  * Wraps each of the cards in the card layouts.
- * Click/Touch => Change the cards view mode
- * @component
  */
 export interface CardModel {
   cardBackgroundColor: string;
@@ -54,19 +45,18 @@ export interface CardModel {
 }
 
 export type CardErrorHandler = (
-  e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>,
+  event: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>,
   card: CardData
 ) => void;
 export type CardLoadHandler = (
-  e: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>,
+  event: SyntheticEvent<HTMLDivElement | HTMLIFrameElement | HTMLImageElement>,
   card: CardData
 ) => void;
 
 interface ViewCardProperties {
   cardId?: string;
-  cardType: DndTypes;
-  useAnimation: boolean;
   cardSettings?: CardSettings;
+  cardType: DndTypes;
   children?: (
     scale: number,
     cardView: CardView,
@@ -77,6 +67,7 @@ interface ViewCardProperties {
   data?: CardData | WidgetData;
   dataGrid?: Layouts;
   onClick?: () => void;
+  useAnimation: boolean;
 }
 
 const ViewCard: FC<ViewCardProperties> = ({
@@ -88,7 +79,6 @@ const ViewCard: FC<ViewCardProperties> = ({
   cardSettings,
   useAnimation,
 }: ViewCardProperties) => {
-  // const cardContainerReference = useRef<HTMLDivElement>(null);
   const { appMode, addAppError, setEditingCard } = useApp();
   const { deleteCard } = useLayout();
   const [oldCardView, setCardView] = useState(CardView.GRID);
@@ -112,36 +102,13 @@ const ViewCard: FC<ViewCardProperties> = ({
     if (data?.contentType === "widget") {
       setAnimationVariant("loaded");
     }
-  }, [animationCounter]);
+  }, [animationCounter, appMode, data?.contentType]);
 
   const [state, actions] = useLocalStore<CardModel>(
     () => ({
-      cardView: CardView.GRID,
-      setCardView: action((state, cardView) => {
-        state.cardView = cardView;
-      }),
-      scale: cardSettings?.scale ?? 1,
-      // data?.contentType === "embed"
-      //   ? appConfig.defaultEmbedScale
-      //   : appConfig.defaultIframeScale,
-      setScale: action((state, scale) => {
-        state.scale += scale;
-        if (data) {
-          setCardScale({ cardId: data?.id, scale: state.scale });
-        }
-      }),
       cardBackgroundColor: "",
-      setBackgroundColor: action((state, color) => {
-        state.cardBackgroundColor = color;
-      }),
-      setShowMenu: action((state, show) => {
-        state.showMenu = show;
-      }),
-      toggleMenu: action((state) => {
-        state.showMenu = !state.showMenu;
-      }),
-      showMenu: false,
       cardType: cardType,
+      cardView: CardView.GRID,
       handleCardPress: thunk((actions, _, { getState }) => {
         const rootel = document.querySelector("#root") as HTMLDivElement;
         if ((rootel.style.pointerEvents = "all")) {
@@ -167,9 +134,29 @@ const ViewCard: FC<ViewCardProperties> = ({
           }
         }
       }),
+      scale: cardSettings?.scale ?? 1,
+      setBackgroundColor: action((state, color) => {
+        state.cardBackgroundColor = color;
+      }),
+      setCardView: action((state, cardView) => {
+        state.cardView = cardView;
+      }),
+      setScale: action((state, scale) => {
+        state.scale += scale;
+        if (data) {
+          setCardScale({ cardId: data?.id, scale: state.scale });
+        }
+      }),
+      setShowMenu: action((state, show) => {
+        state.showMenu = show;
+      }),
+      showMenu: false,
+      toggleMenu: action((state) => {
+        state.showMenu = !state.showMenu;
+      }),
     }),
     [appMode],
-    (s) => {
+    () => {
       return { devTools: false };
     }
   );
@@ -262,12 +249,12 @@ const ViewCard: FC<ViewCardProperties> = ({
   });
 
   const qrContainerStyle = {
-    width: "fit-content",
-    position: "absolute",
     bottom: 0,
-    zIndex: 1,
+    position: "absolute",
     right: 0,
     transform: "translate(50%, 50%)",
+    width: "fit-content",
+    zIndex: 1,
   } as React.CSSProperties;
 
   const renderQrCode = (): JSX.Element | undefined => {
@@ -362,8 +349,6 @@ const calculateTransform2 = (boundingBox: DOMRect): [number, number] => {
   const windowHeight = window.innerHeight;
   const vw = window.innerWidth / 100;
   const vh = window.innerWidth / 100;
-  // const futureWidth = vw * 60;
-  // const futureHeight = vh * 40;
   const futureWidth = boundingBox.width * 1.5;
   const futureHeight = boundingBox.height * 1.5;
 
@@ -384,30 +369,7 @@ const calculateTransform2 = (boundingBox: DOMRect): [number, number] => {
     differenceY *= -1;
   }
   return [differenceX, differenceY];
-  // return `translate(${differenceX}px, ${differenceY}px)`;
 };
-
-const setGpZindex = (
-  refdiv: RefObject<HTMLDivElement> | null,
-  index: number
-): void => {
-  if (refdiv) {
-    const cardGrandParent = refdiv.current?.parentElement?.parentElement;
-    // console.log(cardGrandParent);
-    if (cardGrandParent) {
-      cardGrandParent.style.zIndex = index.toString();
-    }
-  }
-};
-// const setGpZindex1 = (
-//   refdiv: HTMLDivElement,
-//   zIndex: number
-// ): void => {
-//   if (refdiv) {
-//       cardGrandParent.style.zIndex = zIndex.toString();
-//   }
-// };
-//depending on the view state of the card, change its html output node
 
 const ReturnButton = ({
   onClick,
@@ -420,11 +382,5 @@ const ReturnButton = ({
     </div>
   );
 };
-function propertiesAreEqual(
-  previousProperties: Readonly<PropsWithChildren<ViewCardProperties>>,
-  nextProperties: Readonly<PropsWithChildren<ViewCardProperties>>
-): boolean {
-  return true;
-}
 
 export default React.memo(ViewCard);

@@ -26,7 +26,6 @@ const ModeChangeButton = (): JSX.Element => {
     opacity: 0,
   } as React.CSSProperties;
 
-  // const [mosued, setmosue] = useState(initialState)
   return ReactDOM.createPortal(
     <motion.div
       style={{ ...modeChangeButtonStyle, backgroundColor: "white" }}

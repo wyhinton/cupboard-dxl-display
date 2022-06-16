@@ -40,7 +40,6 @@ const LoadingScreen = (): JSX.Element => {
       opacity: 0,
     },
   };
-
   return (
     <LoadingScreenContext.Provider
       value={{
@@ -48,56 +47,57 @@ const LoadingScreen = (): JSX.Element => {
         sheetsAreLoaded,
       }}
     >
-      <AnimatePresence>
-        {visible && (
-          <motion.div
-            animate="in"
-            exit="out"
-            // initial={"in"}
-            style={{
-              width: "40%",
-              height: "50%",
-              minHeight: "fit-content",
-              display: "flex",
-              flexDirection: "column",
-              textAlign: "center",
-              position: "absolute",
-              justifyContent: "center",
-              zIndex: 100,
-              left: "50%",
-              x: "-50%",
-              top: "50%",
-              borderRadius: "10px",
-<<<<<<< HEAD
-              backdropFilter: "blur(10px)", 
-=======
-              backdropFilter: "blur(10px)",
->>>>>>> 1831a28e736b88812ec445c3ac0c774b3b31a111
-              border: " 1px solid rgba(255, 255, 255, 0.294)",
-              boxShadow: "0 8px 32px 0 rgba(49, 49, 49, 0.37)",
-              padding: "1em",
-              opacity: 0,
-            }}
-            variants={variants}
-          >
-            {!sheetsAreLoaded && urlQueryLink && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  // justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Heading size={900}>Loading Content from Google Sheets</Heading>
-                <Spinner size={100} />
-              </div>
-            )}
+      {
+        //@ts-ignore
+        <AnimatePresence>
+          {visible && (
+            <motion.div
+              animate="in"
+              exit="out"
+              // initial={"in"}
+              style={{
+                width: "40%",
+                height: "50%",
+                minHeight: "fit-content",
+                display: "flex",
+                flexDirection: "column",
+                textAlign: "center",
+                position: "absolute",
+                justifyContent: "center",
+                zIndex: 100,
+                left: "50%",
+                x: "-50%",
+                top: "50%",
+                borderRadius: "10px",
+                backdropFilter: "blur(10px)",
+                border: " 1px solid rgba(255, 255, 255, 0.294)",
+                boxShadow: "0 8px 32px 0 rgba(49, 49, 49, 0.37)",
+                padding: "1em",
+                opacity: 0,
+              }}
+              variants={variants}
+            >
+              {!sheetsAreLoaded && urlQueryLink && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    // justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Heading size={900}>
+                    Loading Content from Google Sheets
+                  </Heading>
+                  <Spinner size={100} />
+                </div>
+              )}
 
-            {!urlQueryLink && <NoUrlError />}
-          </motion.div>
-        )}
-      </AnimatePresence>
+              {!urlQueryLink && <NoUrlError />}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      }
     </LoadingScreenContext.Provider>
   );
 };
@@ -116,22 +116,14 @@ const NoUrlError = (): JSX.Element => {
       <Heading size={900}>{}</Heading>
       <Heading size={900}>
         No Google Sheet Provided via URL! <br></br>
-<<<<<<< HEAD
-        <br></br>Switching to backup sheet in {`${appConfig.noUrlTimeout}`}s.
-=======
         <br></br>Switching to backup sheet in{" "}
         {`${appConfig.timers.noUrlTimeout}`}s.
->>>>>>> 1831a28e736b88812ec445c3ac0c774b3b31a111
         <Timer
           onEnd={() => {
             setVisible(false);
             fetchTopLevelSheet(appConfig.backupParentSheetUrl);
           }}
-<<<<<<< HEAD
-          seconds={appConfig.noUrlTimeout}
-=======
           seconds={appConfig.timers.noUrlTimeout}
->>>>>>> 1831a28e736b88812ec445c3ac0c774b3b31a111
         />
         Visit{" "}
         <a

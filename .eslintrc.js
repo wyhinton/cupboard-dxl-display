@@ -19,6 +19,7 @@ module.exports = {
     "sort-exports",
     "simple-import-sort",
     "typescript-sort-keys",
+    "sort-keys-fix",
   ],
   extends: [
     "plugin:etc/recommended",
@@ -44,6 +45,7 @@ module.exports = {
         location: "anywhere",
       },
     ],
+    "sort-keys-fix/sort-keys-fix": "warn",
     "no-console": ["warn"],
     "unicorn/filename-case": "off",
     "unicorn/no-nested-ternary": "off",

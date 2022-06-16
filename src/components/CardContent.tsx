@@ -1,13 +1,13 @@
 import "../css/iframeView.css";
 
 import classNames from "classnames";
-import type { FC} from "react";
+import type { FC } from "react";
 import React, { useEffect, useState } from "react";
-import ReactPlayer from "react-player";
+import type { ReactPlayerProps } from "react-player";
+import _ReactPlayer from "react-player"; // https://github.com/cookpete/react-player/issues/1436
 
 import type CardData from "../data_structs/CardData";
 import type { CardView } from "../enums";
-import { useAppSettings } from "../hooks";
 import type { CardSettings } from "../interfaces/CardSettings";
 import CardIFrame from "./CardContent/CardIFrame";
 import CardImage from "./CardContent/CardImage";
@@ -16,14 +16,16 @@ import type {
   CardLoadHandler,
 } from "./CardLayout/ViewCard/ViewCard";
 
+const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
+
 export interface CardContentProperties {
   card: CardData;
-  scale: number;
+  cardSettings?: CardSettings;
   cardView: CardView;
+  objectFit?: string;
   onError: CardErrorHandler;
   onLoad: CardLoadHandler;
-  cardSettings?: CardSettings;
-  objectFit?: string;
+  scale: number;
 }
 /**
  * Minimal warpper for an <iframe>. Can be toggled between a full screen, active view, and a regular card view.
@@ -53,13 +55,13 @@ const IFrameView: FC<CardContentProperties> = ({
 
   useEffect(() => {}, [cardView]);
 
-  const qrContainerStyle = {
-    width: "100%",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: 10,
-  } as React.CSSProperties;
+  // const qrContainerStyle = {
+  //   width: "100%",
+  //   position: "absolute",
+  //   top: 0,
+  //   left: 0,
+  //   zIndex: 10,
+  // } as React.CSSProperties;
 
   const { src, contentType } = card;
 
@@ -75,7 +77,7 @@ const IFrameView: FC<CardContentProperties> = ({
           onReady={(event) => {
             setIsLoaded(true);
           }}
-          src={card.src}
+          src={src}
         />
       ) : contentType === "image" ? (
         <CardImage
@@ -104,8 +106,8 @@ const ResponsivePlayer = ({
   src,
   onReady,
 }: {
+  onReady: (e: _ReactPlayer) => void;
   src: string;
-  onReady: (e: ReactPlayer) => void;
 }): JSX.Element => {
   return (
     <div className="player-wrapper">

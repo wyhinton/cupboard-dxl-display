@@ -25,9 +25,9 @@ export interface ExtendedLayout {
 
 //in case the layout doe not provide any card settings
 const defaultCardSettings = {
-  scale: 1,
   backgroundColor: undefined,
   objectPosition: "center",
+  scale: 1,
 };
 
 const defaultGridSettings = {
@@ -100,10 +100,10 @@ export default class LayoutData {
     if (!this.sources().includes(toAdd.id)) {
       for (const [k, v] of Object.entries(this.layout)) {
         const newItem: Layout = {
-          x: pos.x,
-          y: pos.y,
           w: 1,
+          x: pos.x,
           h: 1,
+          y: pos.y,
           i: toAdd.id,
         };
         this.layout[k].push(newItem);
@@ -112,10 +112,10 @@ export default class LayoutData {
         !this.layoutSettings.cardSettings.map((cs) => cs.id).includes(toAdd.id)
       ) {
         this.layoutSettings.cardSettings.push({
-          id: toAdd.id,
-          scale: 1,
           backgroundColor: undefined,
+          id: toAdd.id,
           objectPosition: "center",
+          scale: 1,
         });
       }
     }
@@ -124,10 +124,10 @@ export default class LayoutData {
     this.layoutWidgets.push(toAdd);
     for (const [k, v] of Object.entries(this.layout)) {
       const newItem: Layout = {
-        x: pos.x,
-        y: pos.y,
         w: 1,
+        x: pos.x,
         h: 1,
+        y: pos.y,
         i: toAdd.id,
       };
       this.layout[k].push(newItem);

@@ -12,37 +12,56 @@ import widgets from "../static/widgets";
 import type { StoreModel } from "./index";
 /**
  * Core app model
- * @param
+ * Responsible for managing the pool of active cards in a layout, global app state like if the App's
+ * resources are loaded,
  */
 
 export interface AppDataModel {
-  //state
-  isLoaded: boolean;
-  availableCards: CardData[];
-  availableWidgets: WidgetData[];
-  activeWidgets: WidgetData[];
+  /**The active cards present in the currently displayed layout  */
   activeCards: CardData[];
-  rotationSpeed: number;
-  rotateLayouts: boolean;
-  appMode: AppMode;
-  appErrors: AppError[];
-  editingCard: CardData | undefined;
-  //listeners
-  onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
-  onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
-  onSetActiveLayout: ThunkOn<AppDataModel, never, StoreModel>;
-  //managers
-  manageViewModeChange: Thunk<AppDataModel, AppMode>;
-  toggleAppMode: Thunk<AppDataModel, never>;
-  //simple setters
+  /**The widgets present in the currently displayed layout */
+  activeWidgets: WidgetData[];
+  /**Add a new AppError to appErrors */
   addAppError: Action<AppDataModel, AppError>;
-  setRotationSpeed: Action<AppDataModel, number>;
-  setRotateLayouts: Action<AppDataModel, boolean>;
-  setAppMode: Action<AppDataModel, AppMode>;
+  /**List of current App Errors */
+  appErrors: AppError[];
+  /**The current AppMode of the Application, "DISPLAY" or "EDIT"  @*/
+  appMode: AppMode;
+  /**The entire array of all available cards from the Cards spreadsheet */
+  availableCards: CardData[];
+  /**The entire list of available cards from the Widgets Spreadsheets */
+  availableWidgets: WidgetData[];
+  editingCard: CardData | undefined;
+  /**True if all sheets were successfully loaded */
+  isLoaded: boolean;
+  /**Fires when the AppMode changes */
+  manageViewModeChange: Thunk<AppDataModel, AppMode>;
+  /**Fire on succesfully loading the Google Sheet for the cards */
+  onCardSheetLoadSuccess: ThunkOn<AppDataModel, never, StoreModel>;
+  /**Fires when a layout it selected*/
+  onSetActiveLayout: ThunkOn<AppDataModel, never, StoreModel>;
+  /**Fires when a card is released on top  of another card, taking it's place */
+  onSwapCardContent: ThunkOn<AppDataModel, never, StoreModel>;
+  /**Disable or enable the rotation of layouts. If false, then layouts will not rotate */
+  rotateLayouts: boolean;
+  /**Set the time between layout rotations */
+  rotationSpeed: number;
+  /**Set AppModel.ActiveCards */
   setActiveCards: Action<AppDataModel, CardData[]>;
+  /**set AppModel.activeWidgets */
   setActiveWidgets: Action<AppDataModel, WidgetData[]>;
+  /**set AppModel.appMode */
+  setAppMode: Action<AppDataModel, AppMode>;
+  /**set AppModel.availableCards*/
   setAvailableCards: Action<AppDataModel, CardData[]>;
+  /**set AppModel.editingCard */
   setEditingCard: Action<AppDataModel, CardData | undefined>;
+  /**set AppModel.rotateLayouts*/
+  setRotateLayouts: Action<AppDataModel, boolean>;
+  /**set the duration which each layout displays before showing the next layout */
+  setRotationSpeed: Action<AppDataModel, number>;
+  /**Switch the application mode between Edit and Display Mode */
+  toggleAppMode: Thunk<AppDataModel, never>;
 }
 
 const availableWidgets = Object.values(widgets).map(
@@ -50,20 +69,23 @@ const availableWidgets = Object.values(widgets).map(
 );
 
 const appModel: AppDataModel = {
-  //state
-  isLoaded: false,
+  activeCards: [],
+  activeWidgets: [],
+  addAppError: action((state, error) => {
+    const errorsString = state.appErrors.map(
+      (error) => JSON.stringify(error) as string
+    );
+    const newError = JSON.stringify(error);
+    if (!errorsString.includes(newError)) {
+      state.appErrors.push(error);
+    }
+  }),
+  appErrors: [],
+  appMode: AppMode.DISPLAY,
   availableCards: [],
   availableWidgets: availableWidgets,
-  activeWidgets: [],
-  activeCards: [],
-  appErrors: [],
-  rotateLayouts: true,
-  rotationSpeed: appConfig.timers.rotationDuration,
-  appMode: AppMode.DISPLAY,
   editingCard: undefined,
-  // animationCounter: 0,
-  //managers
-  /**Control side effects for altering the view state of the app, and dispatch a setter for the state */
+  isLoaded: false,
   manageViewModeChange: thunk((actions, viewModeEnum) => {
     actions.setAppMode(viewModeEnum);
     switch (viewModeEnum) {
@@ -77,70 +99,19 @@ const appModel: AppDataModel = {
         undefined;
     }
   }),
-  /**utility for switching between app modes with the mode switcher button. Also sets the editing card to undefined when switching back into display mode*/
-  toggleAppMode: thunk((actions, _, { getState }) => {
-    switch (getState().appMode) {
-      case AppMode.EDIT:
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        actions.setEditingCard(undefined);
-        actions.setAppMode(AppMode.DISPLAY);
-        break;
-      case AppMode.DISPLAY:
-        actions.setAppMode(AppMode.EDIT);
-        break;
-      case AppMode.CYCLE:
-        break;
-      default:
-    }
-  }),
-  setAvailableCards: action((state, cardDataArray) => {
-    state.availableCards = cardDataArray;
-  }),
-  setActiveCards: action((state, cardDataArray) => {
-    state.activeCards = cardDataArray;
-  }),
-  setActiveWidgets: action((state, widgetDataArray) => {
-    state.activeWidgets = widgetDataArray;
-  }),
-  setAppMode: action((state, viewModeEnum) => {
-    state.appMode = viewModeEnum;
-  }),
-  setRotationSpeed: action((state, speed) => {
-    state.rotationSpeed = speed;
-  }),
-  setRotateLayouts: action((state, should) => {
-    state.rotateLayouts = should;
-  }),
-  setEditingCard: action((state, card) => {
-    state.editingCard = card;
-  }),
-  addAppError: action((state, error) => {
-    const errorsString = state.appErrors.map(
-      (error) => JSON.stringify(error) as string
-    );
-    const newError = JSON.stringify(error);
-    // const errorBasic = error.
-    if (!errorsString.includes(newError)) {
-      state.appErrors.push(error);
-    }
-  }),
-
-  //listeners
   onCardSheetLoadSuccess: thunkOn(
-    // targetResolver:
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
-    // handler:
     async (actions, target, { getState }) => {
       target.payload.getSheetRows<RawCardRow>("CARDS").then((rows) => {
         const rawCardRowsArray = rows.map((row) => {
           return {
-            src: row.src,
-            title: row.title,
             added: row.added,
-            sourceid: row.sourceid,
             author: row.author,
             interaction: row.interaction,
+            sourceid: row.sourceid,
+            src: row.src,
+            title: row.title,
           } as RawCardRow;
         });
         const cards = getState().availableCards;
@@ -182,7 +153,6 @@ const appModel: AppDataModel = {
       actions.setActiveCards(activeCards);
     }
   ),
-
   onSwapCardContent: thunkOn(
     (actions, storeActions) => storeActions.layoutsModel.swapCardContent,
     async (actions, payload, { getState }) => {
@@ -198,6 +168,45 @@ const appModel: AppDataModel = {
       }
     }
   ),
+  rotateLayouts: true,
+  rotationSpeed: appConfig.timers.rotationDuration,
+  setActiveCards: action((state, cardDataArray) => {
+    state.activeCards = cardDataArray;
+  }),
+  setActiveWidgets: action((state, widgetDataArray) => {
+    state.activeWidgets = widgetDataArray;
+  }),
+  setAppMode: action((state, viewModeEnum) => {
+    state.appMode = viewModeEnum;
+  }),
+  setAvailableCards: action((state, cardDataArray) => {
+    state.availableCards = cardDataArray;
+  }),
+  setEditingCard: action((state, card) => {
+    state.editingCard = card;
+  }),
+  setRotateLayouts: action((state, should) => {
+    state.rotateLayouts = should;
+  }),
+
+  setRotationSpeed: action((state, speed) => {
+    state.rotationSpeed = speed;
+  }),
+
+  toggleAppMode: thunk((actions, _, { getState }) => {
+    switch (getState().appMode) {
+      case AppMode.EDIT:
+        actions.setEditingCard(undefined);
+        actions.setAppMode(AppMode.DISPLAY);
+        break;
+      case AppMode.DISPLAY:
+        actions.setAppMode(AppMode.EDIT);
+        break;
+      case AppMode.CYCLE:
+        break;
+      default:
+    }
+  }),
 };
 
 export default appModel;

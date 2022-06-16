@@ -6,6 +6,7 @@ import App from "./App";
 import store from "./store";
 
 ReactDOM.render(
+  //@ts-ignore
   <StoreProvider store={store}>
     <App />
   </StoreProvider>,

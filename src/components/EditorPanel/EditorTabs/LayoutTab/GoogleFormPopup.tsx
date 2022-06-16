@@ -38,9 +38,9 @@ const GoogleFormPopup = ({
   const layoutString = useStoreState((state) =>
     JSON.stringify(state.layoutsModel.activeLayout)
   );
-  const trueLayoutString = useStoreState((state) =>
-    JSON.stringify(state.layoutsModel.activeLayout?.layout.lg)
-  );
+  // const trueLayoutString = useStoreState((state) =>
+  //   JSON.stringify(state.layoutsModel.activeLayout?.layout.lg)
+  // );
 
   useEffect(() => {
     // console.log(layoutString);
@@ -72,26 +72,26 @@ const GoogleFormPopup = ({
             <Heading color="white" size={900}>
               Add a new layout
             </Heading>
-            <Heading color="white" size={400}>
-              {`The layout will be stored in `}{" "}
+            <Heading color="white" size={600}>
+              {`The layout will be appear `}{" "}
               <a
                 href={layoutSheetUrl}
                 rel="noreferrer"
                 style={{ color: "lightblue" }}
                 target="_blank"
               >
-                {layoutSheetUrl}
+                here
               </a>
             </Heading>
           </div>
-          <FlexRow
+          <FlexColumn
             style={{
               height: "50vh",
-              padding: "4vmin",
+              // padding: "4vmin",
               justifyContent: "space-between",
             }}
           >
-            <div style={{ width: "min-content" }}>
+            <FlexRow style={{ width: "min-content" }}>
               {/* <CopyField
                 onCloseComplete={onCloseComplete}
                 onCopy={() => {
@@ -99,23 +99,26 @@ const GoogleFormPopup = ({
                 }}
                 text={layoutString}
               /> */}
-            </div>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-            <GoogleFormIframe src={formEmbedUrl} active={isCopiedJSON} />
-=======
-            <Button
-              onClick={(e) => {
-                navigator.clipboard.writeText(trueLayoutString);
-                setIsCopiedJson(true);
+            </FlexRow>
+            <FlexRow
+              style={{
+                padding: "1vmin",
+                justifyContent: "center",
+                height: "min-content",
               }}
-            ></Button>
+            >
+              <Button
+                iconBefore={<ClipboardIcon />}
+                text="Copy Layout"
+                onClick={(e) => {
+                  navigator.clipboard.writeText(layoutString);
+                  setIsCopiedJson(true);
+                }}
+              />
+            </FlexRow>
+            {/* <GoogleFormIframe active={isCopiedJSON} /> */}
             <GoogleFormIframe active={isCopiedJSON} />
->>>>>>> Stashed changes
-=======
-            <GoogleFormIframe active={isCopiedJSON} />
->>>>>>> 1831a28e736b88812ec445c3ac0c774b3b31a111
-          </FlexRow>
+          </FlexColumn>
         </FlexColumn>
       </div>
     </Modal>,

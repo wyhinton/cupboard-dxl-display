@@ -33,7 +33,7 @@ export function useToggle(initialValue: boolean): [boolean, () => void] {
 }
 
 interface UseCardEditorProperties {
-  editingCard: CardData | undefined;
+  cardBackgroundColor: string | undefined;
   setEditingCard: ActionCreator<CardData | undefined>;
   setCardScale: ActionCreator<{
     cardId: string;
@@ -49,7 +49,7 @@ interface UseCardEditorProperties {
   }>;
   clearEditingCard: () => void;
   cardScale: number | undefined;
-  cardBackgroundColor: string | undefined;
+  editingCard: CardData | undefined;
   cardContentFit: string | undefined;
 }
 
@@ -81,14 +81,14 @@ export const useCardEditor = (): UseCardEditorProperties => {
 };
 
 interface UseAppSettingsProperties {
-  rotationSpeed: number;
+  enableIframeAudio: boolean;
   enableQrCodes: boolean;
   rotateLayouts: boolean;
-  enableIframeAudio: boolean;
+  rotationSpeed: number;
   enableIframeInteractions: boolean;
-  setRotationSpeed: ActionCreator<number>;
-  setShowQrCodes: ActionCreator<boolean>;
   setBlockIframeInteractions: ActionCreator<boolean>;
+  setShowQrCodes: ActionCreator<boolean>;
+  setRotationSpeed: ActionCreator<number>;
   setMuteIframeAudio: ActionCreator<boolean>;
   setRotateLayouts: ActionCreator<boolean>;
 }
@@ -140,19 +140,19 @@ export const useAppSettings = (): UseAppSettingsProperties => {
 };
 
 interface UseSheetsProperties {
-  fetchTopLevelSheet: ThunkCreator<string, any>;
-  setUrlSheet: ActionCreator<string | null>;
-  parentSheetUrl: string | undefined;
   cardSheetUrl: string | undefined;
-  layoutSheetUrl: string | undefined;
+  fetchTopLevelSheet: ThunkCreator<string, any>;
   formUrl: string | undefined;
+  layoutSheetUrl: string | undefined;
+  parentSheetUrl: string | undefined;
   refreshSheets: ThunkCreator<void, any>;
+  setUrlSheet: ActionCreator<string | null>;
   urlQueryLink: string | null;
 }
 
 export const useSheets = (): UseSheetsProperties => {
   const fetchTopLevelSheet = useStoreActions(
-    (actions) => actions.googleSheetsModel.fetchTopLevelSheet
+    (actions) => actions.googleSheetsModel.fetchParentSheet
   );
   const urlQueryLink = useStoreState(
     (state) => state.googleSheetsModel.urlSheet
@@ -190,10 +190,10 @@ export const useSheets = (): UseSheetsProperties => {
 };
 
 interface UseErrorProperties {
-  appErrors: AppError[];
-  layoutErrors: AppError[];
-  googleSheetsErrors: AppError[];
   allErrors: AppError[];
+  appErrors: AppError[];
+  googleSheetsErrors: AppError[];
+  layoutErrors: AppError[];
 }
 
 export const useErrors = (): UseErrorProperties => {
@@ -214,17 +214,17 @@ export const useErrors = (): UseErrorProperties => {
 };
 
 interface UseAppProperties {
-  appMode: AppMode;
-  rotationSpeed: number;
-  setRotationSpeed: ActionCreator<number>;
-  transitionLayout: ThunkCreator<number, any>;
-  toggleAppMode: ThunkCreator<void, any>;
-  setRotateLayouts: ActionCreator<boolean>;
-  rotateLayouts: boolean;
   addAppError: ActionCreator<AppError>;
-  sheetsAreLoaded: boolean;
+  appMode: AppMode;
   editingCard: CardData | undefined;
+  rotateLayouts: boolean;
+  rotationSpeed: number;
   setEditingCard: ActionCreator<CardData>;
+  setRotateLayouts: ActionCreator<boolean>;
+  setRotationSpeed: ActionCreator<number>;
+  sheetsAreLoaded: boolean;
+  toggleAppMode: ThunkCreator<void, any>;
+  transitionLayout: ThunkCreator<number, any>;
 }
 
 export const useApp = (): UseAppProperties => {
@@ -268,7 +268,6 @@ export const useApp = (): UseAppProperties => {
     sheetsAreLoaded,
     transitionLayout,
     setEditingCard,
-    // animationCounter,
   };
 };
 
@@ -279,16 +278,16 @@ export function useQuery() {
 
 interface UseLayoutProperties {
   activeCards: CardData[];
-  activeWidgets: WidgetData[];
-  setBufferLayout: ActionCreator<ReactGridLayout.Layouts>;
   activeLayout: LayoutData | undefined;
-  deleteCard: ThunkCreator<string, any>;
+  setBufferLayout: ActionCreator<ReactGridLayout.Layouts>;
+  activeWidgets: WidgetData[];
+  clearCards: ThunkCreator<void, any>;
   addCard: ThunkCreator<CardAddEvent, any>;
   swapCard: ThunkCreator<CardSwapEvent, any>;
   // addWidget: ThunkCreator<CardAddEvent, any>;
   setActiveLayout: ActionCreator<LayoutData>;
   useNextLayout: ThunkCreator<void, any>;
-  clearCards: ThunkCreator<void, any>;
+  deleteCard: ThunkCreator<string, any>;
   resetLayout: ThunkCreator<void, any>;
   externalLayouts: LayoutData[];
 }
@@ -356,10 +355,10 @@ export const useKeyboardShortcut = ({
   action,
   disabled,
 }: {
-  keyCode: number;
   action: (event: KeyboardEvent) => void;
+  keyCode: number;
   disabled: boolean;
-}): { enable: () => void; disable: () => void } => {
+}): { disable: () => void; enable: () => void } => {
   React.useEffect(() => {
     if (!disabled) {
       enable();
@@ -564,8 +563,8 @@ function useEventListener<
 // See: https://usehooks-ts.com/react-hook/use-event-listener
 
 interface Size {
-  width: number;
   height: number;
+  width: number;
 }
 
 export function useElementSize<T extends HTMLElement = HTMLDivElement>(): [
@@ -616,8 +615,8 @@ export function useHover<T extends HTMLElement = HTMLElement>(
 }
 
 interface WindowSize {
-  width: number;
   height: number;
+  width: number;
 }
 
 export function useWindowSize(): WindowSize {
