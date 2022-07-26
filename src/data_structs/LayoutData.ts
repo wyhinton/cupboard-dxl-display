@@ -44,6 +44,7 @@ export default class LayoutData {
   layout: Layouts;
   layoutWidgets: WidgetData[];
 
+  
   constructor(row: RawLayoutRow) {
     const { layout } = testGetLayout(row);
     this.id = row.title + "_" + row.timestamp;

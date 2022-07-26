@@ -167,7 +167,6 @@ export const useSheets = (): UseSheetsProperties => {
   const layoutSheetUrl = useStoreState(
     (state) => state.googleSheetsModel.layoutSheetUrl
   );
-
   const setUrlSheet = useStoreActions(
     (actions) => actions.googleSheetsModel.setUrlSheet
   );

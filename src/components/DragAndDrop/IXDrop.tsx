@@ -1,7 +1,7 @@
 import "../../css/droppable.css";
 
 import { AddIcon } from "evergreen-ui";
-import type { FC, ReactNode} from "react";
+import type { FC, ReactNode } from "react";
 import React, { useEffect } from "react";
 import type { DroppableProps } from "react-beautiful-dnd";
 import { Droppable } from "react-beautiful-dnd";
@@ -21,7 +21,6 @@ const IXDrop: FC<IXDrop> = ({
   cardType,
   ...properties
 }) => {
-  // const droppableContainert className = {"droppable " + className}
   return (
     <Droppable {...properties} type="DEFAULT">
       {(provided, snapshot) => {

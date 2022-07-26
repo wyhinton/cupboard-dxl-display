@@ -12,7 +12,6 @@ import backupData from "../static/backupLayout.json";
 import type { StoreModel } from "./index";
 
 export interface LayoutsModel {
-  //state
   /**The currently displayed Layout */
   activeLayout: LayoutData | undefined;
   addCard: Thunk<LayoutsModel, CardAddEvent, never, StoreModel>;
@@ -57,7 +56,6 @@ export interface LayoutsModel {
 }
 
 const layoutsModel: LayoutsModel = {
-  //state
   activeLayout: undefined,
   addCard: thunk((actions, cardAddEvent, { getState, getStoreState }) => {
     const { availableCards, availableWidgets } = getStoreState().appModel;
@@ -109,7 +107,6 @@ const layoutsModel: LayoutsModel = {
   layoutsString: computed([(state) => state.bufferLayout], (bufferLayout) => {
     return JSON.stringify(bufferLayout);
   }),
-  /**On setAppGoogleSheetData, create an array of LayoutData objects from the provided rows */
   onSetAppGoogleSheetData: thunkOn(
     (actions, storeActions) =>
       storeActions.googleSheetsModel.setAppGoogleSheetData,
@@ -121,21 +118,35 @@ const layoutsModel: LayoutsModel = {
           const currentLayoutIds = new Set(
             externalLayouts.map((layout) => layout.id)
           );
+          const receivedLayoutsIds = new Set(
+            rawLayoutRows.map((row) => row.title + "_" + row.timestamp)
+          );
+
+          //for each of the layout data sheet rows, if the our current rows does not already contain the row, crete a new LayoutData and append
           for (const row of rawLayoutRows) {
             try {
-              const l = new LayoutData(row);
-              if (!currentLayoutIds.has(l.id)) {
+              const layoutId = row.title + "_" + row.timestamp;
+              if (!currentLayoutIds.has(layoutId)) {
+                const l = new LayoutData(row);
                 externalLayouts.push(l);
               }
             } catch {
               actions.addLayoutError({
-                errorType: "failed to read layout row",
                 description: `failed to read layout row ${
                   row.title ?? "NO TITLE PROVIDED"
                 }`,
-                source: row.title ?? "NO TITLE PROVIDED",
+                errorType: "failed to read layout row",
                 link: "none",
+                source: row.title ?? "NO TITLE PROVIDED",
               });
+            }
+          }
+          //in case a layout is deleted in the google sheet and then the layouts are refreshed, that needs to be reflected in the UI.
+          //so if the rows we received from the layout does not include a layout which we have previously made, remove it from our layout array.
+          for (const layout of externalLayouts) {
+            if (!receivedLayoutsIds.has(layout.id)) {
+              const indexOfLayoutToRemove = externalLayouts.indexOf(layout);
+              externalLayouts.splice(indexOfLayoutToRemove, 1);
             }
           }
 
@@ -170,8 +181,6 @@ const layoutsModel: LayoutsModel = {
       }
     }
   }),
-  //simple setters
-
   setActiveLayout: action((state, newActiveLayout) => {
     state.activeLayout = newActiveLayout;
     state.bufferLayout = JSON.parse(JSON.stringify(newActiveLayout.layout));

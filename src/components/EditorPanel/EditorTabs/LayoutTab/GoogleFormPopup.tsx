@@ -21,26 +21,23 @@ import GoogleFormIframe from "./GoogleFormPopup/GoogleFormIframe";
  */
 
 interface GoogleFormPopupProperties {
-  visible: boolean;
   onCloseComplete: () => void;
+  visible: boolean;
 }
 
 const GoogleFormPopup = ({
-  visible,
   onCloseComplete,
+  visible,
 }: GoogleFormPopupProperties): JSX.Element => {
-  const { layoutSheetUrl, formUrl } = useSheets();
+  const { layoutSheetUrl } = useSheets();
 
   const { activeLayout } = useLayout();
-  const [isShown, setIsShown] = useState(visible);
+  // const [isShown, setIsShown] = useState(visible);
   const [isCopiedJSON, setIsCopiedJson] = useState(false);
   const [contentString, setContentString] = useState("");
   const layoutString = useStoreState((state) =>
     JSON.stringify(state.layoutsModel.activeLayout)
   );
-  // const trueLayoutString = useStoreState((state) =>
-  //   JSON.stringify(state.layoutsModel.activeLayout?.layout.lg)
-  // );
 
   useEffect(() => {
     // console.log(layoutString);
@@ -55,7 +52,7 @@ const GoogleFormPopup = ({
 
   return ReactDom.createPortal(
     <Modal
-      active={isShown}
+      active={visible}
       backdropOpacity={0.5}
       containerClassName="google-form-popup"
       onClose={() => {}}

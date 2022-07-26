@@ -8,19 +8,8 @@ import GoogleFormPopup from "./GoogleFormPopup";
 import LayoutTable from "./LayoutTable";
 
 const LayoutTab = (): JSX.Element => {
-  const bufferState = useStoreState((state) => state.layoutsModel.bufferLayout);
-  const { activeLayout } = useLayout();
   const { refreshSheets } = useSheets();
-
   const [showNewLayoutPopup, setShowNewLayoutPopup] = useState(false);
-
-  const [layoutString, setLayoutString] = useState(
-    JSON.stringify(activeLayout)
-  );
-
-  useEffect(() => {
-    setLayoutString(JSON.stringify(bufferState));
-  }, [activeLayout, bufferState]);
 
   return (
     <div>

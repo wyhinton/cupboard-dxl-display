@@ -33,10 +33,10 @@ const Clock = (): JSX.Element => {
 
   return (
     <div style={containerStyle}>
-      <div style={{ color: "white", fontSize: "9vmin" }}>
+      <div style={{ color: "white", fontSize: "8vmin" }}>
         Data Experience Lab
       </div>
-      <div style={{ color: "white", fontSize: "9vmin" }}>
+      <div style={{ color: "white", fontSize: "8vmin" }}>
         {date.toLocaleTimeString("en-IT", { hour12: true, timeStyle: "short" })}
       </div>
     </div>

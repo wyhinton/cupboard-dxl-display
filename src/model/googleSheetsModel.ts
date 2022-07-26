@@ -38,6 +38,7 @@ export interface GoogleSheetsModel {
   //**URL of the parent sheet */
   parentSheetUrl: string | undefined;
   //**Returns true if the Google  */
+  requests: Promise<GoogleSheetData>[];
   /** reload both the card and layout sheet so updates from the sheets are shown in the editor UI*/
   refreshSheets: Thunk<GoogleSheetsModel>;
   //**set */
@@ -52,11 +53,11 @@ export interface GoogleSheetsModel {
   setLayoutsSheetUrl: Action<GoogleSheetsModel, string>;
   //**Set Parent Sheet Url */
   setParentSheetUrl: Action<GoogleSheetsModel, string>;
-
   setUrlSheet: Action<GoogleSheetsModel, string | null>;
   /**Set sheets are loaded */
   sheetsAreLoaded: Computed<GoogleSheetsModel, boolean>;
   //** */
+  // testLoad: boolean;
   urlSheet: string | null;
 }
 
@@ -174,6 +175,7 @@ const googleSheetsModel: GoogleSheetsModel = {
       actions.fetchParentSheet(parentSheetUrl);
     }
   }),
+  requests: [],
   setAppGoogleSheetData: action((state, googleSheet) => {
     state.parentGoogleSheet = googleSheet;
   }),
@@ -189,7 +191,6 @@ const googleSheetsModel: GoogleSheetsModel = {
   setLayoutDataGoogleSheet: action((state, sheet) => {
     state.layoutDataGoogleSheet = sheet;
   }),
-
   setLayoutsSheetUrl: action((state, layoutSheetUrl) => {
     state.layoutSheetUrl = layoutSheetUrl;
   }),
